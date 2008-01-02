@@ -155,12 +155,12 @@ class GoogleMaps:
 		return w.get_pixbuf()
 
 	def coord_to_tile(self, zl, lat, lng):
-		world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - zl)
+		world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zl))
 		lng += 180.0
 		x = (world_tiles) / 360.0 * lng
 		tiles_pre_radian = world_tiles / (2 * math.pi)
 		e = math.sin(lat*(1/180.*math.pi))
 		y = int(world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian))
-		return (int(round(x, 0)), int(round(y, 0)))
+		return (int(round(x, 0)) % world_tiles, int(round(y, 0)) % world_tiles)
 
 
