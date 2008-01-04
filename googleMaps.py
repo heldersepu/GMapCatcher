@@ -1,4 +1,4 @@
-import os, re, openanything, urllib, math, gtk
+import os, re, openanything, urllib, math, gtk, sys
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
 TILES_WIDTH = 256
@@ -23,7 +23,7 @@ class GoogleMaps:
 				print 'downloading:', href
 				oa = openanything.fetch(href)
 				if oa['status']==200:
-					file = open( filename, 'w' )
+					file = open( filename, 'wb' )
 					file.write( oa['data'] )
 					file.close()
 					return True

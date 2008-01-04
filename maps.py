@@ -2,6 +2,7 @@
 import os
 import gobject
 import pygtk
+pygtk.require('2.0')
 import gtk
 import googleMaps
 
@@ -135,6 +136,7 @@ class MainWindow(gtk.Window):
 		da.add_events(gtk.gdk.SCROLL_MASK)
 		da.connect("scroll-event", self.scroll_cb)
 
+		da.add_events(gtk.gdk.BUTTON_PRESS_MASK)
 		da.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
 
