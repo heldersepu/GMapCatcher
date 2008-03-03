@@ -15,7 +15,7 @@ class GoogleMaps:
 		else:
 			if not online:
 				return False
-			href = 'http://mt%i.google.com/mt?n=404&v=w2.63&x=%i&y=%i&zoom=%i' % (self.mt_counter,coord[0],
+			href = 'http://mt%i.google.com/mt?n=404&v=w2.69&hl=en&x=%i&y=%i&zoom=%i' % (self.mt_counter,coord[0],
 					coord[1], zl)
 			self.mt_counter += 1
 			self.mt_counter = self.mt_counter % NR_MTS
