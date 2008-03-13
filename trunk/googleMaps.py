@@ -1,4 +1,5 @@
-import os, re, openanything, urllib, math, gtk, sys
+import os, re, openanything, urllib, math, gtk, sys, threading
+
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
 TILES_WIDTH = 256
@@ -64,6 +65,8 @@ class GoogleMaps:
 		else:
 			self.write_locations()
 
+		self.lock = threading.Lock()
+
 	def get_locations(self):
 		return self.locations
 
@@ -107,6 +110,7 @@ class GoogleMaps:
 
 	def coord_to_path(self, zoom_level, coord):
 		path = os.path.join(self.tilespath, '%d' % zoom_level)
+		self.lock.acquire()
 		if not os.path.isdir(path):
 			os.mkdir(path)
 		## at most 1024 files in one dir
@@ -123,6 +127,7 @@ class GoogleMaps:
 		if not os.path.isdir(path):
 			os.mkdir(path)
 
+		self.lock.release()
 		path = os.path.join(path, "%d.png" % (coord[1] % 1024))
 		return path
 	
