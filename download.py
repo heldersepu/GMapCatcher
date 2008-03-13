@@ -8,7 +8,7 @@ import sys
 
 ctx_map = googleMaps.GoogleMaps()
 max_zl = 17
-min_zl = 3
+min_zl = 2
 
 def download(lat, lng, lat_range, lng_range):
 	lat_min = lat - lat_range
@@ -28,8 +28,8 @@ if __name__ == "__main__":
 	lat = None
 	lng = None
 	location = None
-	lat_range = 0.1
-	lng_range = 0.1
+	lat_range = 0.05
+	lng_range = 0.05
 
 	if len(sys.argv) > 1:
 		for arg in sys.argv[1:]:
