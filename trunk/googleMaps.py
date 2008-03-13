@@ -154,10 +154,18 @@ class GoogleMaps:
 #		print ("get_tile_pixbuf: zl: %d, coord: %d, %d") % (zoom_level, coord[0], coord[1])
 		filename = self.get_file(zoom_level, coord, online)
 		if (filename == None):
+			filename = 'missing.png'
 			w.set_from_file('missing.png')
 		else:
 			w.set_from_file(filename)
-		return w.get_pixbuf()
+
+		try:
+			return w.get_pixbuf()
+		except ValueError:
+			print "File corrupted: %s" % filename
+			os.remove(filename)
+			w.set_from_file('missing.png')
+			return w.get_pixbuf()
 
 	def coord_to_tile(self, zl, lat, lng):
 		world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zl))
@@ -166,6 +174,7 @@ class GoogleMaps:
 		tiles_pre_radian = world_tiles / (2 * math.pi)
 		e = math.sin(lat*(1/180.*math.pi))
 		y = int(world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian))
+		
 		return (int(round(x, 0)) % world_tiles, int(round(y, 0)) % world_tiles)
 
 
