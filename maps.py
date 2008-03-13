@@ -5,12 +5,56 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import googleMaps
+import threading
+from threading import Thread
+
+class GetTileThread(Thread):
+	def __init__(self,
+			zl,
+			real_tile_x,
+			real_tile_y,
+			tile_x_pos_inner,
+			tile_y_pos_inner,
+			x_pos,
+			y_pos,
+			draw_width,
+			draw_height,
+			online,
+			gc,
+			window):
+		Thread.__init__(self)
+		self.zl = zl
+		self.x = real_tile_x
+		self.y = real_tile_y
+		self.xp = x_pos
+		self.yp = y_pos
+		self.draw_width = draw_width
+		self.draw_height = draw_height
+		self.online = online
+		self.gc = gc
+		self.window = window
+		self.xi = tile_x_pos_inner
+		self.yi = tile_y_pos_inner
+
+	def run(self):
+		pixbuf = self.window.ctx_map.get_tile_pixbuf(self.zl, (self.x, self.y), self.online)
+		gc = self.gc
+		self.window.drawing_area.window.draw_pixbuf(gc, pixbuf,
+							int(self.xi),
+							int(self.yi),
+							int(self.xp), int(self.yp),
+							int(self.draw_width), int(self.draw_height))
+		return
 
 class MainWindow(gtk.Window):
 	center = ((0,0),(128,128))
 	draging = False
 	draging_start = (0, 0)
 	current_zoom_level = googleMaps.MAP_MAX_ZOOM_LEVEL
+	queue = None
+	threads = []
+
+
 
 	def do_scale(self, pos, pointer=None):
 		pos = round(pos, 0)
@@ -207,28 +251,23 @@ class MainWindow(gtk.Window):
 		tile_y_pos = tl_tile[1]
 		tile_y_pos_inner = tl_offset[1]
 		draw_height = googleMaps.TILES_HEIGHT - tl_offset[1]
+		threads = []
 		while (y_pos < rect.height):
 			tile_x_pos = tl_tile[0]
 			tile_x_pos_inner = tl_offset[0]
 			draw_width = googleMaps.TILES_WIDTH - tl_offset[0]
 			x_pos = 0
 			while (x_pos < rect.width):
+			#############################################
 				real_tile_x, real_tile_y = self.ctx_map.tile_adjust(self.get_zoom_level(), 
 						(tile_x_pos, tile_y_pos))
 				if not (((area.x + area.width < x_pos) or (x_pos + draw_width < area.x)) or \
 						((area.y + area.height < y_pos) or (y_pos + draw_height < area.y))):
-#					print "draw tile (%d, %d)'s (%d, %d), (width=%d, height=%d) at (%d, %d)" % (
-#						real_tile_x, real_tile_y,
-#						tile_x_pos_inner, tile_y_pos_inner,
-#						draw_width, draw_height,
-#						x_pos, y_pos)
-					pixbuf = self.ctx_map.get_tile_pixbuf(zl, (real_tile_x, real_tile_y), online)
-					gc = self.drawing_area.style.black_gc
-					self.drawing_area.window.draw_pixbuf(gc, pixbuf,
-							int(tile_x_pos_inner),
-							int(tile_y_pos_inner),
-							int(x_pos), int(y_pos),
-							int(draw_width), int(draw_height))
+					th = GetTileThread(zl, real_tile_x, real_tile_y, tile_x_pos_inner,
+						tile_y_pos_inner, x_pos, y_pos, draw_width, draw_height, online, 
+						self.drawing_area.style.black_gc, self)
+					threads.append(th)
+					th.start()
 
 				x_pos += draw_width
 				tile_x_pos += 1
@@ -236,12 +275,15 @@ class MainWindow(gtk.Window):
 				draw_width = googleMaps.TILES_WIDTH
 				if (x_pos + draw_width > rect.width):
 					draw_width = rect.width - x_pos
+
 			y_pos += draw_height
 			tile_y_pos += 1
 			tile_y_pos_inner = 0
 			draw_height = googleMaps.TILES_HEIGHT
 			if (y_pos + draw_height > rect.height):
 				draw_height = rect.height - y_pos
+		for th in threads:
+			th.join()
 
 	def scroll_cb(self, widget, event):
 		value = self.scale.get_value()
