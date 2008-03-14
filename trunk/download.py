@@ -5,6 +5,27 @@ import pygtk
 import gtk
 import googleMaps
 import sys
+import Queue
+import threading
+from threading import Thread
+from Queue import Queue
+
+serviceQueue = None
+threads = []
+class DownloaderThread(Thread):
+	def __init__(self):
+		Thread.__init__(self)
+	def run(self):
+		while True:
+			info = serviceQueue.get()
+			if (info == None):
+				return
+			zl = info[0]
+			point = info[1]
+			ctx_map.get_file(zl, point, True)
+			serviceQueue.task_done()
+
+
 
 ctx_map = googleMaps.GoogleMaps()
 max_zl = 17
@@ -22,7 +43,8 @@ def download(lat, lng, lat_range, lng_range):
 		brx, bry = ctx_map.coord_to_tile(zl, lat_min, lng_max)
 		for x in range(tlx, brx+1):
 			for y in range(tly, bry+1):
-				ctx_map.get_file(zl, (x, y), True)
+				serviceQueue.put([zl, (x, y)])
+#				ctx_map.get_file(zl, (x, y), True)
 
 if __name__ == "__main__":
 	lat = None
@@ -30,6 +52,8 @@ if __name__ == "__main__":
 	location = None
 	lat_range = 0.05
 	lng_range = 0.05
+	nr_threads = 5
+
 
 	if len(sys.argv) > 1:
 		for arg in sys.argv[1:]:
@@ -48,7 +72,8 @@ if __name__ == "__main__":
 					lat_range = float(arg[11:])
 				if arg.startswith('--lngrange='):
 					lng_range = float(arg[11:])
-
+				if arg.startswith('--threads='):
+					nr_threads = int(arg[10:])
 	if (location == None) and ((lat == None) or (lng == None)):
 		print 'use --location set location'
 		print 'or --longitude and --latitude'
@@ -67,5 +92,19 @@ if __name__ == "__main__":
 		location = "somewhere"
 	print "Download %s (%f, %f), range (%f, %f), zoom level: %d to %d" % (location, lat, lng, lat_range, lng_range, \
 			max_zl, min_zl)
+
+	if (nr_threads <= 0):
+		threads = 1
+	serviceQueue = Queue(nr_threads)
+	for i in xrange(nr_threads):
+		threads.append(DownloaderThread())
+	for t in threads:
+		t.start()
+
 	download(lat, lng, lat_range, lng_range)
+
+	for t in threads:
+		serviceQueue.put(None)
+	for t in threads:
+		t.join()
 
