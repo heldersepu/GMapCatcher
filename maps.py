@@ -56,10 +56,10 @@ class MainWindow(gtk.Window):
 
 
 
-	def do_scale(self, pos, pointer=None):
+	def do_scale(self, pos, pointer=None, force=False):
 		pos = round(pos, 0)
 		scale = self.scale
-		if (pos == round(scale.get_value(), 0)):
+		if (pos == round(scale.get_value(), 0)) and not force:
 			return
 		scale.set_value(pos)
 
@@ -128,7 +128,7 @@ class MainWindow(gtk.Window):
 
 		self.center = (self.ctx_map.coord_to_tile(10, coord[0], coord[1]), (0,0))
 		self.current_zoom_level = 10
-		self.do_scale(10)
+		self.do_scale(10, force=True)
 
     	def __create_completion_model(self):
 		store = gtk.ListStore(gobject.TYPE_STRING)
