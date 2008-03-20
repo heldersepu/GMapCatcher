@@ -1,0 +1,21 @@
+Mar 20 2008	N.W	<pi3orama@gmail.com>
+	
+	* 0.02
+	* use multithread downloader while online
+	* fix a bug: when hit 'OK' button, doesn't change viewport
+
+
+Mar 02 2008	N.W	<pi3orama@gmail.com>
+
+	* 0.01 hotfix 2
+	* Google guys changed their tile url...
+
+Jan 04 2008	N.W	<pi3orama@gmail.com>
+
+	* 0.01 hotfix
+	* Fix a keyevent problem in windows
+
+Jan 02 2008	N.W	<pi3orama@gmail.com>
+
+	* Initial 0.01
+
