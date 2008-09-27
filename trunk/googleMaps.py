@@ -10,13 +10,45 @@ NR_MTS = 4
 class GoogleMaps:
 	locations = {}
 	mt_counter = 0
+	version_string = None
+	html_data = ""
+
+	def fetch_version_string(self):
+		if self.version_string == None:
+			if self.html_data == "":
+				oa = openanything.fetch( 'http://maps.google.com/maps')
+				if oa['status'] != 200:
+					print "Trying fetch http://maps.google.com/maps but failed"
+					return False
+				self.html_data = oa['data']
+			if self.html_data == "":
+				return False
+			p = re.compile('http://mt[0-9].google.com/mt\?.*w([0-9].[0-9][0-9])')
+			m = p.search(self.html_data)
+			if m:
+				self.version_string = m.group(1)
+				return self.version_string
+			else:
+				print "!@@#"
+				return None
+
 	def get_png_file(self, zl, coord, filename, online):
 		if os.path.isfile(filename):
 		       return True
 		else:
 			if not online:
 				return False
-			href = 'http://mt%i.google.com/mt?n=404&v=w2.75&hl=en&x=%i&y=%i&zoom=%i' % (self.mt_counter,coord[0],
+			if self.version_string == None:
+				self.version_string = self.fetch_version_string()
+			if self.version_string == None:
+				print "!@@!#!@"
+				return False
+
+
+			href = 'http://mt%i.google.com/mt?n=404&v=w%s&hl=en&x=%i&y=%i&zoom=%i' % (
+					self.mt_counter,
+					self.version_string,
+					coord[0],
 					coord[1], zl)
 			self.mt_counter += 1
 			self.mt_counter = self.mt_counter % NR_MTS
@@ -90,6 +122,7 @@ class GoogleMaps:
 		lat, lng = float(m.group(1)), float(m.group(2))
 		self.locations[location] = (lat, lng)
 		self.write_locations()
+		self.html_data = html
 		return location
 
 	def tile_adjustEx(self, zoom_level, tile, offset):
