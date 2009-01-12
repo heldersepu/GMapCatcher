@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 import os
-import gobject
-import pygtk
-import gtk
 import googleMaps
 import sys
 import Queue
@@ -22,7 +19,7 @@ class DownloaderThread(Thread):
 				return
 			zl = info[0]
 			point = info[1]
-			ctx_map.get_file(zl, point, True)
+			ctx_map.get_file(zl, point, True, False)
 			serviceQueue.task_done()
 
 
