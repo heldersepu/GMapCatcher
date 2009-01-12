@@ -1,1 +1,4 @@
-Screenshots
+﻿Screenshots:
+
+http://gmapcatcher.googlecode.com/svn/wiki/Screenshot.png
+
