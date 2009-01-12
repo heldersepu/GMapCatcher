@@ -20,6 +20,7 @@ class GetTileThread(Thread):
                         draw_width,
                         draw_height,
                         online,
+			force_update,
                         gc,
                         window):
                 Thread.__init__(self)
@@ -31,13 +32,14 @@ class GetTileThread(Thread):
                 self.draw_width = draw_width
                 self.draw_height = draw_height
                 self.online = online
+		self.force_update = force_update
                 self.gc = gc
                 self.window = window
                 self.xi = tile_x_pos_inner
                 self.yi = tile_y_pos_inner
 
         def run(self):
-                pixbuf = self.window.ctx_map.get_tile_pixbuf(self.zl, (self.x, self.y), self.online)
+                pixbuf = self.window.ctx_map.get_tile_pixbuf(self.zl, (self.x, self.y), self.online, self.force_update)
                 gc = self.gc
                 self.window.drawing_area.window.draw_pixbuf(gc, pixbuf,
                                                         int(self.xi),
@@ -147,15 +149,24 @@ class MainWindow(gtk.Window):
                 button = gtk.Button(stock='gtk-ok')
                 button.connect('clicked', self.confirm_clicked)
                 bbox.add(button)
-                hbox.pack_start(entry)
+                
+		hbox.pack_start(entry)
                 hbox.pack_start(bbox)
 
                 self.cb_offline = gtk.CheckButton("Off line")
-                vbox = gtk.VBox(False, 10)
+                self.cb_forceupdate = gtk.CheckButton("Force update")
+
+		vbox = gtk.VBox(False, 10)
                 vbox.pack_start(hbox)
-                vbox.pack_start(self.cb_offline)
-                self.cb_offline.set_active(True)
-                frame.add(vbox)
+
+		hbox = gtk.HBox(False, 10)
+                hbox.pack_start(self.cb_offline)
+                hbox.pack_start(self.cb_forceupdate)
+                vbox.pack_start(hbox)
+
+		self.cb_offline.set_active(True)
+                self.cb_forceupdate.set_active(False)
+		frame.add(vbox)
                 self.entry = entry
                 return frame
 
@@ -233,6 +244,7 @@ class MainWindow(gtk.Window):
 
         def expose_cb(self, drawing_area, event):
                 online = not self.cb_offline.get_active()
+		force_update = self.cb_forceupdate.get_active()
                 area = event.area
                 #print "expose_cb: area x=%d, y=%d, width=%d, height=%d" % (area.x, area.y, area.width, area.height)
                 rect = drawing_area.get_allocation()
@@ -265,7 +277,7 @@ class MainWindow(gtk.Window):
                                                 ((area.y + area.height < y_pos) or (y_pos + draw_height < area.y))):
                                         th = GetTileThread(zl, real_tile_x, real_tile_y, tile_x_pos_inner,
                                                 tile_y_pos_inner, x_pos, y_pos, draw_width, draw_height, online, 
-                                                self.drawing_area.style.black_gc, self)
+                                                force_update, self.drawing_area.style.black_gc, self)
                                         threads.append(th)
                                         th.start()
 

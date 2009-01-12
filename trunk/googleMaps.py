@@ -1,4 +1,4 @@
-import os, re, openanything, urllib, math, gtk, sys, threading
+import os, re, openanything, urllib, math, gtk, sys, threading, time
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
@@ -32,7 +32,16 @@ class GoogleMaps:
 				print "!@@#"
 				return None
 
-	def get_png_file(self, zl, coord, filename, online):
+	def get_png_file(self, zl, coord, filename, online, force_update):
+		# remove tile only when online
+		if (os.path.isfile(filename) and force_update and online):
+			# Don't remove old tile unless it is downloaded more
+			# than 24 hours ago
+			mtime = os.path.getmtime(filename)
+			current_time = int(time.time())
+			if (current_time - mtime > 24 * 3600):
+				os.remove(filename)
+
 		if os.path.isfile(filename):
 		       return True
 		else:
@@ -164,7 +173,7 @@ class GoogleMaps:
 		path = os.path.join(path, "%d.png" % (coord[1] % 1024))
 		return path
 	
-	def get_file(self, zoom_level, coord, online):
+	def get_file(self, zoom_level, coord, online, force_update):
 		if (zoom_level > MAP_MAX_ZOOM_LEVEL) or (zoom_level < MAP_MIN_ZOOM_LEVEL):
 			return None
 		world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - zoom_level)
@@ -176,16 +185,16 @@ class GoogleMaps:
 		## Tiles dir structure
 		filename = self.coord_to_path(zoom_level, coord)
 #		print "Coord to path: %s" % filename
-		if (self.get_png_file(zoom_level, coord, filename, online)):
+		if (self.get_png_file(zoom_level, coord, filename, online, force_update)):
 			return filename
 		else:
 			return None
 
 
-	def get_tile_pixbuf(self, zoom_level, coord, online):
+	def get_tile_pixbuf(self, zoom_level, coord, online, force_update):
 		w = gtk.Image()
 #		print ("get_tile_pixbuf: zl: %d, coord: %d, %d") % (zoom_level, coord[0], coord[1])
-		filename = self.get_file(zoom_level, coord, online)
+		filename = self.get_file(zoom_level, coord, online, force_update)
 		if (filename == None):
 			filename = 'missing.png'
 			w.set_from_file('missing.png')

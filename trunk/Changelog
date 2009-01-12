@@ -1,3 +1,7 @@
+Jan 12 2009	N.W	<pi3orama@gmail.com>
+	* 0.04
+	* Add a "Force update" option, force redownload old tiles.
+
 Sep 27 2008	N.W	<pi3orama@gmail.com>
 	* 0.03
 	* Detect googme map version string before download
