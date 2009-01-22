@@ -1,3 +1,9 @@
+Jan 22 2009	N.W	<pi3orama@gmail.com>
+	* 0.041
+	* Automatically search when hiting "enter";
+	* Automatically display after autocompletion.
+	Thanks to <heldersepu@gmail.com>
+
 Jan 12 2009	N.W	<pi3orama@gmail.com>
 	* 0.04
 	* Add a "Force update" option, force redownload old tiles.

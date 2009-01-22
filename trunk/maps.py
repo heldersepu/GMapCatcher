@@ -96,8 +96,16 @@ class MainWindow(gtk.Window):
         def get_zoom_level(self):
                 return int(self.scale.get_value())
 
+	# Automatically display after selecting
+        def on_completion_match(self, completion, model, iter):
+                self.entry.set_text(model[iter][0])
+                self.confirm_clicked(self)
+
         def set_completion(self):
-                completion = gtk.EntryCompletion()
+		completion = gtk.EntryCompletion()
+
+		completion.connect('match-selected', self.on_completion_match)
+
                 self.entry.set_completion(completion)
                 completion_model = self.__create_completion_model()
                 completion.set_model(completion_model)
@@ -145,6 +153,10 @@ class MainWindow(gtk.Window):
                 frame = gtk.Frame("Query")
                 hbox = gtk.HBox(False, 10)
                 entry = gtk.Entry()
+
+		# Start search after hit 'ENTER'
+                entry.connect('activate', self.confirm_clicked)
+
                 bbox = gtk.HButtonBox()
                 button = gtk.Button(stock='gtk-ok')
                 button.connect('clicked', self.confirm_clicked)
@@ -153,7 +165,7 @@ class MainWindow(gtk.Window):
 		hbox.pack_start(entry)
                 hbox.pack_start(bbox)
 
-                self.cb_offline = gtk.CheckButton("Off line")
+                self.cb_offline = gtk.CheckButton("Offline")
                 self.cb_forceupdate = gtk.CheckButton("Force update")
 
 		vbox = gtk.VBox(False, 10)
