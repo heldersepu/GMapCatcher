@@ -1,0 +1,75 @@
+; The name of the installer
+Name "gmapcatcher"
+
+; The file to write
+OutFile "gmapcatcher.exe"
+
+; The default installation directory
+InstallDir $PROGRAMFILES\gmapcatcher
+
+; Registry key to check for directory (so if you install again, it will 
+; overwrite the old one automatically)
+InstallDirRegKey HKLM "Software\gmapcatcher" "Install_Dir"
+
+; Request application privileges for Windows Vista
+RequestExecutionLevel admin
+
+;--------------------------------
+; Pages
+Page components
+Page directory
+Page instfiles
+
+UninstPage uninstConfirm
+UninstPage instfiles
+
+;--------------------------------
+; The stuff to install
+Section "gmapcatcher (required)"
+
+  SectionIn RO
+  
+  ; Set output path to the installation directory.
+  SetOutPath $INSTDIR
+  
+  ; Put files here
+  File /r "dist\*.*"
+  
+  
+  ; Write the installation path into the registry
+  WriteRegStr HKLM SOFTWARE\gmapcatcher "Install_Dir" "$INSTDIR"
+  
+  ; Write the uninstall keys for Windows
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\gmapcatcher" "DisplayName" "gmapcatcher"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\gmapcatcher" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\gmapcatcher" "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\gmapcatcher" "NoRepair" 1
+  WriteUninstaller "uninstall.exe"
+  
+  ;Microsoft Visual C++ 2008 Redistributable in Quiet mode
+  ExecWait '"$INSTDIR\vcredist_x86.exe" /q'
+  
+SectionEnd
+
+; Optional section (can be disabled by the user)
+Section "Start Menu Shortcuts"
+
+  CreateDirectory "$SMPROGRAMS\gmapcatcher"
+  CreateShortCut "$SMPROGRAMS\gmapcatcher\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut "$SMPROGRAMS\gmapcatcher\gmapcatcher.lnk" "$INSTDIR\maps.exe" "" "$INSTDIR\maps.exe" 0
+  
+SectionEnd
+
+;--------------------------------
+; Uninstaller
+Section "Uninstall"
+  
+  ; Remove registry keys
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\gmapcatcher"
+  DeleteRegKey HKLM SOFTWARE\gmapcatcher
+
+  ; Remove directories used
+  RMDir /r "$SMPROGRAMS\gmapcatcher"
+  RMDir /r "$INSTDIR"
+
+SectionEnd

@@ -1,0 +1,11 @@
+prefix=c:/devel/target/36b22e3fbd28b3a7a6605a553bf042ad
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Pango Win32
+Description: Win32 GDI font support for Pango
+Version: 1.22.4
+Requires: pango
+Libs: -L${libdir} -lpangowin32-1.0 -lgdi32
+Cflags: -I${includedir}/pango-1.0
