@@ -4,6 +4,10 @@ Name "gmapcatcher"
 ; The file to write
 OutFile "gmapcatcher.exe"
 
+; Set the compression algorithm 
+SetCompressor /FINAL /SOLID lzma
+SetCompressorDictSize 32
+
 ; The default installation directory
 InstallDir $PROGRAMFILES\gmapcatcher
 
@@ -22,6 +26,9 @@ Page instfiles
 
 UninstPage uninstConfirm
 UninstPage instfiles
+
+ShowInstDetails show
+ShowUninstDetails show
 
 ;--------------------------------
 ; The stuff to install
