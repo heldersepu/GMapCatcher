@@ -41,8 +41,7 @@ Section "gmapcatcher (required)"
   
   ; Put files here
   File /r "dist\*.*"
-  
-  
+    
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\gmapcatcher "Install_Dir" "$INSTDIR"
   
@@ -58,13 +57,19 @@ Section "gmapcatcher (required)"
   
 SectionEnd
 
-; Optional section (can be disabled by the user)
+; Optional Shortcuts sections (can be disabled by the user)
 Section "Start Menu Shortcuts"
-
   CreateDirectory "$SMPROGRAMS\gmapcatcher"
   CreateShortCut "$SMPROGRAMS\gmapcatcher\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\gmapcatcher\gmapcatcher.lnk" "$INSTDIR\maps.exe" "" "$INSTDIR\maps.exe" 0
-  
+SectionEnd
+
+Section "Desktop Shortcut"
+  CreateShortCut "$DESKTOP\gmapcatcher.lnk" "$INSTDIR\maps.exe" "" "$INSTDIR\maps.exe" 0
+SectionEnd
+
+Section "Quick Launch Shortcut"
+  CreateShortCut "$QUICKLAUNCH\gmapcatcher.lnk" "$INSTDIR\maps.exe" "" "$INSTDIR\maps.exe" 0
 SectionEnd
 
 ;--------------------------------
@@ -78,5 +83,9 @@ Section "Uninstall"
   ; Remove directories used
   RMDir /r "$SMPROGRAMS\gmapcatcher"
   RMDir /r "$INSTDIR"
+  
+  ;Delete Shortcuts
+  Delete "$DESKTOP\gmapcatcher.lnk"
+  Delete "$QUICKLAUNCH\gmapcatcher.lnk"
 
 SectionEnd
