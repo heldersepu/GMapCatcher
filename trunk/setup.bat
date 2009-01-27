@@ -28,6 +28,8 @@ PYTHON setup.py py2exe
 @COLOR 07
 "%programfiles%\NSIS\makensis.exe" setup.nsi
 
+@Echo.
+@PAUSE
 :: clean up at the end
 @RD build /s /q
 @RD dist /s /q
