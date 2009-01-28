@@ -38,6 +38,8 @@ class GetTileThread(Thread):
                 self.xi = tile_x_pos_inner
                 self.yi = tile_y_pos_inner
 
+
+
         def run(self):
                 pixbuf = self.window.ctx_map.get_tile_pixbuf(self.zl, (self.x, self.y), self.online, self.force_update)
                 gc = self.gc
@@ -56,6 +58,13 @@ class MainWindow(gtk.Window):
         queue = None
         threads = []
 
+	def error_msg(self, msg):
+		dialog = gtk.MessageDialog(self,
+				gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+				gtk.MESSAGE_ERROR, gtk.BUTTONS_OK,
+				msg)
+		dialog.run()
+		dialog.destroy()
 
 
         def do_scale(self, pos, pointer=None, force=False):
@@ -115,14 +124,15 @@ class MainWindow(gtk.Window):
         def confirm_clicked(self, button):
                 location = self.entry.get_text()
                 if (0 == len(location)):
-                        print ("Need location")
+                        self.error_msg("Need location")
                         return
                 locations = self.ctx_map.get_locations()
                 if (not location in locations.keys()):
                         if (not self.cb_offline.get_active()):
                                 l = self.ctx_map.search_location(location)
                                 if (False == l):
-                                        print "Can't find %s in google map" % location
+                                        self.error_msg(
+						"Can't find %s in google map" % location)
                                         self.entry.set_text("")
                                         return
                                 location = l;
@@ -130,7 +140,7 @@ class MainWindow(gtk.Window):
                                 self.set_completion()
                                 coord = self.ctx_map.get_locations()[location]
                         else:
-                                print "Offline mode, cannot do search"
+                                self.error_msg("Offline mode, cannot do search")
                                 return
                 else:
                         coord = locations[location]
