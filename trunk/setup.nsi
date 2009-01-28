@@ -68,6 +68,12 @@ Section "${PRODUCT_NAME} (required)"
   ;Microsoft Visual C++ 2008 Redistributable in Quiet mode
   ExecWait '"$INSTDIR\vcredist_x86.exe" /q'
   
+  ;Move the ".googlemaps" folder to the %UserProfile% (if it does not already exist)
+  IfFileExists "$PROFILE\.googlemaps\*.*" 0  doMove
+    RMDir /r "$INSTDIR\.googlemaps"    
+  doMove:
+    Rename "$INSTDIR\.googlemaps\*.*" "$PROFILE\.googlemaps"
+  
 SectionEnd
 
 ; Optional Shortcuts sections (can be disabled by the user)
