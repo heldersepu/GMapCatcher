@@ -1,12 +1,12 @@
 !define PRODUCT_NAME "gmapcatcher"
-!define PRODUCT_VERSION "0.0.4.1"
+!define PRODUCT_VERSION "0.042"
 !define PRODUCT_WEB_SITE "http://code.google.com/p/gmapcatcher/"
 
 ; The name of the installer
 Name "${PRODUCT_NAME}"
 
 ; The file to write
-OutFile "${PRODUCT_NAME}.exe"
+OutFile "${PRODUCT_NAME}-${PRODUCT_VERSION}.exe"
 
 ; Set the compression algorithm 
 SetCompressor /FINAL /SOLID lzma
@@ -24,7 +24,7 @@ RequestExecutionLevel admin
 
 ;--------------------------------
 ;Version Information
-  VIProductVersion "${PRODUCT_VERSION}"
+  VIProductVersion "${PRODUCT_VERSION}.0.0"
   VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
   VIAddVersionKey "Comments" "Gmapcatcher is another offline viewer of google maps. It downloads google-map tiles automatically, display them using a specific GUI. User can view google map offline."
   VIAddVersionKey "LegalCopyright" "${PRODUCT_WEB_SITE}"
