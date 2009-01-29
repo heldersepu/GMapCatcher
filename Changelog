@@ -1,3 +1,7 @@
+Jan 28 2009	N.W	<heldersepu@gmail.com>
+	* 0.042
+	* Add right Click functionality to the map
+
 Jan 28 2009	N.W	<pi3orama@gmail.com>
 	* SVN head
 	* Replace some 'print' error messages by dialogbox.
@@ -5,7 +9,7 @@ Jan 28 2009	N.W	<pi3orama@gmail.com>
 
 Jan 22 2009	N.W	<pi3orama@gmail.com>
 	* 0.041
-	* Automatically search when hiting "enter";
+	* Automatically search when hitting "enter";
 	* Automatically display after autocompletion.
 	Thanks to <heldersepu@gmail.com>
 
