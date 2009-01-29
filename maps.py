@@ -20,7 +20,7 @@ class GetTileThread(Thread):
                         draw_width,
                         draw_height,
                         online,
-			force_update,
+                        force_update,
                         gc,
                         window):
                 Thread.__init__(self)
@@ -32,7 +32,7 @@ class GetTileThread(Thread):
                 self.draw_width = draw_width
                 self.draw_height = draw_height
                 self.online = online
-		self.force_update = force_update
+                self.force_update = force_update
                 self.gc = gc
                 self.window = window
                 self.xi = tile_x_pos_inner
@@ -58,13 +58,13 @@ class MainWindow(gtk.Window):
         queue = None
         threads = []
 
-	def error_msg(self, msg):
-		dialog = gtk.MessageDialog(self,
-				gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-				gtk.MESSAGE_ERROR, gtk.BUTTONS_OK,
-				msg)
-		dialog.run()
-		dialog.destroy()
+        def error_msg(self, msg):
+                dialog = gtk.MessageDialog(self,
+                                gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                                gtk.MESSAGE_ERROR, gtk.BUTTONS_OK,
+                                msg)
+                dialog.run()
+                dialog.destroy()
 
 
         def do_scale(self, pos, pointer=None, force=False):
@@ -105,15 +105,15 @@ class MainWindow(gtk.Window):
         def get_zoom_level(self):
                 return int(self.scale.get_value())
 
-	# Automatically display after selecting
+        # Automatically display after selecting
         def on_completion_match(self, completion, model, iter):
                 self.entry.set_text(model[iter][0])
                 self.confirm_clicked(self)
 
         def set_completion(self):
-		completion = gtk.EntryCompletion()
+                completion = gtk.EntryCompletion()
 
-		completion.connect('match-selected', self.on_completion_match)
+                completion.connect('match-selected', self.on_completion_match)
 
                 self.entry.set_completion(completion)
                 completion_model = self.__create_completion_model()
@@ -132,7 +132,7 @@ class MainWindow(gtk.Window):
                                 l = self.ctx_map.search_location(location)
                                 if (False == l):
                                         self.error_msg(
-						"Can't find %s in google map" % location)
+                                                "Can't find %s in google map" % location)
                                         self.entry.set_text("")
                                         return
                                 location = l;
@@ -164,7 +164,7 @@ class MainWindow(gtk.Window):
                 hbox = gtk.HBox(False, 10)
                 entry = gtk.Entry()
 
-		# Start search after hit 'ENTER'
+                # Start search after hit 'ENTER'
                 entry.connect('activate', self.confirm_clicked)
 
                 bbox = gtk.HButtonBox()
@@ -172,23 +172,24 @@ class MainWindow(gtk.Window):
                 button.connect('clicked', self.confirm_clicked)
                 bbox.add(button)
                 
-		hbox.pack_start(entry)
+                hbox.pack_start(entry)
                 hbox.pack_start(bbox)
 
                 self.cb_offline = gtk.CheckButton("Offline")
                 self.cb_forceupdate = gtk.CheckButton("Force update")
 
-		vbox = gtk.VBox(False, 10)
+                vbox = gtk.VBox(False, 5)
+                vbox.set_border_width(5)
                 vbox.pack_start(hbox)
 
-		hbox = gtk.HBox(False, 10)
+                hbox = gtk.HBox(False, 10)
                 hbox.pack_start(self.cb_offline)
                 hbox.pack_start(self.cb_forceupdate)
                 vbox.pack_start(hbox)
 
-		self.cb_offline.set_active(True)
+                self.cb_offline.set_active(True)
                 self.cb_forceupdate.set_active(False)
-		frame.add(vbox)
+                frame.add(vbox)
                 self.entry = entry
                 return frame
 
@@ -207,6 +208,16 @@ class MainWindow(gtk.Window):
                 return scale
 
         def __create_right_paned(self):
+                # This is the menu that holds the menu items,
+                menu = gtk.Menu()
+                # menu-entries
+                listItems = ["Zoom Out ", "Zoom In", "Reset"]
+                for str in listItems:
+                    menu_items = gtk.MenuItem(str)
+                    menu.append(menu_items)
+                    menu_items.connect("activate", self.menu_item_response, str)
+                    menu_items.show()
+                
                 da = gtk.DrawingArea()
                 self.drawing_area = da
                 da.connect("expose_event", self.expose_cb)
@@ -217,12 +228,29 @@ class MainWindow(gtk.Window):
                 da.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
                 da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
 
+                da.connect_object("event", self.da_event, menu)
                 da.connect('button-press-event', self.da_button_press)
                 da.connect('button-release-event', self.da_button_release)
                 da.connect('motion-notify-event', self.da_motion)
                 da.show()
                 return self.drawing_area
 
+        def do_zoom(self, value):
+                if (value >= googleMaps.MAP_MIN_ZOOM_LEVEL) and (value <= googleMaps.MAP_MAX_ZOOM_LEVEL):
+                        self.do_scale(value, self.drawing_area.get_pointer())
+
+        def menu_item_response(self, w, strName):
+                if strName.startswith("Zoom Out"):
+                        self.do_zoom(self.scale.get_value() + 1)
+                elif strName.startswith("Zoom In"):
+                        self.do_zoom(self.scale.get_value() - 1)
+                else:
+                        self.do_zoom(googleMaps.MAP_MAX_ZOOM_LEVEL)
+                
+        def da_event(self, w, event):
+                if (event.type == gtk.gdk.BUTTON_PRESS) and (event.button != 1):
+                        w.popup(None, None, None, event.button, event.time)                
+                
         def da_button_press(self, w, event):
                 if (event.button != 1):
                         return
@@ -266,7 +294,7 @@ class MainWindow(gtk.Window):
 
         def expose_cb(self, drawing_area, event):
                 online = not self.cb_offline.get_active()
-		force_update = self.cb_forceupdate.get_active()
+                force_update = self.cb_forceupdate.get_active()
                 area = event.area
                 #print "expose_cb: area x=%d, y=%d, width=%d, height=%d" % (area.x, area.y, area.width, area.height)
                 rect = drawing_area.get_allocation()
@@ -320,19 +348,16 @@ class MainWindow(gtk.Window):
                         th.join()
 
         def scroll_cb(self, widget, event):
-                value = self.scale.get_value()
                 if (event.direction == gtk.gdk.SCROLL_UP):
-                        if ((value - 1) >= googleMaps.MAP_MIN_ZOOM_LEVEL):
-                                self.do_scale(value - 1, self.drawing_area.get_pointer())
+                        self.do_zoom(self.scale.get_value() - 1)
                 else:
-                        if ((value + 1) <= googleMaps.MAP_MAX_ZOOM_LEVEL):
-                                self.do_scale(value + 1, self.drawing_area.get_pointer())
+                        self.do_zoom(self.scale.get_value() + 1)
 
         def scale_change_value(self, range, scroll, value):
                 if (value <= googleMaps.MAP_MAX_ZOOM_LEVEL) and (value >= googleMaps.MAP_MIN_ZOOM_LEVEL):
                         self.do_scale(value)
                 return
-
+        
         def __init__(self, parent=None):
                 self.draging = False
 
