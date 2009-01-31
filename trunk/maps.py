@@ -69,36 +69,33 @@ class MainWindow(gtk.Window):
 
         def do_scale(self, pos, pointer=None, force=False):
                 pos = round(pos, 0)
-                scale = self.scale
-                if (pos == round(scale.get_value(), 0)) and not force:
+                if (pos == round(self.scale.get_value(), 0)) and not force:
                         return
-                scale.set_value(pos)
+                self.scale.set_value(pos)
 
                 if (pointer == None):
                         fix_tile, fix_offset = self.center
-                else:
-                        da = self.drawing_area
-                        rect = da.get_allocation()
+                else:                        
+                        rect = self.drawing_area.get_allocation()
                         da_center = (rect.width / 2, rect.height / 2)
 
                         fix_tile = self.center[0]
                         fix_offset = self.center[1][0] + (pointer[0] - da_center[0]), \
-                                        self.center[1][1] + (pointer[1] - da_center[1])
+                                     self.center[1][1] + (pointer[1] - da_center[1])
+
                         fix_tile, fix_offset = self.ctx_map.tile_adjustEx(self.current_zoom_level,
                                         fix_tile, fix_offset)
 
-                        
                 scala = 2 ** (self.current_zoom_level - pos)
-                x = (fix_tile[0] * googleMaps.TILES_WIDTH + fix_offset[0]) * scala
-                y = (fix_tile[1] * googleMaps.TILES_HEIGHT + fix_offset[1]) * scala
-                if (pointer != None):
+                x = int((fix_tile[0] * googleMaps.TILES_WIDTH  + fix_offset[0]) * scala)
+                y = int((fix_tile[1] * googleMaps.TILES_HEIGHT + fix_offset[1]) * scala)
+                if (pointer != None) and not force:
                         x = x - (pointer[0] - da_center[0])
                         y = y - (pointer[1] - da_center[1])
 
-                new_center_tile = (int(x) / int(googleMaps.TILES_WIDTH),int(y) / int(googleMaps.TILES_HEIGHT))
-                new_center_offset = (int(x) % int(googleMaps.TILES_WIDTH),int(y) % int(googleMaps.TILES_HEIGHT))
-                self.center = new_center_tile, new_center_offset
-                
+                self.center = (x / googleMaps.TILES_WIDTH, y / googleMaps.TILES_HEIGHT), \
+                              (x % googleMaps.TILES_WIDTH, y % googleMaps.TILES_HEIGHT)
+
                 self.current_zoom_level = pos
                 self.drawing_area.queue_draw()
 
@@ -211,7 +208,7 @@ class MainWindow(gtk.Window):
                 # This is the menu that holds the menu items,
                 menu = gtk.Menu()
                 # menu-entries
-                listItems = ["Zoom Out ", "Zoom In", "Reset"]
+                listItems = ["Zoom In", "Zoom Out", "Center map here", "Reset"]
                 for str in listItems:
                     menu_items = gtk.MenuItem(str)
                     menu.append(menu_items)
@@ -235,15 +232,17 @@ class MainWindow(gtk.Window):
                 da.show()
                 return self.drawing_area
 
-        def do_zoom(self, value):
+        def do_zoom(self, value, doForce=False):
                 if (value >= googleMaps.MAP_MIN_ZOOM_LEVEL) and (value <= googleMaps.MAP_MAX_ZOOM_LEVEL):
-                        self.do_scale(value, self.drawing_area.get_pointer())
+                        self.do_scale(value, self.drawing_area.get_pointer(), doForce)
 
         def menu_item_response(self, w, strName):
                 if strName.startswith("Zoom Out"):
-                        self.do_zoom(self.scale.get_value() + 1)
+                        self.do_zoom(self.scale.get_value() + 1, True)
                 elif strName.startswith("Zoom In"):
-                        self.do_zoom(self.scale.get_value() - 1)
+                        self.do_zoom(self.scale.get_value() - 1, True)
+                elif strName.startswith("Center map"):
+                        self.do_zoom(self.scale.get_value(), True)
                 else:
                         self.do_zoom(googleMaps.MAP_MAX_ZOOM_LEVEL)
                 
