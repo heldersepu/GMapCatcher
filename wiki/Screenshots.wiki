@@ -1,6 +1,7 @@
-﻿Screenshots:
+﻿#labels Featured
+Screenshots:
 
 http://gmapcatcher.googlecode.com/svn/wiki/Screenshot.png
 
+gmapcatcher v0.043 in Windows XP (showing right click menu)
 http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.043-winXP.PNG
-
