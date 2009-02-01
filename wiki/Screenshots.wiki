@@ -2,3 +2,5 @@
 
 http://gmapcatcher.googlecode.com/svn/wiki/Screenshot.png
 
+http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.043-winXP.PNG
+
