@@ -3,5 +3,5 @@ Screenshots:
 
 http://gmapcatcher.googlecode.com/svn/wiki/Screenshot.png
 
-gmapcatcher v0.043 in Windows XP (showing right click menu)
+gmapcatcher v0.043 in Windows XP (showing right click menu)<br>
 http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.043-winXP.PNG
