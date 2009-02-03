@@ -1,3 +1,7 @@
+Feb 02 2009	N.W	<heldersepu@gmail.com>
+	* 0.044
+	* Fix Bug with non unicode chars
+        
 Jan 31 2009	N.W	<heldersepu@gmail.com>
 	* 0.043
 	* Add a "Center map here" to the right Click menu
