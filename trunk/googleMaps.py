@@ -29,7 +29,7 @@ class GoogleMaps:
                                 self.version_string = m.group(1)
                                 return self.version_string
                         else:
-                                print "!@@#"
+                                print "!@@# Unable to fetch version string"
                                 return None
 
         def get_png_file(self, zl, coord, filename, online, force_update):
@@ -82,7 +82,6 @@ class GoogleMaps:
                         m = p.search(line)
                         if m:
                                 self.locations[m.group(1)] = (float(m.group(2)), float(m.group(3)))
-
                 file.close()
 
         def write_locations(self):
@@ -129,6 +128,7 @@ class GoogleMaps:
                 p = re.compile('center:{lat:([0-9.-]+),lng:([0-9.-]+)}')
                 m = p.search(html)
                 lat, lng = float(m.group(1)), float(m.group(2))
+                location = unicode(location, errors='ignore')
                 self.locations[location] = (lat, lng)
                 self.write_locations()
                 self.html_data = html
