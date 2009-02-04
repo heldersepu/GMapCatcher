@@ -65,8 +65,12 @@ Section "${PRODUCT_NAME} (required)"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
   
-  ;Microsoft Visual C++ 2008 Redistributable in Quiet mode
-  ExecWait '"$INSTDIR\vcredist_x86.exe" /q'
+  
+  ;Check if VC++ 2008 runtimes are already installed:
+  ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}" "DisplayName"
+  ;If VC++ 2008 runtimes are not installed execute in Quiet mode
+  StrCmp $0 "Microsoft Visual C++ 2008 Redistributable - x86 9.0.21022" +2 0
+    ExecWait '"$INSTDIR\vcredist_x86.exe" /q'
   
   ;Move the ".googlemaps" folder to the %UserProfile% (if it does not already exist)
   IfFileExists "$PROFILE\.googlemaps\*.*" 0  doMove
