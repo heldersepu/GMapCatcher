@@ -83,12 +83,12 @@ SectionEnd
 ; Optional Shortcuts sections (can be disabled by the user)
 Section "Start Menu Shortcuts"
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe" "" "$INSTDIR\maps.exe" 0
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Export Maps.lnk" "$INSTDIR\ExportMaps.bat" "" "$INSTDIR\ExportMaps.bat" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Export Maps.lnk" "$INSTDIR\ExportMaps.bat" "" "$INSTDIR\ExportMaps.bat" 0
   ;Create a shortcut to the project Homepage
   WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
 SectionEnd
 
 Section "Desktop Shortcut"
