@@ -1,3 +1,8 @@
+Feb 06 2009	N.W	<pi3orama@gmail.com>
+	* 0.046
+	* google's "http://maps.google.com/maps" changes, old code can't fetch version string
+	* use a simpler 'openhttp' to replace complex 'openanything'
+
 Feb 04 2009	N.W	<heldersepu@gmail.com>
 	* 0.045
 	* Changes in the Windows installer
@@ -7,7 +12,7 @@ Feb 04 2009	N.W	<heldersepu@gmail.com>
 Feb 02 2009	N.W	<heldersepu@gmail.com>
 	* 0.044
 	* Fix Bug with non unicode chars
-        
+
 Jan 31 2009	N.W	<heldersepu@gmail.com>
 	* 0.043
 	* Add a "Center map here" to the right Click menu

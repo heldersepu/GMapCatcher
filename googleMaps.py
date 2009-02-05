@@ -26,14 +26,14 @@ class GoogleMaps:
                                 self.html_data = oa['data']
                         if self.html_data == "":
                                 return self.version_string
-                        p = re.compile('http://mt[0-9].google.com/mt\?.*w([0-9].[0-9][0-9])')
+                        p = re.compile('http://mt[0-9].google.com/mt.*w([0-9].[0-9][0-9])')
                         m = p.search(self.html_data)
                         if m:
                                 self.version_string = m.group(1)
                                 return self.version_string
                         else:
                                 print "!@@# Unable to fetch version string"
-                                return self.version_string
+                                return None
 
         def get_png_file(self, zl, coord, filename, online, force_update):
                 # remove tile only when online
