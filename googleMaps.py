@@ -15,14 +15,17 @@ class GoogleMaps:
 
         def fetch_version_string(self):
                 if self.version_string == None:
+                        #default version_string
+                        self.version_string = '2.89'
+
                         if self.html_data == "":
                                 oa = openanything.fetch( 'http://maps.google.com/maps')
                                 if oa['status'] != 200:
                                         print "Trying fetch http://maps.google.com/maps but failed"
-                                        return False
+                                        return self.version_string
                                 self.html_data = oa['data']
                         if self.html_data == "":
-                                return False
+                                return self.version_string
                         p = re.compile('http://mt[0-9].google.com/mt\?.*w([0-9].[0-9][0-9])')
                         m = p.search(self.html_data)
                         if m:
@@ -30,7 +33,7 @@ class GoogleMaps:
                                 return self.version_string
                         else:
                                 print "!@@# Unable to fetch version string"
-                                return None
+                                return self.version_string
 
         def get_png_file(self, zl, coord, filename, online, force_update):
                 # remove tile only when online
@@ -136,7 +139,7 @@ class GoogleMaps:
 
         def tile_adjustEx(self, zoom_level, tile, offset):
                 world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zoom_level))
-                
+
                 x = int((tile[0] * TILES_WIDTH + offset[0]) % (world_tiles * TILES_WIDTH))
                 y = int((tile[1] * TILES_HEIGHT + offset[1]) % (world_tiles * TILES_HEIGHT))
                 tile_coord = (x / int(TILES_WIDTH), y / int(TILES_HEIGHT))
@@ -160,7 +163,7 @@ class GoogleMaps:
                 path = os.path.join(path, "%d" % (coord[0] / 1024))
                 if not os.path.isdir(path):
                         os.mkdir(path)
-                
+
                 path = os.path.join(path, "%d" % (coord[0] % 1024))
                 if not os.path.isdir(path):
                         os.mkdir(path)
@@ -172,7 +175,7 @@ class GoogleMaps:
                 self.lock.release()
                 path = os.path.join(path, "%d.png" % (coord[1] % 1024))
                 return path
-        
+
         def get_file(self, zoom_level, coord, online, force_update):
                 if (zoom_level > MAP_MAX_ZOOM_LEVEL) or (zoom_level < MAP_MIN_ZOOM_LEVEL):
                         return None
@@ -216,7 +219,7 @@ class GoogleMaps:
                 tiles_pre_radian = world_tiles / (2 * math.pi)
                 e = math.sin(lat*(1/180.*math.pi))
                 y = int(world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian))
-                
+
                 return (int(round(x, 0)) % world_tiles, int(round(y, 0)) % world_tiles)
 
 
