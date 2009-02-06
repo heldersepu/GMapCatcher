@@ -143,9 +143,9 @@ class MainWindow(gtk.Window):
                         coord = locations[location]
                 print "%s at %f, %f" % (location, coord[0], coord[1])
 
-                self.center = (self.ctx_map.coord_to_tile(10, coord[0], coord[1]), (0,0))
-                self.current_zoom_level = 10
-                self.do_scale(10, force=True)
+                self.center = (self.ctx_map.coord_to_tile(coord[2], coord[0], coord[1]), (0,0))
+                self.current_zoom_level = coord[2]
+                self.do_scale(coord[2], force=True)
 
         def __create_completion_model(self):
                 store = gtk.ListStore(gobject.TYPE_STRING)

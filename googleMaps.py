@@ -80,18 +80,25 @@ class GoogleMaps:
 
         def read_locations(self):
                 p = re.compile('location="([^"]+)".*lat="([^"]+)".*lng="([^"]+)".*')
+                q = re.compile('.*zoom="([^"]+)".*')
                 file = open(self.locationpath, "r")
                 for line in file:
                         m = p.search(line)
                         if m:
-                                self.locations[m.group(1)] = (float(m.group(2)), float(m.group(3)))
+                                zoom = 10
+                                z = q.search(line)
+                                if z:
+                                        zoom = int(z.group(1))
+                                self.locations[m.group(1)] = (float(m.group(2)), 
+                                                              float(m.group(3)), 
+                                                              zoom)
                 file.close()
 
         def write_locations(self):
                 file = open(self.locationpath, "w")
                 for l in self.locations.keys():
-                        file.write('location="%s"\tlat="%f"\tlng="%f"\n' % (
-                                l, self.locations[l][0], self.locations[l][1]))
+                        file.write('location="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' % (
+                                l, self.locations[l][0], self.locations[l][1], self.locations[l][2]))
                 file.close()
 
         def __init__(self):
@@ -128,11 +135,12 @@ class GoogleMaps:
                         print 'location %s not found' % location
                         return False
 
-                p = re.compile('center:{lat:([0-9.-]+),lng:([0-9.-]+)}')
+                p = re.compile('center:{lat:([0-9.-]+),lng:([0-9.-]+)}.*zoom:([0-9.-]+)')
                 m = p.search(html)
                 lat, lng = float(m.group(1)), float(m.group(2))
+                zoom = MAP_MAX_ZOOM_LEVEL - int(m.group(3))
                 location = unicode(location, errors='ignore')
-                self.locations[location] = (lat, lng)
+                self.locations[location] = (lat, lng, zoom)
                 self.write_locations()
                 self.html_data = html
                 return location
