@@ -299,15 +299,13 @@ class MainWindow(gtk.Window):
                 rect = drawing_area.get_allocation()
                 #print "canvas: x=%d, y=%d, w=%d, h=%d" % (rect.x, rect.y, rect.width, rect.height)
 
-                area_center = (rect.width / 2, rect.height / 2)
-                tl_point = (self.center[1][0] - area_center[0],
-                                self.center[1][1] - area_center[1])
+                tl_point = (self.center[1][0] - rect.width / 2,
+                            self.center[1][1] - rect.height / 2)
                 #print "tl_point: (%d,%d)" % tl_point
                 zl = self.get_zoom_level()
                 tl_tile, tl_offset = self.ctx_map.tile_adjustEx(zl, self.center[0],
                                 tl_point)
 
-                x_pos = 0
                 y_pos = 0
                 tile_y_pos = tl_tile[1]
                 tile_y_pos_inner = tl_offset[1]
