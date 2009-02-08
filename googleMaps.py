@@ -13,6 +13,12 @@ class GoogleMaps:
         version_string = None
         html_data = ""
 
+        def set_zoom(self, intZoom):
+                if (intZoom >= MAP_MIN_ZOOM_LEVEL) and (intZoom <= MAP_MAX_ZOOM_LEVEL):
+                        return intZoom
+                else:
+                        return 10
+        
         def fetch_version_string(self):
                 if self.version_string == None:
                         #default version_string
@@ -137,13 +143,27 @@ class GoogleMaps:
 
                 p = re.compile('center:{lat:([0-9.-]+),lng:([0-9.-]+)}.*zoom:([0-9.-]+)')
                 m = p.search(html)
-                lat, lng = float(m.group(1)), float(m.group(2))
-                zoom = MAP_MAX_ZOOM_LEVEL - int(m.group(3))
-                location = unicode(location, errors='ignore')
-                self.locations[location] = (lat, lng, zoom)
-                self.write_locations()
-                self.html_data = html
-                return location
+                if not m:
+                        p = re.compile('markers:.*lat:([0-9.-]+),lng:([0-9.-]+).*laddr:')
+                        m = p.search(html)
+                if m:
+                        lat, lng = float(m.group(1)), float(m.group(2))
+                        zoom = 10
+                        if m.group(0).find('zoom:') != -1:
+                                zoom = self.set_zoom(MAP_MAX_ZOOM_LEVEL - int(m.group(3)))
+                        else:
+                                p = re.compile('center:.*zoom:([0-9.-]+).*mapType:')
+                                m = p.search(html)
+                                if m:
+                                        zoom = self.set_zoom(MAP_MAX_ZOOM_LEVEL - int(m.group(1)))
+                        location = unicode(location, errors='ignore')
+                        self.locations[location] = (lat, lng, zoom)
+                        self.write_locations()
+                        self.html_data = html
+                        return location
+                else:
+                        print 'Unable to get latitude and longitude of %s ' % location
+                        return False
 
         def tile_adjustEx(self, zoom_level, tile, offset):
                 world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zoom_level))
