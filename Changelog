@@ -1,3 +1,9 @@
+Feb 08 2009	N.W	<heldersepu@gmail.com>
+	* 0.047
+	* Use zoom when searching
+	* Center location (tile) after searching
+	* Fix Issue 21 (Error searching for "Beijing China")
+
 Feb 06 2009	N.W	<pi3orama@gmail.com>
 	* 0.046
 	* google's "http://maps.google.com/maps" changes, old code can't fetch version string
@@ -7,7 +13,7 @@ Feb 04 2009	N.W	<heldersepu@gmail.com>
 	* 0.045
 	* Changes in the Windows installer
 	  - Do not install VC++ 2008 runtimes if already installed.
-	  - Add an Export Maps tool 
+	  - Add an Export Maps tool
 
 Feb 02 2009	N.W	<heldersepu@gmail.com>
 	* 0.044
@@ -45,7 +51,7 @@ Jun 23 2008	N.W	<pi3orama@gmail.com>
 	* google url changed again
 
 Mar 20 2008	N.W	<pi3orama@gmail.com>
-	
+
 	* 0.02
 	* use multithread downloader while online
 	* fix a bug: when hit 'OK' button, doesn't change viewport
