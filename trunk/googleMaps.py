@@ -243,11 +243,12 @@ class GoogleMaps:
         def coord_to_tile(self, zl, lat, lng):
                 world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zl))
                 lng += 180.0
-                x = (world_tiles) / 360.0 * lng
+                x = world_tiles / 360.0 * lng
                 tiles_pre_radian = world_tiles / (2 * math.pi)
                 e = math.sin(lat*(1/180.*math.pi))
-                y = int(world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian))
-
-                return (int(round(x, 0)) % world_tiles, int(round(y, 0)) % world_tiles)
+                y = world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian)
+                offset =  int((x - int(x)) * TILES_WIDTH), \
+                          int((y - int(y)) * TILES_HEIGHT)                 
+                return (int(x) % world_tiles, int(y) % world_tiles), offset
 
 
