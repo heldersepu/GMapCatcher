@@ -1,4 +1,4 @@
-Feb 08 2009	N.W	<heldersepu@gmail.com>
+Feb 08 2009	H.S	<HelderSepu@gmail.com>
 	* 0.047
 	* Use zoom when searching
 	* Center location (tile) after searching
@@ -9,21 +9,21 @@ Feb 06 2009	N.W	<pi3orama@gmail.com>
 	* google's "http://maps.google.com/maps" changes, old code can't fetch version string
 	* use a simpler 'openhttp' to replace complex 'openanything'
 
-Feb 04 2009	N.W	<heldersepu@gmail.com>
+Feb 04 2009	H.S	<HelderSepu@gmail.com>
 	* 0.045
 	* Changes in the Windows installer
 	  - Do not install VC++ 2008 runtimes if already installed.
 	  - Add an Export Maps tool
 
-Feb 02 2009	N.W	<heldersepu@gmail.com>
+Feb 02 2009	H.S	<HelderSepu@gmail.com>
 	* 0.044
 	* Fix Bug with non unicode chars
 
-Jan 31 2009	N.W	<heldersepu@gmail.com>
+Jan 31 2009	H.S	<HelderSepu@gmail.com>
 	* 0.043
 	* Add a "Center map here" to the right Click menu
 
-Jan 28 2009	N.W	<heldersepu@gmail.com>
+Jan 28 2009	H.S	<HelderSepu@gmail.com>
 	* 0.042
 	* Add right Click functionality to the map
 
@@ -36,7 +36,7 @@ Jan 22 2009	N.W	<pi3orama@gmail.com>
 	* 0.041
 	* Automatically search when hitting "enter";
 	* Automatically display after autocompletion.
-	Thanks to <heldersepu@gmail.com>
+	Thanks to <HelderSepu@gmail.com>
 
 Jan 12 2009	N.W	<pi3orama@gmail.com>
 	* 0.04
