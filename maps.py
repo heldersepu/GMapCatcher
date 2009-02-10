@@ -143,8 +143,7 @@ class MainWindow(gtk.Window):
                         coord = locations[location]
                 print "%s at %f, %f" % (location, coord[0], coord[1])
 
-                self.center = (self.ctx_map.coord_to_tile(coord[2], coord[0], coord[1]), 
-                               (googleMaps.TILES_WIDTH / 2, googleMaps.TILES_HEIGHT / 2))
+                self.center = self.ctx_map.coord_to_tile(coord[2], coord[0], coord[1]) 
                 self.current_zoom_level = coord[2]
                 self.do_scale(coord[2], force=True)
 
