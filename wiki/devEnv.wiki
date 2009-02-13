@@ -8,7 +8,7 @@
 
 = Details =
 
-== Main stuff ==
+==  Main stuff ==
         <table cellspacing=10>
          <tr align="left"><th> - Python    </th><th> http://www.python.org/download/</th></tr>
          <tr align="left"><th> - Py(Stuff) </th><th> http://www.pygtk.org/downloads.html</th></tr>
@@ -26,7 +26,7 @@
 
         and a more complete NSIS IDE is [http://hmne.sourceforge.net/ HM NIS EDIT]
 
-== Source Code ==
+==  Source Code ==
          * View the HEAD revision directly at http://code.google.com/p/gmapcatcher/source/browse/#svn/trunk
          * Check out a working copy using [http://tortoisesvn.net/downloads TortoiseSVN]
 
