@@ -22,8 +22,6 @@ If you want to build the win installer you need:
 </table>
 
 <br><br>
-A good editor for Python and NSIS scripts is:
- Notepad++   http://notepad-plus.sourceforge.net/uk/site.htm
-A more complete NSIS IDE:
- HM NIS EDIT http://hmne.sourceforge.net/
+One of the best editors for Python and NSIS scripts is [http://notepad-plus.sourceforge.net/uk/site.htm Notepad++]
+and a more complete NSIS IDE is [http://hmne.sourceforge.net/ HM NIS EDIT]
   
