@@ -27,5 +27,5 @@ One of the best editors for Python and NSIS scripts is [http://notepad-plus.sour
 and a more complete NSIS IDE is [http://hmne.sourceforge.net/ HM NIS EDIT]
 
 == Source Code ==
- *View the HEAD revision directly at http://code.google.com/p/gmapcatcher/source/browse/#svn/trunk
- *Check out a working copy using [http://tortoisesvn.net/downloads TortoiseSVN] - just click on the Tortoise!
+ * View the HEAD revision directly at http://code.google.com/p/gmapcatcher/source/browse/#svn/trunk
+ * Check out a working copy using [http://tortoisesvn.net/downloads TortoiseSVN] - just click on the Tortoise!
