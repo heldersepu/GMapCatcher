@@ -31,3 +31,5 @@ and a more complete NSIS IDE is [http://hmne.sourceforge.net/ HM NIS EDIT]
  * Check out a working copy using [http://tortoisesvn.net/downloads TortoiseSVN] - just click on the Tortoise!
 
 <a href="tsvn:http://gmapcatcher.googlecode.com/svn/trunk"><img src="http://gmapcatcher.googlecode.com/svn/wiki/TortoiseCheckout.png"></a>
+
+----
