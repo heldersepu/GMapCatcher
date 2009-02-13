@@ -9,7 +9,7 @@ This should be a good starting point for all MS Windows developers.
 = Details =
 
 Main stuff:
- * Python  &nbsp;&nbsp;&nbsp;&nbsp;           http://www.python.org/download/
+ * Python  &nbsp&nbsp&nbsp&nbsp           http://www.python.org/download/
  * Py(Stuff)                                  http://www.pygtk.org/downloads.html
  * GTK+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  http://www.gtk.org/download.html
 
