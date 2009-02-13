@@ -28,8 +28,8 @@ and a more complete NSIS IDE is [http://hmne.sourceforge.net/ HM NIS EDIT]
 
 == Source Code ==
  * View the HEAD revision directly at http://code.google.com/p/gmapcatcher/source/browse/#svn/trunk
- * Check out a working copy using [http://tortoisesvn.net/downloads TortoiseSVN] [http://tortoisesvn.net/downloads http://gmapcatcher.googlecode.com/svn/wiki/TortoiseCheckout.png]
+ * Check out a working copy using [http://tortoisesvn.net/downloads TortoiseSVN]
 
-<a href="hther.googlecode.com/svn/trunk">sd</a>
+ [http://tortoisesvn.net/downloads http://gmapcatcher.googlecode.com/svn/wiki/TortoiseCheckout.png] tsvn:http://gmapcatcher.googlecode.com/svn/trunk
 
 ----
