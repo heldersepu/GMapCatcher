@@ -12,7 +12,7 @@
         <table cellspacing=10>
          <tr align="left"><th> - Python    </th><th> http://www.python.org/download/</th></tr>
          <tr align="left"><th> - Py(Stuff) </th><th> http://www.pygtk.org/downloads.html</th></tr>
-         <tr align="left"><th> - GTK+      </th><th> http://www.gtk.org/download.html</th></tr>
+         <tr align="left"><th> - GTK+      </th><th> http://www.gtk.org/download.html Get the "All-in-one bundle"</th></tr>
         </table><br>
         If you want to build the win installer you need:
         <table cellspacing=10>
