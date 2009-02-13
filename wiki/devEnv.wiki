@@ -29,4 +29,6 @@ and a more complete NSIS IDE is [http://hmne.sourceforge.net/ HM NIS EDIT]
 == Source Code ==
  * View the HEAD revision directly at http://code.google.com/p/gmapcatcher/source/browse/#svn/trunk
  * Check out a working copy using [http://tortoisesvn.net/downloads TortoiseSVN] - just click on the Tortoise!
-[tsvn:http://tortoisesvn.tigris.org/svn/tortoisesvn/trunk http://gmapcatcher.googlecode.com/svn/wiki/TortoiseCheckout.png]
+
+<a href="tsvn:http://gmapcatcher.googlecode.com/svn/trunk">
+<img src="http://gmapcatcher.googlecode.com/svn/wiki/TortoiseCheckout.png"></a>
