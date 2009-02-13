@@ -17,6 +17,7 @@ If you want to build the win installer you need:
  * py2exe    http://sourceforge.net/project/showfiles.php?group_id=15583
  * NSIS      http://nsis.sourceforge.net/Download
 
+
 A good editor for Python and NSIS scripts is:
  Notepad++   http://notepad-plus.sourceforge.net/uk/site.htm
 A more complete NSIS IDE:
