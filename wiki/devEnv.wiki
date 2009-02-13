@@ -1,11 +1,26 @@
-#summary dev environment under MS Windows.
+#summary Development environment under MS Windows
+
 
 = Introduction =
 
-Add your content here.
+This should be a good starting point for all MS Windows developers.
 
 
 = Details =
+
+Main stuff:
+ - Python    http://www.python.org/download/
+ - Py[Stuff] http://www.pygtk.org/downloads.html
+ - GTK+      http://www.gtk.org/download.html
+
+If you want to build the win installer you need:
+ - py2exe    http://sourceforge.net/project/showfiles.php?group_id=15583
+ - NSIS      http://nsis.sourceforge.net/Download
+
+And a good editor for Python and NSIS scripts is:
+ Notepad++   http://notepad-plus.sourceforge.net/uk/site.htm
+ 
+
 
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_
