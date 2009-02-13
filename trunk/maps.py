@@ -57,6 +57,7 @@ class MainWindow(gtk.Window):
         current_zoom_level = googleMaps.MAP_MAX_ZOOM_LEVEL
         queue = None
         threads = []
+        default_text = "Enter location here!"
 
         def error_msg(self, msg):
                 dialog = gtk.MessageDialog(self,
@@ -101,11 +102,16 @@ class MainWindow(gtk.Window):
 
         def get_zoom_level(self):
                 return int(self.scale.get_value())
-
+        
         # Automatically display after selecting
         def on_completion_match(self, completion, model, iter):
                 self.entry.set_text(model[iter][0])
                 self.confirm_clicked(self)
+
+        # Clean out the entry box if text = default
+        def clean_entry(self, button, p1=None, p2=None, p3=None, p4=None):
+                if (self.entry.get_text() == self.default_text):
+                        self.entry.set_text("")
 
         def set_completion(self):
                 completion = gtk.EntryCompletion()
@@ -123,29 +129,32 @@ class MainWindow(gtk.Window):
                 if (0 == len(location)):
                         self.error_msg("Need location")
                         return
-                locations = self.ctx_map.get_locations()
-                if (not location in locations.keys()):
-                        if (not self.cb_offline.get_active()):
-                                l = self.ctx_map.search_location(location)
-                                if (False == l):
-                                        self.error_msg(
-                                                "Can't find %s in google map" % location)
-                                        self.entry.set_text("")
-                                        return
-                                location = l;
-                                self.entry.set_text(l)
-                                self.set_completion()
-                                coord = self.ctx_map.get_locations()[location]
-                        else:
-                                self.error_msg("Offline mode, cannot do search")
-                                return
+                if (location == self.default_text):
+                        self.clean_entry(self)
                 else:
-                        coord = locations[location]
-                print "%s at %f, %f" % (location, coord[0], coord[1])
+                        locations = self.ctx_map.get_locations()
+                        if (not location in locations.keys()):
+                                if (not self.cb_offline.get_active()):
+                                        l = self.ctx_map.search_location(location)
+                                        if (False == l):
+                                                self.error_msg(
+                                                        "Can't find %s in google map" % location)
+                                                self.entry.set_text("")
+                                                return
+                                        location = l;
+                                        self.entry.set_text(l)
+                                        self.set_completion()
+                                        coord = self.ctx_map.get_locations()[location]
+                                else:
+                                        self.error_msg("Offline mode, cannot do search")
+                                        return
+                        else:
+                                coord = locations[location]
+                        print "%s at %f, %f" % (location, coord[0], coord[1])
 
-                self.center = self.ctx_map.coord_to_tile(coord[2], coord[0], coord[1]) 
-                self.current_zoom_level = coord[2]
-                self.do_scale(coord[2], force=True)
+                        self.center = self.ctx_map.coord_to_tile(coord[2], coord[0], coord[1]) 
+                        self.current_zoom_level = coord[2]
+                        self.do_scale(coord[2], force=True)
 
         def __create_completion_model(self):
                 store = gtk.ListStore(gobject.TYPE_STRING)
@@ -163,7 +172,13 @@ class MainWindow(gtk.Window):
 
                 # Start search after hit 'ENTER'
                 entry.connect('activate', self.confirm_clicked)
-
+                # Launch clean_entry for all the signals/events below
+                entry.connect("button-release-event", self.clean_entry)
+                entry.connect("cut-clipboard", self.clean_entry)
+                entry.connect("copy-clipboard", self.clean_entry)
+                entry.connect("paste-clipboard", self.clean_entry)
+                entry.connect("move-cursor", self.clean_entry)
+ 
                 bbox = gtk.HButtonBox()
                 button = gtk.Button(stock='gtk-ok')
                 button.connect('clicked', self.confirm_clicked)
@@ -377,6 +392,7 @@ class MainWindow(gtk.Window):
                 self.set_border_width(10)
                 self.set_size_request(450, 400)
                 self.set_completion()
+                self.entry.set_text(self.default_text)
                 self.show_all()
 
 def main():
