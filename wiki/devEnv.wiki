@@ -9,14 +9,14 @@ This should be a good starting point for all MS Windows developers.
 = Details =
 
 Main stuff:
-<table>
+<table cellspacing=10>
  <tr align="left"><th>Python    </th><th>  http://www.python.org/download/</th></tr>
  <tr align="left"><th>Py(Stuff) </th><th>  http://www.pygtk.org/downloads.html</th></tr>
  <tr align="left"><th>GTK+      </th><th>  http://www.gtk.org/download.html</th></tr>
 </table>
 
 If you want to build the win installer you need:
-<table>
+<table cellspacing=10>
  <tr align="left"><th>py2exe   </th><th> http://sourceforge.net/project/showfiles.php?group_id=15583</th></tr>
  <tr align="left"><th>NSIS     </th><th> http://nsis.sourceforge.net/Download</th></tr>
 </table>
