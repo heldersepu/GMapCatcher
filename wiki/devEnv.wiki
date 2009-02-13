@@ -11,7 +11,7 @@
  ==  Main stuff  ==
         <table cellspacing=10>
          <tr align="left"><th> - Python    </th><th> http://www.python.org/download/</th></tr>
-         <tr align="left"><th> - Py(Stuff) </th><th> http://www.pygtk.org/downloads.html pygtk, pygobject and pycairo</th></tr>
+         <tr align="left"><th> - Py(Stuff) </th><th> http://www.pygtk.org/downloads.html _pygtk, pygobject and pycairo_</th></tr>
          <tr align="left"><th> - GTK+      </th><th> http://www.gtk.org/download.html _Get the "All-in-one bundle"_</th></tr>
         </table><br>
         If you want to build the win installer you need:
