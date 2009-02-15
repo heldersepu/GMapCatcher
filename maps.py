@@ -52,7 +52,6 @@ class GetTileThread(Thread):
 
 class MainWindow(gtk.Window):
         center = ((0,0),(128,128))
-        draging = False
         draging_start = (0, 0)
         current_zoom_level = googleMaps.MAP_MAX_ZOOM_LEVEL
         queue = None
@@ -268,15 +267,11 @@ class MainWindow(gtk.Window):
         def da_button_press(self, w, event):
                 if (event.button != 1):
                         return
-                self.draging = True
-                #print "left-button-press at (%d, %d)" % (event.x, event.y)
                 self.draging_start = (event.x, event.y)
 
         def da_button_release(self, w, event):
                 if (event.button != 1):
                         return
-                #print "left-button-release"
-                self.draging = False
 
         def da_motion(self, w, event):
                 x = event.x
@@ -371,8 +366,6 @@ class MainWindow(gtk.Window):
                 return
         
         def __init__(self, parent=None):
-                self.draging = False
-
                 self.ctx_map = googleMaps.GoogleMaps()
                 gtk.Window.__init__(self)
                 try:
