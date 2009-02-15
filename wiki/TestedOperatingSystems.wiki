@@ -17,3 +17,6 @@
   * Microsoft Windows 2000 SP4 (Version 5.0.2195)
   * Ubuntu (Version 8.04 LTS Hardy Heron)
 
+
+
+If you have tested gmapcatcher in an OS that is not on the list please add a comment below
