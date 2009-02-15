@@ -285,18 +285,17 @@ class MainWindow(gtk.Window):
                 if (event.button == 1):
                         self.da_set_cursor()
 
+        # Handles the mouse motion over the drawing_area
         def da_motion(self, w, event):
                 x = event.x
                 y = event.y
-                if (x < 0):
+                if (x < 0) or (y < 0):
                         return
-                if (y < 0):
-                        return
+
                 rect = self.drawing_area.get_allocation()
-                if (x > rect.width):
+                if (x > rect.width) or (y > rect.height):
                         return
-                if (y > rect.height):
-                        return
+
                 #print "mouse move: (%d, %d)" % (x, y)
 
                 center_tile = self.center[0]
@@ -307,11 +306,11 @@ class MainWindow(gtk.Window):
                                 center_tile, center_offset)
                 self.draging_start = (x, y)
                 self.drawing_area.queue_draw()
-#               print "new draging_start: (%d, %d)" % self.draging_start
-#               print "center: %d, %d, %d, %d" % (self.center[0][0],
-#                               self.center[0][1],
-#                               self.center[1][0],
-#                               self.center[1][1])
+                # print "new draging_start: (%d, %d)" % self.draging_start
+                # print "center: %d, %d, %d, %d" % (self.center[0][0],
+                #                 self.center[0][1],
+                #                 self.center[1][0],
+                #                 self.center[1][1])
 
         def expose_cb(self, drawing_area, event):
                 online = not self.cb_offline.get_active()
