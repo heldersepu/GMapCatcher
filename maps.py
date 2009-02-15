@@ -239,7 +239,7 @@ class MainWindow(gtk.Window):
                 da.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
                 da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
 
-                da.connect_object("event", self.da_event, menu)
+                da.connect_object("event", self.da_click_events, menu)
                 da.connect('button-press-event', self.da_button_press)
                 da.connect('button-release-event', self.da_button_release)
                 da.connect('motion-notify-event', self.da_motion)
@@ -260,18 +260,30 @@ class MainWindow(gtk.Window):
                 else:
                         self.do_zoom(googleMaps.MAP_MAX_ZOOM_LEVEL)
                 
-        def da_event(self, w, event):
+        # change the mouse cursor over the drawing_area
+        def da_set_cursor(self, dCursor = gtk.gdk.HAND1):
+                cursor = gtk.gdk.Cursor(dCursor)
+                self.drawing_area.window.set_cursor(cursor)
+
+        # Handles Right & Double clicks events in the drawing_area
+        def da_click_events(self, w, event):
+                # Right-Click event shows the popUp menu
                 if (event.type == gtk.gdk.BUTTON_PRESS) and (event.button != 1):
                         w.popup(None, None, None, event.button, event.time)                
+                # Double-Click event Zoom In
+                elif (event.type == gtk.gdk._2BUTTON_PRESS):
+                        self.do_zoom(self.scale.get_value() - 1, True)
                 
+        # Handles left (press click) event in the drawing_area
         def da_button_press(self, w, event):
-                if (event.button != 1):
-                        return
-                self.draging_start = (event.x, event.y)
+                if (event.button == 1):
+                        self.draging_start = (event.x, event.y)
+                        self.da_set_cursor(gtk.gdk.FLEUR)
 
+        # Handles left (release click) event in the drawing_area
         def da_button_release(self, w, event):
-                if (event.button != 1):
-                        return
+                if (event.button == 1):
+                        self.da_set_cursor()
 
         def da_motion(self, w, event):
                 x = event.x
@@ -387,7 +399,7 @@ class MainWindow(gtk.Window):
                 self.set_completion()
                 self.entry.set_text(self.default_text)
                 self.show_all()
-
+                self.da_set_cursor()
 def main():
         MainWindow()
         gtk.main()
