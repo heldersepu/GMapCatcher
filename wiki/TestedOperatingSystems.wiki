@@ -7,7 +7,7 @@
 
 
 = Details =
-
+*
   * Microsoft Windows 7 Ultimate (Version 6.1.7000) (Beta)
   * Microsoft Windows Server 2008 SP1 (Version 6.0.6001)
   * Microsoft Windows Vista Ultimate SP1 (Version 6.0.6001) (64 Bit)
@@ -16,7 +16,7 @@
   * Microsoft Windows XP Pro SP2 (Spanish & Italian editions)
   * Microsoft Windows 2000 SP4 (Version 5.0.2195)
   * Ubuntu (Version 8.04 LTS Hardy Heron)
-
+*
 
 
 If you have tested gmapcatcher in an OS that is not on the list please add a comment below
