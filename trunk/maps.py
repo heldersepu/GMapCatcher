@@ -9,20 +9,12 @@ import threading
 from threading import Thread
 
 class GetTileThread(Thread):
-        def __init__(self,
-                        zl,
-                        real_tile_x,
-                        real_tile_y,
-                        tile_x_pos_inner,
-                        tile_y_pos_inner,
-                        x_pos,
-                        y_pos,
-                        draw_width,
-                        draw_height,
-                        online,
-                        force_update,
-                        gc,
-                        window):
+        def __init__(self,  zl,
+                        real_tile_x, real_tile_y,
+                        tile_x_pos_inner, tile_y_pos_inner,
+                        x_pos, y_pos,
+                        draw_width, draw_height,
+                        online, force_update, gc, window):
                 Thread.__init__(self)
                 self.zl = zl
                 self.x = real_tile_x
@@ -38,14 +30,11 @@ class GetTileThread(Thread):
                 self.xi = tile_x_pos_inner
                 self.yi = tile_y_pos_inner
 
-
-
         def run(self):
                 pixbuf = self.window.ctx_map.get_tile_pixbuf(self.zl, (self.x, self.y), self.online, self.force_update)
                 gc = self.gc
                 self.window.drawing_area.window.draw_pixbuf(gc, pixbuf,
-                                                        int(self.xi),
-                                                        int(self.yi),
+                                                        int(self.xi), int(self.yi),
                                                         int(self.xp), int(self.yp),
                                                         int(self.draw_width), int(self.draw_height))
                 return
@@ -75,7 +64,7 @@ class MainWindow(gtk.Window):
 
                 if (pointer == None):
                         fix_tile, fix_offset = self.center
-                else:                        
+                else:
                         rect = self.drawing_area.get_allocation()
                         da_center = (rect.width / 2, rect.height / 2)
 
@@ -101,7 +90,7 @@ class MainWindow(gtk.Window):
 
         def get_zoom_level(self):
                 return int(self.scale.get_value())
-        
+
         # Automatically display after selecting
         def on_completion_match(self, completion, model, iter):
                 self.entry.set_text(model[iter][0])
@@ -151,7 +140,7 @@ class MainWindow(gtk.Window):
                                 coord = locations[location]
                         print "%s at %f, %f" % (location, coord[0], coord[1])
 
-                        self.center = self.ctx_map.coord_to_tile(coord[2], coord[0], coord[1]) 
+                        self.center = self.ctx_map.coord_to_tile(coord[2], coord[0], coord[1])
                         self.current_zoom_level = coord[2]
                         self.do_scale(coord[2], force=True)
 
@@ -177,12 +166,12 @@ class MainWindow(gtk.Window):
                 entry.connect("copy-clipboard", self.clean_entry)
                 entry.connect("paste-clipboard", self.clean_entry)
                 entry.connect("move-cursor", self.clean_entry)
- 
+
                 bbox = gtk.HButtonBox()
                 button = gtk.Button(stock='gtk-ok')
                 button.connect('clicked', self.confirm_clicked)
                 bbox.add(button)
-                
+
                 hbox.pack_start(entry)
                 hbox.pack_start(bbox)
 
@@ -228,7 +217,7 @@ class MainWindow(gtk.Window):
                     menu.append(menu_items)
                     menu_items.connect("activate", self.menu_item_response, str)
                     menu_items.show()
-                
+
                 da = gtk.DrawingArea()
                 self.drawing_area = da
                 da.connect("expose_event", self.expose_cb)
@@ -259,7 +248,7 @@ class MainWindow(gtk.Window):
                         self.do_zoom(self.scale.get_value(), True)
                 else:
                         self.do_zoom(googleMaps.MAP_MAX_ZOOM_LEVEL)
-                
+
         # change the mouse cursor over the drawing_area
         def da_set_cursor(self, dCursor = gtk.gdk.HAND1):
                 cursor = gtk.gdk.Cursor(dCursor)
@@ -269,11 +258,11 @@ class MainWindow(gtk.Window):
         def da_click_events(self, w, event):
                 # Right-Click event shows the popUp menu
                 if (event.type == gtk.gdk.BUTTON_PRESS) and (event.button != 1):
-                        w.popup(None, None, None, event.button, event.time)                
+                        w.popup(None, None, None, event.button, event.time)
                 # Double-Click event Zoom In
                 elif (event.type == gtk.gdk._2BUTTON_PRESS):
                         self.do_zoom(self.scale.get_value() - 1, True)
-                
+
         # Handles left (press click) event in the drawing_area
         def da_button_press(self, w, event):
                 if (event.button == 1):
@@ -300,7 +289,7 @@ class MainWindow(gtk.Window):
 
                 center_tile = self.center[0]
                 self.center[1]
-                
+
                 center_offset = self.center[1][0] + (self.draging_start[0] - x), self.center[1][1] + (self.draging_start[1] - y)
                 self.center = self.ctx_map.tile_adjustEx(self.get_zoom_level(),
                                 center_tile, center_offset)
@@ -339,12 +328,12 @@ class MainWindow(gtk.Window):
                         x_pos = 0
                         while (x_pos < rect.width):
                         #############################################
-                                real_tile_x, real_tile_y = self.ctx_map.tile_adjust(self.get_zoom_level(), 
+                                real_tile_x, real_tile_y = self.ctx_map.tile_adjust(self.get_zoom_level(),
                                                 (tile_x_pos, tile_y_pos))
                                 if not (((area.x + area.width < x_pos) or (x_pos + draw_width < area.x)) or \
                                                 ((area.y + area.height < y_pos) or (y_pos + draw_height < area.y))):
                                         th = GetTileThread(zl, real_tile_x, real_tile_y, tile_x_pos_inner,
-                                                tile_y_pos_inner, x_pos, y_pos, draw_width, draw_height, online, 
+                                                tile_y_pos_inner, x_pos, y_pos, draw_width, draw_height, online,
                                                 force_update, self.drawing_area.style.black_gc, self)
                                         threads.append(th)
                                         th.start()
@@ -375,7 +364,7 @@ class MainWindow(gtk.Window):
                 if (value <= googleMaps.MAP_MAX_ZOOM_LEVEL) and (value >= googleMaps.MAP_MIN_ZOOM_LEVEL):
                         self.do_scale(value)
                 return
-        
+
         def __init__(self, parent=None):
                 self.ctx_map = googleMaps.GoogleMaps()
                 gtk.Window.__init__(self)
