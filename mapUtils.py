@@ -1,4 +1,3 @@
-import threading
 from threading import Thread
 
 class GetTileThread(Thread):
