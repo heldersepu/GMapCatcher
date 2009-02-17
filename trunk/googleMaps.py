@@ -177,9 +177,7 @@ class GoogleMaps:
 
         def tile_adjust(self, zoom_level, tile):
                 world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zoom_level))
-                tile_coord = tile
-                tile_coord = (int(tile_coord[0]) % world_tiles, int(tile_coord[1]) % world_tiles)
-                return tile_coord
+                return (int(tile[0]) % world_tiles, int(tile[1]) % world_tiles)
 
         def coord_to_path(self, zoom_level, coord):
                 path = os.path.join(self.tilespath, '%d' % zoom_level)
