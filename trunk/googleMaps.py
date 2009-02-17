@@ -1,4 +1,5 @@
-import os, re, openanything, urllib, math, gtk, sys, threading, time
+import os, re, openanything, urllib, math, gtk, sys, time
+from threading import Lock
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
@@ -180,7 +181,7 @@ class GoogleMaps:
 
         def coord_to_path(self, coord):
                 path = os.path.join(self.tilespath, '%d' % coord[2])
-                lock = threading.Lock()
+                lock = Lock()
                 lock.acquire()
                 if not os.path.isdir(path):
                         os.mkdir(path)
