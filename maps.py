@@ -6,11 +6,12 @@ pygtk.require('2.0')
 import gtk
 import googleMaps
 import mapUtils
+from mapConst import *
 
 class MainWindow(gtk.Window):
         center = ((0,0),(128,128))
         draging_start = (0, 0)
-        current_zoom_level = googleMaps.MAP_MAX_ZOOM_LEVEL
+        current_zoom_level = MAP_MAX_ZOOM_LEVEL
         default_text = "Enter location here!"
 
         def error_msg(self, msg):
@@ -42,14 +43,14 @@ class MainWindow(gtk.Window):
                                         fix_tile, fix_offset)
 
                 scala = 2 ** (self.current_zoom_level - pos)
-                x = int((fix_tile[0] * googleMaps.TILES_WIDTH  + fix_offset[0]) * scala)
-                y = int((fix_tile[1] * googleMaps.TILES_HEIGHT + fix_offset[1]) * scala)
+                x = int((fix_tile[0] * TILES_WIDTH  + fix_offset[0]) * scala)
+                y = int((fix_tile[1] * TILES_HEIGHT + fix_offset[1]) * scala)
                 if (pointer != None) and not force:
                         x = x - (pointer[0] - da_center[0])
                         y = y - (pointer[1] - da_center[1])
 
-                self.center = (x / googleMaps.TILES_WIDTH, y / googleMaps.TILES_HEIGHT), \
-                              (x % googleMaps.TILES_WIDTH, y % googleMaps.TILES_HEIGHT)
+                self.center = (x / TILES_WIDTH, y / TILES_HEIGHT), \
+                              (x % TILES_WIDTH, y % TILES_HEIGHT)
 
                 self.current_zoom_level = pos
                 self.drawing_area.queue_draw()
@@ -161,13 +162,13 @@ class MainWindow(gtk.Window):
 
         def __create_left_paned(self):
                 scale = gtk.VScale()
-                scale.set_range(googleMaps.MAP_MIN_ZOOM_LEVEL, googleMaps.MAP_MAX_ZOOM_LEVEL)
+                scale.set_range(MAP_MIN_ZOOM_LEVEL, MAP_MAX_ZOOM_LEVEL)
 #               scale.set_inverted(True)
                 scale.set_property("update-policy", gtk.UPDATE_DISCONTINUOUS)
                 scale.set_size_request(30, -1)
                 scale.set_increments(1,1)
                 scale.set_digits(0)
-                scale.set_value(googleMaps.MAP_MAX_ZOOM_LEVEL)
+                scale.set_value(MAP_MAX_ZOOM_LEVEL)
                 scale.connect("change-value", self.scale_change_value)
                 scale.show()
                 self.scale = scale
@@ -202,7 +203,7 @@ class MainWindow(gtk.Window):
                 return self.drawing_area
 
         def do_zoom(self, value, doForce=False):
-                if (value >= googleMaps.MAP_MIN_ZOOM_LEVEL) and (value <= googleMaps.MAP_MAX_ZOOM_LEVEL):
+                if (value >= MAP_MIN_ZOOM_LEVEL) and (value <= MAP_MAX_ZOOM_LEVEL):
                         self.do_scale(value, self.drawing_area.get_pointer(), doForce)
 
         def menu_item_response(self, w, strName):
@@ -213,7 +214,7 @@ class MainWindow(gtk.Window):
                 elif strName.startswith("Center map"):
                         self.do_zoom(self.scale.get_value(), True)
                 else:
-                        self.do_zoom(googleMaps.MAP_MAX_ZOOM_LEVEL)
+                        self.do_zoom(MAP_MAX_ZOOM_LEVEL)
 
         # change the mouse cursor over the drawing_area
         def da_set_cursor(self, dCursor = gtk.gdk.HAND1):
@@ -273,8 +274,7 @@ class MainWindow(gtk.Window):
                 rect = drawing_area.get_allocation()
                 zl = self.get_zoom_level()
                 mapUtils.do_expose_cb(self, zl, self.center, rect, online, force_update, \
-                                      self.drawing_area.style.black_gc, event.area, \
-                                      googleMaps.TILES_HEIGHT, googleMaps.TILES_WIDTH)
+                                      self.drawing_area.style.black_gc, event.area)
 
         def scroll_cb(self, widget, event):
                 if (event.direction == gtk.gdk.SCROLL_UP):
@@ -283,7 +283,7 @@ class MainWindow(gtk.Window):
                         self.do_zoom(self.scale.get_value() + 1)
 
         def scale_change_value(self, range, scroll, value):
-                if (value <= googleMaps.MAP_MAX_ZOOM_LEVEL) and (value >= googleMaps.MAP_MIN_ZOOM_LEVEL):
+                if (value <= MAP_MAX_ZOOM_LEVEL) and (value >= MAP_MIN_ZOOM_LEVEL):
                         self.do_scale(value)
                 return
 
@@ -316,4 +316,3 @@ def main():
 
 if __name__ == "__main__":
         main()
-

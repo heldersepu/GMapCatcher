@@ -1,3 +1,4 @@
+from mapConst import *
 from threading import Thread
 
 class GetTileThread(Thread):
@@ -31,22 +32,22 @@ class GetTileThread(Thread):
                                                         int(self.draw_width), int(self.draw_height))
                 return
 
-def do_expose_cb(self, zl, center, rect, online, force_update, style_black_gc, area, tiles_height, tiles_width):
+def do_expose_cb(self, zl, center, rect, online, force_update, style_black_gc, area):
 
         tl_point = (center[1][0] - rect.width / 2,
                     center[1][1] - rect.height / 2)
-        
+
         tl_tile, tl_offset = self.ctx_map.tile_adjustEx(zl, center[0], tl_point)
 
         y_pos = 0
         tile_y_pos = tl_tile[1]
         tile_y_pos_inner = tl_offset[1]
-        draw_height = tiles_height - tl_offset[1]
+        draw_height = TILES_HEIGHT - tl_offset[1]
         threads = []
         while (y_pos < rect.height):
                 tile_x_pos = tl_tile[0]
                 tile_x_pos_inner = tl_offset[0]
-                draw_width = tiles_width - tl_offset[0]
+                draw_width = TILES_WIDTH - tl_offset[0]
                 x_pos = 0
                 while (x_pos < rect.width):
                 #############################################
@@ -63,14 +64,14 @@ def do_expose_cb(self, zl, center, rect, online, force_update, style_black_gc, a
                         x_pos += draw_width
                         tile_x_pos += 1
                         tile_x_pos_inner = 0
-                        draw_width = tiles_width
+                        draw_width = TILES_WIDTH
                         if (x_pos + draw_width > rect.width):
                                 draw_width = rect.width - x_pos
 
                 y_pos += draw_height
                 tile_y_pos += 1
                 tile_y_pos_inner = 0
-                draw_height = tiles_height
+                draw_height = TILES_HEIGHT
                 if (y_pos + draw_height > rect.height):
                         draw_height = rect.height - y_pos
         for th in threads:

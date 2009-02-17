@@ -1,12 +1,6 @@
 import os, re, openanything, urllib, math, gtk, sys, time
+from mapConst import *
 from threading import Lock
-
-MAP_MAX_ZOOM_LEVEL = 17
-MAP_MIN_ZOOM_LEVEL = -2
-TILES_WIDTH = 256
-TILES_HEIGHT = 256
-NR_MTS = 4
-
 
 class GoogleMaps:
         # coord = (lat, lng, zoom_level)
@@ -20,7 +14,7 @@ class GoogleMaps:
                         return intZoom
                 else:
                         return 10
-        
+
         def fetch_version_string(self):
                 if self.version_string == None:
                         #default version_string
@@ -97,8 +91,8 @@ class GoogleMaps:
                                 z = q.search(line)
                                 if z:
                                         zoom = int(z.group(1))
-                                self.locations[m.group(1)] = (float(m.group(2)), 
-                                                              float(m.group(3)), 
+                                self.locations[m.group(1)] = (float(m.group(2)),
+                                                              float(m.group(3)),
                                                               zoom)
                 file.close()
 
@@ -238,14 +232,12 @@ class GoogleMaps:
                         w.set_from_file('missing.png')
                         return w.get_pixbuf()
 
-        def coord_to_tile(self, coord): 
+        def coord_to_tile(self, coord):
                 world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - coord[2]))
                 x = world_tiles / 360.0 * (coord[1] + 180.0)
                 tiles_pre_radian = world_tiles / (2 * math.pi)
                 e = math.sin(coord[0] * (1/180.*math.pi))
                 y = world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian)
                 offset =  int((x - int(x)) * TILES_WIDTH), \
-                          int((y - int(y)) * TILES_HEIGHT)                 
+                          int((y - int(y)) * TILES_HEIGHT)
                 return (int(x) % world_tiles, int(y) % world_tiles), offset
-
-
