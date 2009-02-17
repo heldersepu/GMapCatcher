@@ -121,8 +121,6 @@ class GoogleMaps:
                 else:
                         self.write_locations()
 
-                self.lock = threading.Lock()
-
         def get_locations(self):
                 return self.locations
 
@@ -181,7 +179,8 @@ class GoogleMaps:
 
         def coord_to_path(self, zoom_level, coord):
                 path = os.path.join(self.tilespath, '%d' % zoom_level)
-                self.lock.acquire()
+                lock = threading.Lock()
+                lock.acquire()
                 if not os.path.isdir(path):
                         os.mkdir(path)
                 ## at most 1024 files in one dir
@@ -198,7 +197,7 @@ class GoogleMaps:
                 if not os.path.isdir(path):
                         os.mkdir(path)
 
-                self.lock.release()
+                lock.release()
                 path = os.path.join(path, "%d.png" % (coord[1] % 1024))
                 return path
 
