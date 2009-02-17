@@ -95,7 +95,7 @@ class MainWindow(gtk.Window):
                 self.confirm_clicked(self)
 
         # Clean out the entry box if text = default
-        def clean_entry(self, button, p1=None, p2=None, p3=None, p4=None):
+        def clean_entry(self, *args):
                 if (self.entry.get_text() == self.default_text):
                         self.entry.set_text("")
 
