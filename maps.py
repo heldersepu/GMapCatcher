@@ -43,8 +43,6 @@ class MainWindow(gtk.Window):
         center = ((0,0),(128,128))
         draging_start = (0, 0)
         current_zoom_level = googleMaps.MAP_MAX_ZOOM_LEVEL
-        queue = None
-        threads = []
         default_text = "Enter location here!"
 
         def error_msg(self, msg):
