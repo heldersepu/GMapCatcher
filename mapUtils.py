@@ -24,7 +24,7 @@ class GetTileThread(Thread):
                 self.yi = tile_y_pos_inner
 
         def run(self):
-                pixbuf = self.window.ctx_map.get_tile_pixbuf(self.zl, (self.x, self.y), self.online, self.force_update)
+                pixbuf = self.window.ctx_map.get_tile_pixbuf((self.x, self.y, self.zl), self.online, self.force_update)
                 gc = self.gc
                 self.window.drawing_area.window.draw_pixbuf(gc, pixbuf,
                                                         int(self.xi), int(self.yi),

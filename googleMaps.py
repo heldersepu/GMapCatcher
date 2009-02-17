@@ -8,6 +8,7 @@ NR_MTS = 4
 
 
 class GoogleMaps:
+        # coord = (lat, lng, zoom_level)
         locations = {}
         mt_counter = 0
         version_string = None
@@ -41,7 +42,7 @@ class GoogleMaps:
                                 print "!@@# Unable to fetch version string"
                                 return None
 
-        def get_png_file(self, zl, coord, filename, online, force_update):
+        def get_png_file(self, coord, filename, online, force_update):
                 # remove tile only when online
                 if (os.path.isfile(filename) and force_update and online):
                         # Don't remove old tile unless it is downloaded more
@@ -67,7 +68,7 @@ class GoogleMaps:
                                         self.mt_counter,
                                         self.version_string,
                                         coord[0],
-                                        coord[1], zl)
+                                        coord[1], coord[2])
                         self.mt_counter += 1
                         self.mt_counter = self.mt_counter % NR_MTS
                         try:
@@ -177,8 +178,8 @@ class GoogleMaps:
                 world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zoom_level))
                 return (int(tile[0]) % world_tiles, int(tile[1]) % world_tiles)
 
-        def coord_to_path(self, zoom_level, coord):
-                path = os.path.join(self.tilespath, '%d' % zoom_level)
+        def coord_to_path(self, coord):
+                path = os.path.join(self.tilespath, '%d' % coord[2])
                 lock = threading.Lock()
                 lock.acquire()
                 if not os.path.isdir(path):
@@ -201,28 +202,27 @@ class GoogleMaps:
                 path = os.path.join(path, "%d.png" % (coord[1] % 1024))
                 return path
 
-        def get_file(self, zoom_level, coord, online, force_update):
-                if (zoom_level > MAP_MAX_ZOOM_LEVEL) or (zoom_level < MAP_MIN_ZOOM_LEVEL):
+        def get_file(self, coord, online, force_update):
+                if (coord[2] > MAP_MAX_ZOOM_LEVEL) or (coord[2] < MAP_MIN_ZOOM_LEVEL):
                         return None
-                world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - zoom_level)
+                world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - coord[2])
                 if (coord[0] > world_tiles):
                         return None
                 if (coord[1] > world_tiles):
                         return None
 
                 ## Tiles dir structure
-                filename = self.coord_to_path(zoom_level, coord)
+                filename = self.coord_to_path(coord)
 #                print "Coord to path: %s" % filename
-                if (self.get_png_file(zoom_level, coord, filename, online, force_update)):
+                if (self.get_png_file(coord, filename, online, force_update)):
                         return filename
                 else:
                         return None
 
-
-        def get_tile_pixbuf(self, zoom_level, coord, online, force_update):
+        def get_tile_pixbuf(self, coord, online, force_update):
                 w = gtk.Image()
-#                print ("get_tile_pixbuf: zl: %d, coord: %d, %d") % (zoom_level, coord[0], coord[1])
-                filename = self.get_file(zoom_level, coord, online, force_update)
+#                print ("get_tile_pixbuf: zl: %d, coord: %d, %d") % (coord)
+                filename = self.get_file(coord, online, force_update)
                 if (filename == None):
                         filename = 'missing.png'
                         w.set_from_file('missing.png')
@@ -237,12 +237,11 @@ class GoogleMaps:
                         w.set_from_file('missing.png')
                         return w.get_pixbuf()
 
-        def coord_to_tile(self, zl, lat, lng):
-                world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zl))
-                lng += 180.0
-                x = world_tiles / 360.0 * lng
+        def coord_to_tile(self, coord): 
+                world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - coord[2]))
+                x = world_tiles / 360.0 * (coord[1] + 180.0)
                 tiles_pre_radian = world_tiles / (2 * math.pi)
-                e = math.sin(lat*(1/180.*math.pi))
+                e = math.sin(coord[0] * (1/180.*math.pi))
                 y = world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian)
                 offset =  int((x - int(x)) * TILES_WIDTH), \
                           int((y - int(y)) * TILES_HEIGHT)                 
