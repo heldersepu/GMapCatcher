@@ -28,13 +28,36 @@ class DownloaderThread(Thread):
 ctx_map = googleMaps.GoogleMaps()
 max_zl = MAP_MAX_ZOOM_LEVEL
 min_zl = MAP_MIN_ZOOM_LEVEL + 4
+lng_range = 0.05
+lat_range = 0.05
+nr_threads = 5
+
+def print_help():
+    print ' '
+    print 'Download all maps of given location with one command'
+    print ' '
+    print 'OPTIONS'
+    print '  --location=   Location to download'
+    print '  --latitude=   Latitude of the location '
+    print '  --longitude=  Longitud of the location'
+    print ' '
+    print '  --latrange=   Latitude Range to get   (default = %f)' % lat_range
+    print '  --lngrange=   Longitud Range to get   (default = %f)' % lng_range
+    print '  --max-zoom=   Maximum Zoom   (default = %d)' % max_zl
+    print '  --min-zoom=   Minimum Zoom   (default = %d)' % min_zl
+    print '  --threads=    Number of therads   (default = %d)' % nr_threads
+    print ' '
+    print 'SAMPLE USAGE'
+    print ' '
+    print '  download.py --location="Paris, France"'
+    print '  download.py --latitude=37.979180 --longitude=23.716647'
 
 def download(lat, lng, lat_range, lng_range):
     lat_min = lat - lat_range
     lat_max = lat + lat_range
     lng_min = lng - lng_range
     lng_max = lng + lng_range
-    
+
     for zl in range(max_zl, min_zl - 1, -1):
         print "Downloading zl %d" % zl
         tmpCenter = coord_to_tile((lat_max, lng_min, zl))
@@ -52,33 +75,32 @@ if __name__ == "__main__":
     lat = None
     lng = None
     location = None
-    lat_range = 0.05
-    lng_range = 0.05
-    nr_threads = 5
-
 
     if len(sys.argv) > 1:
         for arg in sys.argv[1:]:
             if arg.startswith('--'):
                 if arg.startswith('--max-zoom-level='):
                     max_zl = int(arg[17:])
-                if arg.startswith('--min-zoom-level='):
+                elif arg.startswith('--min-zoom-level='):
                     min_zl = int(arg[17:])
-                if arg.startswith('--location='):
+                elif arg.startswith('--max-zoom='):
+                    max_zl = int(arg[11:])
+                elif arg.startswith('--min-zoom='):
+                    min_zl = int(arg[11:])
+                elif arg.startswith('--location='):
                     location = arg[11:]
-                if arg.startswith('--longitude='):
+                elif arg.startswith('--longitude='):
                     lng = float(arg[12:])
-                if arg.startswith('--latitude='):
+                elif arg.startswith('--latitude='):
                     lat = float(arg[11:])
-                if arg.startswith('--latrange='):
+                elif arg.startswith('--latrange='):
                     lat_range = float(arg[11:])
-                if arg.startswith('--lngrange='):
+                elif arg.startswith('--lngrange='):
                     lng_range = float(arg[11:])
-                if arg.startswith('--threads='):
+                elif arg.startswith('--threads='):
                     nr_threads = int(arg[10:])
     if (location == None) and ((lat == None) or (lng == None)):
-        print ' use --location= set location'
-        print ' or --longitude= and --latitude='
+        print_help()
         exit(0)
     print "location = %s" % location
     if ((lat == None) or (lng == None)):
@@ -90,7 +112,7 @@ if __name__ == "__main__":
                 exit(0)
             location = l;
         coord = ctx_map.get_locations()[location]
-        lat = coord[0] 
+        lat = coord[0]
         lng = coord[1]
 
     if (location == None):
