@@ -4,29 +4,30 @@ import googleMaps
 import sys
 import Queue
 import threading
+from mapConst import *
 from threading import Thread
 from Queue import Queue
+from mapUtils import coord_to_tile
 
 serviceQueue = None
 threads = []
 class DownloaderThread(Thread):
     def __init__(self):
         Thread.__init__(self)
+
     def run(self):
         while True:
             info = serviceQueue.get()
             if (info == None):
                 return
-            zl = info[0]
-            point = info[1]
-            ctx_map.get_file(zl, point, True, False)
+            ctx_map.get_file(info, True, False)
             serviceQueue.task_done()
 
 
 
 ctx_map = googleMaps.GoogleMaps()
-max_zl = 17
-min_zl = 2
+max_zl = MAP_MAX_ZOOM_LEVEL
+min_zl = MAP_MIN_ZOOM_LEVEL + 4
 
 def download(lat, lng, lat_range, lng_range):
     lat_min = lat - lat_range
@@ -36,11 +37,15 @@ def download(lat, lng, lat_range, lng_range):
     
     for zl in range(max_zl, min_zl - 1, -1):
         print "Downloading zl %d" % zl
-        tlx, tly = ctx_map.coord_to_tile(zl, lat_max, lng_min)
-        brx, bry = ctx_map.coord_to_tile(zl, lat_min, lng_max)
+        tmpCenter = coord_to_tile((lat_max, lng_min, zl))
+        tlx, tly = tmpCenter[0]
+
+        tmpCenter = coord_to_tile((lat_min, lng_max, zl))
+        brx, bry = tmpCenter[0]
+
         for x in range(tlx, brx+1):
             for y in range(tly, bry+1):
-                serviceQueue.put([zl, (x, y)])
+                serviceQueue.put((x, y, zl))
 #                ctx_map.get_file(zl, (x, y), True)
 
 if __name__ == "__main__":
@@ -72,8 +77,8 @@ if __name__ == "__main__":
                 if arg.startswith('--threads='):
                     nr_threads = int(arg[10:])
     if (location == None) and ((lat == None) or (lng == None)):
-        print 'use --location set location'
-        print 'or --longitude and --latitude'
+        print ' use --location= set location'
+        print ' or --longitude= and --latitude='
         exit(0)
     print "location = %s" % location
     if ((lat == None) or (lng == None)):
@@ -84,7 +89,10 @@ if __name__ == "__main__":
                 print "Can't find %s in google map" % location
                 exit(0)
             location = l;
-        lat, lng = ctx_map.get_locations()[location]
+        coord = ctx_map.get_locations()[location]
+        lat = coord[0] 
+        lng = coord[1]
+
     if (location == None):
         location = "somewhere"
     print "Download %s (%f, %f), range (%f, %f), zoom level: %d to %d" % \
