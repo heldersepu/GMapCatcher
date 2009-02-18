@@ -25,7 +25,8 @@ class GetTileThread(Thread):
         self.yi = tile_y_pos_inner
 
     def run(self):
-        pixbuf = self.window.ctx_map.get_tile_pixbuf((self.x, self.y, self.zl), self.online, self.force_update)
+        pixbuf = self.window.ctx_map.get_tile_pixbuf((self.x, self.y, self.zl),
+               self.online, self.force_update)
         gc = self.gc
         self.window.drawing_area.window.draw_pixbuf(gc, pixbuf,
                             int(self.xi), int(self.yi),
@@ -33,7 +34,8 @@ class GetTileThread(Thread):
                             int(self.draw_width), int(self.draw_height))
         return
 
-def do_expose_cb(self, zl, center, rect, online, force_update, style_black_gc, area):
+def do_expose_cb(self, zl, center, rect, online, 
+                 force_update, style_black_gc, area):
 
     tl_point = (center[1][0] - rect.width / 2,
             center[1][1] - rect.height / 2)
@@ -54,11 +56,14 @@ def do_expose_cb(self, zl, center, rect, online, force_update, style_black_gc, a
         #############################################
             real_tile_x, real_tile_y = tile_adjust(zl, (tile_x_pos, tile_y_pos))
 
-            if not (((area.x + area.width < x_pos) or (x_pos + draw_width < area.x)) or \
-                    ((area.y + area.height < y_pos) or (y_pos + draw_height < area.y))):
-                th = GetTileThread(zl, real_tile_x, real_tile_y, tile_x_pos_inner,
-                    tile_y_pos_inner, x_pos, y_pos, draw_width, draw_height, online,
-                    force_update, style_black_gc, self)
+            if not (((area.x + area.width < x_pos) or \
+                     (x_pos + draw_width < area.x)) or \
+                    ((area.y + area.height < y_pos) or 
+                     (y_pos + draw_height < area.y))):
+                th = GetTileThread(zl, real_tile_x, real_tile_y, 
+                        tile_x_pos_inner, tile_y_pos_inner, x_pos, y_pos, 
+                        draw_width, draw_height, online,
+                        force_update, style_black_gc, self)
                 threads.append(th)
                 th.start()
 

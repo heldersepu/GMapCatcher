@@ -87,8 +87,8 @@ if __name__ == "__main__":
         lat, lng = ctx_map.get_locations()[location]
     if (location == None):
         location = "somewhere"
-    print "Download %s (%f, %f), range (%f, %f), zoom level: %d to %d" % (location, lat, lng, lat_range, lng_range, \
-            max_zl, min_zl)
+    print "Download %s (%f, %f), range (%f, %f), zoom level: %d to %d" % \
+            (location, lat, lng, lat_range, lng_range, max_zl, min_zl)
 
     if (nr_threads <= 0):
         threads = 1
