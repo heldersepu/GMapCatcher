@@ -1,4 +1,9 @@
-import os, re, openanything, urllib, gtk, sys
+import os 
+import re 
+import gtk 
+import sys
+import urllib 
+import openanything 
 from time import time
 from mapConst import *
 from threading import Lock
@@ -58,27 +63,24 @@ class GoogleMaps:
                 print "!@@!#!@"
                 return False
 
-
-            href = 'http://mt%i.google.com/mt?n=404&v=w%s&hl=en&x=%i&y=%i&zoom=%i' % (
-                    self.mt_counter,
-                    self.version_string,
-                    coord[0],
-                    coord[1], coord[2])
-            self.mt_counter += 1
-            self.mt_counter = self.mt_counter % NR_MTS
-            try:
-                print 'downloading:', href
-                oa = openanything.fetch(href)
-                if oa['status']==200:
-                    file = open( filename, 'wb' )
-                    file.write( oa['data'] )
-                    file.close()
-                    return True
-            except KeyboardInterrupt:
-                raise
-            except:
-                print '\tdownload failed -', sys.exc_info()[0]
-            return False
+        href = 'http://mt%i.google.com/mt?n=404&v=w%s&hl=en&x=%i&y=%i&zoom=%i'\
+                % (self.mt_counter, self.version_string,
+                   coord[0], coord[1], coord[2])
+        self.mt_counter += 1
+        self.mt_counter = self.mt_counter % NR_MTS
+        try:
+            print 'downloading:', href
+            oa = openanything.fetch(href)
+            if oa['status']==200:
+                file = open( filename, 'wb' )
+                file.write( oa['data'] )
+                file.close()
+                return True
+        except KeyboardInterrupt:
+            raise
+        except:
+            print '\tdownload failed -', sys.exc_info()[0]
+        return False
 
     def read_locations(self):
         p = re.compile('location="([^"]+)".*lat="([^"]+)".*lng="([^"]+)".*')
@@ -99,8 +101,10 @@ class GoogleMaps:
     def write_locations(self):
         file = open(self.locationpath, "w")
         for l in self.locations.keys():
-            file.write('location="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' % (
-                l, self.locations[l][0], self.locations[l][1], self.locations[l][2]))
+            file.write('location="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' % 
+                      (l, self.locations[l][0], 
+                          self.locations[l][1], 
+                          self.locations[l][2]))
         file.close()
 
     def __init__(self):
@@ -123,7 +127,8 @@ class GoogleMaps:
 
     def search_location(self, location):
         print 'downloading the following location:', location
-        oa = openanything.fetch( 'http://maps.google.com/maps?q='+urllib.quote_plus(location) )
+        oa = openanything.fetch( 'http://maps.google.com/maps?q=' + 
+            urllib.quote_plus(location) )
         if oa['status']!=200:
             print 'error connecting to http://maps.google.com - aborting'
             return False
@@ -136,7 +141,8 @@ class GoogleMaps:
             print 'location %s not found' % location
             return False
 
-        p = re.compile('center:{lat:([0-9.-]+),lng:([0-9.-]+)}.*zoom:([0-9.-]+)')
+        p = re.compile('center:{lat:([0-9.-]+),lng:([0-9.-]+)}' + 
+                       '.*zoom:([0-9.-]+)')
         m = p.search(html)
         if not m:
             p = re.compile('markers:.*lat:([0-9.-]+),lng:([0-9.-]+).*laddr:')

@@ -38,8 +38,9 @@ class MainWindow(gtk.Window):
             fix_offset = self.center[1][0] + (pointer[0] - da_center[0]), \
                      self.center[1][1] + (pointer[1] - da_center[1])
 
-            fix_tile, fix_offset = mapUtils.tile_adjustEx(self.current_zoom_level,
-                    fix_tile, fix_offset)
+            fix_tile, fix_offset = \
+            mapUtils.tile_adjustEx(self.current_zoom_level, 
+                                   fix_tile, fix_offset)
 
         scala = 2 ** (self.current_zoom_level - pos)
         x = int((fix_tile[0] * TILES_WIDTH  + fix_offset[0]) * scala)
@@ -244,9 +245,10 @@ class MainWindow(gtk.Window):
         center_tile = self.center[0]
         self.center[1]
 
-        center_offset = self.center[1][0] + (self.draging_start[0] - x), self.center[1][1] + (self.draging_start[1] - y)
+        center_offset = (self.center[1][0] + (self.draging_start[0] - x),  
+                         self.center[1][1] + (self.draging_start[1] - y))
         self.center = mapUtils.tile_adjustEx(self.get_zoom_level(),
-                center_tile, center_offset)
+                         center_tile, center_offset)
         self.draging_start = (x, y)
         self.drawing_area.queue_draw()
         # print "new draging_start: (%d, %d)" % self.draging_start
@@ -260,8 +262,9 @@ class MainWindow(gtk.Window):
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
         zl = self.get_zoom_level()
-        mapUtils.do_expose_cb(self, zl, self.center, rect, online, force_update, \
-                      self.drawing_area.style.black_gc, event.area)
+        mapUtils.do_expose_cb(self, zl, self.center, rect, online, 
+                              force_update, self.drawing_area.style.black_gc, 
+                              event.area)
 
     def scroll_cb(self, widget, event):
         if (event.direction == gtk.gdk.SCROLL_UP):
