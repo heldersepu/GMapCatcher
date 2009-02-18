@@ -46,10 +46,12 @@ def print_help():
     print '  --max-zoom=   Maximum Zoom   (default = %d)' % max_zl
     print '  --min-zoom=   Minimum Zoom   (default = %d)' % min_zl
     print '  --threads=    Number of therads   (default = %d)' % nr_threads
+    print '  --full-range  Sets the Latitude & Longitud ranges to the Maximum'
     print ' '
     print 'SAMPLE USAGE'
     print ' '
     print '  download.py --location="Paris, France"'
+    print '  download.py --location="0, 0" --min-zoom=13 --full-range'
     print '  download.py --latitude=37.979180 --longitude=23.716647'
 
 def download(lat, lng, lat_range, lng_range):
@@ -99,6 +101,10 @@ if __name__ == "__main__":
                     lng_range = float(arg[11:])
                 elif arg.startswith('--threads='):
                     nr_threads = int(arg[10:])
+                elif arg.startswith('--full-range'):
+                    lat_range = 85
+                    lng_range = 179
+
     if (location == None) and ((lat == None) or (lng == None)):
         print_help()
         exit(0)
