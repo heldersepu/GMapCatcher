@@ -1,3 +1,4 @@
+import math
 from mapConst import *
 from threading import Thread
 
@@ -37,7 +38,7 @@ def do_expose_cb(self, zl, center, rect, online, force_update, style_black_gc, a
         tl_point = (center[1][0] - rect.width / 2,
                     center[1][1] - rect.height / 2)
 
-        tl_tile, tl_offset = self.ctx_map.tile_adjustEx(zl, center[0], tl_point)
+        tl_tile, tl_offset = tile_adjustEx(zl, center[0], tl_point)
 
         y_pos = 0
         tile_y_pos = tl_tile[1]
@@ -51,7 +52,7 @@ def do_expose_cb(self, zl, center, rect, online, force_update, style_black_gc, a
                 x_pos = 0
                 while (x_pos < rect.width):
                 #############################################
-                        real_tile_x, real_tile_y = self.ctx_map.tile_adjust(zl, (tile_x_pos, tile_y_pos))
+                        real_tile_x, real_tile_y = tile_adjust(zl, (tile_x_pos, tile_y_pos))
 
                         if not (((area.x + area.width < x_pos) or (x_pos + draw_width < area.x)) or \
                                         ((area.y + area.height < y_pos) or (y_pos + draw_height < area.y))):
@@ -76,3 +77,28 @@ def do_expose_cb(self, zl, center, rect, online, force_update, style_black_gc, a
                         draw_height = rect.height - y_pos
         for th in threads:
                 th.join()
+
+def tile_adjustEx(zoom_level, tile, offset):
+        world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zoom_level))
+
+        x = int((tile[0] * TILES_WIDTH + offset[0]) % (world_tiles * TILES_WIDTH))
+        y = int((tile[1] * TILES_HEIGHT + offset[1]) % (world_tiles * TILES_HEIGHT))
+        tile_coord = (x / int(TILES_WIDTH), y / int(TILES_HEIGHT))
+        offset_in_tile = (x % int(TILES_WIDTH), y % int(TILES_HEIGHT))
+
+        return tile_coord, offset_in_tile
+
+def tile_adjust(zoom_level, tile):
+        world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zoom_level))
+        return (int(tile[0]) % world_tiles, int(tile[1]) % world_tiles)
+
+# convert from coord(lat, lng, zoom_level) to (tiles, offset)
+def coord_to_tile(coord):
+        world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - coord[2]))
+        x = world_tiles / 360.0 * (coord[1] + 180.0)
+        tiles_pre_radian = world_tiles / (2 * math.pi)
+        e = math.sin(coord[0] * (1/180.*math.pi))
+        y = world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian)
+        offset =  int((x - int(x)) * TILES_WIDTH), \
+                  int((y - int(y)) * TILES_HEIGHT)
+        return (int(x) % world_tiles, int(y) % world_tiles), offset
