@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os
-import gobject
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -70,12 +69,9 @@ class MainWindow(gtk.Window):
 
         def set_completion(self):
                 completion = gtk.EntryCompletion()
-
                 completion.connect('match-selected', self.on_completion_match)
-
                 self.entry.set_completion(completion)
-                completion_model = self.__create_completion_model()
-                completion.set_model(completion_model)
+                completion.set_model(self.ctx_map.completion_model())
                 completion.set_text_column(0)
                 self.completion = completion
 
@@ -110,15 +106,6 @@ class MainWindow(gtk.Window):
                         self.center = mapUtils.coord_to_tile(coord)
                         self.current_zoom_level = coord[2]
                         self.do_scale(coord[2], force=True)
-
-        def __create_completion_model(self):
-                store = gtk.ListStore(gobject.TYPE_STRING)
-                locations = self.ctx_map.get_locations().keys()
-
-                for str in locations:
-                        iter = store.append()
-                        store.set(iter, 0, str)
-                return store
 
         def __create_top_paned(self):
                 frame = gtk.Frame("Query")

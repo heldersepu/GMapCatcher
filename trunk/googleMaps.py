@@ -1,6 +1,7 @@
 import os, re, openanything, urllib, gtk, sys, time
 from mapConst import *
 from threading import Lock
+from gobject import TYPE_STRING
 
 class GoogleMaps:
         # coord = (lat, lng, zoom_level)
@@ -218,4 +219,9 @@ class GoogleMaps:
                         w.set_from_file('missing.png')
                         return w.get_pixbuf()
 
-
+        def completion_model(self):
+                store = gtk.ListStore(TYPE_STRING)
+                for str in self.locations.keys():
+                        iter = store.append()
+                        store.set(iter, 0, str)
+                return store
