@@ -1,4 +1,5 @@
-import os, re, openanything, urllib, gtk, sys, time
+import os, re, openanything, urllib, gtk, sys
+from time import time
 from mapConst import *
 from threading import Lock
 from gobject import TYPE_STRING
@@ -42,10 +43,8 @@ class GoogleMaps:
                 # remove tile only when online
                 if (os.path.isfile(filename) and force_update and online):
                         # Don't remove old tile unless it is downloaded more
-                        # than 24 hours ago
-                        mtime = os.path.getmtime(filename)
-                        current_time = int(time.time())
-                        if (current_time - mtime > 24 * 3600):
+                        # than 24 hours ago (24h * 3600s) = 86400
+                        if (int(time() - os.path.getmtime(filename)) > 86400):
                                 os.remove(filename)
 
                 if os.path.isfile(filename):
