@@ -39,7 +39,7 @@ class MainWindow(gtk.Window):
                         fix_offset = self.center[1][0] + (pointer[0] - da_center[0]), \
                                      self.center[1][1] + (pointer[1] - da_center[1])
 
-                        fix_tile, fix_offset = self.ctx_map.tile_adjustEx(self.current_zoom_level,
+                        fix_tile, fix_offset = mapUtils.tile_adjustEx(self.current_zoom_level,
                                         fix_tile, fix_offset)
 
                 scala = 2 ** (self.current_zoom_level - pos)
@@ -107,7 +107,7 @@ class MainWindow(gtk.Window):
                                 coord = locations[location]
                         print "%s at %f, %f" % (location, coord[0], coord[1])
 
-                        self.center = self.ctx_map.coord_to_tile(coord)
+                        self.center = mapUtils.coord_to_tile(coord)
                         self.current_zoom_level = coord[2]
                         self.do_scale(coord[2], force=True)
 
@@ -258,7 +258,7 @@ class MainWindow(gtk.Window):
                 self.center[1]
 
                 center_offset = self.center[1][0] + (self.draging_start[0] - x), self.center[1][1] + (self.draging_start[1] - y)
-                self.center = self.ctx_map.tile_adjustEx(self.get_zoom_level(),
+                self.center = mapUtils.tile_adjustEx(self.get_zoom_level(),
                                 center_tile, center_offset)
                 self.draging_start = (x, y)
                 self.drawing_area.queue_draw()

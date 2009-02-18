@@ -1,4 +1,4 @@
-import os, re, openanything, urllib, math, gtk, sys, time
+import os, re, openanything, urllib, gtk, sys, time
 from mapConst import *
 from threading import Lock
 
@@ -104,6 +104,7 @@ class GoogleMaps:
                 file.close()
 
         def __init__(self):
+                self.lock = Lock()
                 self.configpath = os.path.expanduser("~/.googlemaps")
                 self.locationpath = os.path.join(self.configpath, 'locations')
                 self.tilespath = os.path.join(self.configpath, 'tiles')
@@ -159,24 +160,9 @@ class GoogleMaps:
                         print 'Unable to get latitude and longitude of %s ' % location
                         return False
 
-        def tile_adjustEx(self, zoom_level, tile, offset):
-                world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zoom_level))
-
-                x = int((tile[0] * TILES_WIDTH + offset[0]) % (world_tiles * TILES_WIDTH))
-                y = int((tile[1] * TILES_HEIGHT + offset[1]) % (world_tiles * TILES_HEIGHT))
-                tile_coord = (x / int(TILES_WIDTH), y / int(TILES_HEIGHT))
-                offset_in_tile = (x % int(TILES_WIDTH), y % int(TILES_HEIGHT))
-
-                return tile_coord, offset_in_tile
-
-        def tile_adjust(self, zoom_level, tile):
-                world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zoom_level))
-                return (int(tile[0]) % world_tiles, int(tile[1]) % world_tiles)
-
         def coord_to_path(self, coord):
                 path = os.path.join(self.tilespath, '%d' % coord[2])
-                lock = Lock()
-                lock.acquire()
+                self.lock.acquire()
                 if not os.path.isdir(path):
                         os.mkdir(path)
                 ## at most 1024 files in one dir
@@ -193,7 +179,7 @@ class GoogleMaps:
                 if not os.path.isdir(path):
                         os.mkdir(path)
 
-                lock.release()
+                self.lock.release()
                 path = os.path.join(path, "%d.png" % (coord[1] % 1024))
                 return path
 
@@ -232,12 +218,4 @@ class GoogleMaps:
                         w.set_from_file('missing.png')
                         return w.get_pixbuf()
 
-        def coord_to_tile(self, coord):
-                world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - coord[2]))
-                x = world_tiles / 360.0 * (coord[1] + 180.0)
-                tiles_pre_radian = world_tiles / (2 * math.pi)
-                e = math.sin(coord[0] * (1/180.*math.pi))
-                y = world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian)
-                offset =  int((x - int(x)) * TILES_WIDTH), \
-                          int((y - int(y)) * TILES_HEIGHT)
-                return (int(x) % world_tiles, int(y) % world_tiles), offset
+
