@@ -87,19 +87,32 @@ class GoogleMaps:
         q = re.compile('.*zoom="([^"]+)".*')
         file = open(self.locationpath, "r")
         for line in file:
-            m = p.search(line)
-            if m:
-                zoom = 10
-                z = q.search(line)
-                if z:
-                    zoom = int(z.group(1))
-                self.locations[m.group(1)] = (float(m.group(2)),
-                                  float(m.group(3)),
-                                  zoom)
+            if (line[0] != '#'):
+                m = p.search(line)
+                if m:
+                    zoom = 10
+                    z = q.search(line)
+                    if z:
+                        zoom = int(z.group(1))
+                    self.locations[m.group(1)] = (float(m.group(2)),
+                                      float(m.group(3)),
+                                      zoom)
         file.close()
 
-    def write_locations(self):
+    def write_locations(self, isNew=False):
         file = open(self.locationpath, "w")
+        file.write("# This is the locations file used by gmapcatcher\n"+\
+            "#\n"+\
+            "# This file contains a list of Locations/Position.\n"+\
+            "# Each entry should be kept on an individual line.\n"+\
+            "# The latitude, longitud and zoom should be TAB separated.\n"+\
+            "#\n"+\
+            "# Additionally, comments (such as these) may be inserted on\n"+\
+            "# lines sarting with a '#' symbol.\n"+\
+            "#\n" + "# For example:\n" + "#\n" +  
+            ('#   location="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
+             ("Paris, France", 48.856667, 2.350987, 5)))
+
         for l in self.locations.keys():
             file.write('location="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' % 
                       (l, self.locations[l][0], 
