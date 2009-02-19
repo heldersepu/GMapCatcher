@@ -2,7 +2,6 @@
 import os
 import googleMaps
 import sys
-import Queue
 import threading
 from mapConst import *
 from threading import Thread
