@@ -3,8 +3,8 @@ import os
 import pygtk
 pygtk.require('2.0')
 import gtk
-import googleMaps
 import mapUtils
+import googleMaps
 from mapConst import *
 
 class MainWindow(gtk.Window):
