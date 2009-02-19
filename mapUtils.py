@@ -1,6 +1,9 @@
 import math
+import mapMark
 from mapConst import *
 from threading import Thread
+
+marker = mapMark.MyMarkers()
 
 class GetTileThread(Thread):
     def __init__(self,  zl,
@@ -25,13 +28,24 @@ class GetTileThread(Thread):
         self.yi = tile_y_pos_inner
 
     def run(self):
+        da = self.window.drawing_area.window
         pixbuf = self.window.ctx_map.get_tile_pixbuf((self.x, self.y, self.zl),
                self.online, self.force_update)
         gc = self.gc
-        self.window.drawing_area.window.draw_pixbuf(gc, pixbuf,
-                            int(self.xi), int(self.yi),
-                            int(self.xp), int(self.yp),
-                            int(self.draw_width), int(self.draw_height))
+        da.draw_pixbuf(gc, pixbuf, 
+                    int(self.xi), int(self.yi),
+                    int(self.xp), int(self.yp),
+                    int(self.draw_width), int(self.draw_height))
+
+        if (self.zl < MAP_MAX_ZOOM_LEVEL - 2):
+            for str in marker.positions.keys():
+                coord = marker.positions[str]
+                myCenter = coord_to_tile(coord)
+                if (self.x == myCenter[0][0] and self.y == myCenter[0][1]):
+                    da.draw_pixbuf(gc, marker.pixbuf, 
+                                int(self.xi), int(self.yi),
+                                int(self.xp), int(self.yp),
+                                int(self.draw_width), int(self.draw_height))
         return
 
 def do_expose_cb(self, zl, center, rect, online, 
