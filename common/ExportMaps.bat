@@ -11,11 +11,25 @@
 @IF NOT EXIST "%NSIS%" GOTO ERROR
 @IF NOT EXIST "%NSI_NAME%" GOTO ERROR
 @IF NOT EXIST "%FOLDER_PATH%" GOTO ERROR
-  COPY "%NSI_NAME%" "%FOLDER_PATH%\%NSI_NAME%"
-  CD "%FOLDER_PATH%"
-  CALL "%NSIS%" "%NSI_NAME%"
-  @MOVE "%FILE_NAME%" "%USERPROFILE%\Desktop"
-  @DEL "%FOLDER_PATH%\%NSI_NAME%"
+
+    @ECHO.
+    @ECHO.
+    @ECHO.
+    @ECHO      This tool will export all your downloaded maps and locations,
+    @ECHO     it creates a sefl-extracting exe in your desktop (%FILE_NAME%)
+    @ECHO.   
+    @ECHO.   
+    @ECHO   ** if you DO NOT WISH TO PROCEED please close this window now **
+    @ECHO.
+    @ECHO.
+    @ECHO.
+    @PAUSE
+
+    COPY "%NSI_NAME%" "%FOLDER_PATH%\%NSI_NAME%"
+    CD "%FOLDER_PATH%"
+    CALL "%NSIS%" "%NSI_NAME%"
+    @MOVE "%FILE_NAME%" "%USERPROFILE%\Desktop"
+    @DEL "%FOLDER_PATH%\%NSI_NAME%"
 
 :SUCCESS
 @ECHO.
