@@ -28,7 +28,7 @@ def read_file(strInfo, filePath):
 # Writes all the locations (fileData) to given file (filePath)
 def write_file(strInfo, filePath, fileData): 
     file = open(filePath, "w")
-    file.write("# This is the "+ strInfo +"s file used by gmapcatcher\n"+\
+    file.write("# This is the "+ strInfo +"s file used by gmapcatcher.\n"+\
         "#\n"+\
         "# This file contains a list of Locations/Position.\n"+\
         "# Each entry should be kept on an individual line.\n"+\
@@ -38,7 +38,7 @@ def write_file(strInfo, filePath, fileData):
         "# lines sarting with a '#' symbol.\n"+\
         "#\n" + "# For example:\n" + "#\n" +  
         ('#   '+ strInfo +'="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
-         ("Paris, France", 48.856667, 2.350987, 5)))
+         ("Paris, France", 48.856667, 2.350987, 5)) + "#\n" )
 
     for l in fileData.keys():
         file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' % 
