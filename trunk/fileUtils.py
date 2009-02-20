@@ -44,3 +44,11 @@ def write_file(strInfo, filePath, fileData):
         file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' % 
                   (l, fileData[l][0], fileData[l][1], fileData[l][2]))
     file.close()
+
+def check_dir(strPath, strSubPath=None):
+        if (strSubPath != None):
+            strPath = os.path.join(strPath, strSubPath)
+        if not os.path.isdir(strPath):
+            os.mkdir(strPath)
+        return strPath
+

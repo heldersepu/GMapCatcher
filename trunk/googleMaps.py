@@ -19,32 +19,28 @@ class GoogleMaps:
     html_data = ""
 
     def set_zoom(self, intZoom):
-        if (intZoom >= MAP_MIN_ZOOM_LEVEL) and (intZoom <= MAP_MAX_ZOOM_LEVEL):
+        if (MAP_MIN_ZOOM_LEVEL <= intZoom <= MAP_MAX_ZOOM_LEVEL):
             return intZoom
         else:
             return 10
 
     def fetch_version_string(self):
-        if self.version_string == None:
-            #default version_string
-            self.version_string = '2.89'
-
-            if self.html_data == "":
-                oa = openanything.fetch( 'http://maps.google.com/maps')
-                if oa['status'] != 200:
-                    print "Trying fetch http://maps.google.com/maps but failed"
-                    return self.version_string
+        #default version_string
+        self.version_string = '2.89'
+        if self.html_data == "":
+            oa = openanything.fetch( 'http://maps.google.com/maps')
+            if oa['status'] != 200:
+                print "Trying fetch http://maps.google.com/maps but failed"
+            else:
                 self.html_data = oa['data']
-            if self.html_data == "":
-                return self.version_string
+        if self.html_data != "":
             p = re.compile('http://mt[0-9].google.com/mt.*w([0-9].[0-9][0-9])')
             m = p.search(self.html_data)
             if m:
                 self.version_string = m.group(1)
-                return self.version_string
             else:
                 print "!@@# Unable to fetch version string"
-                return None
+        return self.version_string
 
     def get_png_file(self, coord, filename, online, force_update):
         # remove tile only when online
@@ -150,48 +146,31 @@ class GoogleMaps:
             return False
 
     def coord_to_path(self, coord):
-        path = os.path.join(self.tilespath, '%d' % coord[2])
         self.lock.acquire()
-        if not os.path.isdir(path):
-            os.mkdir(path)
         ## at most 1024 files in one dir
-        ## We onle have 2 levels for one axis
-        path = os.path.join(path, "%d" % (coord[0] / 1024))
-        if not os.path.isdir(path):
-            os.mkdir(path)
-
-        path = os.path.join(path, "%d" % (coord[0] % 1024))
-        if not os.path.isdir(path):
-            os.mkdir(path)
-
-        path = os.path.join(path, "%d" % (coord[1] / 1024))
-        if not os.path.isdir(path):
-            os.mkdir(path)
-
+        ## We only have 2 levels for one axis
+        path = fileUtils.check_dir(self.tilespath, '%d' % coord[2])
+        path = fileUtils.check_dir(path, "%d" % (coord[0] / 1024))
+        path = fileUtils.check_dir(path, "%d" % (coord[0] % 1024))
+        path = fileUtils.check_dir(path, "%d" % (coord[1] / 1024))
         self.lock.release()
-        path = os.path.join(path, "%d.png" % (coord[1] % 1024))
-        return path
+        return os.path.join(path, "%d.png" % (coord[1] % 1024))
 
     def get_file(self, coord, online, force_update):
-        if (coord[2] > MAP_MAX_ZOOM_LEVEL) or (coord[2] < MAP_MIN_ZOOM_LEVEL):
-            return None
-        world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - coord[2])
-        if (coord[0] > world_tiles):
-            return None
-        if (coord[1] > world_tiles):
-            return None
+        if (MAP_MIN_ZOOM_LEVEL <= coord[2] <= MAP_MAX_ZOOM_LEVEL):
+            world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - coord[2])
+            if (coord[0] > world_tiles) or (coord[1] > world_tiles):
+                return None
+            ## Tiles dir structure
+            filename = self.coord_to_path(coord)
+            # print "Coord to path: %s" % filename
+            if (self.get_png_file(coord, filename, online, force_update)):
+                return filename
 
-        ## Tiles dir structure
-        filename = self.coord_to_path(coord)
-#        print "Coord to path: %s" % filename
-        if (self.get_png_file(coord, filename, online, force_update)):
-            return filename
-        else:
-            return None
 
     def get_tile_pixbuf(self, coord, online, force_update):
         w = gtk.Image()
-#        print ("get_tile_pixbuf: zl: %d, coord: %d, %d") % (coord)
+        # print ("get_tile_pixbuf: zl: %d, coord: %d, %d") % (coord)
         filename = self.get_file(coord, online, force_update)
         if (filename == None):
             filename = 'missing.png'
