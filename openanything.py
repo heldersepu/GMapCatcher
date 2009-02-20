@@ -37,7 +37,7 @@ class DefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
             req.get_full_url(), code, msg, headers, fp)
         result.status = code
         return result
-    
+
 def encode_post_data_dict( post_data ):
     data = []
     for key in post_data.keys():
@@ -101,7 +101,7 @@ def openAnything( source, etag=None, lastmodified=None, agent=USER_AGENT, post_d
         request.add_header('Accept-encoding', 'gzip')
         opener = urllib2.build_opener(SmartRedirectHandler(), DefaultErrorHandler())
         return opener.open(request)
-    
+
     # try to open with native open function (if source is a filename)
     try:
         return open(source)
@@ -131,7 +131,7 @@ def fetch(source, etag=None, lastmodified=None, agent=USER_AGENT, post_data=None
         result['status'] = f.status
     f.close()
     return result
-    
+
 def encode_multipart_formdata(fields, files):
     """
     fields is a sequence of (name, value) elements for regular form fields.

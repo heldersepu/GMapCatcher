@@ -1,9 +1,9 @@
-import os 
-import re 
-import gtk 
+import os
+import re
+import gtk
 import sys
-import urllib 
-import openanything 
+import urllib
+import openanything
 import fileUtils
 
 from time import time
@@ -106,7 +106,7 @@ class GoogleMaps:
 
     def search_location(self, location):
         print 'downloading the following location:', location
-        oa = openanything.fetch( 'http://maps.google.com/maps?q=' + 
+        oa = openanything.fetch( 'http://maps.google.com/maps?q=' +
             urllib.quote_plus(location) )
         if oa['status']!=200:
             print 'error connecting to http://maps.google.com - aborting'
@@ -120,7 +120,7 @@ class GoogleMaps:
             print 'location %s not found' % location
             return False
 
-        p = re.compile('center:{lat:([0-9.-]+),lng:([0-9.-]+)}' + 
+        p = re.compile('center:{lat:([0-9.-]+),lng:([0-9.-]+)}' +
                        '.*zoom:([0-9.-]+)')
         m = p.search(html)
         if not m:

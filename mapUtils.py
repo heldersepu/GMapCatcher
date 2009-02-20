@@ -32,7 +32,7 @@ class GetTileThread(Thread):
         pixbuf = self.window.ctx_map.get_tile_pixbuf((self.x, self.y, self.zl),
                self.online, self.force_update)
         gc = self.gc
-        da.draw_pixbuf(gc, pixbuf, 
+        da.draw_pixbuf(gc, pixbuf,
                     int(self.xi), int(self.yi),
                     int(self.xp), int(self.yp),
                     int(self.draw_width), int(self.draw_height))
@@ -42,13 +42,13 @@ class GetTileThread(Thread):
                 coord = marker.positions[str]
                 myCenter = coord_to_tile(coord)
                 if (self.x == myCenter[0][0] and self.y == myCenter[0][1]):
-                    da.draw_pixbuf(gc, marker.pixbuf, 
+                    da.draw_pixbuf(gc, marker.pixbuf,
                                 int(self.xi), int(self.yi),
                                 int(self.xp), int(self.yp),
                                 int(self.draw_width), int(self.draw_height))
         return
 
-def do_expose_cb(self, zl, center, rect, online, 
+def do_expose_cb(self, zl, center, rect, online,
                  force_update, style_black_gc, area):
 
     tl_point = (center[1][0] - rect.width / 2,
@@ -72,10 +72,10 @@ def do_expose_cb(self, zl, center, rect, online,
 
             if not (((area.x + area.width < x_pos) or \
                      (x_pos + draw_width < area.x)) or \
-                    ((area.y + area.height < y_pos) or 
+                    ((area.y + area.height < y_pos) or
                      (y_pos + draw_height < area.y))):
-                th = GetTileThread(zl, real_tile_x, real_tile_y, 
-                        tile_x_pos_inner, tile_y_pos_inner, x_pos, y_pos, 
+                th = GetTileThread(zl, real_tile_x, real_tile_y,
+                        tile_x_pos_inner, tile_y_pos_inner, x_pos, y_pos,
                         draw_width, draw_height, online,
                         force_update, style_black_gc, self)
                 threads.append(th)
