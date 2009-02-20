@@ -4,7 +4,7 @@ import py2exe
 setup(
     name = 'gmapcatcher',
     description = 'Offline Google Map Viewer',
-    version = '0.048',
+    version = '0.049',
     url = "http://code.google.com/p/gmapcatcher/",
 
     windows = [

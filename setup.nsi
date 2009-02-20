@@ -1,5 +1,5 @@
 !define PRODUCT_NAME "gmapcatcher"
-!define PRODUCT_VERSION "0.048"
+!define PRODUCT_VERSION "0.049"
 !define PRODUCT_WEB_SITE "http://code.google.com/p/gmapcatcher/"
 
 ; The name of the installer

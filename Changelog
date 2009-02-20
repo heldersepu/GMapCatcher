@@ -1,79 +1,85 @@
-Feb 15 2009	H.S	<HelderSepu@gmail.com>
-	* 0.048
-	* Add description in the query entry box 
-	* Add some info in the missing.png image 
-	* Double-Click functionality in the Map
-        
-Feb 08 2009	H.S	<HelderSepu@gmail.com>
-	* 0.047
-	* Use zoom when searching
-	* Center location (tile) after searching
-	* Fix Issue 21 (Error searching for "Beijing China")
+Feb 19 2009    H.S    <HelderSepu@gmail.com>
+    * 0.049
+    * Add description to the locations file
+    * Add basic support for markers, see Issue 22
+    * Adopt PEP 8 Style Guide for Python Code http://www.python.org/dev/peps/pep-0008/
 
-Feb 06 2009	N.W	<pi3orama@gmail.com>
-	* 0.046
-	* google's "http://maps.google.com/maps" changes, old code can't fetch version string
-	* use a simpler 'openhttp' to replace complex 'openanything'
+Feb 15 2009    H.S    <HelderSepu@gmail.com>
+    * 0.048
+    * Add description in the query entry box
+    * Add some info in the missing.png image
+    * Double-Click functionality in the Map
 
-Feb 04 2009	H.S	<HelderSepu@gmail.com>
-	* 0.045
-	* Changes in the Windows installer
-	  - Do not install VC++ 2008 runtimes if already installed.
-	  - Add an Export Maps tool
+Feb 08 2009    H.S    <HelderSepu@gmail.com>
+    * 0.047
+    * Use zoom when searching
+    * Center location (tile) after searching
+    * Fix Issue 21 (Error searching for "Beijing China")
 
-Feb 02 2009	H.S	<HelderSepu@gmail.com>
-	* 0.044
-	* Fix Bug with non unicode chars
+Feb 06 2009    N.W    <pi3orama@gmail.com>
+    * 0.046
+    * google's "http://maps.google.com/maps" changes, old code can't fetch version string
+    * use a simpler 'openhttp' to replace complex 'openanything'
 
-Jan 31 2009	H.S	<HelderSepu@gmail.com>
-	* 0.043
-	* Add a "Center map here" to the right Click menu
+Feb 04 2009    H.S    <HelderSepu@gmail.com>
+    * 0.045
+    * Changes in the Windows installer
+      - Do not install VC++ 2008 runtimes if already installed.
+      - Add an Export Maps tool
 
-Jan 28 2009	H.S	<HelderSepu@gmail.com>
-	* 0.042
-	* Add right Click functionality to the map
+Feb 02 2009    H.S    <HelderSepu@gmail.com>
+    * 0.044
+    * Fix Bug with non unicode chars
 
-Jan 28 2009	N.W	<pi3orama@gmail.com>
-	* SVN head
-	* Replace some 'print' error messages by dialogbox.
-	* See http://code.google.com/p/gmapcatcher/issues/detail?id=7
+Jan 31 2009    H.S    <HelderSepu@gmail.com>
+    * 0.043
+    * Add a "Center map here" to the right Click menu
 
-Jan 22 2009	N.W	<pi3orama@gmail.com>
-	* 0.041
-	* Automatically search when hitting "enter";
-	* Automatically display after autocompletion.
-	Thanks to <HelderSepu@gmail.com>
+Jan 28 2009    H.S    <HelderSepu@gmail.com>
+    * 0.042
+    * Add right Click functionality to the map
 
-Jan 12 2009	N.W	<pi3orama@gmail.com>
-	* 0.04
-	* Add a "Force update" option, force redownload old tiles.
+Jan 28 2009    N.W    <pi3orama@gmail.com>
+    * SVN head
+    * Replace some 'print' error messages by dialogbox.
+    * See http://code.google.com/p/gmapcatcher/issues/detail?id=7
 
-Sep 27 2008	N.W	<pi3orama@gmail.com>
-	* 0.03
-	* Detect google map version string before download
+Jan 22 2009    N.W    <pi3orama@gmail.com>
+    * 0.041
+    * Automatically search when hitting "enter";
+    * Automatically display after autocompletion.
+    Thanks to <HelderSepu@gmail.com>
 
-Jun 23 2008	N.W	<pi3orama@gmail.com>
-	* 0.02 hotfix
-	* google url changed again
+Jan 12 2009    N.W    <pi3orama@gmail.com>
+    * 0.04
+    * Add a "Force update" option, force redownload old tiles.
 
-Mar 20 2008	N.W	<pi3orama@gmail.com>
+Sep 27 2008    N.W    <pi3orama@gmail.com>
+    * 0.03
+    * Detect google map version string before download
 
-	* 0.02
-	* use multithread downloader while online
-	* fix a bug: when hit 'OK' button, doesn't change viewport
+Jun 23 2008    N.W    <pi3orama@gmail.com>
+    * 0.02 hotfix
+    * google url changed again
+
+Mar 20 2008    N.W    <pi3orama@gmail.com>
+
+    * 0.02
+    * use multithread downloader while online
+    * fix a bug: when hit 'OK' button, doesn't change viewport
 
 
-Mar 02 2008	N.W	<pi3orama@gmail.com>
+Mar 02 2008    N.W    <pi3orama@gmail.com>
 
-	* 0.01 hotfix 2
-	* Google guys changed their tile url...
+    * 0.01 hotfix 2
+    * Google guys changed their tile url...
 
-Jan 04 2008	N.W	<pi3orama@gmail.com>
+Jan 04 2008    N.W    <pi3orama@gmail.com>
 
-	* 0.01 hotfix
-	* Fix a keyevent problem in windows
+    * 0.01 hotfix
+    * Fix a keyevent problem in windows
 
-Jan 02 2008	N.W	<pi3orama@gmail.com>
+Jan 02 2008    N.W    <pi3orama@gmail.com>
 
-	* Initial 0.01
+    * Initial 0.01
 
