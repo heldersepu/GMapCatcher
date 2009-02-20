@@ -1,17 +1,17 @@
-import os 
-import re 
-import gtk 
+import os
+import re
+import gtk
 import fileUtils
 
 class MyMarkers:
     # coord = (lat, lng, zoom_level)
     positions = {}
     pixbuf = None
-    
+
     def read_markers(self):
         self.positions = fileUtils.read_file('marker', self.markerpath)
 
-    def write_markers(self):    
+    def write_markers(self):
         fileUtils.write_file('marker', self.markerpath, self.positions)
 
     def __init__(self):
@@ -29,7 +29,7 @@ class MyMarkers:
 
     def get_markers(self):
         return self.positions
-  
+
     def get_marker_pixbuf(self):
         filename = 'marker.png'
         if (os.path.exists(filename)):
