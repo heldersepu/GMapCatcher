@@ -19,6 +19,7 @@ PYTHON setup.py py2exe
 
 :: Copy individual files
 @COPY missing.png dist
+@COPY marker.png dist
 
 :: Need to copy the [etc, lib, share] directories from your GTK+ install (not the pygtk install) to the "dist" dir py2exe created.
 :: All the Required files should be in the "common" folder
