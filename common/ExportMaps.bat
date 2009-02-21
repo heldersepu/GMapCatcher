@@ -1,7 +1,7 @@
 :: Make a "tiles" installer using NSIS
 
 @SET NSI_NAME=setupTiles.nsi
-@SET NSIS=%PROGRAMFILES%\gmapcatcher\NSIS\makensis.exe
+@SET NSIS=%PROGRAMFILES%\GMapCatcher\NSIS\makensis.exe
 @SET FILE_NAME=MyMaps.exe
 @SET FOLDER_PATH=%USERPROFILE%\.googlemaps
 

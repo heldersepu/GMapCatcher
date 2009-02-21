@@ -2,7 +2,7 @@ from distutils.core import setup
 import py2exe
 
 setup(
-    name = 'gmapcatcher',
+    name = 'GMapCatcher',
     description = 'Offline Google Map Viewer',
     version = '0.049',
     url = "http://code.google.com/p/gmapcatcher/",

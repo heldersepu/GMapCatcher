@@ -1,14 +1,14 @@
-Name "GmapCatcher Maps"
+Name "GMapCatcher Maps"
 OutFile "MyMaps.exe"
 InstallDir $PROFILE\.googlemaps
 
 ;--------------------------------
 ;Version Information
   VIProductVersion "0.0.0.0"
-  VIAddVersionKey "ProductName" "GmapCatcher"
-  VIAddVersionKey "Comments" "GmapCatcher is another offline viewer of google maps. It downloads google-map tiles automatically, display them using a specific GUI. User can view google map offline."
+  VIAddVersionKey "ProductName" "GMapCatcher"
+  VIAddVersionKey "Comments" "GMapCatcher is an offline viewer of google maps. It downloads google-map tiles automatically, display them using a specific GUI. User can view google map offline."
   VIAddVersionKey "LegalCopyright" "http://code.google.com/p/gmapcatcher/"
-  VIAddVersionKey "FileDescription" "Maps for GmapCatcher"
+  VIAddVersionKey "FileDescription" "Maps for GMapCatcher"
   VIAddVersionKey "FileVersion" ""
 
 ;--------------------------------
