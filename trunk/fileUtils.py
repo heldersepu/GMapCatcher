@@ -28,7 +28,7 @@ def read_file(strInfo, filePath):
 # Writes all the locations (fileData) to given file (filePath)
 def write_file(strInfo, filePath, fileData):
     file = open(filePath, "w")
-    file.write("# This is the "+ strInfo +"s file used by gmapcatcher.\n"+\
+    file.write("# This is the "+ strInfo +"s file used by GMapCatcher.\n"+\
         "#\n"+\
         "# This file contains a list of Locations/Position.\n"+\
         "# Each entry should be kept on an individual line.\n"+\
