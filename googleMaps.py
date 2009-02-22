@@ -91,11 +91,9 @@ class GoogleMaps:
         self.configpath = os.path.expanduser("~/.googlemaps")
         self.locationpath = os.path.join(self.configpath, 'locations')
         self.tilespath = os.path.join(self.configpath, 'tiles')
+        fileUtils.check_dir(self.configpath)
+        fileUtils.check_dir(self.tilespath)
 
-        if not os.path.isdir(self.configpath):
-            os.mkdir(self.configpath)
-        if not os.path.isdir(self.tilespath):
-            os.mkdir(self.tilespath)
         if (os.path.exists(self.locationpath)):
             self.read_locations()
         else:
