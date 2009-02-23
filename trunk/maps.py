@@ -69,6 +69,11 @@ class MainWindow(gtk.Window):
             self.entry.set_text("")
             self.entry.grab_focus()
 
+    # Reset the default text if entry is empty
+    def default_entry(self, *args):
+        if (self.entry.get_text().strip() == ''):
+            self.entry.set_text(self.default_text)
+
     def set_completion(self):
         completion = gtk.EntryCompletion()
         completion.connect('match-selected', self.on_completion_match)
@@ -119,11 +124,13 @@ class MainWindow(gtk.Window):
         # Start search after hit 'ENTER'
         entry.connect('activate', self.confirm_clicked)
         # Launch clean_entry for all the signals/events below
-        entry.connect("button-release-event", self.clean_entry)
+        entry.connect("button-press-event", self.clean_entry)
         entry.connect("cut-clipboard", self.clean_entry)
         entry.connect("copy-clipboard", self.clean_entry)
         entry.connect("paste-clipboard", self.clean_entry)
         entry.connect("move-cursor", self.clean_entry)
+        # Launch the default_entry on the focus out
+        entry.connect("focus-out-event", self.default_entry)
 
         bbox = gtk.HButtonBox()
         button = gtk.Button(stock='gtk-ok')
@@ -300,9 +307,10 @@ class MainWindow(gtk.Window):
         self.set_border_width(10)
         self.set_size_request(450, 400)
         self.set_completion()
-        self.entry.set_text(self.default_text)
+        self.default_entry()
         self.show_all()
         self.da_set_cursor()
+
 def main():
     MainWindow()
     gtk.main()
