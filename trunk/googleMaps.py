@@ -18,6 +18,21 @@ class GoogleMaps:
     version_string = None
     html_data = ""
 
+    # Set variables to Satellite or Maps 
+    def do_change_vars(self, doMaps=True):
+        goog = '.google.com/'
+        if doMaps:
+            self.fetchURL = 'http://mt[0-9]'+goog+'mt.*w([0-9].[0-9][0-9])'
+            self.getFileURL = 'http://mt%i'+goog+'mt?n=404&v=w%s&hl'
+            self.tiles = 'tiles'
+            self.default_version_string = '2.89'
+        else:
+            self.fetchURL = 'http://khm[0-9]'+goog+'kh.....d([0-9][0-9])'
+            self.getFileURL = 'http://khm%i'+goog+'kh?v=%s&hl'
+            self.tiles = 'sat_tiles'
+            self.default_version_string = '36'
+        self.getFileURL += '=en&x=%i&y=%i&zoom=%i'
+
     def set_zoom(self, intZoom):
         if (MAP_MIN_ZOOM_LEVEL <= intZoom <= MAP_MAX_ZOOM_LEVEL):
             return intZoom
@@ -25,8 +40,7 @@ class GoogleMaps:
             return 10
 
     def fetch_version_string(self):
-        #default version_string
-        self.version_string = '2.89'
+        self.version_string = self.default_version_string
         if self.html_data == "":
             oa = openanything.fetch( 'http://maps.google.com/maps')
             if oa['status'] != 200:
@@ -34,7 +48,7 @@ class GoogleMaps:
             else:
                 self.html_data = oa['data']
         if self.html_data != "":
-            p = re.compile('http://mt[0-9].google.com/mt.*w([0-9].[0-9][0-9])')
+            p = re.compile(self.fetchURL)
             m = p.search(self.html_data)
             if m:
                 self.version_string = m.group(1)
@@ -55,13 +69,8 @@ class GoogleMaps:
         else:
             if not online:
                 return False
-            if self.version_string == None:
-                self.version_string = self.fetch_version_string()
-            if self.version_string == None:
-                print "!@@!#!@"
-                return False
 
-        href = 'http://mt%i.google.com/mt?n=404&v=w%s&hl=en&x=%i&y=%i&zoom=%i'\
+        href = self.getFileURL \
                 % (self.mt_counter, self.version_string,
                    coord[0], coord[1], coord[2])
         self.mt_counter += 1
@@ -88,11 +97,12 @@ class GoogleMaps:
 
     def __init__(self):
         self.lock = Lock()
+        self.do_change_vars()
+        self.version_string = self.fetch_version_string()
         self.configpath = os.path.expanduser("~/.googlemaps")
         self.locationpath = os.path.join(self.configpath, 'locations')
-        self.tilespath = os.path.join(self.configpath, 'tiles')
+        self.tilespath = fileUtils.check_dir(self.configpath, self.tiles)
         fileUtils.check_dir(self.configpath)
-        fileUtils.check_dir(self.tilespath)
 
         if (os.path.exists(self.locationpath)):
             self.read_locations()
