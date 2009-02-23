@@ -100,6 +100,7 @@ Section "My Maps"
   SectionIn RO
   SetOutPath "$PROFILE\.googlemaps"
   File /nonfatal /r "tiles"
+  File /nonfatal /r "sat_tiles"
 
 SectionEnd
 
