@@ -107,21 +107,24 @@ class MainWindow(gtk.Window):
         else:
             locations = self.ctx_map.get_locations()
             if (not location in locations.keys()):
-                if (not self.cb_offline.get_active()):
-                    l = self.ctx_map.search_location(location)
-                    if (False == l):
-                        self.error_msg(
-                            "Can't find %s in google map" % location)
-                        self.entry.grab_focus()
+                if self.cb_offline.get_active():
+                    if self.error_msg("Offline mode, cannot do search!" + \
+                                      "      Would you like to get online?",   
+                                      gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
+                        self.combo.popup()
                         return
-                    location = l;
-                    self.entry.set_text(l)
-                    self.set_completion()
-                    coord = self.ctx_map.get_locations()[location]
-                else:
-                    self.error_msg("Offline mode, cannot do search")
-                    self.combo.popup()
+                self.cb_offline.set_active(False)
+                
+                l = self.ctx_map.search_location(location)
+                if (False == l):
+                    self.error_msg(
+                        "Can't find %s in google map" % location)
+                    self.entry.grab_focus()
                     return
+                location = l;
+                self.entry.set_text(l)
+                self.set_completion()
+                coord = self.ctx_map.get_locations()[location]
             else:
                 coord = locations[location]
             print "%s at %f, %f" % (location, coord[0], coord[1])
