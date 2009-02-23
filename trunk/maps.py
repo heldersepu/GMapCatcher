@@ -13,14 +13,13 @@ class MainWindow(gtk.Window):
     current_zoom_level = MAP_MAX_ZOOM_LEVEL
     default_text = "Enter location here!"
 
-    def error_msg(self, msg):
+    def error_msg(self, msg, buttons=gtk.BUTTONS_OK):
         dialog = gtk.MessageDialog(self,
                 gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                gtk.MESSAGE_ERROR, gtk.BUTTONS_OK,
-                msg)
-        dialog.run()
+                gtk.MESSAGE_ERROR, buttons, msg)
+        resp = dialog.run()
         dialog.destroy()
-
+        return resp
 
     def do_scale(self, pos, pointer=None, force=False):
         pos = round(pos, 0)
@@ -74,6 +73,18 @@ class MainWindow(gtk.Window):
         if (self.entry.get_text().strip() == ''):
             self.entry.set_text(self.default_text)
 
+    # Handles the change event of the ComboBox
+    def changed_combo(self, *args):
+        str = self.entry.get_text()
+        if (str.endswith(SEPARATOR)):
+            self.entry.set_text(str.strip())
+            self.confirm_clicked(self)
+
+    # Show the combo list when pressing arrow keys
+    def key_press_combo(self, w, event):
+        if event.keyval in [gtk.keysyms.Up, gtk.keysyms.Down] :
+            self.combo.popup()
+
     def set_completion(self):
         completion = gtk.EntryCompletion()
         completion.connect('match-selected', self.on_completion_match)
@@ -81,6 +92,8 @@ class MainWindow(gtk.Window):
         completion.set_model(self.ctx_map.completion_model())
         completion.set_text_column(0)
         self.completion = completion
+        # Populate the dropdownlist
+        self.combo.set_model(self.ctx_map.completion_model(SEPARATOR))
 
     def confirm_clicked(self, button):
         location = self.entry.get_text()
@@ -107,6 +120,7 @@ class MainWindow(gtk.Window):
                     coord = self.ctx_map.get_locations()[location]
                 else:
                     self.error_msg("Offline mode, cannot do search")
+                    self.combo.popup()
                     return
             else:
                 coord = locations[location]
@@ -118,8 +132,12 @@ class MainWindow(gtk.Window):
 
     def __create_top_paned(self):
         frame = gtk.Frame("Query")
-        hbox = gtk.HBox(False, 10)
-        entry = gtk.Entry()
+        hbox = gtk.HBox(False, 0)
+        self.combo = gtk.combo_box_entry_new_text()        
+        self.combo.connect('changed', self.changed_combo)
+        self.combo.connect('key-press-event', self.key_press_combo)
+        self.combo.set_size_request(200,20)
+        entry = self.combo.child
 
         # Start search after hit 'ENTER'
         entry.connect('activate', self.confirm_clicked)
@@ -137,7 +155,7 @@ class MainWindow(gtk.Window):
         button.connect('clicked', self.confirm_clicked)
         bbox.add(button)
 
-        hbox.pack_start(entry)
+        hbox.pack_start(self.combo)
         hbox.pack_start(bbox)
 
         self.cb_offline = gtk.CheckButton("Offline")

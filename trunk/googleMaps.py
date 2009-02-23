@@ -194,9 +194,9 @@ class GoogleMaps:
             w.set_from_file('missing.png')
             return w.get_pixbuf()
 
-    def completion_model(self):
+    def completion_model(self,strAppend=''):
         store = gtk.ListStore(TYPE_STRING)
         for str in self.locations.keys():
             iter = store.append()
-            store.set(iter, 0, str)
+            store.set(iter, 0, str + strAppend)
         return store
