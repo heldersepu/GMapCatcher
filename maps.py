@@ -114,6 +114,7 @@ class MainWindow(gtk.Window):
                         self.combo.popup()
                         return
                 self.cb_offline.set_active(False)
+                mapUtils.force_repaint()
                 
                 l = self.ctx_map.search_location(location)
                 if (False == l):

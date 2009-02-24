@@ -1,3 +1,4 @@
+import gtk
 import math
 import mapMark
 from mapConst import *
@@ -121,3 +122,7 @@ def coord_to_tile(coord):
     offset =  int((x - int(x)) * TILES_WIDTH), \
           int((y - int(y)) * TILES_HEIGHT)
     return (int(x) % world_tiles, int(y) % world_tiles), offset
+    
+def force_repaint():
+    while gtk.events_pending():
+        gtk.main_iteration_do(False) 
