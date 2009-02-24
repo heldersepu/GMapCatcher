@@ -84,6 +84,7 @@ class MainWindow(gtk.Window):
     def key_press_combo(self, w, event):
         if event.keyval in [65362, 65364] :
             self.combo.popup()
+            return True
 
     def set_completion(self):
         completion = gtk.EntryCompletion()
