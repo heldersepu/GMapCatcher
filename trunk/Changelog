@@ -1,3 +1,10 @@
+Feb 23 2009    H.S    <HelderSepu@gmail.com>
+    * 0.050
+    * Add a new icon
+    * Use MixedCase in the name (GMapCatcher)
+    * Start infrastructure for Satellite images
+    * Replace the Entry with a ComboBoxEntry
+    
 Feb 19 2009    H.S    <HelderSepu@gmail.com>
     * 0.049
     * Add description to the locations file
