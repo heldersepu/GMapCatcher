@@ -82,7 +82,7 @@ class MainWindow(gtk.Window):
 
     # Show the combo list when pressing arrow keys
     def key_press_combo(self, w, event):
-        if event.keyval in [gtk.keysyms.Up, gtk.keysyms.Down] :
+        if event.keyval in [65362, 65364] :
             self.combo.popup()
 
     def set_completion(self):
