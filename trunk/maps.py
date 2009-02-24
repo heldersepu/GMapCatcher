@@ -328,6 +328,7 @@ class MainWindow(gtk.Window):
         vpaned.add2(hpaned)
 
         self.add(vpaned)
+        self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 400)
         self.set_completion()
