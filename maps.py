@@ -80,10 +80,15 @@ class MainWindow(gtk.Window):
             self.entry.set_text(str.strip())
             self.confirm_clicked(self)
 
-    # Show the combo list when pressing arrow keys
-    def key_press_combo(self, w, event):
-        if event.keyval in [65362, 65364] :
+    # Show the combo list if is not empty
+    def combo_popup(self):
+        if self.combo.get_model().get_iter_root() != None:
             self.combo.popup()
+
+    # Handles the pressing of arrow keys
+    def key_press_combo(self, w, event):
+        if event.keyval in [65362, 65364]:
+            self.combo_popup()
             return True
 
     def set_completion(self):
@@ -112,7 +117,7 @@ class MainWindow(gtk.Window):
                     if self.error_msg("Offline mode, cannot do search!" + \
                                       "      Would you like to get online?",   
                                       gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
-                        self.combo.popup()
+                        self.combo_popup()
                         return
                 self.cb_offline.set_active(False)
                 mapUtils.force_repaint()
