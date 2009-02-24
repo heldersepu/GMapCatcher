@@ -223,9 +223,10 @@ class MainWindow(gtk.Window):
         return self.drawing_area
 
     def do_zoom(self, value, doForce=False):
-        if (value >= MAP_MIN_ZOOM_LEVEL) and (value <= MAP_MAX_ZOOM_LEVEL):
+        if (MAP_MIN_ZOOM_LEVEL <= value <= MAP_MAX_ZOOM_LEVEL):
             self.do_scale(value, self.drawing_area.get_pointer(), doForce)
 
+    # All the actions for the menu items
     def menu_item_response(self, w, strName):
         if strName.startswith("Zoom Out"):
             self.do_zoom(self.scale.get_value() + 1, True)
@@ -236,7 +237,7 @@ class MainWindow(gtk.Window):
         else:
             self.do_zoom(MAP_MAX_ZOOM_LEVEL)
 
-    # change the mouse cursor over the drawing_area
+    # Change the mouse cursor over the drawing_area
     def da_set_cursor(self, dCursor = gtk.gdk.HAND1):
         cursor = gtk.gdk.Cursor(dCursor)
         self.drawing_area.window.set_cursor(cursor)
@@ -294,6 +295,7 @@ class MainWindow(gtk.Window):
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
         zl = self.get_zoom_level()
+        mapUtils.force_repaint()
         mapUtils.do_expose_cb(self, zl, self.center, rect, online,
                               force_update, self.drawing_area.style.black_gc,
                               event.area)
@@ -305,7 +307,7 @@ class MainWindow(gtk.Window):
             self.do_zoom(self.scale.get_value() + 1)
 
     def scale_change_value(self, range, scroll, value):
-        if (value <= MAP_MAX_ZOOM_LEVEL) and (value >= MAP_MIN_ZOOM_LEVEL):
+        if (MAP_MIN_ZOOM_LEVEL <= value <= MAP_MAX_ZOOM_LEVEL):
             self.do_scale(value)
         return
 
