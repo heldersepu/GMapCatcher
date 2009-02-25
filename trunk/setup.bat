@@ -9,7 +9,7 @@
 @RD build /s /q
 
 :: Launch the PYTHON setup
-PYTHON setup.py py2exe
+C:\PYTHON26\PYTHON.EXE setup.py py2exe
 
 :: Few seconds delay to show dependencies
 @COLOR F0
