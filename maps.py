@@ -301,7 +301,6 @@ class MainWindow(gtk.Window):
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
         zl = self.get_zoom_level()
-        mapUtils.force_repaint()
         mapUtils.do_expose_cb(self, zl, self.center, rect, online,
                               force_update, self.drawing_area.style.black_gc,
                               event.area)
