@@ -1,5 +1,0 @@
-;; -*- scheme -*-
-;; THIS FILE IS GENERATED - DO NOT EDIT
-(include "gtk/gdk-2.10.defs")
-(include "gtk/gdk-2.12.defs")
-(include "gtk/gdk-base.defs")
