@@ -1,6 +1,9 @@
 ﻿#labels Featured
 Screenshots:
 
+New look coming under Windows!!!<br>
+http://gmapcatcher.googlecode.com/svn/wiki/WinNewLook.PNG
+
 gmapcatcher v0.050 in XP & Ubuntu Showing new Features<br>
 http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.050-ComboBoxEntry.PNG
 http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.050-Yes_No.PNG
