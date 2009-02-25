@@ -11,7 +11,7 @@
  ==  Main stuff  ==
         <table cellspacing=10>
          <tr align="left"><th> - Python    </th><th> http://www.python.org/download/</th></tr>
-         <tr align="left"><th> - GTK+ runtime</th><th> http://sourceforge.net/project/showfiles.php?group_id=98754</th></tr>
+         <tr align="left"><th> - GTK+ runtime</th><th> http://gtk-win.sourceforge.net/home/index.php/en/Downloads</th></tr>
          <tr align="left"><th> - Py(Stuff) </th><th> http://www.pygtk.org/downloads.html ^(pygtk, pygobject & pycairo)^</th></tr>
          <tr align="left"><th> - GTK+      </th><th> http://www.gtk.org/download.html ^(Get the "All-in-one bundle")^</th></tr>
         </table><br>
