@@ -47,9 +47,9 @@ def write_file(strInfo, filePath, fileData):
 
 # Checks if a directory exist if not it will be created
 def check_dir(strPath, strSubPath=None):
-        if (strSubPath != None):
-            strPath = os.path.join(strPath, strSubPath)
-        if not os.path.isdir(strPath):
-            os.mkdir(strPath)
-        return strPath
+    if (strSubPath != None):
+        strPath = os.path.join(strPath, strSubPath)
+    if not os.path.isdir(strPath):
+        os.mkdir(strPath)
+    return strPath
 
