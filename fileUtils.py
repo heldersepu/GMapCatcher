@@ -40,7 +40,7 @@ def write_file(strInfo, filePath, fileData):
         ('#   '+ strInfo +'="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
          ("Paris, France", 48.856667, 2.350987, 5)) + "#\n" )
 
-    for l in fileData.keys():
+    for l in sorted(fileData.keys()):
         file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
                   (l, fileData[l][0], fileData[l][1], fileData[l][2]))
     file.close()
