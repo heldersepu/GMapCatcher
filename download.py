@@ -39,6 +39,7 @@ def print_help():
     print '  --location=   Location to download'
     print '  --latitude=   Latitude of the location '
     print '  --longitude=  Longitude of the location'
+    print '  --do-sat      Retrieve satellite images'
     print ' '
     print '  --latrange=   Latitude Range to get    (default = %f)' % lat_range
     print '  --lngrange=   Longitude Range to get   (default = %f)' % lng_range
@@ -81,6 +82,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         for arg in sys.argv[1:]:
             if arg.startswith('--'):
+                arg = arg.lower()
                 if arg.startswith('--max-zoom-level='):
                     max_zl = int(arg[17:])
                 elif arg.startswith('--min-zoom-level='):
@@ -101,6 +103,8 @@ if __name__ == "__main__":
                     lng_range = float(arg[11:])
                 elif arg.startswith('--threads='):
                     nr_threads = int(arg[10:])
+                elif arg.startswith('--do-sat'):
+                    ctx_map.get_maps(False)
                 elif arg.startswith('--full-range'):
                     location = "Whole World"
                     lng = 0

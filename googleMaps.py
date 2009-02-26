@@ -19,19 +19,21 @@ class GoogleMaps:
     html_data = ""
 
     # Set variables to Satellite or Maps 
-    def do_change_vars(self, doMaps=True):
+    def get_maps(self, doMaps=True):
         goog = '.google.com/'
         if doMaps:
             self.fetchURL = 'http://mt[0-9]'+goog+'mt.*w([0-9].[0-9][0-9])'
             self.getFileURL = 'http://mt%i'+goog+'mt?n=404&v=w%s&hl'
             self.tiles = 'tiles'
-            self.default_version_string = '2.89'
+            self.default_version_string = '2.92'
         else:
             self.fetchURL = 'http://khm[0-9]'+goog+'kh.....d([0-9][0-9])'
             self.getFileURL = 'http://khm%i'+goog+'kh?v=%s&hl'
             self.tiles = 'sat_tiles'
             self.default_version_string = '36'
         self.getFileURL += '=en&x=%i&y=%i&zoom=%i'
+        self.version_string = self.fetch_version_string()
+        self.tilespath = fileUtils.check_dir(self.configpath, self.tiles)
 
     def set_zoom(self, intZoom):
         if (MAP_MIN_ZOOM_LEVEL <= intZoom <= MAP_MAX_ZOOM_LEVEL):
@@ -97,12 +99,9 @@ class GoogleMaps:
 
     def __init__(self):
         self.lock = Lock()
-        self.do_change_vars()
-        self.version_string = self.fetch_version_string()
-        self.configpath = os.path.expanduser("~/.googlemaps")
+        self.configpath = fileUtils.check_dir(os.path.expanduser("~/.googlemaps"))
         self.locationpath = os.path.join(self.configpath, 'locations')
-        self.tilespath = fileUtils.check_dir(self.configpath, self.tiles)
-        fileUtils.check_dir(self.configpath)
+        self.get_maps(True)
 
         if (os.path.exists(self.locationpath)):
             self.read_locations()
