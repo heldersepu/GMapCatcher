@@ -127,12 +127,16 @@ class GoogleMaps:
             print 'location %s not found' % location
             return False
 
-        p = re.compile('center:{lat:([0-9.-]+),lng:([0-9.-]+)}' +
-                       '.*zoom:([0-9.-]+)')
-        m = p.search(html)
-        if not m:
-            p = re.compile('markers:.*lat:([0-9.-]+),lng:([0-9.-]+).*laddr:')
+        # List of patterns to look for the latitude & longitude 
+        paList = ['center:{lat:([0-9.-]+),lng:([0-9.-]+)}.*zoom:([0-9.-]+)',
+                  'markers:.*lat:([0-9.-]+),lng:([0-9.-]+).*laddr:',
+                  'dtlsUrl:.*x26sll=([0-9.-]+),([0-9.-]+).*x26sspn']
+
+        for srtPattern in paList:
+            p = re.compile(srtPattern)
             m = p.search(html)
+            if m: break
+
         if m:
             lat, lng = float(m.group(1)), float(m.group(2))
             zoom = 10
@@ -173,7 +177,6 @@ class GoogleMaps:
             # print "Coord to path: %s" % filename
             if (self.get_png_file(coord, filename, online, force_update)):
                 return filename
-
 
     def get_tile_pixbuf(self, coord, online, force_update):
         w = gtk.Image()
