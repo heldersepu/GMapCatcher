@@ -196,7 +196,7 @@ class GoogleMaps:
 
     def completion_model(self,strAppend=''):
         store = gtk.ListStore(TYPE_STRING)
-        for str in self.locations.keys():
+        for str in sorted(self.locations.keys()):
             iter = store.append()
             store.set(iter, 0, str + strAppend)
         return store
