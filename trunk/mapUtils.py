@@ -32,28 +32,28 @@ class GetTileThread(Thread):
         da = self.window.drawing_area.window
         pixbuf = self.window.ctx_map.get_tile_pixbuf((self.x, self.y, self.zl),
                self.online, self.force_update)
-        gc = self.gc
-        da.draw_pixbuf(gc, pixbuf,
-                    int(self.xi), int(self.yi),
-                    int(self.xp), int(self.yp),
-                    int(self.draw_width), int(self.draw_height))
+
+        da.draw_pixbuf(self.gc, pixbuf,
+                    self.xi, self.yi,
+                    self.xp, self.yp,
+                    self.draw_width, self.draw_height)
 
         if (self.zl < MAP_MAX_ZOOM_LEVEL - 2):
             for str in marker.positions.keys():
                 coord = marker.positions[str]
                 myCenter = coord_to_tile(coord)
                 if (self.x == myCenter[0][0] and self.y == myCenter[0][1]):
-                    da.draw_pixbuf(gc, marker.pixbuf,
-                                int(self.xi), int(self.yi),
-                                int(self.xp), int(self.yp),
-                                int(self.draw_width), int(self.draw_height))
+                    da.draw_pixbuf(self.gc, marker.pixbuf,
+                                self.xi, self.yi,
+                                self.xp, self.yp,
+                                self.draw_width, self.draw_height)
         return
 
 def do_expose_cb(self, zl, center, rect, online,
                  force_update, style_black_gc, area):
 
     tl_point = (center[1][0] - rect.width / 2,
-            center[1][1] - rect.height / 2)
+                center[1][1] - rect.height / 2)
 
     tl_tile, tl_offset = tile_adjustEx(zl, center[0], tl_point)
 
@@ -119,8 +119,8 @@ def coord_to_tile(coord):
     tiles_pre_radian = world_tiles / (2 * math.pi)
     e = math.sin(coord[0] * (1/180.*math.pi))
     y = world_tiles/2 + 0.5*math.log((1+e)/(1-e)) * (-tiles_pre_radian)
-    offset =  int((x - int(x)) * TILES_WIDTH), \
-          int((y - int(y)) * TILES_HEIGHT)
+    offset = int((x - int(x)) * TILES_WIDTH), \
+             int((y - int(y)) * TILES_HEIGHT)
     return (int(x) % world_tiles, int(y) % world_tiles), offset
     
 def force_repaint():
