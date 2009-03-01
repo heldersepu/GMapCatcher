@@ -1,10 +1,15 @@
+Feb 28 2009    H.S    <HelderSepu@gmail.com>
+    * 0.051
+    * Sort the locations in the ComboBoxEntry
+    * Add a checkBox for the Satellite images (see Issue 16)
+
 Feb 23 2009    H.S    <HelderSepu@gmail.com>
     * 0.050
     * Add a new icon
     * Use MixedCase in the name (GMapCatcher)
     * Start infrastructure for Satellite images
     * Replace the Entry with a ComboBoxEntry
-    
+
 Feb 19 2009    H.S    <HelderSepu@gmail.com>
     * 0.049
     * Add description to the locations file
