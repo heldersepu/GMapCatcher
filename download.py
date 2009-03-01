@@ -119,11 +119,11 @@ if __name__ == "__main__":
     if ((lat == None) or (lng == None)):
         locations = ctx_map.get_locations()
         if (not location in locations.keys()):
-            l = ctx_map.search_location(location)
-            if (False == l):
-                print "Can't find %s in google map" % location
+            location = ctx_map.search_location(location)
+            if (location[:6] == "error="):
+                print location[6:]
                 exit(0)
-            location = l;
+
         coord = ctx_map.get_locations()[location]
         lat = coord[0]
         lng = coord[1]
