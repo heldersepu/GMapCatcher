@@ -33,7 +33,6 @@ class GoogleMaps:
             self.tiles = 'sat_tiles'
             self.default_version_string = '36'
         self.getFileURL += '=en&x=%i&y=%i&zoom=%i'
-        self.version_string = self.fetch_version_string()
         self.tilespath = fileUtils.check_dir(self.configpath, self.tiles)
 
     def set_zoom(self, intZoom):
@@ -68,10 +67,13 @@ class GoogleMaps:
                 os.remove(filename)
 
         if os.path.isfile(filename):
-               return True
+            return True
         else:
             if not online:
                 return False
+        
+        if self.version_string == None:
+            self.version_string = self.fetch_version_string()
 
         href = self.getFileURL \
                 % (self.mt_counter, self.version_string,
