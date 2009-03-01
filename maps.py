@@ -139,6 +139,10 @@ class MainWindow(gtk.Window):
             self.center = mapUtils.coord_to_tile(coord)
             self.current_zoom_level = coord[2]
             self.do_scale(coord[2], force=True)
+    
+    def button_sat_click(self, w):
+        self.ctx_map.get_maps(not w.get_active())
+        self.drawing_area.queue_draw()
 
     def __create_top_paned(self):
         frame = gtk.Frame("Query")
@@ -170,7 +174,9 @@ class MainWindow(gtk.Window):
 
         self.cb_offline = gtk.CheckButton("Offline")
         self.cb_forceupdate = gtk.CheckButton("Force update")
-
+        self.cb_satellite = gtk.CheckButton("Satellite")
+        self.cb_satellite.connect("toggled", self.button_sat_click)
+        
         vbox = gtk.VBox(False, 5)
         vbox.set_border_width(5)
         vbox.pack_start(hbox)
@@ -178,10 +184,12 @@ class MainWindow(gtk.Window):
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(self.cb_offline)
         hbox.pack_start(self.cb_forceupdate)
+        hbox.pack_start(self.cb_satellite)
         vbox.pack_start(hbox)
 
         self.cb_offline.set_active(True)
         self.cb_forceupdate.set_active(False)
+        self.cb_satellite.set_active(False)
         frame.add(vbox)
         self.entry = entry
         return frame
@@ -339,6 +347,8 @@ class MainWindow(gtk.Window):
         self.set_completion()
         self.default_entry()
         self.show_all()
+        if not self.ctx_map.show_sat:
+            self.cb_satellite.hide()
         self.da_set_cursor()
 
 def main():

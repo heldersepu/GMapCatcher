@@ -17,6 +17,7 @@ class GoogleMaps:
     mt_counter = 0
     version_string = None
     html_data = ""
+    show_sat = False
 
     # Set variables to Satellite or Maps 
     def get_maps(self, doMaps=True):
@@ -99,9 +100,12 @@ class GoogleMaps:
 
     def __init__(self):
         self.lock = Lock()
-        self.configpath = fileUtils.check_dir(os.path.expanduser("~/.googlemaps"))
+        self.configpath = \
+            fileUtils.check_dir(os.path.expanduser("~/.googlemaps"))
         self.locationpath = os.path.join(self.configpath, 'locations')
         self.get_maps(True)
+        self.show_sat = \
+            os.path.isdir(os.path.join(self.configpath, 'sat_tiles'))
 
         if (os.path.exists(self.locationpath)):
             self.read_locations()
