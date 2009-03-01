@@ -106,7 +106,6 @@ class MainWindow(gtk.Window):
         if (0 == len(location)):
             self.error_msg("Need location")
             self.entry.grab_focus()
-
             return
         if (location == self.default_text):
             self.clean_entry(self)
@@ -115,21 +114,20 @@ class MainWindow(gtk.Window):
             if (not location in locations.keys()):
                 if self.cb_offline.get_active():
                     if self.error_msg("Offline mode, cannot do search!" + \
-                                      "      Would you like to get online?",   
+                                      "      Would you like to get online?",
                                       gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
                         self.combo_popup()
                         return
                 self.cb_offline.set_active(False)
                 mapUtils.force_repaint()
-                
-                l = self.ctx_map.search_location(location)
-                if (False == l):
-                    self.error_msg(
-                        "Can't find %s in google map" % location)
+
+                location = self.ctx_map.search_location(location)
+                if (location[:6] == "error="):
+                    self.error_msg(location[6:])
                     self.entry.grab_focus()
                     return
-                location = l;
-                self.entry.set_text(l)
+
+                self.entry.set_text(location)
                 self.set_completion()
                 coord = self.ctx_map.get_locations()[location]
             else:
@@ -139,7 +137,7 @@ class MainWindow(gtk.Window):
             self.center = mapUtils.coord_to_tile(coord)
             self.current_zoom_level = coord[2]
             self.do_scale(coord[2], force=True)
-    
+
     def button_sat_click(self, w):
         self.ctx_map.get_maps(not w.get_active())
         self.drawing_area.queue_draw()
@@ -147,7 +145,7 @@ class MainWindow(gtk.Window):
     def __create_top_paned(self):
         frame = gtk.Frame("Query")
         hbox = gtk.HBox(False, 0)
-        self.combo = gtk.combo_box_entry_new_text()        
+        self.combo = gtk.combo_box_entry_new_text()
         self.combo.connect('changed', self.changed_combo)
         self.combo.connect('key-press-event', self.key_press_combo)
         self.combo.set_size_request(200,20)
@@ -176,7 +174,7 @@ class MainWindow(gtk.Window):
         self.cb_forceupdate = gtk.CheckButton("Force update")
         self.cb_satellite = gtk.CheckButton("Satellite")
         self.cb_satellite.connect("toggled", self.button_sat_click)
-        
+
         vbox = gtk.VBox(False, 5)
         vbox.set_border_width(5)
         vbox.pack_start(hbox)

@@ -19,7 +19,7 @@ class GoogleMaps:
     html_data = ""
     show_sat = False
 
-    # Set variables to Satellite or Maps 
+    # Set variables to Satellite or Maps
     def get_maps(self, doMaps=True):
         goog = '.google.com/'
         if doMaps:
@@ -71,7 +71,7 @@ class GoogleMaps:
         else:
             if not online:
                 return False
-        
+
         if self.version_string == None:
             self.version_string = self.fetch_version_string()
 
@@ -119,21 +119,23 @@ class GoogleMaps:
 
     def search_location(self, location):
         print 'downloading the following location:', location
-        oa = openanything.fetch( 'http://maps.google.com/maps?q=' +
-            urllib.quote_plus(location) )
+        try:
+            oa = openanything.fetch( 'http://maps.google.com/maps?q=' +
+                urllib.quote_plus(location) )
+        except Exception:
+            return 'error=Can not connect to http://maps.google.com'
         if oa['status']!=200:
-            print 'error connecting to http://maps.google.com - aborting'
-            return False
+            return 'error=Can not connect to http://maps.google.com'
+
         html = oa['data']
         p = re.compile('laddr:"([^"]+)"')
         m = p.search(html)
         if m:
             location = m.group(1)
         else:
-            print 'location %s not found' % location
-            return False
+            return 'error=Location %s not found' % location
 
-        # List of patterns to look for the latitude & longitude 
+        # List of patterns to look for the latitude & longitude
         paList = ['center:{lat:([0-9.-]+),lng:([0-9.-]+)}.*zoom:([0-9.-]+)',
                   'markers:.*lat:([0-9.-]+),lng:([0-9.-]+).*laddr:',
                   'dtlsUrl:.*x26sll=([0-9.-]+),([0-9.-]+).*x26sspn']
@@ -159,8 +161,8 @@ class GoogleMaps:
             self.html_data = html
             return location
         else:
-            print 'Unable to get latitude and longitude of %s ' % location
-            return False
+            return 'error=Unable to get latitude and longitude of %s ' % location
+
 
     def coord_to_path(self, coord):
         self.lock.acquire()
