@@ -1,3 +1,9 @@
+Mar 06 2009    H.S    <HelderSepu@gmail.com>
+    * 0.052
+    * Handle exceptions in fileUtils.py
+    * Use threads only when online (see Issue 24)
+    * Improve the error messages searching for location
+
 Feb 28 2009    H.S    <HelderSepu@gmail.com>
     * 0.051
     * Sort the locations in the ComboBoxEntry
