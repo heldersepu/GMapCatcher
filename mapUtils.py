@@ -6,47 +6,31 @@ from threading import Thread
 
 marker = mapMark.MyMarkers()
 
+def do_draw_pix(myTuple):
+    da = myTuple[12].drawing_area.window
+    pixbuf = myTuple[12].ctx_map.get_tile_pixbuf(
+            (myTuple[1], myTuple[2], myTuple[0]), myTuple[9], myTuple[10])
+
+    da.draw_pixbuf(myTuple[11], pixbuf,
+                    myTuple[3], myTuple[4], myTuple[5],
+                    myTuple[6], myTuple[7], myTuple[8])
+
+    if (myTuple[0] < MAP_MAX_ZOOM_LEVEL - 2):
+        for str in marker.positions.keys():
+            coord = marker.positions[str]
+            myCenter = coord_to_tile(coord)
+            if (myTuple[1] == myCenter[0][0] and myTuple[2] == myCenter[0][1]):
+                da.draw_pixbuf(myTuple[11], marker.pixbuf,
+                        myTuple[3], myTuple[4], myTuple[5],
+                        myTuple[6], myTuple[7], myTuple[8])
+
 class GetTileThread(Thread):
-    def __init__(self,  zl,
-            real_tile_x, real_tile_y,
-            tile_x_pos_inner, tile_y_pos_inner,
-            x_pos, y_pos,
-            draw_width, draw_height,
-            online, force_update, gc, window):
+    def __init__(self, myTuple):
         Thread.__init__(self)
-        self.zl = zl
-        self.x = real_tile_x
-        self.y = real_tile_y
-        self.xp = x_pos
-        self.yp = y_pos
-        self.draw_width = draw_width
-        self.draw_height = draw_height
-        self.online = online
-        self.force_update = force_update
-        self.gc = gc
-        self.window = window
-        self.xi = tile_x_pos_inner
-        self.yi = tile_y_pos_inner
+        self.myTuple = myTuple
 
     def run(self):
-        da = self.window.drawing_area.window
-        pixbuf = self.window.ctx_map.get_tile_pixbuf((self.x, self.y, self.zl),
-               self.online, self.force_update)
-
-        da.draw_pixbuf(self.gc, pixbuf,
-                    self.xi, self.yi,
-                    self.xp, self.yp,
-                    self.draw_width, self.draw_height)
-
-        if (self.zl < MAP_MAX_ZOOM_LEVEL - 2):
-            for str in marker.positions.keys():
-                coord = marker.positions[str]
-                myCenter = coord_to_tile(coord)
-                if (self.x == myCenter[0][0] and self.y == myCenter[0][1]):
-                    da.draw_pixbuf(self.gc, marker.pixbuf,
-                                self.xi, self.yi,
-                                self.xp, self.yp,
-                                self.draw_width, self.draw_height)
+        do_draw_pix(self.myTuple)
         return
 
 def do_expose_cb(self, zl, center, rect, online,
@@ -75,12 +59,16 @@ def do_expose_cb(self, zl, center, rect, online,
                      (x_pos + draw_width < area.x)) or \
                     ((area.y + area.height < y_pos) or
                      (y_pos + draw_height < area.y))):
-                th = GetTileThread(zl, real_tile_x, real_tile_y,
+                myTuple = (zl, real_tile_x, real_tile_y,
                         tile_x_pos_inner, tile_y_pos_inner, x_pos, y_pos,
                         draw_width, draw_height, online,
                         force_update, style_black_gc, self)
-                threads.append(th)
-                th.start()
+                if online:
+                    th = GetTileThread(myTuple)
+                    threads.append(th)
+                    th.start()
+                else:
+                    do_draw_pix(myTuple)
 
             x_pos += draw_width
             tile_x_pos += 1
@@ -95,8 +83,9 @@ def do_expose_cb(self, zl, center, rect, online,
         draw_height = TILES_HEIGHT
         if (y_pos + draw_height > rect.height):
             draw_height = rect.height - y_pos
-    for th in threads:
-        th.join()
+    if online:
+        for th in threads:
+            th.join()
 
 def tile_adjustEx(zoom_level, tile, offset):
     world_tiles = int(2 ** (MAP_MAX_ZOOM_LEVEL - zoom_level))
