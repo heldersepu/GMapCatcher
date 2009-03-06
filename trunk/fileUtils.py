@@ -27,7 +27,13 @@ def read_file(strInfo, filePath):
 
 # Writes all the locations (fileData) to given file (filePath)
 def write_file(strInfo, filePath, fileData):
-    file = open(filePath, "w")
+    try:
+        file = open(filePath, "w")
+    except Exception:
+        print 'Error! Can NOT write file:' 
+        print '  ' + filePath
+        return
+
     file.write("# This is the "+ strInfo +"s file used by GMapCatcher.\n"+\
         "#\n"+\
         "# This file contains a list of Locations/Position.\n"+\
@@ -50,6 +56,10 @@ def check_dir(strPath, strSubPath=None):
     if (strSubPath != None):
         strPath = os.path.join(strPath, strSubPath)
     if not os.path.isdir(strPath):
-        os.mkdir(strPath)
+        try:
+            os.mkdir(strPath)
+        except Exception:
+            print 'Error! Can not create directory:' 
+            print '  ' + strPath
     return strPath
 
