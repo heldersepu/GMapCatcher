@@ -20,6 +20,7 @@
         <table cellspacing=10>
          <tr align="left"><th> - py2exe   </th><th> http://www.py2exe.org/</th></tr>
          <tr align="left"><th> - NSIS     </th><th> http://nsis.sourceforge.net/Download</th></tr>
+         <tr align="left"><th> - NSIS AccessControl plug-in    </th><th> http://nsis.sourceforge.net/AccessControl_plug-in</th></tr>
         </table>
         <br><br>
         One of the best editors for Python and NSIS scripts is [http://notepad-plus.sourceforge.net/uk/download.php Notepad++]<br>
