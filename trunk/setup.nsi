@@ -65,18 +65,21 @@ Section "${PRODUCT_NAME} (required)"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
 
+  ; Change the permissions of the install directory
+  AccessControl::GrantOnFile "$INSTDIR" "(BU)" "FullAccess"
 
-  ;Check if VC++ 2008 runtimes are already installed:
+  ; Move the ".googlemaps" folder to the %UserProfile% (if it does not already exist)
+  IfFileExists "$PROFILE\.googlemaps\*.*" +2 0
+    Rename "$INSTDIR\.googlemaps\*.*" "$PROFILE\.googlemaps"
+
+  ; Check if VC++ 2008 runtimes are already installed:
   ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}" "DisplayName"
-  ;If VC++ 2008 runtimes are not installed execute in Quiet mode
+  ; If VC++ 2008 runtimes are not installed execute in Quiet mode
   StrCmp $0 "Microsoft Visual C++ 2008 Redistributable - x86 9.0.21022" +2 0
     ExecWait '"$INSTDIR\vcredist_x86.exe" /q'
 
-  ;Move the ".googlemaps" folder to the %UserProfile% (if it does not already exist)
-  IfFileExists "$PROFILE\.googlemaps\*.*" 0  doMove
-    RMDir /r "$INSTDIR\.googlemaps"
-  doMove:
-    Rename "$INSTDIR\.googlemaps\*.*" "$PROFILE\.googlemaps"
+  ; Change the permissions of the ".googlemaps" folder
+  AccessControl::GrantOnFile "$INSTDIR\.googlemaps" "(BU)" "FullAccess"
 
 SectionEnd
 
@@ -86,7 +89,7 @@ Section "Start Menu Shortcuts"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe" "" "$INSTDIR\maps.exe" 0
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Export Maps.lnk" "$INSTDIR\ExportMaps.bat" "" "$INSTDIR\ExportMaps.bat" 0
-  ;Create a shortcut to the project Homepage
+  ; Create a shortcut to the project Homepage
   WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
 SectionEnd
@@ -111,7 +114,7 @@ Section "Uninstall"
   RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
   RMDir /r "$INSTDIR"
 
-  ;Delete Shortcuts
+  ; Delete Shortcuts
   Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
   Delete "$QUICKLAUNCH\${PRODUCT_NAME}.lnk"
 
