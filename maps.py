@@ -90,6 +90,16 @@ class MainWindow(gtk.Window):
             self.combo_popup()
             return True
 
+    # Create a gtk Menu with the given items
+    def gtk_menu(self, listItems):
+        myMenu = gtk.Menu()
+        for str in listItems:
+            menu_items = gtk.MenuItem(str)
+            myMenu.append(menu_items)
+            menu_items.connect("activate", self.menu_item_response, str)
+            menu_items.show()
+        return myMenu
+
     def set_completion(self):
         completion = gtk.EntryCompletion()
         completion.connect('match-selected', self.on_completion_match)
@@ -169,9 +179,9 @@ class MainWindow(gtk.Window):
         hbox.pack_start(self.combo)
         hbox.pack_start(bbox)
 
-        self.cb_offline = gtk.CheckButton("Offline")
-        self.cb_forceupdate = gtk.CheckButton("Force update")
-        self.cb_satellite = gtk.CheckButton("Satellite")
+        self.cb_offline = gtk.CheckButton("Offlin_e")
+        self.cb_forceupdate = gtk.CheckButton("_Force update")
+        self.cb_satellite = gtk.CheckButton("_Satellite")
         self.cb_satellite.connect("toggled", self.button_sat_click)
 
         vbox = gtk.VBox(False, 5)
@@ -194,7 +204,7 @@ class MainWindow(gtk.Window):
     def __create_left_paned(self):
         scale = gtk.VScale()
         scale.set_range(MAP_MIN_ZOOM_LEVEL, MAP_MAX_ZOOM_LEVEL)
-#           scale.set_inverted(True)
+        # scale.set_inverted(True)
         scale.set_property("update-policy", gtk.UPDATE_DISCONTINUOUS)
         scale.set_size_request(30, -1)
         scale.set_increments(1,1)
@@ -206,16 +216,6 @@ class MainWindow(gtk.Window):
         return scale
 
     def __create_right_paned(self):
-        # This is the menu that holds the menu items,
-        menu = gtk.Menu()
-        # menu-entries
-        listItems = ["Zoom In", "Zoom Out", "Center map here", "Reset"]
-        for str in listItems:
-            menu_items = gtk.MenuItem(str)
-            menu.append(menu_items)
-            menu_items.connect("activate", self.menu_item_response, str)
-            menu_items.show()
-
         da = gtk.DrawingArea()
         self.drawing_area = da
         da.connect("expose_event", self.expose_cb)
@@ -225,6 +225,9 @@ class MainWindow(gtk.Window):
         da.add_events(gtk.gdk.BUTTON_PRESS_MASK)
         da.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
+
+        menu = self.gtk_menu(["Zoom In", "Zoom Out",
+                              "Center map here", "Reset"])
 
         da.connect_object("event", self.da_click_events, menu)
         da.connect('button-press-event', self.da_button_press)
