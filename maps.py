@@ -37,8 +37,8 @@ class MainWindow(gtk.Window):
                          self.center[1][1] + (pointer[1] - da_center[1])
 
             fix_tile, fix_offset = \
-            mapUtils.tile_adjustEx(self.current_zoom_level,
-                                   fix_tile, fix_offset)
+                mapUtils.tile_adjustEx(self.current_zoom_level,
+                                       fix_tile, fix_offset)
 
         scala = 2 ** (self.current_zoom_level - pos)
         x = int((fix_tile[0] * TILES_WIDTH  + fix_offset[0]) * scala)
@@ -248,7 +248,7 @@ class MainWindow(gtk.Window):
             self.do_zoom(self.scale.get_value() - 1, True)
         elif strName.startswith("Center map"):
             self.do_zoom(self.scale.get_value(), True)
-        else:
+        elif strName.startswith("Reset"):
             self.do_zoom(MAP_MAX_ZOOM_LEVEL)
 
     # Change the mouse cursor over the drawing_area
@@ -350,6 +350,7 @@ class MainWindow(gtk.Window):
         if not self.ctx_map.show_sat:
             self.cb_satellite.hide()
         self.da_set_cursor()
+        self.entry.grab_focus()
 
 def main():
     MainWindow()
