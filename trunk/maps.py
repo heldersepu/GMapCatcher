@@ -151,15 +151,13 @@ class MainWindow(gtk.Window):
         self.ctx_map.get_maps(not w.get_active())
         self.drawing_area.queue_draw()
 
-    def __create_top_paned(self):
-        frame = gtk.Frame("Query")
-        hbox = gtk.HBox(False, 0)
-        self.combo = gtk.combo_box_entry_new_text()
-        self.combo.connect('changed', self.changed_combo)
-        self.combo.connect('key-press-event', self.key_press_combo)
-        self.combo.set_size_request(200,20)
-        entry = self.combo.child
+    # Creates a comboBox that will contain the locations
+    def __create_combo_box(self):
+        combo = gtk.combo_box_entry_new_text()
+        combo.connect('changed', self.changed_combo)
+        combo.connect('key-press-event', self.key_press_combo)
 
+        entry = combo.child
         # Start search after hit 'ENTER'
         entry.connect('activate', self.confirm_clicked)
         # Launch clean_entry for all the signals/events below
@@ -170,35 +168,48 @@ class MainWindow(gtk.Window):
         entry.connect("move-cursor", self.clean_entry)
         # Launch the default_entry on the focus out
         entry.connect("focus-out-event", self.default_entry)
+        self.entry = entry
+        return combo
+
+    # Creates the box that packs the comboBox & buttons 
+    def __create_upper_box(self):
+        hbox = gtk.HBox(False, 5)
+
+        self.combo = self.__create_combo_box()
+        hbox.pack_start(self.combo)
 
         bbox = gtk.HButtonBox()
         button = gtk.Button(stock='gtk-ok')
         button.connect('clicked', self.confirm_clicked)
         bbox.add(button)
+        hbox.pack_start(bbox, False, True, 15)
+        return hbox
 
-        hbox.pack_start(self.combo)
-        hbox.pack_start(bbox)
+    # Creates the box with the CheckButtons
+    def __create_check_buttons(self):
+        hbox = gtk.HBox(False, 10)
 
         self.cb_offline = gtk.CheckButton("Offlin_e")
+        self.cb_offline.set_active(True)
+        hbox.pack_start(self.cb_offline)
+
         self.cb_forceupdate = gtk.CheckButton("_Force update")
+        self.cb_forceupdate.set_active(False)
+        hbox.pack_start(self.cb_forceupdate)
+
         self.cb_satellite = gtk.CheckButton("_Satellite")
         self.cb_satellite.connect("toggled", self.button_sat_click)
+        self.cb_satellite.set_active(False)
+        hbox.pack_start(self.cb_satellite)
+        return hbox
 
+    def __create_top_paned(self):
+        frame = gtk.Frame("Query")
         vbox = gtk.VBox(False, 5)
         vbox.set_border_width(5)
-        vbox.pack_start(hbox)
-
-        hbox = gtk.HBox(False, 10)
-        hbox.pack_start(self.cb_offline)
-        hbox.pack_start(self.cb_forceupdate)
-        hbox.pack_start(self.cb_satellite)
-        vbox.pack_start(hbox)
-
-        self.cb_offline.set_active(True)
-        self.cb_forceupdate.set_active(False)
-        self.cb_satellite.set_active(False)
+        vbox.pack_start(self.__create_upper_box())
+        vbox.pack_start(self.__create_check_buttons())
         frame.add(vbox)
-        self.entry = entry
         return frame
 
     def __create_left_paned(self):
