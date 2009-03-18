@@ -45,12 +45,18 @@ class GoogleMaps:
 
     def fetch_version_string(self):
         self.version_string = self.default_version_string
+        googleMaps = 'http://maps.google.com/maps'
         if self.html_data == "":
-            oa = openanything.fetch( 'http://maps.google.com/maps')
-            if oa['status'] != 200:
-                print "Trying fetch http://maps.google.com/maps but failed"
+            try:
+                oa = openanything.fetch(googleMaps)
+            except Exception:
+                print "Exception opening ", googleMaps
             else:
-                self.html_data = oa['data']
+                # Check successfull return of page
+                if oa['status'] != 200:
+                    print "Bad return from ", googleMaps
+                else:
+                    self.html_data = oa['data']
         if self.html_data != "":
             p = re.compile(self.fetchURL)
             m = p.search(self.html_data)
@@ -107,7 +113,7 @@ class GoogleMaps:
         self.configpath = \
             fileUtils.check_dir(os.path.expanduser("~/.googlemaps"))
         self.locationpath = os.path.join(self.configpath, 'locations')
-        self.get_maps(True)
+        self.get_maps(False, True)
         self.show_sat = \
             os.path.isdir(os.path.join(self.configpath, 'sat_tiles'))
 
