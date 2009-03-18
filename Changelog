@@ -1,3 +1,12 @@
+Mar 18 2009    H.S    <HelderSepu@gmail.com>
+    * 0.053
+    * Add a new button that will hold more options, such as:
+      - Settings  
+      - Edit Locations
+    * Add Full-Screen functionality 
+      - F11 = fullscreen 
+      - F12 = remove buttons  
+
 Mar 06 2009    H.S    <HelderSepu@gmail.com>
     * 0.052
     * Handle exceptions in fileUtils.py

@@ -4,6 +4,7 @@ pygtk.require('2.0')
 import gtk
 import mapUtils
 import googleMaps
+import mapTools
 from mapConst import *
 
 class MainWindow(gtk.Window):
@@ -101,6 +102,14 @@ class MainWindow(gtk.Window):
             menu_items.show()
         return myMenu
 
+    # Handles the events in the Tools buttons
+    def tools_button_event(self, w, event):
+        if event.type == gtk.gdk.BUTTON_PRESS:
+            w.popup(None, None, None, 1, event.time)
+        elif event.type == gtk.gdk.KEY_PRESS and \
+             event.keyval in [65293, 32]:
+            self.menu_tools(TOOLS_MENU[0])
+
     def set_completion(self):
         completion = gtk.EntryCompletion()
         completion.connect('match-selected', self.on_completion_match)
@@ -149,7 +158,8 @@ class MainWindow(gtk.Window):
             self.do_scale(coord[2], force=True)
 
     def button_sat_click(self, w):
-        self.ctx_map.get_maps(not w.get_active())
+        online = not self.cb_offline.get_active()
+        self.ctx_map.get_maps(online, not w.get_active())
         self.drawing_area.queue_draw()
 
     # Creates a comboBox that will contain the locations
@@ -175,6 +185,12 @@ class MainWindow(gtk.Window):
     # Creates the box that packs the comboBox & buttons
     def __create_upper_box(self):
         hbox = gtk.HBox(False, 5)
+
+        # gtk.stock_add([(gtk.STOCK_PREFERENCES, "", 0, 0, "")])
+        # button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
+        # menu = self.gtk_menu(TOOLS_MENU)
+        # button.connect_object("event", self.tools_button_event, menu)
+        # hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
         hbox.pack_start(self.combo)
@@ -252,6 +268,11 @@ class MainWindow(gtk.Window):
         if (MAP_MIN_ZOOM_LEVEL <= value <= MAP_MAX_ZOOM_LEVEL):
             self.do_scale(value, self.drawing_area.get_pointer(), doForce)
 
+    def menu_tools(self, strName):
+        for intPos in range(len(TOOLS_MENU)):
+            if strName.startswith(TOOLS_MENU[intPos]):
+                mapTools.main(self, intPos)
+
     # All the actions for the menu items
     def menu_item_response(self, w, strName):
         if strName.startswith("Zoom Out"):
@@ -262,6 +283,8 @@ class MainWindow(gtk.Window):
             self.do_zoom(self.scale.get_value(), True)
         elif strName.startswith("Reset"):
             self.do_zoom(MAP_MAX_ZOOM_LEVEL)
+        else:
+            self.menu_tools(strName)
 
     # Change the mouse cursor over the drawing_area
     def da_set_cursor(self, dCursor = gtk.gdk.HAND1):

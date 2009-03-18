@@ -20,7 +20,7 @@ class GoogleMaps:
     show_sat = False
 
     # Set variables to Satellite or Maps
-    def get_maps(self, doMaps=True):
+    def get_maps(self, online, doMaps=True):
         goog = '.google.com/'
         if doMaps:
             self.fetchURL = 'http://mt[0-9]'+goog+'mt.*w([0-9].[0-9][0-9])'
@@ -34,7 +34,8 @@ class GoogleMaps:
             self.default_version_string = '37'
         self.getFileURL += '=en&x=%i&y=%i&zoom=%i'
         self.tilespath = fileUtils.check_dir(self.configpath, self.tiles)
-        self.version_string = self.fetch_version_string()
+        if online:
+         self.version_string = self.fetch_version_string()
 
     def set_zoom(self, intZoom):
         if (MAP_MIN_ZOOM_LEVEL <= intZoom <= MAP_MAX_ZOOM_LEVEL):
