@@ -11,6 +11,7 @@ class MainWindow(gtk.Window):
     draging_start = (0, 0)
     current_zoom_level = MAP_MAX_ZOOM_LEVEL
     default_text = "Enter location here!"
+    show_panels = True
 
     def error_msg(self, msg, buttons=gtk.BUTTONS_OK):
         dialog = gtk.MessageDialog(self,
@@ -171,7 +172,7 @@ class MainWindow(gtk.Window):
         self.entry = entry
         return combo
 
-    # Creates the box that packs the comboBox & buttons 
+    # Creates the box that packs the comboBox & buttons
     def __create_upper_box(self):
         hbox = gtk.HBox(False, 5)
 
@@ -335,6 +336,26 @@ class MainWindow(gtk.Window):
             self.do_scale(value)
         return
 
+    # Handles the pressing of F11 & F12
+    def full_screen(self, w, event):
+        if event.keyval == 65480:
+            if self.get_decorated():
+                self.set_keep_above(True)
+                self.set_decorated(False)
+                self.maximize()
+            else:
+                self.set_keep_above(False)
+                self.set_decorated(True)
+                self.unmaximize()
+        elif event.keyval == 65481:
+            if self.show_panels:
+                self.left_panel.hide()
+                self.top_panel.hide()
+            else:
+                self.left_panel.show()
+                self.top_panel.show()
+            self.show_panels = not self.show_panels
+
     def __init__(self, parent=None):
         self.ctx_map = googleMaps.GoogleMaps()
         gtk.Window.__init__(self)
@@ -343,14 +364,17 @@ class MainWindow(gtk.Window):
         except AttributeError:
             self.connect("destroy", lambda *w: gtk.main_quit())
 
+        self.connect('key-press-event', self.full_screen)
         vpaned = gtk.VPaned()
         hpaned = gtk.HPaned()
+        self.top_panel = self.__create_top_paned()
+        self.left_panel = self.__create_left_paned()
 
-        vpaned.pack1(self.__create_top_paned(), False, False)
-        hpaned.pack1(self.__create_left_paned(), False, False)
+        vpaned.pack1(self.top_panel, False, False)
+        hpaned.pack1(self.left_panel, False, False)
         hpaned.pack2(self.__create_right_paned(), True, True)
         vpaned.add2(hpaned)
-
+ 
         self.add(vpaned)
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
@@ -358,6 +382,7 @@ class MainWindow(gtk.Window):
         self.set_completion()
         self.default_entry()
         self.show_all()
+
         if not self.ctx_map.show_sat:
             self.cb_satellite.hide()
         self.da_set_cursor()
