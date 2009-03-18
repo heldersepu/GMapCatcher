@@ -31,9 +31,10 @@ class GoogleMaps:
             self.fetchURL = 'http://khm[0-9]'+goog+'kh.....d([0-9][0-9])'
             self.getFileURL = 'http://khm%i'+goog+'kh?v=%s&hl'
             self.tiles = 'sat_tiles'
-            self.default_version_string = '36'
+            self.default_version_string = '37'
         self.getFileURL += '=en&x=%i&y=%i&zoom=%i'
         self.tilespath = fileUtils.check_dir(self.configpath, self.tiles)
+        self.version_string = self.fetch_version_string()
 
     def set_zoom(self, intZoom):
         if (MAP_MIN_ZOOM_LEVEL <= intZoom <= MAP_MAX_ZOOM_LEVEL):
