@@ -79,7 +79,7 @@ Section "${PRODUCT_NAME} (required)"
     ExecWait '"$INSTDIR\vcredist_x86.exe" /q'
 
   ; Change the permissions of the ".googlemaps" folder
-  AccessControl::GrantOnFile "$INSTDIR\.googlemaps" "(BU)" "FullAccess"
+  AccessControl::GrantOnFile "$PROFILE\.googlemaps" "(BU)" "FullAccess"
 
 SectionEnd
 
