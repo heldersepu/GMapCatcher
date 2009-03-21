@@ -12,6 +12,7 @@ from threading import Lock
 from gobject import TYPE_STRING
 
 class GoogleMaps:
+
     # coord = (lat, lng, zoom_level)
     locations = {}
     mt_counter = 0

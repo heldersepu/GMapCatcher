@@ -8,6 +8,7 @@ import mapTools
 from mapConst import *
 
 class MainWindow(gtk.Window):
+
     center = ((0,0),(128,128))
     draging_start = (0, 0)
     current_zoom_level = MAP_MAX_ZOOM_LEVEL
@@ -186,11 +187,11 @@ class MainWindow(gtk.Window):
     def __create_upper_box(self):
         hbox = gtk.HBox(False, 5)
 
-        # gtk.stock_add([(gtk.STOCK_PREFERENCES, "", 0, 0, "")])
-        # button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
-        # menu = self.gtk_menu(TOOLS_MENU)
-        # button.connect_object("event", self.tools_button_event, menu)
-        # hbox.pack_start(button, False)
+        gtk.stock_add([(gtk.STOCK_PREFERENCES, "", 0, 0, "")])
+        button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
+        menu = self.gtk_menu(TOOLS_MENU)
+        button.connect_object("event", self.tools_button_event, menu)
+        hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
         hbox.pack_start(self.combo)
@@ -271,7 +272,8 @@ class MainWindow(gtk.Window):
     def menu_tools(self, strName):
         for intPos in range(len(TOOLS_MENU)):
             if strName.startswith(TOOLS_MENU[intPos]):
-                mapTools.main(self, intPos)
+                mapTools.main(self, self.ctx_map.configpath, intPos)
+                return True
 
     # All the actions for the menu items
     def menu_item_response(self, w, strName):
@@ -397,7 +399,7 @@ class MainWindow(gtk.Window):
         hpaned.pack1(self.left_panel, False, False)
         hpaned.pack2(self.__create_right_paned(), True, True)
         vpaned.add2(hpaned)
- 
+
         self.add(vpaned)
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
