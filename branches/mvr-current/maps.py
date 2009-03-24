@@ -158,9 +158,10 @@ class MainWindow(gtk.Window):
             self.current_zoom_level = coord[2]
             self.do_scale(coord[2], force=True)
 
-    def button_sat_click(self, w):
+    def layer_changed(self, w):
         online = not self.cb_offline.get_active()
-        self.ctx_map.get_maps(online, not w.get_active())
+	self.layer = w.get_active()
+        self.ctx_map.switch_layer(self.layer,online)
         self.drawing_area.queue_draw()
 
     # Creates a comboBox that will contain the locations
@@ -215,10 +216,12 @@ class MainWindow(gtk.Window):
         self.cb_forceupdate.set_active(False)
         hbox.pack_start(self.cb_forceupdate)
 
-        self.cb_satellite = gtk.CheckButton("_Satellite")
-        self.cb_satellite.connect("toggled", self.button_sat_click)
-        self.cb_satellite.set_active(False)
-        hbox.pack_start(self.cb_satellite)
+	self.cmb_layer = gtk.combo_box_new_text()
+	for w in LAYER_NAMES:
+	    self.cmb_layer.append_text(w)
+	self.cmb_layer.set_active(0)
+	self.cmb_layer.connect('changed',self.layer_changed)
+        hbox.pack_start(self.cmb_layer)
         return hbox
 
     def __create_top_paned(self):
@@ -408,8 +411,6 @@ class MainWindow(gtk.Window):
         self.default_entry()
         self.show_all()
 
-        if not self.ctx_map.show_sat:
-            self.cb_satellite.hide()
         self.da_set_cursor()
         self.entry.grab_focus()
 
