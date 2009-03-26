@@ -26,9 +26,8 @@ class GoogleMaps:
         if self.layer==new_layer and (not online or self.version_string!=None):
             return True
         self.layer=new_layer
-        self.tilespath=os.path.join(self.configpath,'tiles_%s'%LAYER_NAMES[new_layer])
-        if not os.path.isdir(self.tilespath):
-            os.mkdir(self.tilespath)
+        self.tilespath=os.path.join(self.configpath,LAYER_DIRS[new_layer])
+        fileUtils.check_dir(self.tilespath)
         if new_layer not in self.known_layers:
             self.version_string=None
             if not online:
@@ -152,7 +151,6 @@ class GoogleMaps:
             location = unicode(location, errors='ignore')
             self.locations[location] = (lat, lng, zoom)
             self.write_locations()
-            self.html_data = html
             return location
         else:
             return 'error=Unable to get latitude and longitude of %s ' % location
