@@ -53,12 +53,18 @@ class TreeView():
             tvcolumn.pack_start(cell, True)
             tvcolumn.set_attributes(cell, text=intPos)
             tvcolumn.set_sort_column_id(intPos)
+            tvcolumn.set_resizable(True)
+            if intPos == 0:
+                tvcolumn.set_expand(True)
+            else:
+                tvcolumn.set_min_width(75)
 
         # make myTree searchable by location
         myTree.set_search_column(0)
         self.liststore.set_sort_column_id(0, gtk.SORT_ASCENDING)
 
         scrolledwindow = gtk.ScrolledWindow()
+        scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         scrolledwindow.add(myTree)
         return scrolledwindow
 
@@ -92,8 +98,8 @@ class MainWindow:
         win.set_border_width(10)
         win.set_transient_for(parent)
         win.set_size_request(600, 400)
+        win.set_destroy_with_parent(True)
         win.set_title(" GMapCatcher Tools ")
-        win.connect("delete_event", gtk.main_quit)
 
         myNotebook = self.__create_notebook(configpath)
         win.add(myNotebook)
@@ -102,7 +108,6 @@ class MainWindow:
 
 def main(parent, configpath, start_page):
     MainWindow(parent, configpath, start_page)
-    gtk.main()
 
 if __name__ == "__main__":
     main()
