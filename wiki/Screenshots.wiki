@@ -1,17 +1,20 @@
 ﻿#labels Featured
 Screenshots:
 
-New look coming under Windows!!!<br>
+We have a new member! Say hello to Maxim.Razin, he is coming with some GREAT ideas!!!<br>
+http://gmapcatcher.googlecode.com/svn/wiki/GMapCatcher_Terrain.PNG
+
+We have a New under Windows.<br>
 http://gmapcatcher.googlecode.com/svn/wiki/WinNewLook.PNG
 
-gmapcatcher v0.050 in XP & Ubuntu Showing new Features<br>
+GMapCatcher v0.050 in XP & Ubuntu Showing new Features.<br>
 http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.050-ComboBoxEntry.PNG
 http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.050-Yes_No.PNG
 
-gmapcatcher v0.046 in Ubuntu<br>
+GMapCatcher v0.046 in Ubuntu.<br>
 http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.046-Ubuntu.png
 
-gmapcatcher v0.043 in Windows XP (showing right click menu)<br>
+GMapCatcher v0.043 in Windows XP (showing right click menu)<br>
 http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.043-winXP.PNG
 
 
