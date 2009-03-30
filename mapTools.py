@@ -78,6 +78,7 @@ class TreeView():
         button.connect('clicked', self.btn_add_clicked, liststore, myTree)
         bbox.add(button)
 
+        gtk.stock_add([(gtk.STOCK_REMOVE, "_Delete", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_REMOVE)
         button.connect('clicked', self.btn_remove_clicked, liststore, myTree)
         bbox.add(button)
