@@ -53,9 +53,10 @@ class TreeView():
         treeSelection = myTree.get_selection()
         model, iter = treeSelection.get_selected()
         if iter:
+            intPath = liststore.get_path(iter)
             liststore.remove(iter)
             if model.get_iter_first():
-                self.change_selection(myTree, 0)
+                self.change_selection(myTree, intPath)
 
     # Reload the list from the file
     def btn_revert_clicked(self, button, strInfo, filePath, liststore, myTree):
@@ -92,12 +93,19 @@ class TreeView():
         bbox.add(button)
         return bbox
 
+    # Handle the delete key
+    def key_press_tree(self, w, event, liststore):
+        if event.keyval == 65535:
+            self.btn_remove_clicked(None, liststore, w)
+            return True
+
     def show(self, strInfo, filePath):
         # create a liststore with one string column to use as the model
         liststore = gtk.ListStore(str, float, float, int)
 
         # create the TreeView using liststore
         myTree = gtk.TreeView(self.__read_file(strInfo, filePath, liststore))
+        myTree.connect("key-press-event", self.key_press_tree, liststore)
 
         strCols = ['Location', 'Latitude', 'Longitude', 'Zoom']
         for intPos in range(len(strCols)):
