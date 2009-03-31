@@ -100,6 +100,7 @@ class GoogleMaps:
         self.locationpath = os.path.join(self.configpath, 'locations')
         self.layer = None
         self.known_layers = {}
+        self.locations = {}
         self.switch_layer(layer,False)
 
         if (os.path.exists(self.locationpath)):
