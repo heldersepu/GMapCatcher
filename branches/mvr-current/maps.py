@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject
@@ -9,7 +10,19 @@ import googleMaps
 import mapTools
 from mapConst import *
 
-gtk.gdk.threads_init()
+if sys.platform=='win32':
+    def do_gui_operation(function, *args, **kw):
+        def idle_func():
+            gtk.threads_enter()
+            try:
+                function(*args, **kw)
+                return False
+            finally:
+                gtk.threads_leave()
+        gobject.idle_add(idle_func)
+else:
+    gtk.gdk.threads_init()
+    do_gui_operation=gobject.idle_add
 
 def nice_round(f):
     n=math.ceil(math.log(f,10))
@@ -145,9 +158,9 @@ class DLWindow(gtk.Window):
     def run_thread(self, todo):
         for i,q in enumerate(todo):
             if not self.processing: return
-            gobject.idle_add(self.update_pbar, "x=%d y=%d zoom=%d" % q, i, len(todo))
+            do_gui_operation(self.update_pbar, "x=%d y=%d zoom=%d" % q, i, len(todo))
             self.gmap.get_tile_pixbuf(q, True, False)
-        gobject.idle_add(self.download_complete)
+        do_gui_operation(self.download_complete)
 
     def stop_thread(self):
         if self.thr and self.thr.isAlive():
