@@ -276,7 +276,11 @@ class MainWindow(gtk.Window):
     def gtk_menu(self, listItems):
         myMenu = gtk.Menu()
         for str in listItems:
-            menu_items = gtk.MenuItem(str)
+            # An empty item inserts a separator
+            if str == "":
+                menu_items = gtk.MenuItem()
+            else:
+                menu_items = gtk.MenuItem(str)
             myMenu.append(menu_items)
             menu_items.connect("activate", self.menu_item_response, str)
             menu_items.show()
