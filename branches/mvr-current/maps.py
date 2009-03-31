@@ -391,9 +391,7 @@ class MainWindow(gtk.Window):
         button_go = gtk.Button(stock='gtk-ok')
         button_go.connect('clicked', self.confirm_clicked)
         bbox.add(button_go)
-        button_dl = gtk.Button(label="Download")
-        button_dl.connect('clicked', self.download_clicked)
-        bbox.add(button_dl)
+
         hbox.pack_start(bbox, False, True, 15)
         return hbox
 
@@ -409,12 +407,21 @@ class MainWindow(gtk.Window):
         self.cb_forceupdate.set_active(False)
         hbox.pack_start(self.cb_forceupdate)
 
+        bbox = gtk.HButtonBox()
+        bbox.set_layout(gtk.BUTTONBOX_SPREAD)
+        gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
+        button = gtk.Button(stock=gtk.STOCK_HARDDISK)
+        button.connect('clicked', self.download_clicked)
+        bbox.add(button)
+
         self.cmb_layer = gtk.combo_box_new_text()
         for w in LAYER_NAMES:
             self.cmb_layer.append_text(w)
         self.cmb_layer.set_active(0)
         self.cmb_layer.connect('changed',self.layer_changed)
-        hbox.pack_start(self.cmb_layer)
+        bbox.add(self.cmb_layer)
+        
+        hbox.pack_start(bbox)
         return hbox
 
     def __create_top_paned(self):
@@ -451,8 +458,8 @@ class MainWindow(gtk.Window):
         da.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
 
-        menu = self.gtk_menu(["Zoom In", "Zoom Out",
-                              "Center map here", "Reset"])
+        menu = self.gtk_menu(["Zoom In", "Zoom Out", "Center map here", 
+                              "Reset", "", "Batch Download"])
 
         da.connect_object("event", self.da_click_events, menu)
         da.connect('button-press-event', self.da_button_press)
@@ -481,6 +488,8 @@ class MainWindow(gtk.Window):
             self.do_zoom(self.scale.get_value(), True)
         elif strName.startswith("Reset"):
             self.do_zoom(MAP_MAX_ZOOM_LEVEL)
+        elif strName.startswith("Batch Download"):
+            self.download_clicked(w)
         else:
             self.menu_tools(strName)
 
