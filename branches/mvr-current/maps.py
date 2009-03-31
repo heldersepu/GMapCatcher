@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 import sys
+import math
+import time
+import threading
+
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject
-import threading
-import math
+
 import mapUtils
 import googleMaps
 import mapTools
@@ -13,13 +16,18 @@ from mapConst import *
 if sys.platform=='win32':
     def do_gui_operation(function, *args, **kw):
         def idle_func():
-            gtk.threads_enter()
+            gtk.gdk.threads_enter()
             try:
                 function(*args, **kw)
                 return False
             finally:
-                gtk.threads_leave()
+                gtk.gdk.threads_leave()
         gobject.idle_add(idle_func)
+
+    def sleeper():
+        time.sleep(.001)
+        return 1 # don't forget this otherwise the timeout will be removed
+
 else:
     gtk.gdk.threads_init()
     do_gui_operation=gobject.idle_add
@@ -597,6 +605,8 @@ class MainWindow(gtk.Window):
         self.entry.grab_focus()
 
 def main():
+    if sys.platform == 'win32':
+        gobject.timeout_add(400,sleeper)
     MainWindow()
     gtk.main()
 
