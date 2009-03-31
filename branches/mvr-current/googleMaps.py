@@ -58,33 +58,33 @@ class GoogleMaps:
 
         if os.path.isfile(filename):
             return True
-	if not online:
-	    return False
-	if not self.switch_layer(self.layer,online):
-	    return False
+        if not online:
+            return False
+        if not self.switch_layer(self.layer,online):
+            return False
 
-	href = 'http://%s%i.google.com/%s/v=%s&hl=en&x=%i&y=%i&zoom=%i' % (
-		self.mt_prefix,
-		self.mt_counter,
-		self.mt_suffix,
-		self.version_string,
-		coord[0],
-		coord[1], coord[2])
-	self.mt_counter += 1
-	self.mt_counter = self.mt_counter % NR_MTS
-	try:
-	    print 'downloading:', href
-	    oa = openanything.fetch(href)
-	    if oa['status']==200:
-		file = open( filename, 'wb' )
-		file.write( oa['data'] )
-		file.close()
-		return True
-	except KeyboardInterrupt:
-	    raise
-	except:
-	    print '\tdownload failed -', sys.exc_info()[0]
-	return False
+        href = 'http://%s%i.google.com/%s/v=%s&hl=en&x=%i&y=%i&zoom=%i' % (
+                self.mt_prefix,
+                self.mt_counter,
+                self.mt_suffix,
+                self.version_string,
+                coord[0],
+                coord[1], coord[2])
+        self.mt_counter += 1
+        self.mt_counter = self.mt_counter % NR_MTS
+        try:
+            print 'downloading:', href
+            oa = openanything.fetch(href)
+            if oa['status']==200:
+                file = open( filename, 'wb' )
+                file.write( oa['data'] )
+                file.close()
+                return True
+        except KeyboardInterrupt:
+            raise
+        except:
+            print '\tdownload failed -', sys.exc_info()[0]
+        return False
 
     def read_locations(self):
         self.locations = fileUtils.read_file('location', self.locationpath)
@@ -93,12 +93,12 @@ class GoogleMaps:
         fileUtils.write_file('location', self.locationpath, self.locations)
 
     def __init__(self, layer=LAYER_MAP, configpath=None):
-	configpath = os.path.expanduser(configpath or "~/.googlemaps")
+        configpath = os.path.expanduser(configpath or "~/.googlemaps")
         self.lock = Lock()
-	self.mt_counter=0
+        self.mt_counter=0
         self.configpath = fileUtils.check_dir(configpath)
         self.locationpath = os.path.join(self.configpath, 'locations')
-	self.layer = None
+        self.layer = None
         self.known_layers = {}
         self.switch_layer(layer,False)
 
