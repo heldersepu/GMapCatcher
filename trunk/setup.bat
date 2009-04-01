@@ -26,12 +26,13 @@ C:\PYTHON26\PYTHON.EXE setup.py py2exe
 @XCOPY /E common\* dist 
 
 :: Launch the NSIS setup
-@COLOR 07
+@COLOR 0F
 "%programfiles%\NSIS\makensis.exe" setup.nsi
 
+@COLOR 0A
 @Echo.
 @PAUSE
+
 :: clean up at the end
 @RD build /s /q
 @RD dist /s /q
-
