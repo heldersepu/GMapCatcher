@@ -134,4 +134,15 @@ def km_per_pixel(coord):
 
 def force_repaint():
     while gtk.events_pending():
-        gtk.main_iteration_do(False) 
+        gtk.main_iteration_do(False)
+
+def nice_round(f):
+    n = math.ceil(math.log(f,10))
+    p = f/10**n
+    if p>0.5:
+        p = 1.0
+    elif p>0.2:
+        p = 0.5
+    else:
+        p = 0.2
+    return p*10**n

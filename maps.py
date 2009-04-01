@@ -12,26 +12,15 @@ import mapTools
 from gtkThread import do_gui_operation
 from mapConst import *
 
-def nice_round(f):
-    n=math.ceil(math.log(f,10))
-    p=f/10**n
-    if p>0.5:
-        p=1.0
-    elif p>0.2:
-        p=0.5
-    else:
-        p=0.2
-    return p*10**n
-
 class DLWindow(gtk.Window):
-    def __init__(self, coord, kmx,kmy, layer):
+    def __init__(self, coord, kmx, kmy, layer):
         def lbl(text):
             l=gtk.Label(text)
             l.set_justify(gtk.JUSTIFY_RIGHT)
-            return l        
+            return l
         print "DLWindow(",coord,kmx,kmy,layer,')'
-        kmx=nice_round(kmx)
-        kmy=nice_round(kmy)
+        kmx = mapUtils.nice_round(kmx)
+        kmy = mapUtils.nice_round(kmy)
         self.layer=layer
         gtk.Window.__init__(self)
         lat0=coord[0]
@@ -85,7 +74,7 @@ class DLWindow(gtk.Window):
         tbl.attach(self.pbar, 0,4,4,5, xoptions=gtk.EXPAND|gtk.FILL, yoptions=0)
 
         self.add(tbl)
-        
+
         self.set_title("GMapCatcher download")
         self.set_border_width(10)
         self.set_size_request(600, 300)
@@ -125,7 +114,7 @@ class DLWindow(gtk.Window):
             bottom_right = mapUtils.coord_to_tile((lat0-dlat/2., lon0+dlon/2., zoom))
             world_tiles = mapUtils.tiles_on_level(zoom)
             xmin,ymin=top_left[0]
-            xmax,ymax=bottom_right[0]            
+            xmax,ymax=bottom_right[0]
             for i in range((xmax-xmin+1+world_tiles)%world_tiles):
                 x=(xmin+i)%world_tiles
                 for j in range((ymax-ymin+1+world_tiles)%world_tiles):
@@ -389,8 +378,8 @@ class MainWindow(gtk.Window):
 
         self.cb_offline = gtk.CheckButton("Offlin_e")
         self.cb_offline.set_active(True)
-        self.cb_offline.connect('clicked',self.offline_clicked)         
-        hbox.pack_start(self.cb_offline)      
+        self.cb_offline.connect('clicked',self.offline_clicked)
+        hbox.pack_start(self.cb_offline)
 
         self.cb_forceupdate = gtk.CheckButton("_Force update")
         self.cb_forceupdate.set_active(False)
@@ -409,7 +398,7 @@ class MainWindow(gtk.Window):
         self.cmb_layer.set_active(0)
         self.cmb_layer.connect('changed',self.layer_changed)
         bbox.add(self.cmb_layer)
-        
+
         hbox.pack_start(bbox)
         return hbox
 
@@ -447,7 +436,7 @@ class MainWindow(gtk.Window):
         da.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
 
-        menu = self.gtk_menu(["Zoom In", "Zoom Out", "Center map here", 
+        menu = self.gtk_menu(["Zoom In", "Zoom Out", "Center map here",
                               "Reset", "", "Batch Download"])
 
         da.connect_object("event", self.da_click_events, menu)
