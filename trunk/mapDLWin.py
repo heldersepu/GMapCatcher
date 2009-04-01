@@ -1,4 +1,5 @@
 import threading
+import math
 
 import pygtk
 pygtk.require('2.0')
@@ -12,65 +13,103 @@ from gtkThread import do_gui_operation
 class DLWindow(gtk.Window):
     def __init__(self, coord, kmx, kmy, layer):
         def lbl(text):
-            l=gtk.Label(text)
+            l = gtk.Label(text)
             l.set_justify(gtk.JUSTIFY_RIGHT)
             return l
-        print "DLWindow(",coord,kmx,kmy,layer,')'
+
+        def _frame(strName, container):
+            frame = gtk.Frame(strName)
+            vbox = gtk.VBox(False, 5)
+            vbox.set_border_width(5)
+            vbox.pack_start(container)
+            frame.add(vbox)
+            return frame
+
+        def _zoom(zoom0, zoom1):
+            vbox = gtk.VBox()
+            hbox = gtk.HBox(False, 10)
+            hbox.pack_start(lbl("min:"))
+            a_zoom0 = gtk.Adjustment(zoom0, MAP_MIN_ZOOM_LEVEL,
+                                     MAP_MAX_ZOOM_LEVEL, 1)
+            self.s_zoom0 = gtk.SpinButton(a_zoom0)
+            self.s_zoom0.set_digits(0)
+            hbox.pack_start(self.s_zoom0)
+            vbox.pack_start(hbox)
+
+            hbox = gtk.HBox(False, 10)
+            hbox.pack_start(lbl("max:"))
+            a_zoom1 = gtk.Adjustment(zoom1, MAP_MIN_ZOOM_LEVEL,
+                                     MAP_MAX_ZOOM_LEVEL, 1)
+            self.s_zoom1 = gtk.SpinButton(a_zoom1)
+            self.s_zoom1.set_digits(0)
+            hbox.pack_start(self.s_zoom1)
+            vbox.pack_start(hbox)
+            return _frame(" Zoom ", vbox)
+
+        def _center(lat0, lon0):
+            vbox = gtk.VBox()
+            hbox = gtk.HBox(False, 10)
+            hbox.pack_start(lbl("latitude:"))
+            self.e_lat0 = gtk.Entry()
+            self.e_lat0.set_text("%.6f" % lat0)
+            hbox.pack_start(self.e_lat0)
+            vbox.pack_start(hbox)
+
+            hbox = gtk.HBox(False, 10)
+            hbox.pack_start(lbl("longitude:"))
+            self.e_lon0 = gtk.Entry()
+            self.e_lon0.set_text("%.6f" % lon0)
+            hbox.pack_start(self.e_lon0)
+            vbox.pack_start(hbox)
+            return _frame(" Center ", vbox)
+
+        def _area(kmx, kmy):
+            vbox = gtk.VBox()
+            hbox = gtk.HBox(False, 10)
+            hbox.pack_start(lbl("width:"))
+            self.e_kmx = gtk.Entry()
+            self.e_kmx.set_text("%.6g" % kmx)
+            hbox.pack_start(self.e_kmx)
+
+            hbox.pack_start(lbl("height:"))
+            self.e_kmy = gtk.Entry()
+            self.e_kmy.set_text("%.6g" % kmy)
+            hbox.pack_start(self.e_kmy)
+            vbox.pack_start(hbox)
+            return _frame(" Area (km) ", vbox)
+
+        print "DLWindow(", coord, kmx, kmy, layer, ')'
         kmx = mapUtils.nice_round(kmx)
         kmy = mapUtils.nice_round(kmy)
-        self.layer=layer
+        self.layer = layer
         gtk.Window.__init__(self)
-        lat0=coord[0]
-        lon0=coord[1]
-        zoom0=max(MAP_MIN_ZOOM_LEVEL,coord[2]-3)
-        zoom1=min(MAP_MAX_ZOOM_LEVEL,coord[2]+1)
+        lat0 = coord[0]
+        lon0 = coord[1]
+        zoom0 = max(MAP_MIN_ZOOM_LEVEL, coord[2]-3)
+        zoom1 = min(MAP_MAX_ZOOM_LEVEL, coord[2]+1)
+        
+        vbox = gtk.VBox(False, 10)
+        hbox = gtk.HBox(False, 10)
+        hbox.pack_start(_center(lat0, lon0))
+        hbox.pack_start(_zoom(zoom0, zoom1))
+        vbox.pack_start(hbox)
+        vbox.pack_start(_area(kmx, kmy))
 
-        tbl=gtk.Table(rows=4, columns=4, homogeneous=False)
-        tbl.set_col_spacings(10)
-        tbl.set_row_spacings(10)
-
-        tbl.attach(lbl("Center latitude:"),0,1,0,1)
-        self.e_lat0=gtk.Entry()
-        self.e_lat0.set_text("%.6f" % lat0)
-        tbl.attach(self.e_lat0, 1,2,0,1)
-        tbl.attach(lbl("longitude:"),2,3,0,1)
-        self.e_lon0=gtk.Entry()
-        self.e_lon0.set_text("%.6f" % lon0)
-        tbl.attach(self.e_lon0, 3,4,0,1)
-
-        tbl.attach(lbl("Area width (km):"),0,1,1,2)
-        self.e_kmx=gtk.Entry()
-        self.e_kmx.set_text("%.6g" % kmx)
-        tbl.attach(self.e_kmx, 1,2,1,2)
-        tbl.attach(lbl("Area height (km):"),2,3,1,2)
-        self.e_kmy=gtk.Entry()
-        self.e_kmy.set_text("%.6g" % kmy)
-        tbl.attach(self.e_kmy, 3,4,1,2)
-
-        tbl.attach(lbl("Zoom min:"),0,1,2,3)
-        a_zoom0=gtk.Adjustment(zoom0,MAP_MIN_ZOOM_LEVEL,MAP_MAX_ZOOM_LEVEL,1)
-        self.s_zoom0=gtk.SpinButton(a_zoom0)
-        self.s_zoom0.set_digits(0)
-        tbl.attach(self.s_zoom0, 1,2,2,3)
-        tbl.attach(lbl("max:"),2,3,2,3)
-        a_zoom1=gtk.Adjustment(zoom1,MAP_MIN_ZOOM_LEVEL,MAP_MAX_ZOOM_LEVEL,1)
-        self.s_zoom1=gtk.SpinButton(a_zoom1)
-        self.s_zoom1.set_digits(0)
-        tbl.attach(self.s_zoom1, 3,4,2,3)
-
-        self.b_download=gtk.Button(label="Download")
-        tbl.attach(self.b_download, 1,2,3,4, xoptions=gtk.EXPAND|gtk.FILL, yoptions=0)
+        hbbox = gtk.HButtonBox()
+        hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
+        self.b_download = gtk.Button(stock=gtk.STOCK_HARDDISK)
         self.b_download.connect('clicked', self.run)
+        hbbox.pack_start(self.b_download)
 
-        self.b_cancel=gtk.Button(stock='gtk-cancel')
-        tbl.attach(self.b_cancel, 3,4,3,4, xoptions=gtk.EXPAND|gtk.FILL, yoptions=0)
+        self.b_cancel = gtk.Button(stock='gtk-cancel')
         self.b_cancel.connect('clicked', self.cancel)
         self.b_cancel.set_sensitive(False)
+        hbbox.pack_start(self.b_cancel)
+        vbox.pack_start(hbbox)
 
         self.pbar=gtk.ProgressBar()
-        tbl.attach(self.pbar, 0,4,4,5, xoptions=gtk.EXPAND|gtk.FILL, yoptions=0)
-
-        self.add(tbl)
+        vbox.pack_start(self.pbar)
+        self.add(vbox)
 
         self.set_title("GMapCatcher download")
         self.set_border_width(10)
@@ -86,24 +125,25 @@ class DLWindow(gtk.Window):
     def run(self,w):
         if self.processing: return
         try:
-            lat0=float(self.e_lat0.get_text())
-            lon0=float(self.e_lon0.get_text())
-            kmx=float(self.e_kmx.get_text())
-            kmy=float(self.e_kmy.get_text())
-            zoom0=self.s_zoom0.get_value_as_int()
-            zoom1=self.s_zoom1.get_value_as_int()
-            layer=self.layer
+            lat0 = float(self.e_lat0.get_text())
+            lon0 = float(self.e_lon0.get_text())
+            kmx = float(self.e_kmx.get_text())
+            kmy = float(self.e_kmy.get_text())
+            zoom0 = self.s_zoom0.get_value_as_int()
+            zoom1 = self.s_zoom1.get_value_as_int()
+            layer = self.layer
         except ValueError:
-            d=gtk.MessageDialog(self,gtk.DIALOG_MODAL,gtk.MESSAGE_ERROR,gtk.BUTTONS_CLOSE,
-                "Some field contain non-numbers")
+            d = gtk.MessageDialog(self, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
+                    gtk.BUTTONS_CLOSE, "Some field contain non-numbers")
             d.run()
             d.destroy()
+            return
         self.b_cancel.set_sensitive(True)
         self.b_download.set_sensitive(False)
         print ("lat0=%g lon0=%g kmx=%g kmy=%g zoom0=%d zoom1=%d layer=%d"
             % (lat0, lon0, kmx, kmy, zoom0, zoom1, layer))
-        dlon=kmx*180/math.pi/(mapUtils.R_EARTH*math.cos(lat0*math.pi/180))
-        dlat=kmy*180/math.pi/mapUtils.R_EARTH
+        dlon=kmx*180/math.pi/(R_EARTH*math.cos(lat0*math.pi/180))
+        dlat=kmy*180/math.pi/R_EARTH
         todo=[]
         if zoom0>zoom1: zoom0,zoom1=zoom1,zoom0
         for zoom in xrange(zoom1,zoom0-1,-1):
