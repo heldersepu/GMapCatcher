@@ -32,8 +32,12 @@ class GoogleMaps:
             self.version_string=None
             if not online:
                 return True
-            oa = openanything.fetch(
-                'http://maps.google.com/maps?t='+self.map_server_query[new_layer])
+            try: 
+                oa = openanything.fetch('http://maps.google.com/maps?t=' + \
+                                        self.map_server_query[new_layer])
+            except Exception:
+                print "Can not open http://maps.google.com/maps"
+                return False
             if oa['status'] != 200:
                 print "Trying to fetch http://maps.google.com/maps but failed"
                 return False
