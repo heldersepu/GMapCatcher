@@ -14,29 +14,7 @@ from gobject import TYPE_STRING
 class GoogleMaps:
 
     # coord = (lat, lng, zoom_level)
-    locations = {}
-    mt_counter = 0
-    version_string = None
-    html_data = ""
-    show_sat = False
-
-    # Set variables to Satellite or Maps
-    def get_maps(self, online, doMaps=True):
-        goog = '.google.com/'
-        if doMaps:
-            self.fetchURL = 'http://mt[0-9]'+goog+'mt.*w([0-9].[0-9][0-9])'
-            self.getFileURL = 'http://mt%i'+goog+'mt?n=404&v=w%s&hl'
-            self.tiles = 'tiles'
-            self.default_version_string = '2.92'
-        else:
-            self.fetchURL = 'http://khm[0-9]'+goog+'kh.....d([0-9][0-9])'
-            self.getFileURL = 'http://khm%i'+goog+'kh?v=%s&hl'
-            self.tiles = 'sat_tiles'
-            self.default_version_string = '37'
-        self.getFileURL += '=en&x=%i&y=%i&zoom=%i'
-        self.tilespath = fileUtils.check_dir(self.configpath, self.tiles)
-        if online:
-         self.version_string = self.fetch_version_string()
+    map_server_query=["","h","p"]
 
     def set_zoom(self, intZoom):
         if (MAP_MIN_ZOOM_LEVEL <= intZoom <= MAP_MAX_ZOOM_LEVEL):
@@ -44,28 +22,31 @@ class GoogleMaps:
         else:
             return 10
 
-    def fetch_version_string(self):
-        self.version_string = self.default_version_string
-        googleMaps = 'http://maps.google.com/maps'
-        if self.html_data == "":
-            try:
-                oa = openanything.fetch(googleMaps)
-            except Exception:
-                print "Exception opening ", googleMaps
-            else:
-                # Check successfull return of page
-                if oa['status'] != 200:
-                    print "Bad return from ", googleMaps
-                else:
-                    self.html_data = oa['data']
-        if self.html_data != "":
-            p = re.compile(self.fetchURL)
-            m = p.search(self.html_data)
-            if m:
-                self.version_string = m.group(1)
-            else:
-                print "!@@# Unable to fetch version string"
-        return self.version_string
+    def switch_layer(self,new_layer,online):
+        if self.layer==new_layer and (not online or self.version_string!=None):
+            return True
+        self.layer=new_layer
+        self.tilespath=os.path.join(self.configpath,LAYER_DIRS[new_layer])
+        fileUtils.check_dir(self.tilespath)
+        if new_layer not in self.known_layers:
+            self.version_string=None
+            if not online:
+                return True
+            oa = openanything.fetch(
+                'http://maps.google.com/maps?t='+self.map_server_query[new_layer])
+            if oa['status'] != 200:
+                print "Trying to fetch http://maps.google.com/maps but failed"
+                return False
+            html=oa['data']
+            p=re.compile(
+                'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v=([a-z0-9.]+)&')
+            m=p.search(html)
+            if not m:
+                print "Cannot parse result"
+                return False
+            self.known_layers[new_layer]=tuple(m.groups())
+        self.mt_prefix,self.mt_suffix,self.version_string=self.known_layers[new_layer]
+        return True
 
     def get_png_file(self, coord, filename, online, force_update):
         # remove tile only when online
@@ -77,16 +58,18 @@ class GoogleMaps:
 
         if os.path.isfile(filename):
             return True
-        else:
-            if not online:
-                return False
+        if not online:
+            return False
+        if not self.switch_layer(self.layer,online):
+            return False
 
-        if self.version_string == None:
-            self.version_string = self.fetch_version_string()
-
-        href = self.getFileURL \
-                % (self.mt_counter, self.version_string,
-                   coord[0], coord[1], coord[2])
+        href = 'http://%s%i.google.com/%s/v=%s&hl=en&x=%i&y=%i&zoom=%i' % (
+                self.mt_prefix,
+                self.mt_counter,
+                self.mt_suffix,
+                self.version_string,
+                coord[0],
+                coord[1], coord[2])
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
         try:
@@ -109,14 +92,16 @@ class GoogleMaps:
     def write_locations(self):
         fileUtils.write_file('location', self.locationpath, self.locations)
 
-    def __init__(self):
+    def __init__(self, layer=LAYER_MAP, configpath=None):
+        configpath = os.path.expanduser(configpath or "~/.googlemaps")
         self.lock = Lock()
-        self.configpath = \
-            fileUtils.check_dir(os.path.expanduser("~/.googlemaps"))
+        self.mt_counter=0
+        self.configpath = fileUtils.check_dir(configpath)
         self.locationpath = os.path.join(self.configpath, 'locations')
-        self.get_maps(False, True)
-        self.show_sat = \
-            os.path.isdir(os.path.join(self.configpath, 'sat_tiles'))
+        self.layer = None
+        self.known_layers = {}
+        self.locations = {}
+        self.switch_layer(layer,False)
 
         if (os.path.exists(self.locationpath)):
             self.read_locations()
@@ -167,7 +152,6 @@ class GoogleMaps:
             location = unicode(location, errors='ignore')
             self.locations[location] = (lat, lng, zoom)
             self.write_locations()
-            self.html_data = html
             return location
         else:
             return 'error=Unable to get latitude and longitude of %s ' % location
