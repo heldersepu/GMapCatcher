@@ -321,6 +321,11 @@ class MainWindow(gtk.Window):
             self.current_zoom_level = coord[2]
             self.do_scale(coord[2], force=True)
 
+    def offline_clicked(self, w):
+        online = not self.cb_offline.get_active()
+        if online:
+             self.drawing_area.queue_draw()
+
     def layer_changed(self, w):
         online = not self.cb_offline.get_active()
         self.layer = w.get_active()
@@ -381,7 +386,8 @@ class MainWindow(gtk.Window):
 
         self.cb_offline = gtk.CheckButton("Offlin_e")
         self.cb_offline.set_active(True)
-        hbox.pack_start(self.cb_offline)
+        self.cb_offline.connect('clicked',self.offline_clicked)         
+        hbox.pack_start(self.cb_offline)      
 
         self.cb_forceupdate = gtk.CheckButton("_Force update")
         self.cb_forceupdate.set_active(False)
