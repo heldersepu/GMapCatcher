@@ -123,10 +123,13 @@ class DLWindow(gtk.Window):
         for zoom in xrange(zoom1,zoom0-1,-1):
             top_left = mapUtils.coord_to_tile((lat0+dlat/2., lon0-dlon/2., zoom))
             bottom_right = mapUtils.coord_to_tile((lat0-dlat/2., lon0+dlon/2., zoom))
+            world_tiles = mapUtils.tiles_on_level(zoom)
             xmin,ymin=top_left[0]
-            xmax,ymax=bottom_right[0]
-            for x in xrange(xmin,xmax+1):
-                for y in xrange(ymin,ymax+1):
+            xmax,ymax=bottom_right[0]            
+            for i in range((xmax-xmin+1+world_tiles)%world_tiles):
+                x=(xmin+i)%world_tiles
+                for j in range((ymax-ymin+1+world_tiles)%world_tiles):
+                    y=(ymin+j)%world_tiles
                     todo.append((x,y,zoom))
         self.gmap=googleMaps.GoogleMaps(layer=layer) # creating our own gmap
         self.processing=True
