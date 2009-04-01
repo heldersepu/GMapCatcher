@@ -126,7 +126,6 @@ def tile_to_coord(tile, zoom):
     lat = 180.0/math.pi * math.asin(e)
     return lat, lon, zoom
 
-R_EARTH=6371.
 # Find scale of the picture in km per pixel
 def km_per_pixel(coord):
     world_tiles = tiles_on_level(coord[2])
