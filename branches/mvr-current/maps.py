@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-import sys
 import math
-import time
 import threading
 
 import pygtk
@@ -11,26 +9,8 @@ import gtk, gobject
 import mapUtils
 import googleMaps
 import mapTools
+from gtkThread import do_gui_operation
 from mapConst import *
-
-if sys.platform=='win32':
-    def do_gui_operation(function, *args, **kw):
-        def idle_func():
-            gtk.gdk.threads_enter()
-            try:
-                function(*args, **kw)
-                return False
-            finally:
-                gtk.gdk.threads_leave()
-        gobject.idle_add(idle_func)
-
-    def sleeper():
-        time.sleep(.001)
-        return 1 # don't forget this otherwise the timeout will be removed
-
-else:
-    gtk.gdk.threads_init()
-    do_gui_operation=gobject.idle_add
 
 def nice_round(f):
     n=math.ceil(math.log(f,10))
@@ -618,8 +598,6 @@ class MainWindow(gtk.Window):
         self.entry.grab_focus()
 
 def main():
-    if sys.platform == 'win32':
-        gobject.timeout_add(400,sleeper)
     MainWindow()
     gtk.main()
 
