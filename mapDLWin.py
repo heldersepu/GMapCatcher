@@ -77,7 +77,7 @@ class DLWindow(gtk.Window):
             return hbox
 
         def _center(lat0, lon0):
-            vbox = gtk.VBox()
+            vbox = gtk.VBox(False, 5)
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("latitude:"))
             self.e_lat0 = gtk.Entry()
@@ -96,7 +96,7 @@ class DLWindow(gtk.Window):
             return _frame(" Center ", vbox)
 
         def _area(kmx, kmy):
-            vbox = gtk.VBox()
+            vbox = gtk.VBox(False, 5)
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("width:"))
             self.e_kmx = gtk.Entry()
