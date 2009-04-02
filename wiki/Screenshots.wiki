@@ -1,8 +1,10 @@
 ﻿#labels Featured
 Screenshots:
 
-We have a new member! Say hello to Maxim.Razin, he is coming with some GREAT ideas!!!<br>
+v0.054 is out with some kool features, thanks to Maxim.Razin !!!<br>
+http://gmapcatcher.googlecode.com/svn/wiki/GMapCatcher-v0.054.png
 http://gmapcatcher.googlecode.com/svn/wiki/GMapCatcher_Terrain.PNG
+
 
 We have a New look under Windows.<br>
 http://gmapcatcher.googlecode.com/svn/wiki/WinNewLook.PNG
