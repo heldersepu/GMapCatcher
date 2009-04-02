@@ -26,25 +26,26 @@ class DLWindow(gtk.Window):
             return frame
 
         def _zoom(zoom0, zoom1):
-            vbox = gtk.VBox()
-            hbox = gtk.HBox(False, 10)
-            hbox.pack_start(lbl("min:"))
+            out_hbox = gtk.HBox(False, 50)
+            out_hbox.set_border_width(10)
+            hbox = gtk.HBox(False, 20)
+            hbox.pack_start(lbl("min:"), False)
             a_zoom0 = gtk.Adjustment(zoom0, MAP_MIN_ZOOM_LEVEL,
                                      MAP_MAX_ZOOM_LEVEL, 1)
             self.s_zoom0 = gtk.SpinButton(a_zoom0)
             self.s_zoom0.set_digits(0)
             hbox.pack_start(self.s_zoom0)
-            vbox.pack_start(hbox)
-
-            hbox = gtk.HBox(False, 10)
-            hbox.pack_start(lbl("max:"))
+            out_hbox.pack_start(hbox)
+            
+            hbox = gtk.HBox(False, 20)
+            hbox.pack_start(lbl("max:"), False)
             a_zoom1 = gtk.Adjustment(zoom1, MAP_MIN_ZOOM_LEVEL,
                                      MAP_MAX_ZOOM_LEVEL, 1)
             self.s_zoom1 = gtk.SpinButton(a_zoom1)
             self.s_zoom1.set_digits(0)
             hbox.pack_start(self.s_zoom1)
-            vbox.pack_start(hbox)
-            return _frame(" Zoom ", vbox)
+            out_hbox.pack_start(hbox)
+            return _frame(" Zoom ", out_hbox)
 
         def _center(lat0, lon0):
             vbox = gtk.VBox()
@@ -52,14 +53,14 @@ class DLWindow(gtk.Window):
             hbox.pack_start(lbl("latitude:"))
             self.e_lat0 = gtk.Entry()
             self.e_lat0.set_text("%.6f" % lat0)
-            hbox.pack_start(self.e_lat0)
+            hbox.pack_start(self.e_lat0, False)
             vbox.pack_start(hbox)
 
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("longitude:"))
             self.e_lon0 = gtk.Entry()
             self.e_lon0.set_text("%.6f" % lon0)
-            hbox.pack_start(self.e_lon0)
+            hbox.pack_start(self.e_lon0, False)
             vbox.pack_start(hbox)
             return _frame(" Center ", vbox)
 
@@ -69,14 +70,29 @@ class DLWindow(gtk.Window):
             hbox.pack_start(lbl("width:"))
             self.e_kmx = gtk.Entry()
             self.e_kmx.set_text("%.6g" % kmx)
-            hbox.pack_start(self.e_kmx)
-
+            hbox.pack_start(self.e_kmx, False)
+            vbox.pack_start(hbox)
+         
+            hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("height:"))
             self.e_kmy = gtk.Entry()
             self.e_kmy.set_text("%.6g" % kmy)
-            hbox.pack_start(self.e_kmy)
+            hbox.pack_start(self.e_kmy, False)
             vbox.pack_start(hbox)
             return _frame(" Area (km) ", vbox)
+        
+        def _buttons():
+            hbbox = gtk.HButtonBox()
+            hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
+            self.b_download = gtk.Button(stock=gtk.STOCK_HARDDISK)
+            self.b_download.connect('clicked', self.run)
+            hbbox.pack_start(self.b_download)
+
+            self.b_cancel = gtk.Button(stock='gtk-cancel')
+            self.b_cancel.connect('clicked', self.cancel)
+            self.b_cancel.set_sensitive(False)
+            hbbox.pack_start(self.b_cancel)
+            return hbbox
 
         print "DLWindow(", coord, kmx, kmy, layer, ')'
         kmx = mapUtils.nice_round(kmx)
@@ -91,21 +107,10 @@ class DLWindow(gtk.Window):
         vbox = gtk.VBox(False, 10)
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(_center(lat0, lon0))
-        hbox.pack_start(_zoom(zoom0, zoom1))
+        hbox.pack_start(_area(kmx, kmy))
         vbox.pack_start(hbox)
-        vbox.pack_start(_area(kmx, kmy))
-
-        hbbox = gtk.HButtonBox()
-        hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
-        self.b_download = gtk.Button(stock=gtk.STOCK_HARDDISK)
-        self.b_download.connect('clicked', self.run)
-        hbbox.pack_start(self.b_download)
-
-        self.b_cancel = gtk.Button(stock='gtk-cancel')
-        self.b_cancel.connect('clicked', self.cancel)
-        self.b_cancel.set_sensitive(False)
-        hbbox.pack_start(self.b_cancel)
-        vbox.pack_start(hbbox)
+        vbox.pack_start(_zoom(zoom0, zoom1))
+        vbox.pack_start(_buttons())
 
         self.pbar=gtk.ProgressBar()
         vbox.pack_start(self.pbar)
@@ -113,7 +118,6 @@ class DLWindow(gtk.Window):
 
         self.set_title("GMapCatcher download")
         self.set_border_width(10)
-        self.set_size_request(600, 300)
 
         self.todo=[]
         self.processing=False
