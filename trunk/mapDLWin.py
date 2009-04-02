@@ -12,6 +12,30 @@ from gtkThread import do_gui_operation
 
 class DLWindow(gtk.Window):
     def __init__(self, coord, kmx, kmy, layer):
+        # Validate the text on all the "input" widgets
+        def insert_text(entry, text, length, position, max, isInt=True):
+            # generate what the new text will be
+            text = text[:length]
+            pos = entry.get_position()
+            old = entry.get_text()
+            new_text = old[:pos] + text + old[pos:]
+
+            # Allow the minus as the first char
+            if new_text == "-":
+                return
+            # Allow a maximum number of chars
+            elif (len(new_text) > max):
+                entry.stop_emission('insert-text')
+            else:
+                # If an exception is raised the text is not good
+                try:
+                    if isInt:
+                        int(new_text)
+                    else:
+                        float(new_text)
+                except Exception:
+                    entry.stop_emission('insert-text')
+
         def lbl(text):
             l = gtk.Label(text)
             l.set_justify(gtk.JUSTIFY_RIGHT)
@@ -33,6 +57,7 @@ class DLWindow(gtk.Window):
             a_zoom0 = gtk.Adjustment(zoom0, MAP_MIN_ZOOM_LEVEL,
                                      MAP_MAX_ZOOM_LEVEL, 1)
             self.s_zoom0 = gtk.SpinButton(a_zoom0)
+            self.s_zoom0.connect('insert-text', insert_text, 2)
             self.s_zoom0.set_digits(0)
             in_hbox.pack_start(self.s_zoom0)
             out_hbox.pack_start(in_hbox)
@@ -42,6 +67,7 @@ class DLWindow(gtk.Window):
             a_zoom1 = gtk.Adjustment(zoom1, MAP_MIN_ZOOM_LEVEL,
                                      MAP_MAX_ZOOM_LEVEL, 1)
             self.s_zoom1 = gtk.SpinButton(a_zoom1)
+            self.s_zoom1.connect('insert-text', insert_text, 2)
             self.s_zoom1.set_digits(0)
             in_hbox.pack_start(self.s_zoom1)
             out_hbox.pack_start(in_hbox)
@@ -56,6 +82,7 @@ class DLWindow(gtk.Window):
             hbox.pack_start(lbl("latitude:"))
             self.e_lat0 = gtk.Entry()
             self.e_lat0.set_text("%.6f" % lat0)
+            self.e_lat0.connect('insert-text', insert_text, 15, False)
             hbox.pack_start(self.e_lat0, False)
             vbox.pack_start(hbox)
 
@@ -63,6 +90,7 @@ class DLWindow(gtk.Window):
             hbox.pack_start(lbl("longitude:"))
             self.e_lon0 = gtk.Entry()
             self.e_lon0.set_text("%.6f" % lon0)
+            self.e_lon0.connect('insert-text', insert_text, 15, False)
             hbox.pack_start(self.e_lon0, False)
             vbox.pack_start(hbox)
             return _frame(" Center ", vbox)
@@ -73,6 +101,7 @@ class DLWindow(gtk.Window):
             hbox.pack_start(lbl("width:"))
             self.e_kmx = gtk.Entry()
             self.e_kmx.set_text("%.6g" % kmx)
+            self.e_kmx.connect('insert-text', insert_text, 10)
             hbox.pack_start(self.e_kmx, False)
             vbox.pack_start(hbox)
 
@@ -80,6 +109,7 @@ class DLWindow(gtk.Window):
             hbox.pack_start(lbl("height:"))
             self.e_kmy = gtk.Entry()
             self.e_kmy.set_text("%.6g" % kmy)
+            self.e_kmy.connect('insert-text', insert_text, 10)
             hbox.pack_start(self.e_kmy, False)
             vbox.pack_start(hbox)
             return _frame(" Area (km) ", vbox)
