@@ -1,3 +1,9 @@
+April 2 2009    H.S    <HelderSepu@gmail.com>
+    * 0.054 - At revision: 264  
+    * Add Map/Satellite/Terrain switch (by Maxim.Razin)
+    * Batch download from the map GUI  (by Maxim.Razin)
+    * Add action buttons to "Edit Locations"
+
 Mar 18 2009    H.S    <HelderSepu@gmail.com>
     * 0.053
     * Add a new button that will hold more options, such as:
