@@ -17,10 +17,10 @@ class DLWindow(gtk.Window):
             l.set_justify(gtk.JUSTIFY_RIGHT)
             return l
 
-        def _frame(strName, container):
+        def _frame(strName, container, spacing = 5):
             frame = gtk.Frame(strName)
-            vbox = gtk.VBox(False, 5)
-            vbox.set_border_width(5)
+            vbox = gtk.VBox(False, spacing)
+            vbox.set_border_width(spacing)
             vbox.pack_start(container)
             frame.add(vbox)
             return frame
@@ -28,24 +28,27 @@ class DLWindow(gtk.Window):
         def _zoom(zoom0, zoom1):
             out_hbox = gtk.HBox(False, 50)
             out_hbox.set_border_width(10)
-            hbox = gtk.HBox(False, 20)
-            hbox.pack_start(lbl("min:"), False)
+            in_hbox = gtk.HBox(False, 20)
+            in_hbox.pack_start(lbl("min:"), False)
             a_zoom0 = gtk.Adjustment(zoom0, MAP_MIN_ZOOM_LEVEL,
                                      MAP_MAX_ZOOM_LEVEL, 1)
             self.s_zoom0 = gtk.SpinButton(a_zoom0)
             self.s_zoom0.set_digits(0)
-            hbox.pack_start(self.s_zoom0)
-            out_hbox.pack_start(hbox)
-            
-            hbox = gtk.HBox(False, 20)
-            hbox.pack_start(lbl("max:"), False)
+            in_hbox.pack_start(self.s_zoom0)
+            out_hbox.pack_start(in_hbox)
+
+            in_hbox = gtk.HBox(False, 20)
+            in_hbox.pack_start(lbl("max:"), False)
             a_zoom1 = gtk.Adjustment(zoom1, MAP_MIN_ZOOM_LEVEL,
                                      MAP_MAX_ZOOM_LEVEL, 1)
             self.s_zoom1 = gtk.SpinButton(a_zoom1)
             self.s_zoom1.set_digits(0)
-            hbox.pack_start(self.s_zoom1)
-            out_hbox.pack_start(hbox)
-            return _frame(" Zoom ", out_hbox)
+            in_hbox.pack_start(self.s_zoom1)
+            out_hbox.pack_start(in_hbox)
+            hbox = gtk.HBox()
+            hbox.set_border_width(10)
+            hbox.pack_start(_frame(" Zoom ", out_hbox, 0))
+            return hbox
 
         def _center(lat0, lon0):
             vbox = gtk.VBox()
@@ -72,7 +75,7 @@ class DLWindow(gtk.Window):
             self.e_kmx.set_text("%.6g" % kmx)
             hbox.pack_start(self.e_kmx, False)
             vbox.pack_start(hbox)
-         
+
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("height:"))
             self.e_kmy = gtk.Entry()
@@ -80,9 +83,10 @@ class DLWindow(gtk.Window):
             hbox.pack_start(self.e_kmy, False)
             vbox.pack_start(hbox)
             return _frame(" Area (km) ", vbox)
-        
+
         def _buttons():
             hbbox = gtk.HButtonBox()
+            hbbox.set_border_width(10)
             hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
             self.b_download = gtk.Button(stock=gtk.STOCK_HARDDISK)
             self.b_download.connect('clicked', self.run)
@@ -103,8 +107,8 @@ class DLWindow(gtk.Window):
         lon0 = coord[1]
         zoom0 = max(MAP_MIN_ZOOM_LEVEL, coord[2]-3)
         zoom1 = min(MAP_MAX_ZOOM_LEVEL, coord[2]+1)
-        
-        vbox = gtk.VBox(False, 10)
+
+        vbox = gtk.VBox(False)
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(_center(lat0, lon0))
         hbox.pack_start(_area(kmx, kmy))
@@ -112,7 +116,8 @@ class DLWindow(gtk.Window):
         vbox.pack_start(_zoom(zoom0, zoom1))
         vbox.pack_start(_buttons())
 
-        self.pbar=gtk.ProgressBar()
+        self.pbar = gtk.ProgressBar()
+        self.pbar.set_text(" ")
         vbox.pack_start(self.pbar)
         self.add(vbox)
 
