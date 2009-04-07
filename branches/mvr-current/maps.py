@@ -1,170 +1,13 @@
 #!/usr/bin/env python
-import math
-import threading
-
-import pygtk
-pygtk.require('2.0')
-import gtk, gobject
-
+from mapUtils import mod
 import mapUtils
 import googleMaps
 import mapTools
-from gtkThread import do_gui_operation
+from gtkThread import *
 from mapConst import *
-
-def nice_round(f):
-    n=math.ceil(math.log(f,10))
-    p=f/10**n
-    if p>0.5:
-        p=1.0
-    elif p>0.2:
-        p=0.5
-    else:
-        p=0.2
-    return p*10**n
-
-class DLWindow(gtk.Window):
-    def __init__(self, coord, kmx,kmy, layer):
-        def lbl(text):
-            l=gtk.Label(text)
-            l.set_justify(gtk.JUSTIFY_RIGHT)
-            return l        
-        print "DLWindow(",coord,kmx,kmy,layer,')'
-        kmx=nice_round(kmx)
-        kmy=nice_round(kmy)
-        self.layer=layer
-        gtk.Window.__init__(self)
-        lat0=coord[0]
-        lon0=coord[1]
-        zoom0=max(MAP_MIN_ZOOM_LEVEL,coord[2]-3)
-        zoom1=min(MAP_MAX_ZOOM_LEVEL,coord[2]+1)
-
-        tbl=gtk.Table(rows=4, columns=4, homogeneous=False)
-        tbl.set_col_spacings(10)
-        tbl.set_row_spacings(10)
-
-        tbl.attach(lbl("Center latitude:"),0,1,0,1)
-        self.e_lat0=gtk.Entry()
-        self.e_lat0.set_text("%.6f" % lat0)
-        tbl.attach(self.e_lat0, 1,2,0,1)
-        tbl.attach(lbl("longitude:"),2,3,0,1)
-        self.e_lon0=gtk.Entry()
-        self.e_lon0.set_text("%.6f" % lon0)
-        tbl.attach(self.e_lon0, 3,4,0,1)
-
-        tbl.attach(lbl("Area width (km):"),0,1,1,2)
-        self.e_kmx=gtk.Entry()
-        self.e_kmx.set_text("%.6g" % kmx)
-        tbl.attach(self.e_kmx, 1,2,1,2)
-        tbl.attach(lbl("Area height (km):"),2,3,1,2)
-        self.e_kmy=gtk.Entry()
-        self.e_kmy.set_text("%.6g" % kmy)
-        tbl.attach(self.e_kmy, 3,4,1,2)
-
-        tbl.attach(lbl("Zoom min:"),0,1,2,3)
-        a_zoom0=gtk.Adjustment(zoom0,MAP_MIN_ZOOM_LEVEL,MAP_MAX_ZOOM_LEVEL,1)
-        self.s_zoom0=gtk.SpinButton(a_zoom0)
-        self.s_zoom0.set_digits(0)
-        tbl.attach(self.s_zoom0, 1,2,2,3)
-        tbl.attach(lbl("max:"),2,3,2,3)
-        a_zoom1=gtk.Adjustment(zoom1,MAP_MIN_ZOOM_LEVEL,MAP_MAX_ZOOM_LEVEL,1)
-        self.s_zoom1=gtk.SpinButton(a_zoom1)
-        self.s_zoom1.set_digits(0)
-        tbl.attach(self.s_zoom1, 3,4,2,3)
-
-        self.b_download=gtk.Button(label="Download")
-        tbl.attach(self.b_download, 1,2,3,4, xoptions=gtk.EXPAND|gtk.FILL, yoptions=0)
-        self.b_download.connect('clicked', self.run)
-
-        self.b_cancel=gtk.Button(stock='gtk-cancel')
-        tbl.attach(self.b_cancel, 3,4,3,4, xoptions=gtk.EXPAND|gtk.FILL, yoptions=0)
-        self.b_cancel.connect('clicked', self.cancel)
-        self.b_cancel.set_sensitive(False)
-
-        self.pbar=gtk.ProgressBar()
-        tbl.attach(self.pbar, 0,4,4,5, xoptions=gtk.EXPAND|gtk.FILL, yoptions=0)
-
-        self.add(tbl)
-        
-        self.set_title("GMapCatcher download")
-        self.set_border_width(10)
-        self.set_size_request(600, 300)
-
-        self.todo=[]
-        self.processing=False
-        self.thr=None
-        self.gmap=None
-        self.connect('delete-event', self.on_delete)
-        self.show_all()
-
-    def run(self,w):
-        if self.processing: return
-        try:
-            lat0=float(self.e_lat0.get_text())
-            lon0=float(self.e_lon0.get_text())
-            kmx=float(self.e_kmx.get_text())
-            kmy=float(self.e_kmy.get_text())
-            zoom0=self.s_zoom0.get_value_as_int()
-            zoom1=self.s_zoom1.get_value_as_int()
-            layer=self.layer
-        except ValueError:
-            d=gtk.MessageDialog(self,gtk.DIALOG_MODAL,gtk.MESSAGE_ERROR,gtk.BUTTONS_CLOSE,
-                "Some field contain non-numbers")
-            d.run()
-            d.destroy()
-        self.b_cancel.set_sensitive(True)
-        self.b_download.set_sensitive(False)
-        print ("lat0=%g lon0=%g kmx=%g kmy=%g zoom0=%d zoom1=%d layer=%d"
-            % (lat0, lon0, kmx, kmy, zoom0, zoom1, layer))
-        dlon=kmx*180/math.pi/(mapUtils.R_EARTH*math.cos(lat0*math.pi/180))
-        dlat=kmy*180/math.pi/mapUtils.R_EARTH
-        todo=[]
-        if zoom0>zoom1: zoom0,zoom1=zoom1,zoom0
-        for zoom in xrange(zoom1,zoom0-1,-1):
-            top_left = mapUtils.coord_to_tile((lat0+dlat/2., lon0-dlon/2., zoom))
-            bottom_right = mapUtils.coord_to_tile((lat0-dlat/2., lon0+dlon/2., zoom))
-            xmin,ymin=top_left[0]
-            xmax,ymax=bottom_right[0]
-            for x in xrange(xmin,xmax+1):
-                for y in xrange(ymin,ymax+1):
-                    todo.append((x,y,zoom))
-        self.gmap=googleMaps.GoogleMaps(layer=layer) # creating our own gmap
-        self.processing=True
-        self.thr=threading.Thread(target=self.run_thread, args=(todo,))
-        self.thr.start()
-
-    def update_pbar(self, text, pos, maxpos):
-        self.pbar.set_text(text)
-        self.pbar.set_fraction(float(pos)/maxpos)
-
-    def download_complete(self):
-        self.update_pbar("Complete",0,1);
-        self.processing=False
-        self.b_cancel.set_sensitive(False)
-        self.b_download.set_sensitive(True)
-
-    def run_thread(self, todo):
-        for i,q in enumerate(todo):
-            if not self.processing: return
-            do_gui_operation(self.update_pbar, "x=%d y=%d zoom=%d" % q, i, len(todo))
-            self.gmap.get_tile_pixbuf(q, True, False)
-        do_gui_operation(self.download_complete)
-
-    def stop_thread(self):
-        if self.thr and self.thr.isAlive():
-            self.processing=False
-            self.thr.join()
-        self.thr=None
-
-    def cancel(self,w):
-        self.stop_thread()
-        self.update_pbar("Canceled",0,1);
-        self.b_cancel.set_sensitive(False)
-        self.b_download.set_sensitive(True)
-
-    def on_delete(self,*params):
-        self.stop_thread()
-        return False
+from DLWindow import DLWindow
+import mapDownloader
+import lrucache
 
 class MainWindow(gtk.Window):
 
@@ -183,7 +26,7 @@ class MainWindow(gtk.Window):
         return resp
 
     def do_scale(self, pos, pointer=None, force=False):
-        pos = round(pos, 0)
+        pos = int(round(pos, 0))
         if (pos == round(self.scale.get_value(), 0)) and not force:
             return
         self.scale.set_value(pos)
@@ -192,7 +35,7 @@ class MainWindow(gtk.Window):
             fix_tile, fix_offset = self.center
         else:
             rect = self.drawing_area.get_allocation()
-            da_center = (rect.width / 2, rect.height / 2)
+            da_center = (rect.width // 2, rect.height // 2)
 
             fix_tile = self.center[0]
             fix_offset = self.center[1][0] + (pointer[0] - da_center[0]), \
@@ -213,7 +56,7 @@ class MainWindow(gtk.Window):
                       (x % TILES_WIDTH, y % TILES_HEIGHT)
 
         self.current_zoom_level = pos
-        self.drawing_area.queue_draw()
+	self.repaint()
 
     def get_zoom_level(self):
         return int(self.scale.get_value())
@@ -302,7 +145,6 @@ class MainWindow(gtk.Window):
                         self.combo_popup()
                         return
                 self.cb_offline.set_active(False)
-                mapUtils.force_repaint()
 
                 location = self.ctx_map.search_location(location)
                 if (location[:6] == "error="):
@@ -321,11 +163,14 @@ class MainWindow(gtk.Window):
             self.current_zoom_level = coord[2]
             self.do_scale(coord[2], force=True)
 
-    def layer_changed(self, w):
+    def offline_clicked(self, w):
         online = not self.cb_offline.get_active()
+        if online:
+             self.repaint()
+
+    def layer_changed(self, w):
         self.layer = w.get_active()
-        self.ctx_map.switch_layer(self.layer,online)
-        self.drawing_area.queue_draw()
+        self.repaint()
 
     def download_clicked(self,w):
         coord=mapUtils.tile_to_coord(self.center, self.current_zoom_level)
@@ -381,7 +226,8 @@ class MainWindow(gtk.Window):
 
         self.cb_offline = gtk.CheckButton("Offlin_e")
         self.cb_offline.set_active(True)
-        hbox.pack_start(self.cb_offline)
+        self.cb_offline.connect('clicked',self.offline_clicked)         
+        hbox.pack_start(self.cb_offline)      
 
         self.cb_forceupdate = gtk.CheckButton("_Force update")
         self.cb_forceupdate.set_active(False)
@@ -430,7 +276,7 @@ class MainWindow(gtk.Window):
     def __create_right_paned(self):
         da = gtk.DrawingArea()
         self.drawing_area = da
-        da.connect("expose_event", self.expose_cb)
+        da.connect("expose-event", self.expose_cb)
         da.add_events(gtk.gdk.SCROLL_MASK)
         da.connect("scroll-event", self.scroll_cb)
 
@@ -519,21 +365,77 @@ class MainWindow(gtk.Window):
         self.center = mapUtils.tile_adjustEx(self.get_zoom_level(),
                          center_tile, center_offset)
         self.draging_start = (x, y)
-        self.drawing_area.queue_draw()
+        self.repaint()
         # print "new draging_start: (%d, %d)" % self.draging_start
         # print "center: %d, %d, %d, %d" % (self.center[0][0],
         #         self.center[0][1],
         #         self.center[1][0],
         #         self.center[1][1])
 
+    def tile_coord_to_screen(self, coord):
+        if self.current_zoom_level!=coord[2]: return None # wrong zoom
+        world_tiles=mapUtils.tiles_on_level(coord[2])
+        rect=self.drawing_area.get_allocation()
+        x_rollup=world_tiles*TILES_WIDTH
+        y_rollup=world_tiles*TILES_HEIGHT
+        dx=mod(rect.width//2-self.center[1][0]
+            +(coord[0]-self.center[0][0])*TILES_WIDTH, x_rollup)
+        dy=mod(rect.height//2-self.center[1][1]+(coord[1]-self.center[0][1])*TILES_HEIGHT, y_rollup)
+        if dx+TILES_WIDTH>=x_rollup: dx-=x_rollup
+        if dy+TILES_HEIGHT>=y_rollup: dy-=y_rollup
+        if dx+TILES_WIDTH>=0 and dx<rect.width and \
+           dy+TILES_HEIGHT>=0 and dy<rect.height:
+            return [(xx,yy)
+                for xx in xrange(dx, rect.width, x_rollup)
+                for yy in xrange(dy, rect.height, y_rollup)]
+        else:
+            return None
+
+    def load_pixbuf(self, filename):
+        if filename in self.tile_cache:
+            return self.tile_cache[filename]
+        w = gtk.Image()
+        if (filename == None):
+            w.set_from_file('missing.png')
+        else:
+            w.set_from_file(filename)
+        try:
+            pb=w.get_pixbuf()
+            self.tile_cache[filename]=pb
+            return pb
+        except ValueError:
+            print "File corrupted: %s" % filename
+            os.remove(filename)
+            w.set_from_file('missing.png')
+            return w.get_pixbuf()        
+
+    def tile_received(self, coord, layer, filename):
+        #print "tile_received", coord, layer, filename
+        if self.layer==layer:
+            xy=self.tile_coord_to_screen(coord)
+            if xy:
+                #print "Placing to",xy
+                gc=self.drawing_area.style.black_gc
+                da=self.drawing_area.window
+                img=self.load_pixbuf(filename)
+                for x,y in xy:
+                    da.draw_pixbuf(
+                        gc, img, 0, 0, x, y, TILES_WIDTH, TILES_HEIGHT)
+
     def expose_cb(self, drawing_area, event):
+        #print "expose_cb"
         online = not self.cb_offline.get_active()
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
         zl = self.get_zoom_level()
-        mapUtils.do_expose_cb(self, zl, self.center, rect, online,
-                              force_update, self.drawing_area.style.black_gc,
-                              event.area)
+        self.downloader.query_region_around_point(
+            self.center, (rect.width, rect.height), zl, self.layer,
+            gui_callback(self.tile_received),
+            online=online, force_update=force_update
+        )
+
+    def repaint(self):
+        self.drawing_area.queue_draw()
 
     def scroll_cb(self, widget, event):
         if (event.direction == gtk.gdk.SCROLL_UP):
@@ -566,9 +468,15 @@ class MainWindow(gtk.Window):
                 self.top_panel.show()
             self.show_panels = not self.show_panels
 
+    def on_delete(self,*args):
+        self.downloader.stop_all()
+        return False
+
     def __init__(self, parent=None):
         self.ctx_map = googleMaps.GoogleMaps()
+        self.downloader = mapDownloader.MapDownloader(self.ctx_map)
         self.layer=0
+        self.tile_cache=lrucache.LRUCache(1000)
         gtk.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
@@ -576,6 +484,7 @@ class MainWindow(gtk.Window):
             self.connect("destroy", lambda *w: gtk.main_quit())
 
         self.connect('key-press-event', self.full_screen)
+        self.connect('delete-event', self.on_delete)
         vpaned = gtk.VPaned()
         hpaned = gtk.HPaned()
         self.top_panel = self.__create_top_paned()
