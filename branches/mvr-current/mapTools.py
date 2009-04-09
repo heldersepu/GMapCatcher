@@ -19,9 +19,7 @@ class TreeView():
     def __write_file(self, strInfo, strFilePath, liststore):
         locations = {}
         for row in liststore:
-            print row[0]
             locations[row[0]] = (float(row[1]), float(row[2]), int(row[3]))
-        print strFilePath, strInfo
         fileUtils.write_file(strInfo, strFilePath, locations)
 
     # Handle the 'edited' event of the cells
