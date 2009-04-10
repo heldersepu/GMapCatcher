@@ -142,7 +142,7 @@ class TreeView():
 class MainWindow():
 
     def __create_notebook(self, parent):
-        filePath = self.ctx_map.configpath
+        filePath = parent.ctx_map.configpath
         notebook = gtk.Notebook()
         notebook.set_tab_pos(gtk.POS_TOP)
         notebook.show()
