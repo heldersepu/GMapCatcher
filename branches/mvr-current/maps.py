@@ -56,7 +56,7 @@ class MainWindow(gtk.Window):
                       (x % TILES_WIDTH, y % TILES_HEIGHT)
 
         self.current_zoom_level = pos
-	self.repaint()
+    self.repaint()
 
     def get_zoom_level(self):
         return int(self.scale.get_value())
@@ -226,8 +226,8 @@ class MainWindow(gtk.Window):
 
         self.cb_offline = gtk.CheckButton("Offlin_e")
         self.cb_offline.set_active(True)
-        self.cb_offline.connect('clicked',self.offline_clicked)         
-        hbox.pack_start(self.cb_offline)      
+        self.cb_offline.connect('clicked',self.offline_clicked)
+        hbox.pack_start(self.cb_offline)
 
         self.cb_forceupdate = gtk.CheckButton("_Force update")
         self.cb_forceupdate.set_active(False)
@@ -246,7 +246,7 @@ class MainWindow(gtk.Window):
         self.cmb_layer.set_active(0)
         self.cmb_layer.connect('changed',self.layer_changed)
         bbox.add(self.cmb_layer)
-        
+
         hbox.pack_start(bbox)
         return hbox
 
@@ -284,7 +284,7 @@ class MainWindow(gtk.Window):
         da.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
 
-        menu = self.gtk_menu(["Zoom In", "Zoom Out", "Center map here", 
+        menu = self.gtk_menu(["Zoom In", "Zoom Out", "Center map here",
                               "Reset", "", "Batch Download"])
 
         da.connect_object("event", self.da_click_events, menu)
@@ -407,7 +407,7 @@ class MainWindow(gtk.Window):
             print "File corrupted: %s" % filename
             os.remove(filename)
             w.set_from_file('missing.png')
-            return w.get_pixbuf()        
+            return w.get_pixbuf()
 
     def tile_received(self, coord, layer, filename):
         #print "tile_received", coord, layer, filename

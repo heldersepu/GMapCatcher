@@ -41,7 +41,7 @@ class GoogleMaps:
                 print "Cannot parse result"
                 return None
             self.known_layers[layer] = (
-                'http://%s%%d.google.com/%s/v=%s&hl=en&x=%%i&y=%%i&zoom=%%i' 
+                'http://%s%%d.google.com/%s/v=%s&hl=en&x=%%i&y=%%i&zoom=%%i'
                 % tuple(m.groups()))
             print "URL pattern for layer %i: %s" % (layer,self.known_layers[layer])
 

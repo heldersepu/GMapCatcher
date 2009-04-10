@@ -22,7 +22,7 @@ class DownloaderThread(Thread):
         Thread.__init__(self)
         self.ctx_map=ctx_map
         self.inq=inq
-             
+
     def run(self):
         while True:
             task = self.inq.get()
