@@ -26,10 +26,9 @@ class MapConf():
         config.set(strSection, 'height', self.init_height)
         config.set(strSection, 'zoom', self.init_zoom)
         config.set(strSection, 'center', self.init_center)
-
-        # Writing our configuration file to 'example.cfg'
-        with open(configpath, 'wb') as configfile:
-            config.write(configfile)
+        
+        configfile = open(configpath, 'wb')
+        config.write(configfile)
 
     def read(self, configpath):
         config = ConfigParser.RawConfigParser()
