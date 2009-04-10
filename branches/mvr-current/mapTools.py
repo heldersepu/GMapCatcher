@@ -139,9 +139,10 @@ class TreeView():
         hpaned.pack2(buttons, False, False)
         return hpaned
 
-class MainWindow:
+class MainWindow():
 
-    def __create_notebook(self, filePath):
+    def __create_notebook(self, parent):
+        filePath = self.ctx_map.configpath
         notebook = gtk.Notebook()
         notebook.set_tab_pos(gtk.POS_TOP)
         notebook.show()
@@ -164,7 +165,7 @@ class MainWindow:
         # Set what page to start at
         return notebook
 
-    def __init__(self, parent, configpath, start_page):
+    def __init__(self, parent, start_page):
         win = gtk.Window(gtk.WINDOW_TOPLEVEL)
         win.set_border_width(10)
         win.set_transient_for(parent)
@@ -172,13 +173,13 @@ class MainWindow:
         win.set_destroy_with_parent(True)
         win.set_title(" GMapCatcher Tools ")
 
-        myNotebook = self.__create_notebook(configpath)
+        myNotebook = self.__create_notebook(parent)
         win.add(myNotebook)
         win.show_all()
         myNotebook.set_current_page(start_page)
 
-def main(parent, configpath, start_page):
-    MainWindow(parent, configpath, start_page)
+def main(parent, start_page):
+    MainWindow(parent, start_page)
 
 if __name__ == "__main__":
     main()

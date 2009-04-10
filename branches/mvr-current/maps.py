@@ -56,7 +56,7 @@ class MainWindow(gtk.Window):
                       (x % TILES_WIDTH, y % TILES_HEIGHT)
 
         self.current_zoom_level = pos
-    self.repaint()
+        self.repaint()
 
     def get_zoom_level(self):
         return int(self.scale.get_value())
@@ -301,7 +301,7 @@ class MainWindow(gtk.Window):
     def menu_tools(self, strName):
         for intPos in range(len(TOOLS_MENU)):
             if strName.startswith(TOOLS_MENU[intPos]):
-                mapTools.main(self, self.ctx_map.configpath, intPos)
+                mapTools.main(self, intPos)
                 return True
 
     # All the actions for the menu items
