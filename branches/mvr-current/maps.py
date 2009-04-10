@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 from mapUtils import mod
+import mapConf
 import mapUtils
 import googleMaps
 import mapTools
+
 from gtkThread import *
 from mapConst import *
 from DLWindow import DLWindow
@@ -267,7 +269,7 @@ class MainWindow(gtk.Window):
         scale.set_size_request(30, -1)
         scale.set_increments(1,1)
         scale.set_digits(0)
-        scale.set_value(MAP_MAX_ZOOM_LEVEL)
+        scale.set_value(self.current_zoom_level)
         scale.connect("change-value", self.scale_change_value)
         scale.show()
         self.scale = scale
@@ -473,6 +475,10 @@ class MainWindow(gtk.Window):
         return False
 
     def __init__(self, parent=None):
+        self.conf = mapConf.MapConf()
+        self.center = self.conf.init_center
+        self.current_zoom_level = self.conf.init_zoom
+
         self.ctx_map = googleMaps.GoogleMaps()
         self.downloader = mapDownloader.MapDownloader(self.ctx_map)
         self.layer=0
@@ -499,6 +505,7 @@ class MainWindow(gtk.Window):
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 400)
+        self.set_default_size(self.conf.init_width, self.conf.init_height)
         self.set_completion()
         self.default_entry()
         self.show_all()

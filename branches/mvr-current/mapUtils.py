@@ -52,3 +52,14 @@ def tile_to_coord(tile, zoom):
 def km_per_pixel(coord):
     world_tiles = tiles_on_level(coord[2])
     return 2*math.pi*R_EARTH/world_tiles/TILES_WIDTH * math.cos(coord[0]*math.pi/180.0)
+
+# Convert tuple-like string to real tuples
+# eg: '((1, 2), (2, 3))' -> ((1, 2), (2, 3))
+def str_to_tuple(strCenter):
+    strCenter = strCenter.strip()
+    strCenter = strCenter.replace('(', '')
+    strCenter = strCenter.replace(')', '')
+    center = map(int, strCenter.split(','))
+    return ((center[0], center[1]), 
+            (center[2], center[3]))
+
