@@ -166,7 +166,6 @@ class MainWindow(gtk.Window):
 
     def offline_clicked(self, w):
         online = not self.cb_offline.get_active()
-        self.ctx_map.switch_layer(self.layer,online)
         if online:
              self.drawing_area.queue_draw()
 
@@ -382,7 +381,7 @@ class MainWindow(gtk.Window):
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
         zl = self.get_zoom_level()
-        mapUtils.do_expose_cb(self, self.layer, zl, self.center, rect, online,
+        mapUtils.do_expose_cb(self, zl, self.center, rect, online,
                               force_update, self.drawing_area.style.black_gc,
                               event.area)
 
@@ -417,12 +416,6 @@ class MainWindow(gtk.Window):
                 self.top_panel.show()
             self.show_panels = not self.show_panels
 
-    def on_destroy(self, widget):
-        """Application is going down"""
-        print "Finishing gmapcatcher"
-        self.ctx_map.finish()
-        gtk.main_quit();
-        
     def __init__(self, parent=None):
         self.ctx_map = googleMaps.GoogleMaps()
         self.layer=0
@@ -430,7 +423,7 @@ class MainWindow(gtk.Window):
         try:
             self.set_screen(parent.get_screen())
         except AttributeError:
-            self.connect("destroy", self.on_destroy)
+            self.connect("destroy", lambda *w: gtk.main_quit())
 
         self.connect('key-press-event', self.full_screen)
         vpaned = gtk.VPaned()
