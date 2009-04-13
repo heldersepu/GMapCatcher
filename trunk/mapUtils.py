@@ -6,23 +6,40 @@ from threading import Thread
 
 marker = mapMark.MyMarkers()
 
+# myTuple indexes
+MT_LAYER = 0
+MT_ZL = 1
+MT_RTX = 2
+MT_RTY = 3
+MT_TXPI = 4
+MT_TYPI = 5
+MT_TXP = 6
+MT_TYP = 7
+MT_DWIDTH = 8
+MT_DHEIGHT = 9
+MT_ONLINE = 10
+MT_FORCEUPD = 11
+MT_SBGC = 12
+MT_SELF = 13
+
+
 def do_draw_pix(myTuple):
-    da = myTuple[12].drawing_area.window
-    pixbuf = myTuple[12].ctx_map.get_tile_pixbuf(
-            (myTuple[1], myTuple[2], myTuple[0]), myTuple[9], myTuple[10])
+    da = myTuple[MT_SELF].drawing_area.window
+    pixbuf = myTuple[MT_SELF].ctx_map.get_tile_pixbuf(
+            (myTuple[MT_RTX], myTuple[MT_RTY], myTuple[MT_ZL], myTuple[MT_LAYER]), myTuple[MT_ONLINE], myTuple[MT_FORCEUPD])
 
-    da.draw_pixbuf(myTuple[11], pixbuf,
-                    myTuple[3], myTuple[4], myTuple[5],
-                    myTuple[6], myTuple[7], myTuple[8])
+    da.draw_pixbuf(myTuple[MT_SBGC], pixbuf,
+                    myTuple[MT_TXPI], myTuple[MT_TYPI], myTuple[MT_TXP],
+                    myTuple[MT_TYP], myTuple[MT_DWIDTH], myTuple[MT_DHEIGHT])
 
-    if (myTuple[0] < MAP_MAX_ZOOM_LEVEL - 2):
+    if (myTuple[MT_ZL] < MAP_MAX_ZOOM_LEVEL - 2):
         for str in marker.positions.keys():
             coord = marker.positions[str]
             myCenter = coord_to_tile(coord)
-            if (myTuple[1] == myCenter[0][0] and myTuple[2] == myCenter[0][1]):
-                da.draw_pixbuf(myTuple[11], marker.pixbuf,
-                        myTuple[3], myTuple[4], myTuple[5],
-                        myTuple[6], myTuple[7], myTuple[8])
+            if (myTuple[MT_RTX] == myCenter[0][0] and myTuple[MT_RTY] == myCenter[0][1]):
+                da.draw_pixbuf(myTuple[MT_SBGC], marker.pixbuf,
+                        myTuple[MT_TXPI], myTuple[MT_TYPI], myTuple[MT_TXP],
+                        myTuple[MT_TYP], myTuple[MT_DWIDTH], myTuple[MT_DHEIGHT])
 
 class GetTileThread(Thread):
     def __init__(self, myTuple):
@@ -33,7 +50,7 @@ class GetTileThread(Thread):
         do_draw_pix(self.myTuple)
         return
 
-def do_expose_cb(self, zl, center, rect, online,
+def do_expose_cb(self, layer, zl, center, rect, online,
                  force_update, style_black_gc, area):
 
     tl_point = (center[1][0] - rect.width / 2,
@@ -59,7 +76,7 @@ def do_expose_cb(self, zl, center, rect, online,
                      (x_pos + draw_width < area.x)) or \
                     ((area.y + area.height < y_pos) or
                      (y_pos + draw_height < area.y))):
-                myTuple = (zl, real_tile_x, real_tile_y,
+                myTuple = (layer, zl, real_tile_x, real_tile_y,
                         tile_x_pos_inner, tile_y_pos_inner, x_pos, y_pos,
                         draw_width, draw_height, online,
                         force_update, style_black_gc, self)
