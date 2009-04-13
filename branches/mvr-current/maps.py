@@ -10,6 +10,7 @@ from mapConst import *
 from DLWindow import DLWindow
 import mapDownloader
 import lrucache
+import tilesreposfs
 
 class MainWindow(gtk.Window):
 
@@ -393,37 +394,6 @@ class MainWindow(gtk.Window):
         else:
             return None
 
-    def load_pixbuf(self, filename):
-        if filename in self.tile_cache:
-            return self.tile_cache[filename]
-        w = gtk.Image()
-        if (filename == None):
-            w.set_from_file('missing.png')
-        else:
-            w.set_from_file(filename)
-        try:
-            pb=w.get_pixbuf()
-            self.tile_cache[filename]=pb
-            return pb
-        except ValueError:
-            print "File corrupted: %s" % filename
-            os.remove(filename)
-            w.set_from_file('missing.png')
-            return w.get_pixbuf()
-
-    def tile_received(self, coord, layer, filename):
-        #print "tile_received", coord, layer, filename
-        if self.layer==layer:
-            xy=self.tile_coord_to_screen(coord)
-            if xy:
-                #print "Placing to",xy
-                gc=self.drawing_area.style.black_gc
-                da=self.drawing_area.window
-                img=self.load_pixbuf(filename)
-                for x,y in xy:
-                    da.draw_pixbuf(
-                        gc, img, 0, 0, x, y, TILES_WIDTH, TILES_HEIGHT)
-
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
         online = not self.cb_offline.get_active()
@@ -432,7 +402,7 @@ class MainWindow(gtk.Window):
         zl = self.get_zoom_level()
         self.downloader.query_region_around_point(
             self.center, (rect.width, rect.height), zl, self.layer,
-            gui_callback(self.tile_received),
+            gui_callback(self.tile_repository.tile_received),
             online=online, force_update=force_update
         )
 
@@ -472,6 +442,7 @@ class MainWindow(gtk.Window):
 
     def on_delete(self,*args):
         self.downloader.stop_all()
+        self.tile_repository.finish()
         return False
 
     def __init__(self, parent=None):
@@ -482,7 +453,8 @@ class MainWindow(gtk.Window):
         self.ctx_map = googleMaps.GoogleMaps()
         self.downloader = mapDownloader.MapDownloader(self.ctx_map)
         self.layer=0
-        self.tile_cache=lrucache.LRUCache(1000)
+        self.tile_repository = tilesreposfs.TilesRepositoryFS(self, self.ctx_map)
+        self.ctx_map.tile_repository = self.tile_repository
         gtk.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())

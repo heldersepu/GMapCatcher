@@ -47,42 +47,6 @@ class GoogleMaps:
 
         return self.known_layers[layer]
 
-    def get_png_file(self, coord, layer, filename, online, force_update):
-        # remove tile only when online
-        if (os.path.isfile(filename) and force_update and online):
-            # Don't remove old tile unless it is downloaded more
-            # than 24 hours ago (24h * 3600s) = 86400
-            if (int(time() - os.path.getmtime(filename)) > 86400):
-                os.remove(filename)
-
-        if os.path.isfile(filename):
-            return True
-        if not online:
-            return False
-
-        t=self.layer_url_template(layer,online)
-        if not t:
-            return False
-
-        href = t % (
-                self.mt_counter,
-                coord[0], coord[1], coord[2])
-        self.mt_counter += 1
-        self.mt_counter = self.mt_counter % NR_MTS
-        try:
-            print 'downloading:', href
-            oa = openanything.fetch(href)
-            if oa['status']==200:
-                file = open( filename, 'wb' )
-                file.write( oa['data'] )
-                file.close()
-                return True
-        except KeyboardInterrupt:
-            raise
-        except:
-            print '\tdownload failed -', sys.exc_info()[0]
-        return False
-
     def read_locations(self):
         self.locations = fileUtils.read_file('location', self.locationpath)
 
@@ -97,6 +61,9 @@ class GoogleMaps:
         self.locationpath = os.path.join(self.configpath, 'locations')
         self.known_layers = {}
         self.locations = {}
+
+        #implementaion of the method is set in maps.py:__init__()
+        self.tile_repository = None
 
         if (os.path.exists(self.locationpath)):
             self.read_locations()
@@ -158,48 +125,30 @@ class GoogleMaps:
             return 'error=Unable to get latitude and longitude of %s ' % location
 
 
-    def coord_to_path(self, coord, layer):
-        self.lock.acquire()
-        ## at most 1024 files in one dir
-        ## We only have 2 levels for one axis
-        path = fileUtils.check_dir(self.configpath, LAYER_DIRS[layer])
-        path = fileUtils.check_dir(path, '%d' % coord[2])
-        path = fileUtils.check_dir(path, "%d" % (coord[0] / 1024))
-        path = fileUtils.check_dir(path, "%d" % (coord[0] % 1024))
-        path = fileUtils.check_dir(path, "%d" % (coord[1] / 1024))
-        self.lock.release()
-        return os.path.join(path, "%d.png" % (coord[1] % 1024))
+    def get_tile_from_url(self, coord, layer, online):
+        t=self.layer_url_template(layer,online)
+        if not t:
+            return False
 
-    def get_file(self, coord, layer, online, force_update):
-        if (MAP_MIN_ZOOM_LEVEL <= coord[2] <= MAP_MAX_ZOOM_LEVEL):
-            world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - coord[2])
-            if (coord[0] > world_tiles) or (coord[1] > world_tiles):
-                return None
-            ## Tiles dir structure
-            filename = self.coord_to_path(coord, layer)
-            # print "Coord to path: %s" % filename
-            if (self.get_png_file(coord, layer, filename, online, force_update)):
-                return filename
-        return None
-
-    def get_tile_pixbuf(self, coord, layer, online, force_update):
-        w = gtk.Image()
-        # print ("get_tile_pixbuf: zl: %d, coord: %d, %d") % (coord)
-        filename = self.get_file(coord, online, force_update)
-        if (filename == None):
-            filename = 'missing.png'
-            w.set_from_file('missing.png')
-        else:
-            w.set_from_file(filename)
-
+        href = t % (
+                self.mt_counter,
+                coord[0], coord[1], coord[2])
+        self.mt_counter += 1
+        self.mt_counter = self.mt_counter % NR_MTS
         try:
-            return w.get_pixbuf()
-        except ValueError:
-            print "File corrupted: %s" % filename
-            os.remove(filename)
-            w.set_from_file('missing.png')
-            return w.get_pixbuf()
-
+            print 'downloading:', href
+            oa = openanything.fetch(href)
+            if oa['status']==200:
+                return oa['data']
+            else:
+                raise RuntimeError, ("HTTP Reponse is: " + str(oa['status']),)
+        except:
+            raise
+        
+            
+    def get_file(self, coord, layer, online, force_update):
+        return self.tile_repository.get_file(coord, layer, online, force_update)
+        
     def completion_model(self, strAppend=''):
         store = gtk.ListStore(TYPE_STRING)
         for str in sorted(self.locations.keys()):
