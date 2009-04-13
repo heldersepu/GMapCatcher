@@ -12,5 +12,4 @@ LAYER_MAP = 0
 LAYER_SATELLITE = 1
 LAYER_TERRAIN = 2
 LAYER_NAMES = ["Map", "Satellite", "Terrain"]
-LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles"]
 R_EARTH = 6371.
