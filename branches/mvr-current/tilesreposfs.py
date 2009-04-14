@@ -7,15 +7,15 @@ import fileUtils
 from mapConst import *
 
 class TilesRepositoryFS:
-    
+
     def __init__(self, maps_inst, googleMaps_inst):
         self.tile_cache = lrucache.LRUCache(1000)
         self.instance_maps = maps_inst
         self.instance_google_maps = googleMaps_inst
-    
+
     def finish(self):
         pass
-    
+
     def load_pixbuf(self, filename):
         if filename in self.tile_cache:
             return self.tile_cache[filename]

@@ -144,11 +144,11 @@ class GoogleMaps:
                 raise RuntimeError, ("HTTP Reponse is: " + str(oa['status']),)
         except:
             raise
-        
-            
+
+
     def get_file(self, coord, layer, online, force_update):
         return self.tile_repository.get_file(coord, layer, online, force_update)
-        
+
     def completion_model(self, strAppend=''):
         store = gtk.ListStore(TYPE_STRING)
         for str in sorted(self.locations.keys()):

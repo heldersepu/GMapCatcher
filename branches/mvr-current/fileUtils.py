@@ -30,7 +30,7 @@ def write_file(strInfo, filePath, fileData):
     try:
         file = open(filePath, "w")
     except Exception:
-        print 'Error! Can NOT write file:' 
+        print 'Error! Can NOT write file:'
         print '  ' + filePath
         return
 
@@ -59,7 +59,7 @@ def check_dir(strPath, strSubPath=None):
         try:
             os.mkdir(strPath)
         except Exception:
-            print 'Error! Can not create directory:' 
+            print 'Error! Can not create directory:'
             print '  ' + strPath
     return strPath
 
