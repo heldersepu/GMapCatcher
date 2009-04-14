@@ -60,6 +60,9 @@ def str_to_tuple(strCenter):
     strCenter = strCenter.replace('(', '')
     strCenter = strCenter.replace(')', '')
     center = map(int, strCenter.split(','))
-    return ((center[0], center[1]), 
+    return ((center[0], center[1]),
             (center[2], center[3]))
 
+def nice_round(f):
+    n = int(math.log(f, 10))
+    return round(f, 2 - n)

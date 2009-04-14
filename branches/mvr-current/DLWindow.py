@@ -11,9 +11,6 @@ import googleMaps
 import mapUtils
 from gtkThread import *
 
-def nice_round(f):
-    n = int(math.log(f, 10))
-    return round(f, 2 - n)
 
 class DLWindow(gtk.Window):
     def __init__(self, coord, kmx, kmy, layer):
@@ -84,8 +81,8 @@ class DLWindow(gtk.Window):
             return hbbox
 
         print "DLWindow(", coord, kmx, kmy, layer, ')'
-        kmx = nice_round(kmx)
-        kmy = nice_round(kmy)
+        kmx = mapUtils.nice_round(kmx)
+        kmy = mapUtils.nice_round(kmy)
         self.layer = layer
         gtk.Window.__init__(self)
         lat0 = coord[0]
