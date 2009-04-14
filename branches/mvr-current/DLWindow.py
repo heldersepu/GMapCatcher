@@ -1,6 +1,4 @@
 import math
-from bisect import bisect_left
-
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -13,12 +11,9 @@ import googleMaps
 import mapUtils
 from gtkThread import *
 
-NICE_GRADES=[ 0.1, 0.12, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.8 ]
 def nice_round(f):
-    n=math.ceil(math.log(f,10))
-    p=f/10**n
-    p=NICE_GRADES[bisect_left(NICE_GRADES,p)]
-    return p*10**n
+    n = int(math.log(f, 10))
+    return round(f, 2 - n)
 
 class DLWindow(gtk.Window):
     def __init__(self, coord, kmx, kmy, layer):
