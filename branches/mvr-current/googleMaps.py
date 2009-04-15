@@ -8,7 +8,6 @@ import fileUtils
 
 from time import time
 from mapConst import *
-from threading import Lock
 from gobject import TYPE_STRING
 
 class GoogleMaps:
@@ -55,7 +54,6 @@ class GoogleMaps:
 
     def __init__(self, configpath=None):
         configpath = os.path.expanduser(configpath or "~/.googlemaps")
-        self.lock = Lock()
         self.mt_counter=0
         self.configpath = fileUtils.check_dir(configpath)
         self.locationpath = os.path.join(self.configpath, 'locations')

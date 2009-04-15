@@ -402,7 +402,7 @@ class MainWindow(gtk.Window):
         zl = self.get_zoom_level()
         self.downloader.query_region_around_point(
             self.center, (rect.width, rect.height), zl, self.layer,
-            gui_callback(self.tile_repository.tile_received),
+            gui_callback(self.tile_received),
             online=online, force_update=force_update
         )
 
@@ -419,6 +419,19 @@ class MainWindow(gtk.Window):
         if (MAP_MIN_ZOOM_LEVEL <= value <= MAP_MAX_ZOOM_LEVEL):
             self.do_scale(value)
         return
+
+    def tile_received(self, coord, layer, filename):
+        #print "tile_received", coord, layer, filename
+        if self.layer==layer:
+            xy=self.tile_coord_to_screen(coord)
+            if xy:
+                #print "Placing to",xy
+                gc=self.drawing_area.style.black_gc
+                da=self.drawing_area.window
+                img=self.tile_repository.load_pixbuf(filename)
+                for x,y in xy:
+                    da.draw_pixbuf(
+                        gc, img, 0, 0, x, y, TILES_WIDTH, TILES_HEIGHT)
 
     # Handles the pressing of F11 & F12
     def full_screen(self, w, event):
@@ -453,7 +466,7 @@ class MainWindow(gtk.Window):
         self.ctx_map = googleMaps.GoogleMaps()
         self.downloader = mapDownloader.MapDownloader(self.ctx_map)
         self.layer=0
-        self.tile_repository = tilesreposfs.TilesRepositoryFS(self, self.ctx_map)
+        self.tile_repository = tilesreposfs.TilesRepositoryFS(self.ctx_map)
         self.ctx_map.tile_repository = self.tile_repository
         gtk.Window.__init__(self)
         try:

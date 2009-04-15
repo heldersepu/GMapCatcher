@@ -1,17 +1,43 @@
+""" 
+This modul provides filebased tile repository functions
+
+All file operations - storing tiles into filo, retrieving 
+tiles from file (cache) will be provided by the modul. 
+
+Public methods:
+- load_pixbuf
+- get_file
+- finish
+
+Initial version.
+
+Usage:
+- constructor requires googleMaps instance, because method
+'get_tile_from_url' is provided be the googleMaps
+
+- when created googleMaps - it's member variable 'googleMaps instance'.tile_repository
+has to be set to this repository (see ie maps.py.__init__())
+
+It's not good and will be improved.
+"""
+
 import os
 import sys
 import gtk
 
 import lrucache
 import fileUtils
+
+from threading import Lock
 from mapConst import *
 
 class TilesRepositoryFS:
 
-    def __init__(self, maps_inst, googleMaps_inst):
+    def __init__(self, googleMaps_inst):
         self.tile_cache = lrucache.LRUCache(1000)
-        self.instance_maps = maps_inst
         self.instance_google_maps = googleMaps_inst
+        self.lock = Lock()
+        self.configpath = self.instance_google_maps.configpath
 
     def finish(self):
         pass
@@ -33,19 +59,6 @@ class TilesRepositoryFS:
             os.remove(filename)
             w.set_from_file('missing.png')
             return w.get_pixbuf()
-
-    def tile_received(self, coord, layer, filename):
-        #print "tile_received", coord, layer, filename
-        if self.instance_maps.layer==layer:
-            xy=self.instance_maps.tile_coord_to_screen(coord)
-            if xy:
-                #print "Placing to",xy
-                gc=self.instance_maps.drawing_area.style.black_gc
-                da=self.instance_maps.drawing_area.window
-                img=self.load_pixbuf(filename)
-                for x,y in xy:
-                    da.draw_pixbuf(
-                        gc, img, 0, 0, x, y, TILES_WIDTH, TILES_HEIGHT)
 
     def get_png_file(self, coord, layer, filename, online, force_update):
         # remove tile only when online
@@ -73,16 +86,16 @@ class TilesRepositoryFS:
         return False
 
     def coord_to_path(self, coord, layer):
-        self.instance_google_maps.lock.acquire()
+        self.lock.acquire()
         ## at most 1024 files in one dir
         ## We only have 2 levels for one axis
-        path=os.path.join(self.instance_google_maps.configpath,LAYER_DIRS[layer])
+        path=os.path.join(self.configpath,LAYER_DIRS[layer])
         path = fileUtils.check_dir(path)
         path = fileUtils.check_dir(path, '%d' % coord[2])
         path = fileUtils.check_dir(path, "%d" % (coord[0] / 1024))
         path = fileUtils.check_dir(path, "%d" % (coord[0] % 1024))
         path = fileUtils.check_dir(path, "%d" % (coord[1] / 1024))
-        self.instance_google_maps.lock.release()
+        self.lock.release()
         return os.path.join(path, "%d.png" % (coord[1] % 1024))
 
     def get_file(self, coord, layer, online, force_update):
