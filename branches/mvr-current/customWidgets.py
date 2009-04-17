@@ -33,37 +33,37 @@ def _myEntry(strText, maxChars=8, isInt=True):
 
 class MySettings():
 
-    def show(self):
-        def _size():
+    def show(self, parent):
+        def _size(width, height):
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("Width:"), False)
-            self.s_width = _SpinBtn(450, 450, 1024, 100, 4)
+            self.s_width = _SpinBtn(width, 450, 1024, 100, 4)
             hbox.pack_start(self.s_width)
 
             hbox.pack_start(lbl("Height:"), False)
-            self.s_height = _SpinBtn(400, 400, 768, 100, 4)
+            self.s_height = _SpinBtn(height, 400, 768, 100, 4)
             hbox.pack_start(self.s_height)
             return _frame(" Size ", hbox)
 
-        def _zoom():
+        def _zoom(zoom):
             hbox = gtk.HBox(False, 10)
-            self.s_zoom = _SpinBtn()
+            self.s_zoom = _SpinBtn(zoom)
             hbox.pack_start(self.s_zoom, False)
             return _frame(" Zoom ", hbox)
 
-        def _center():
+        def _center(center):
             hbox = gtk.HBox(False, 0)
             hbox.pack_start(lbl(" (( "), False)
-            s_center = _SpinBtn(0, 0, 999999, 1, 6)
+            s_center = _SpinBtn(center[0][0], 0, 999999, 1, 6)
             hbox.pack_start(s_center, False)
             hbox.pack_start(lbl(" ,  "), False)
-            s_center = _SpinBtn(0, 0, 999999, 1, 6)
+            s_center = _SpinBtn(center[0][1], 0, 999999, 1, 6)
             hbox.pack_start(s_center, False)
             hbox.pack_start(lbl(" ), ( "), False)
-            s_center = _SpinBtn(0, 0, 256, 32, 3)
+            s_center = _SpinBtn(center[1][0], 0, 256, 32, 3)
             hbox.pack_start(s_center, False)
             hbox.pack_start(lbl(" ,  "), False)
-            s_center = _SpinBtn(0, 0, 256, 32, 3)
+            s_center = _SpinBtn(center[1][1], 0, 256, 32, 3)
             hbox.pack_start(s_center, False)
             hbox.pack_start(lbl(" )) "), False)
             return _frame(" Center ", hbox)
@@ -71,10 +71,11 @@ class MySettings():
         vbox = gtk.VBox()
         vbox.set_border_width(10)
         hbox = gtk.HBox(False, 10)
-        hbox.pack_start(_size())
-        hbox.pack_start(_zoom(), False)
+        hbox.pack_start(_size(parent.conf.init_width, 
+                              parent.conf.init_height))
+        hbox.pack_start(_zoom(parent.conf.init_zoom), False)
         vbox.pack_start(hbox, False)
-        vbox.pack_start(_center(), False)
+        vbox.pack_start(_center(parent.conf.init_center), False)
         return vbox
 
 
