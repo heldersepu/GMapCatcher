@@ -67,7 +67,17 @@ class MySettings():
             hbox.pack_start(s_center, False)
             hbox.pack_start(lbl(" )) "), False)
             return _frame(" Center ", hbox)
+            
+        def _action_buttons():
+            bbox = gtk.HButtonBox()
+            bbox.set_layout(gtk.BUTTONBOX_END)
+            bbox.set_border_width(10)
+            button = gtk.Button(stock=gtk.STOCK_SAVE)
+            #button.connect('clicked', self.btn_save_clicked)
+            bbox.add(button)
+            return bbox
 
+        hpaned = gtk.VPaned()
         vbox = gtk.VBox()
         vbox.set_border_width(10)
         hbox = gtk.HBox(False, 10)
@@ -76,7 +86,9 @@ class MySettings():
         hbox.pack_start(_zoom(parent.conf.init_zoom), False)
         vbox.pack_start(hbox, False)
         vbox.pack_start(_center(parent.conf.init_center), False)
-        return vbox
+        hpaned.pack1(vbox, True, True)
+        hpaned.pack2(_action_buttons(), False, False)
+        return hpaned
 
 
 class TreeView():
