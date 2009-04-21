@@ -375,25 +375,6 @@ class MainWindow(gtk.Window):
         #         self.center[1][0],
         #         self.center[1][1])
 
-    def tile_coord_to_screen(self, coord):
-        if self.current_zoom_level!=coord[2]: return None # wrong zoom
-        world_tiles=mapUtils.tiles_on_level(coord[2])
-        rect=self.drawing_area.get_allocation()
-        x_rollup=world_tiles*TILES_WIDTH
-        y_rollup=world_tiles*TILES_HEIGHT
-        dx=mod(rect.width//2-self.center[1][0]
-            +(coord[0]-self.center[0][0])*TILES_WIDTH, x_rollup)
-        dy=mod(rect.height//2-self.center[1][1]+(coord[1]-self.center[0][1])*TILES_HEIGHT, y_rollup)
-        if dx+TILES_WIDTH>=x_rollup: dx-=x_rollup
-        if dy+TILES_HEIGHT>=y_rollup: dy-=y_rollup
-        if dx+TILES_WIDTH>=0 and dx<rect.width and \
-           dy+TILES_HEIGHT>=0 and dy<rect.height:
-            return [(xx,yy)
-                for xx in xrange(dx, rect.width, x_rollup)
-                for yy in xrange(dy, rect.height, y_rollup)]
-        else:
-            return None
-
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
         online = not self.cb_offline.get_active()
@@ -422,15 +403,16 @@ class MainWindow(gtk.Window):
 
     def tile_received(self, coord, layer, filename):
         #print "tile_received", coord, layer, filename
-        if self.layer==layer:
-            xy=self.tile_coord_to_screen(coord)
+        if self.layer==layer and self.current_zoom_level == coord[2]:
+            da = self.drawing_area
+            rect = da.get_allocation()
+            xy = mapUtils.tile_coord_to_screen(coord, rect, self.center)
             if xy:
                 #print "Placing to",xy
-                gc=self.drawing_area.style.black_gc
-                da=self.drawing_area.window
-                img=self.tile_repository.load_pixbuf(filename)
+                gc = self.drawing_area.style.black_gc
+                img = self.tile_repository.load_pixbuf(filename)
                 for x,y in xy:
-                    da.draw_pixbuf(
+                    da.window.draw_pixbuf(
                         gc, img, 0, 0, x, y, TILES_WIDTH, TILES_HEIGHT)
 
     # Handles the pressing of F11 & F12

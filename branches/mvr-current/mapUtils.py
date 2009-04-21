@@ -2,8 +2,6 @@ import math
 import mapMark
 from mapConst import *
 
-marker = mapMark.MyMarkers()
-
 def tiles_on_level(zoom_level):
     return 1<<(MAP_MAX_ZOOM_LEVEL-int(zoom_level))
 
@@ -66,3 +64,26 @@ def str_to_tuple(strCenter):
 def nice_round(f):
     n = int(math.log(f, 10))
     return round(f, 2 - n)
+
+def tile_coord_to_screen(coord, rect, center):
+    world_tiles = tiles_on_level(coord[2])
+    x_rollup = world_tiles * TILES_WIDTH
+    y_rollup = world_tiles * TILES_HEIGHT
+    dx = mod(rect.width//2 - center[1][0] +
+        (coord[0] - center[0][0]) * TILES_WIDTH, x_rollup)
+    dy = mod(rect.height//2 - center[1][1] +
+        (coord[1] - center[0][1]) * TILES_HEIGHT, y_rollup)
+
+    if dx + TILES_WIDTH >= x_rollup:
+        dx -= x_rollup
+    if dy + TILES_HEIGHT >= y_rollup:
+        dy -= y_rollup
+
+    if dx + TILES_WIDTH >= 0 and dx < rect.width and \
+       dy + TILES_HEIGHT >= 0 and dy < rect.height:
+        return [(xx,yy)
+            for xx in xrange(dx, rect.width, x_rollup)
+            for yy in xrange(dy, rect.height, y_rollup)]
+    else:
+        return None
+
