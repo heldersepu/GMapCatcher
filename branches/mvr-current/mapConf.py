@@ -10,9 +10,13 @@ class MapConf():
     init_zoom = MAP_MAX_ZOOM_LEVEL
     init_center = ((0,0),(128,128))
 
-    def __init__(self, configpath=None):
-        configpath = os.path.expanduser(configpath or "~/.googlemaps")
+    def get_configpath(self):
+        configpath = os.path.expanduser("~/.googlemaps")
         configpath = os.path.join(configpath, 'gmapcatcher.conf')
+        return configpath
+
+    def __init__(self):
+        configpath = self.get_configpath()
         if os.path.exists(configpath):
             self.read(configpath)
         else:
@@ -39,3 +43,8 @@ class MapConf():
         self.init_zoom = config.getint(strSection, 'zoom')
         strCenter = config.get(strSection, 'center')
         self.init_center = mapUtils.str_to_tuple(strCenter)
+
+    def save(self):
+        configpath = self.get_configpath()
+        self.write(configpath)
+
