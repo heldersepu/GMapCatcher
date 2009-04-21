@@ -42,7 +42,7 @@ class GoogleMaps:
             self.known_layers[layer] = (
                 'http://%s%%d.google.com/%s/v=%s&hl=en&x=%%i&y=%%i&zoom=%%i'
                 % tuple(m.groups()))
-            print "URL pattern for layer %i: %s" % (layer,self.known_layers[layer])
+            #print "URL pattern for layer %i: %s" % (layer,self.known_layers[layer])
 
         return self.known_layers[layer]
 
