@@ -30,6 +30,7 @@ import fileUtils
 
 from threading import Lock
 from mapConst import *
+from time import time
 
 class TilesRepositoryFS:
 

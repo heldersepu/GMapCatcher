@@ -6,7 +6,6 @@ import urllib
 import openanything
 import fileUtils
 
-from time import time
 from mapConst import *
 from gobject import TYPE_STRING
 
