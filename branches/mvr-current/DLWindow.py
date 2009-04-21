@@ -155,7 +155,7 @@ class DLWindow(gtk.Window):
         self.all_placed=True
 
     def tile_received(self, coord, layer, filename):
-        print "tile_received(", coord, layer, self.processing, self.downloader!=None,")"
+        #print "tile_received(", coord, layer, self.processing, self.downloader!=None,")"
         self.complete.append((coord, layer))
         ncomplete=len(self.complete)
         nqueued=self.downloader.qsize() if self.downloader else 0
