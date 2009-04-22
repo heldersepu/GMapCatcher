@@ -1,5 +1,5 @@
 !define PRODUCT_NAME "GMapCatcher"
-!define PRODUCT_VERSION "0.054-b1"
+!define PRODUCT_VERSION "0.054"
 !define PRODUCT_WEB_SITE "http://code.google.com/p/gmapcatcher/"
 
 ; The name of the installer
@@ -74,12 +74,13 @@ Section "${PRODUCT_NAME} (required)"
         Rename "$INSTDIR\.googlemaps\*.*" "$PROFILE\.googlemaps"
         AccessControl::GrantOnFile "$PROFILE\.googlemaps" "(BU)" "FullAccess"
 
+    CopyFiles /SILENT "$INSTDIR\.googlemaps\*.*" "$PROFILE\.googlemaps" 1024
+
     ; Check if VC++ 2008 runtimes are already installed:
     ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}" "DisplayName"
     ; If VC++ 2008 runtimes are not installed execute in Quiet mode
     StrCmp $0 "Microsoft Visual C++ 2008 Redistributable - x86 9.0.21022" +2 0
         ExecWait '"$INSTDIR\vcredist_x86.exe" /q'
-
 
 SectionEnd
 
