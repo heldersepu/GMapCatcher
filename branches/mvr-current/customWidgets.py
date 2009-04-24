@@ -124,9 +124,10 @@ class TreeView():
     def __read_file(self, strInfo, strFilePath, liststore):
         locations = fileUtils.read_file(strInfo, strFilePath)
         # add rows with text
-        for strLoc in locations.keys():
-            liststore.append([strLoc , locations[strLoc][0],
-                              locations[strLoc][1], locations[strLoc][2]])
+        if locations:
+            for strLoc in locations.keys():
+                liststore.append([strLoc , locations[strLoc][0],
+                                  locations[strLoc][1], locations[strLoc][2]])
         return liststore
 
     # Writes a given list to the file

@@ -24,6 +24,7 @@ def read_file(strInfo, filePath):
         return fileData
     else:
         write_file(strInfo, filePath, fileData)
+        return None
 
 # Writes all the locations (fileData) to given file (filePath)
 def write_file(strInfo, filePath, fileData):
