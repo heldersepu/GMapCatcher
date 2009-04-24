@@ -1,24 +1,16 @@
 """ 
 This modul provides filebased tile repository functions
 
-All file operations - storing tiles into filo, retrieving 
-tiles from file (cache) will be provided by the modul. 
-
-Public methods:
-- load_pixbuf
-- get_file
-- finish
-
-Initial version.
-
 Usage:
+
 - constructor requires googleMaps instance, because method
 'get_tile_from_url' is provided be the googleMaps
 
-- when created googleMaps - it's member variable 'googleMaps instance'.tile_repository
-has to be set to this repository (see ie maps.py.__init__())
+- this modul is not used directly. It is used via GoogleMaps() methods:
+    - get_file()
+    - load_pixbuf()
+- module is finalized from GoogleMaps.finish() method
 
-It's not good and will be improved.
 """
 
 import os
@@ -43,7 +35,10 @@ class TilesRepositoryFS:
     def finish(self):
         pass
 
-    def load_pixbuf(self, filename):
+    def load_pixbuf(self, coord, layer):
+        filename = self.coord_to_path(coord, layer)
+        if not os.path.isfile(filename):
+            filename = None
         if filename in self.tile_cache:
             return self.tile_cache[filename]
         w = gtk.Image()

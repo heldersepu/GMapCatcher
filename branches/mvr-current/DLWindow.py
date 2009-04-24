@@ -9,7 +9,6 @@ from customWidgets import _SpinBtn, _myEntry, _frame, lbl
 
 import googleMaps
 import mapUtils
-import tilesreposfs
 from gtkThread import *
 
 
@@ -139,8 +138,6 @@ class DLWindow(gtk.Window):
         self.gmap=googleMaps.GoogleMaps() # creating our own gmap
         self.complete=[]
         self.downloader=MapDownloader(self.gmap)
-        tile_repository = tilesreposfs.TilesRepositoryFS(self.gmap)
-        self.gmap.tile_repository = tile_repository
         if zoom0>zoom1:
             zoom0,zoom1=zoom1,zoom0
         self.all_placed=False
@@ -154,7 +151,7 @@ class DLWindow(gtk.Window):
             self.download_complete()
         self.all_placed=True
 
-    def tile_received(self, coord, layer, filename):
+    def tile_received(self, coord, layer):
         #print "tile_received(", coord, layer, self.processing, self.downloader!=None,")"
         self.complete.append((coord, layer))
         ncomplete=len(self.complete)

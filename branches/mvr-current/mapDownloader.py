@@ -18,6 +18,12 @@ class DownloadTask:
         return "DownloadTask(%s,%s)" % (self.coord,self.layer)
 
 class DownloaderThread(Thread):
+    """Downloads tiles from the web.
+    
+    process_task gets filename of the tile and requests via callback to download it.
+    Callback function is tile_received() implemented in DLWindow.py and maps.py.
+    The only place where DownloaderThread is used is from class MapDownloader.
+    """
     def __init__(self,ctx_map,inq):
         Thread.__init__(self)
         self.ctx_map=ctx_map
@@ -39,9 +45,24 @@ class DownloaderThread(Thread):
         filename=self.ctx_map.get_file(task.coord, task.layer, True, task.force_update)
         if task.callback:
             #print "process_task callback", task
-            task.callback(False,task.coord,task.layer,filename)
+            task.callback(False,task.coord,task.layer)
 
 class MapDownloader:
+    """Main class used for downloading tiles.
+    
+    Class is used from: 
+        - download.py
+        - DLWindow class (DLWindow.py)
+        - MainWindows class (maps.py)
+        
+    One of parameters query_region is callback function. Callback is used in method query_tile()
+    
+    function gui_callback from gtkThread.py is used as the callback.
+    Parameter to gui_callback is used self.tile_received() implemented in DLWindow.py and  maps.py
+    There is different behavior between DLWindow and maps implementation of the method tile_received()
+    
+    In short - query_tile() calls tile_received implemented in DLWindow.py and maps.py respectively.
+    """
     def __init__(self, ctx_map, numthreads=4):
         self.ctx_map=ctx_map
         self.threads=[]
@@ -76,7 +97,7 @@ class MapDownloader:
         coord=(mod(coord[0],world_tiles),mod(coord[1],world_tiles),coord[2])
         fn=self.ctx_map.get_file(coord,layer,False,False) # try to get a tile offline
         if fn!=None or (not online):
-            callback(True,coord,layer,fn)
+            callback(True,coord,layer)
             return
         else:
             self.taskq.put(

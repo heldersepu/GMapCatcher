@@ -10,7 +10,6 @@ from mapConst import *
 from DLWindow import DLWindow
 import mapDownloader
 import lrucache
-import tilesreposfs
 
 class MainWindow(gtk.Window):
 
@@ -401,7 +400,7 @@ class MainWindow(gtk.Window):
             self.do_scale(value)
         return
 
-    def tile_received(self, coord, layer, filename):
+    def tile_received(self, coord, layer):
         #print "tile_received", coord, layer, filename
         if self.layer==layer and self.current_zoom_level == coord[2]:
             da = self.drawing_area
@@ -410,7 +409,7 @@ class MainWindow(gtk.Window):
             if xy:
                 #print "Placing to",xy
                 gc = self.drawing_area.style.black_gc
-                img = self.tile_repository.load_pixbuf(filename)
+                img = self.ctx_map.load_pixbuf(coord, layer)
                 for x,y in xy:
                     da.window.draw_pixbuf(
                         gc, img, 0, 0, x, y, TILES_WIDTH, TILES_HEIGHT)
@@ -437,7 +436,7 @@ class MainWindow(gtk.Window):
 
     def on_delete(self,*args):
         self.downloader.stop_all()
-        self.tile_repository.finish()
+        self.ctx_map.finish()
         return False
 
     def __init__(self, parent=None):
@@ -448,8 +447,6 @@ class MainWindow(gtk.Window):
         self.ctx_map = googleMaps.GoogleMaps()
         self.downloader = mapDownloader.MapDownloader(self.ctx_map)
         self.layer=0
-        self.tile_repository = tilesreposfs.TilesRepositoryFS(self.ctx_map)
-        self.ctx_map.tile_repository = self.tile_repository
         gtk.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())

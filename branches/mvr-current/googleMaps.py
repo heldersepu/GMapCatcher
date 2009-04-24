@@ -5,9 +5,11 @@ import sys
 import urllib
 import openanything
 import fileUtils
+import tilesreposfs
 
 from mapConst import *
 from gobject import TYPE_STRING
+
 
 class GoogleMaps:
 
@@ -60,12 +62,15 @@ class GoogleMaps:
         self.locations = {}
 
         #implementaion of the method is set in maps.py:__init__()
-        self.tile_repository = None
+        self.tile_repository = tilesreposfs.TilesRepositoryFS(self)
 
         if (os.path.exists(self.locationpath)):
             self.read_locations()
         else:
             self.write_locations()
+
+    def finish(self):
+        self.tile_repository.finish()
 
     def get_locations(self):
         return self.locations
@@ -145,6 +150,10 @@ class GoogleMaps:
 
     def get_file(self, coord, layer, online, force_update):
         return self.tile_repository.get_file(coord, layer, online, force_update)
+
+    def load_pixbuf(self, coord, layer):
+        return self.tile_repository.load_pixbuf(coord, layer)
+    
 
     def completion_model(self, strAppend=''):
         store = gtk.ListStore(TYPE_STRING)
