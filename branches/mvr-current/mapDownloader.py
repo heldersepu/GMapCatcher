@@ -60,14 +60,14 @@ class MapDownloader:
     method query_tile()
     
     function gui_callback from gtkThread.py is used as the callback.
-    Parameter to gui_callback is self.tile_received() implemented in DLWindow.py 
-    and  maps.py
-    There is different behavior between DLWindow and maps implementation of the 
-    method tile_received()
+    Parameter to gui_callback is usually tile_received() implemented in
+    DLWindow.py and  maps.py. There is different behavior between DLWindow and 
+    maps implementation of the method tile_received()
     
-    In short - query_tile() (usually) calls directly tile_received() implemented 
-    in DLWindow.py and maps.py respectively or indirectly via 
-    DownloaderThread.process_task().
+    In short - query_tile() (usually) calls 
+        - directly tile_received() implemented in DLWindow.py and maps.py 
+          respectively or 
+        - indirectly via DownloaderThread.process_task().
     """
     def __init__(self, ctx_map, numthreads=4):
         self.ctx_map=ctx_map
