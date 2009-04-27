@@ -47,14 +47,16 @@ class TilesRepositoryFS:
         else:
             w.set_from_file(filename)
         try:
-            pb=w.get_pixbuf()
-            self.tile_cache[filename]=pb
+            pb = w.get_pixbuf()
+            self.tile_cache[filename] = pb
             return pb
         except ValueError:
             print "File corrupted: %s" % filename
-            os.remove(filename)
-            w.set_from_file('missing.png')
-            return w.get_pixbuf()
+            try:
+                os.remove(filename)
+            finally:
+                w.set_from_file('missing.png')
+                return w.get_pixbuf()
 
     def get_png_file(self, coord, layer, filename, online, force_update):
         # remove tile only when online
