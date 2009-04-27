@@ -350,29 +350,14 @@ class MainWindow(gtk.Window):
     def da_motion(self, w, event):
         x = event.x
         y = event.y
-        if (x < 0) or (y < 0):
-            return
-
         rect = self.drawing_area.get_allocation()
-        if (x > rect.width) or (y > rect.height):
-            return
-
-        #print "mouse move: (%d, %d)" % (x, y)
-
-        center_tile = self.center[0]
-        self.center[1]
-
-        center_offset = (self.center[1][0] + (self.draging_start[0] - x),
-                         self.center[1][1] + (self.draging_start[1] - y))
-        self.center = mapUtils.tile_adjustEx(self.get_zoom_level(),
-                         center_tile, center_offset)
-        self.draging_start = (x, y)
-        self.repaint()
-        # print "new draging_start: (%d, %d)" % self.draging_start
-        # print "center: %d, %d, %d, %d" % (self.center[0][0],
-        #         self.center[0][1],
-        #         self.center[1][0],
-        #         self.center[1][1])
+        if (0 <= x <= rect.width) and (0 <= y <= rect.height): 
+            center_offset = (self.center[1][0] + (self.draging_start[0] - x),
+                             self.center[1][1] + (self.draging_start[1] - y))
+            self.center = mapUtils.tile_adjustEx(self.get_zoom_level(),
+                             self.center[0], center_offset)
+            self.draging_start = (x, y)
+            self.repaint()
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
