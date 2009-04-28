@@ -15,13 +15,22 @@ if sys.platform=='win32':
             finally:
                 gtk.gdk.threads_leave()
         gobject.idle_add(idle_func)
+    do_gui_operation=gobject.idle_add
     def _sleeper():
-	
-        time.sleep(.001)
+        time.sleep(0.001)
         return 1 # don't forget this otherwise the timeout will be removed
 
-    gobject.timeout_add(500,_sleeper)
+    gobject.timeout_add(100,_sleeper)
 
 else:
+    gtk.gdk.threads_init()
     do_gui_operation=gobject.idle_add
-    
+
+# may be used as decorator
+def gui_callback(function):
+    def cb(inGuiThread, *args, **kwargs):
+        if inGuiThread:
+            function(*args, **kwargs)
+        else:
+            do_gui_operation(function, *args, **kwargs)
+    return cb

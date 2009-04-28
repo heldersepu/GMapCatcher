@@ -1,13 +1,16 @@
 #!/usr/bin/env python
-import pygtk
-pygtk.require('2.0')
-import gtk, gobject
-
+from mapUtils import mod
+import mapMark
+import mapConf
 import mapUtils
-import mapTools
 import googleMaps
-import mapDLWin
+import mapTools
+
+from gtkThread import *
 from mapConst import *
+from DLWindow import DLWindow
+import mapDownloader
+import lrucache
 
 class MainWindow(gtk.Window):
 
@@ -26,7 +29,7 @@ class MainWindow(gtk.Window):
         return resp
 
     def do_scale(self, pos, pointer=None, force=False):
-        pos = round(pos, 0)
+        pos = int(round(pos, 0))
         if (pos == round(self.scale.get_value(), 0)) and not force:
             return
         self.scale.set_value(pos)
@@ -35,7 +38,7 @@ class MainWindow(gtk.Window):
             fix_tile, fix_offset = self.center
         else:
             rect = self.drawing_area.get_allocation()
-            da_center = (rect.width / 2, rect.height / 2)
+            da_center = (rect.width // 2, rect.height // 2)
 
             fix_tile = self.center[0]
             fix_offset = self.center[1][0] + (pointer[0] - da_center[0]), \
@@ -56,7 +59,7 @@ class MainWindow(gtk.Window):
                       (x % TILES_WIDTH, y % TILES_HEIGHT)
 
         self.current_zoom_level = pos
-        self.drawing_area.queue_draw()
+        self.repaint()
 
     def get_zoom_level(self):
         return int(self.scale.get_value())
@@ -145,7 +148,6 @@ class MainWindow(gtk.Window):
                         self.combo_popup()
                         return
                 self.cb_offline.set_active(False)
-                mapUtils.force_repaint()
 
                 location = self.ctx_map.search_location(location)
                 if (location[:6] == "error="):
@@ -167,20 +169,17 @@ class MainWindow(gtk.Window):
     def offline_clicked(self, w):
         online = not self.cb_offline.get_active()
         if online:
-             self.drawing_area.queue_draw()
+             self.repaint()
 
     def layer_changed(self, w):
-        online = not self.cb_offline.get_active()
         self.layer = w.get_active()
-        self.ctx_map.switch_layer(self.layer,online)
-        self.drawing_area.queue_draw()
+        self.repaint()
 
-    def download_clicked(self, w):
-        coord = mapUtils.tile_to_coord(self.center, self.current_zoom_level)
+    def download_clicked(self,w):
+        coord=mapUtils.tile_to_coord(self.center, self.current_zoom_level)
         rect = self.drawing_area.get_allocation()
-        km_px = mapUtils.km_per_pixel(coord)
-        dlw = mapDLWin.DLWindow(coord, km_px*rect.width,
-                                km_px*rect.height, self.layer)
+        km_px=mapUtils.km_per_pixel(coord)
+        dlw=DLWindow(coord, km_px*rect.width, km_px*rect.height, self.layer)
         dlw.show()
 
     # Creates a comboBox that will contain the locations
@@ -271,7 +270,7 @@ class MainWindow(gtk.Window):
         scale.set_size_request(30, -1)
         scale.set_increments(1,1)
         scale.set_digits(0)
-        scale.set_value(MAP_MAX_ZOOM_LEVEL)
+        scale.set_value(self.current_zoom_level)
         scale.connect("change-value", self.scale_change_value)
         scale.show()
         self.scale = scale
@@ -280,7 +279,7 @@ class MainWindow(gtk.Window):
     def __create_right_paned(self):
         da = gtk.DrawingArea()
         self.drawing_area = da
-        da.connect("expose_event", self.expose_cb)
+        da.connect("expose-event", self.expose_cb)
         da.add_events(gtk.gdk.SCROLL_MASK)
         da.connect("scroll-event", self.scroll_cb)
 
@@ -305,7 +304,7 @@ class MainWindow(gtk.Window):
     def menu_tools(self, strName):
         for intPos in range(len(TOOLS_MENU)):
             if strName.startswith(TOOLS_MENU[intPos]):
-                mapTools.main(self, self.ctx_map.configpath, intPos)
+                mapTools.main(self, intPos)
                 return True
 
     # All the actions for the menu items
@@ -352,38 +351,29 @@ class MainWindow(gtk.Window):
     def da_motion(self, w, event):
         x = event.x
         y = event.y
-        if (x < 0) or (y < 0):
-            return
-
         rect = self.drawing_area.get_allocation()
-        if (x > rect.width) or (y > rect.height):
-            return
-
-        #print "mouse move: (%d, %d)" % (x, y)
-
-        center_tile = self.center[0]
-        self.center[1]
-
-        center_offset = (self.center[1][0] + (self.draging_start[0] - x),
-                         self.center[1][1] + (self.draging_start[1] - y))
-        self.center = mapUtils.tile_adjustEx(self.get_zoom_level(),
-                         center_tile, center_offset)
-        self.draging_start = (x, y)
-        self.drawing_area.queue_draw()
-        # print "new draging_start: (%d, %d)" % self.draging_start
-        # print "center: %d, %d, %d, %d" % (self.center[0][0],
-        #         self.center[0][1],
-        #         self.center[1][0],
-        #         self.center[1][1])
+        if (0 <= x <= rect.width) and (0 <= y <= rect.height):
+            center_offset = (self.center[1][0] + (self.draging_start[0] - x),
+                             self.center[1][1] + (self.draging_start[1] - y))
+            self.center = mapUtils.tile_adjustEx(self.get_zoom_level(),
+                             self.center[0], center_offset)
+            self.draging_start = (x, y)
+            self.repaint()
 
     def expose_cb(self, drawing_area, event):
+        #print "expose_cb"
         online = not self.cb_offline.get_active()
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
         zl = self.get_zoom_level()
-        mapUtils.do_expose_cb(self, zl, self.center, rect, online,
-                              force_update, self.drawing_area.style.black_gc,
-                              event.area)
+        self.downloader.query_region_around_point(
+            self.center, (rect.width, rect.height), zl, self.layer,
+            gui_callback(self.tile_received),
+            online=online, force_update=force_update
+        )
+
+    def repaint(self):
+        self.drawing_area.queue_draw()
 
     def scroll_cb(self, widget, event):
         if (event.direction == gtk.gdk.SCROLL_UP):
@@ -395,6 +385,27 @@ class MainWindow(gtk.Window):
         if (MAP_MIN_ZOOM_LEVEL <= value <= MAP_MAX_ZOOM_LEVEL):
             self.do_scale(value)
         return
+
+    def tile_received(self, tile_coord, layer):
+        if self.layer == layer and self.current_zoom_level == tile_coord[2]:
+            da = self.drawing_area
+            rect = da.get_allocation()
+            xy = mapUtils.tile_coord_to_screen(tile_coord, rect, self.center)
+            if xy:
+                gc = da.style.black_gc
+                img = self.ctx_map.load_pixbuf(tile_coord, layer)
+                for x,y in xy:
+                    da.window.draw_pixbuf(gc, img, 0, 0, x, y,
+                                          TILES_WIDTH, TILES_HEIGHT)
+                # Draw the markers
+                if self.downloader.qsize() == 0:
+                    img = self.marker.pixbuf
+                    for str in self.marker.positions.keys():
+                        mct = mapUtils.coord_to_tile(self.marker.positions[str])
+                        if tile_coord[0] == mct[0][0] and \
+                           tile_coord[1] == mct[0][1]:
+                            da.window.draw_pixbuf(gc, img, 0, 0, x, y,
+                                                  TILES_WIDTH, TILES_HEIGHT)
 
     # Handles the pressing of F11 & F12
     def full_screen(self, w, event):
@@ -416,8 +427,19 @@ class MainWindow(gtk.Window):
                 self.top_panel.show()
             self.show_panels = not self.show_panels
 
+    def on_delete(self,*args):
+        self.downloader.stop_all()
+        self.ctx_map.finish()
+        return False
+
     def __init__(self, parent=None):
+        self.conf = mapConf.MapConf()
+        self.center = self.conf.init_center
+        self.current_zoom_level = self.conf.init_zoom
+
+        self.marker = mapMark.MyMarkers()
         self.ctx_map = googleMaps.GoogleMaps()
+        self.downloader = mapDownloader.MapDownloader(self.ctx_map)
         self.layer=0
         gtk.Window.__init__(self)
         try:
@@ -426,6 +448,7 @@ class MainWindow(gtk.Window):
             self.connect("destroy", lambda *w: gtk.main_quit())
 
         self.connect('key-press-event', self.full_screen)
+        self.connect('delete-event', self.on_delete)
         vpaned = gtk.VPaned()
         hpaned = gtk.HPaned()
         self.top_panel = self.__create_top_paned()
@@ -440,6 +463,7 @@ class MainWindow(gtk.Window):
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 400)
+        self.set_default_size(self.conf.init_width, self.conf.init_height)
         self.set_completion()
         self.default_entry()
         self.show_all()
