@@ -1,11 +1,25 @@
+April 28 2009    H.S    <HelderSepu@gmail.com>
+    * 0.060 - At revision: 309
+    **  Major code reorganization **  (thanks to Maxim.Razin & Standa Mitrega)
+    * Show tiles as they are downloaded (see Issue 20)
+    * Fix a crash browsing the map (see Issue 24)
+    * Add Settings, now users can personalize GMapCatcher (see Issue 33)
+    * Fix an Access Denied Error deleting tiles (see Issue 39)
+
+April 2 2009    H.S    <HelderSepu@gmail.com>
+    * 0.054 - At revision: 264
+    * Add Map/Satellite/Terrain switch (by Maxim.Razin)
+    * Batch download from the map GUI  (by Maxim.Razin)
+    * Add action buttons to "Edit Locations"
+
 Mar 18 2009    H.S    <HelderSepu@gmail.com>
     * 0.053
     * Add a new button that will hold more options, such as:
-      - Settings  
+      - Settings
       - Edit Locations
-    * Add Full-Screen functionality 
-      - F11 = fullscreen 
-      - F12 = remove buttons  
+    * Add Full-Screen functionality
+      - F11 = fullscreen
+      - F12 = remove buttons
 
 Mar 06 2009    H.S    <HelderSepu@gmail.com>
     * 0.052
