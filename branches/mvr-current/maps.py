@@ -352,7 +352,7 @@ class MainWindow(gtk.Window):
         x = event.x
         y = event.y
         rect = self.drawing_area.get_allocation()
-        if (0 <= x <= rect.width) and (0 <= y <= rect.height): 
+        if (0 <= x <= rect.width) and (0 <= y <= rect.height):
             center_offset = (self.center[1][0] + (self.draging_start[0] - x),
                              self.center[1][1] + (self.draging_start[1] - y))
             self.center = mapUtils.tile_adjustEx(self.get_zoom_level(),
@@ -395,16 +395,16 @@ class MainWindow(gtk.Window):
                 gc = da.style.black_gc
                 img = self.ctx_map.load_pixbuf(tile_coord, layer)
                 for x,y in xy:
-                    da.window.draw_pixbuf(gc, img, 0, 0, x, y, 
+                    da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                           TILES_WIDTH, TILES_HEIGHT)
-                # Draw the markers 
+                # Draw the markers
                 if self.downloader.qsize() == 0:
-                    img = self.marker.pixbuf 
+                    img = self.marker.pixbuf
                     for str in self.marker.positions.keys():
                         mct = mapUtils.coord_to_tile(self.marker.positions[str])
                         if tile_coord[0] == mct[0][0] and \
                            tile_coord[1] == mct[0][1]:
-                            da.window.draw_pixbuf(gc, img, 0, 0, x, y, 
+                            da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                                   TILES_WIDTH, TILES_HEIGHT)
 
     # Handles the pressing of F11 & F12
