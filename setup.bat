@@ -1,4 +1,4 @@
-:: Create an executable using py2exe then 
+:: Create an executable using py2exe then
 :: Make the installer using NSIS
 
 @COLOR 02
@@ -23,7 +23,7 @@ C:\PYTHON26\PYTHON.EXE setup.py py2exe
 
 :: Need to copy the [etc, lib, share] directories from your GTK+ install (not the pygtk install) to the "dist" dir py2exe created.
 :: All the Required files should be in the "common" folder
-@XCOPY /E common\* dist 
+@XCOPY /E common\* dist
 
 :: Launch the NSIS setup
 @COLOR 07
