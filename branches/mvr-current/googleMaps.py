@@ -153,7 +153,7 @@ class GoogleMaps:
 
     def load_pixbuf(self, coord, layer):
         return self.tile_repository.load_pixbuf(coord, layer)
-    
+
 
     def completion_model(self, strAppend=''):
         store = gtk.ListStore(TYPE_STRING)

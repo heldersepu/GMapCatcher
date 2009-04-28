@@ -1,4 +1,4 @@
-""" 
+"""
 This modul provides filebased tile repository functions
 
 Usage:
