@@ -24,7 +24,7 @@ class MainWindow():
             if str in [TOOLS_MENU[1], TOOLS_MENU[2]]:
                 frame.add(myTree.show(str[5:-1], filePath +'/'+ str[5:]))
             elif str == TOOLS_MENU[0]:
-                frame.add(mySett.show(parent.conf))
+                frame.add(mySett.show(parent))
             else:
                 frame.add(gtk.Label(str + ' coming soon!! '))
             label = gtk.Label(str)

@@ -33,7 +33,7 @@ def _myEntry(strText, maxChars=8, isInt=True):
 
 class MySettings():
 
-    def show(self, conf):
+    def show(self, parent):
         def _size(width, height):
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("Width:"), False)
@@ -104,15 +104,32 @@ class MySettings():
             bbox.add(button)
             return bbox
 
+        def btn_use_current(button, parent):
+            self.s_center00.set_value(parent.center[0][0])
+            self.s_center01.set_value(parent.center[0][1])
+            self.s_center10.set_value(parent.center[1][0])
+            self.s_center11.set_value(parent.center[1][1])
+            self.s_zoom.set_value(parent.current_zoom_level)
+
         hpaned = gtk.VPaned()
         vbox = gtk.VBox()
         vbox.set_border_width(10)
+
         hbox = gtk.HBox(False, 10)
-        hbox.pack_start(_size(conf.init_width,
-                              conf.init_height))
+        conf = parent.conf
+        hbox.pack_start(_size(conf.init_width, conf.init_height))
         hbox.pack_start(_zoom(conf.init_zoom), False)
         vbox.pack_start(hbox, False)
-        vbox.pack_start(_center(conf.init_center), False)
+
+        hbox = gtk.HBox(False, 10)
+        hbox.pack_start(_center(conf.init_center))
+        bbox = gtk.HButtonBox()
+        button = gtk.Button("Use Current")
+        button.connect('clicked', btn_use_current, parent)
+        bbox.add(button)
+        hbox.pack_start(bbox)
+
+        vbox.pack_start(hbox, False)
         hpaned.pack1(vbox, True, True)
         hpaned.pack2(_action_buttons(conf), False, False)
         return hpaned
