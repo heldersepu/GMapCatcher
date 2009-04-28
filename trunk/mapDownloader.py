@@ -19,10 +19,10 @@ class DownloadTask:
 
 class DownloaderThread(Thread):
     """Downloads tiles from the web.
-    
-    process_task gets tile using get_file() and processes post-processing via 
-    callback. Callback function is (usually) tile_received() implemented in 
-    DLWindow.py and maps.py. The only place where DownloaderThread is used is 
+
+    process_task gets tile using get_file() and processes post-processing via
+    callback. Callback function is (usually) tile_received() implemented in
+    DLWindow.py and maps.py. The only place where DownloaderThread is used is
     from class MapDownloader.
     """
     def __init__(self,ctx_map,inq):
@@ -50,23 +50,23 @@ class DownloaderThread(Thread):
 
 class MapDownloader:
     """Main class used for downloading tiles.
-    
-    Class is used from: 
+
+    Class is used from:
         - download.py
         - DLWindow class (DLWindow.py)
         - MainWindows class (maps.py)
-        
-    One of parameters query_region is callback function. Callback is used in 
+
+    One of parameters query_region is callback function. Callback is used in
     method query_tile()
-    
+
     function gui_callback from gtkThread.py is used as the callback.
     Parameter to gui_callback is usually tile_received() implemented in
-    DLWindow.py and  maps.py. There is different behavior between DLWindow and 
+    DLWindow.py and  maps.py. There is different behavior between DLWindow and
     maps implementation of the method tile_received()
-    
-    In short - query_tile() (usually) calls 
-        - directly tile_received() implemented in DLWindow.py and maps.py 
-          respectively or 
+
+    In short - query_tile() (usually) calls
+        - directly tile_received() implemented in DLWindow.py and maps.py
+          respectively or
         - indirectly via DownloaderThread.process_task().
     """
     def __init__(self, ctx_map, numthreads=4):
