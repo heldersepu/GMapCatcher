@@ -16,7 +16,7 @@
     @ECHO.
     @ECHO.
     @ECHO      This tool will export all your downloaded maps and locations,
-    @ECHO     it creates a sefl-extracting exe in your desktop (%FILE_NAME%)
+    @ECHO     it creates a self-extracting exe in your desktop (%FILE_NAME%)
     @ECHO.   
     @ECHO.   
     @ECHO   ** if you DO NOT WISH TO PROCEED please close this window now **

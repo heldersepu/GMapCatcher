@@ -1,30 +1,11 @@
 #!/usr/bin/env python
-import os
 import googleMaps
 import sys
-import threading
-from mapConst import *
-from threading import Thread
-from Queue import Queue
-from mapUtils import coord_to_tile
-
-serviceQueue = None
-threads = []
-class DownloaderThread(Thread):
-    def __init__(self):
-        Thread.__init__(self)
-
-    def run(self):
-        while True:
-            info = serviceQueue.get()
-            if (info == None):
-                return
-            ctx_map.get_file(info, True, False)
-            serviceQueue.task_done()
-
-
+from mapUtils import *
+from mapDownloader import MapDownloader
 
 ctx_map = googleMaps.GoogleMaps()
+downloader = None
 max_zl = MAP_MAX_ZOOM_LEVEL
 min_zl = MAP_MIN_ZOOM_LEVEL + 4
 lng_range = 0.05
@@ -58,29 +39,21 @@ def print_help():
     print '  download.py --min-zoom=13 --full-range'
     print '  download.py --latitude=37.979180 --longitude=23.716647'
 
-def download(lat, lng, lat_range, lng_range):
-    lat_min = lat - lat_range
-    lat_max = lat + lat_range
-    lng_min = lng - lng_range
-    lng_max = lng + lng_range
+def do_nothing(*args, **kwargs):
+    pass
 
+
+def download(lat, lng, lat_range, lng_range, layer):
     for zl in range(max_zl, min_zl - 1, -1):
         print "Downloading zl %d" % zl
-        tmpCenter = coord_to_tile((lat_max, lng_min, zl))
-        tlx, tly = tmpCenter[0]
-
-        tmpCenter = coord_to_tile((lat_min, lng_max, zl))
-        brx, bry = tmpCenter[0]
-
-        for x in range(tlx, brx+1):
-            for y in range(tly, bry+1):
-                serviceQueue.put((x, y, zl))
-#                ctx_map.get_file(zl, (x, y), True)
+        downloader.query_region_around_location(lat, lng, lat_range*2, lng_range*2, zl, layer, do_nothing)
+        downloader.wait_all()
 
 if __name__ == "__main__":
     lat = None
     lng = None
     location = None
+    layer = LAYER_MAP
 
     if len(sys.argv) > 1:
         for arg in sys.argv[1:]:
@@ -107,9 +80,9 @@ if __name__ == "__main__":
                 elif arg.startswith('--threads='):
                     nr_threads = int(arg[10:])
                 elif arg.startswith('--satellite'):
-                    ctx_map.switch_layer(LAYER_SATELLITE, True)
+                    layer = LAYER_SATELLITE
                 elif arg.startswith('--terrain'):
-                    ctx_map.switch_layer(LAYER_TERRAIN, True)
+                    layer = LAYER_TERRAIN
                 elif arg.startswith('--full-range'):
                     location = "Whole World"
                     lng = 0
@@ -138,18 +111,10 @@ if __name__ == "__main__":
     print "Download %s (%f, %f), range (%f, %f), zoom level: %d to %d" % \
             (location, lat, lng, lat_range, lng_range, max_zl, min_zl)
 
-    if (nr_threads <= 0):
-        threads = 1
-    serviceQueue = Queue(nr_threads)
-    for i in xrange(nr_threads):
-        threads.append(DownloaderThread())
-    for t in threads:
-        t.start()
-
-    download(lat, lng, lat_range, lng_range)
-
-    for t in threads:
-        serviceQueue.put(None)
-    for t in threads:
-        t.join()
+    downloader=MapDownloader(ctx_map, nr_threads)
+    try:
+        download(lat, lng, lat_range, lng_range, layer)
+    finally:
+        print "Waiting..."
+        downloader.stop_all()
 
