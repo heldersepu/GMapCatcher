@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from mapUtils import mod
+import mapMark
 import mapConf
 import mapUtils
 import googleMaps
@@ -385,19 +386,26 @@ class MainWindow(gtk.Window):
             self.do_scale(value)
         return
 
-    def tile_received(self, coord, layer):
-        #print "tile_received", coord, layer, filename
-        if self.layer==layer and self.current_zoom_level == coord[2]:
+    def tile_received(self, tile_coord, layer):
+        if self.layer == layer and self.current_zoom_level == tile_coord[2]:
             da = self.drawing_area
             rect = da.get_allocation()
-            xy = mapUtils.tile_coord_to_screen(coord, rect, self.center)
+            xy = mapUtils.tile_coord_to_screen(tile_coord, rect, self.center)
             if xy:
-                #print "Placing to",xy
-                gc = self.drawing_area.style.black_gc
-                img = self.ctx_map.load_pixbuf(coord, layer)
+                gc = da.style.black_gc
+                img = self.ctx_map.load_pixbuf(tile_coord, layer)
                 for x,y in xy:
-                    da.window.draw_pixbuf(
-                        gc, img, 0, 0, x, y, TILES_WIDTH, TILES_HEIGHT)
+                    da.window.draw_pixbuf(gc, img, 0, 0, x, y, 
+                                          TILES_WIDTH, TILES_HEIGHT)
+                # Draw the markers 
+                if self.downloader.qsize() == 0:
+                    img = self.marker.pixbuf 
+                    for str in self.marker.positions.keys():
+                        mct = mapUtils.coord_to_tile(self.marker.positions[str])
+                        if tile_coord[0] == mct[0][0] and \
+                           tile_coord[1] == mct[0][1]:
+                            da.window.draw_pixbuf(gc, img, 0, 0, x, y, 
+                                                  TILES_WIDTH, TILES_HEIGHT)
 
     # Handles the pressing of F11 & F12
     def full_screen(self, w, event):
@@ -429,6 +437,7 @@ class MainWindow(gtk.Window):
         self.center = self.conf.init_center
         self.current_zoom_level = self.conf.init_zoom
 
+        self.marker = mapMark.MyMarkers()
         self.ctx_map = googleMaps.GoogleMaps()
         self.downloader = mapDownloader.MapDownloader(self.ctx_map)
         self.layer=0
