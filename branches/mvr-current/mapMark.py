@@ -2,6 +2,7 @@ import os
 import re
 import gtk
 import fileUtils
+from mapConst import *
 
 class MyMarkers:
     # coord = (lat, lng, zoom_level)
@@ -15,7 +16,7 @@ class MyMarkers:
         fileUtils.write_file('marker', self.markerpath, self.positions)
 
     def __init__(self):
-        self.configpath = os.path.expanduser("~/.googlemaps")
+        self.configpath = os.path.expanduser(DEFAULT_PATH)
         self.markerpath = os.path.join(self.configpath, 'markers')
         self.pixbuf = self.get_marker_pixbuf()
 

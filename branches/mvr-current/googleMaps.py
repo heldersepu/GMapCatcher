@@ -54,7 +54,7 @@ class GoogleMaps:
         fileUtils.write_file('location', self.locationpath, self.locations)
 
     def __init__(self, configpath=None):
-        configpath = os.path.expanduser(configpath or "~/.googlemaps")
+        configpath = os.path.expanduser(configpath or DEFAULT_PATH)
         self.mt_counter=0
         self.configpath = fileUtils.check_dir(configpath)
         self.locationpath = os.path.join(self.configpath, 'locations')

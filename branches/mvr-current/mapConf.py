@@ -11,7 +11,7 @@ class MapConf():
     init_center = ((0,0),(128,128))
 
     def get_configpath(self):
-        configpath = os.path.expanduser("~/.googlemaps")
+        configpath = os.path.expanduser(DEFAULT_PATH)
         configpath = os.path.join(configpath, 'gmapcatcher.conf')
         return configpath
 
