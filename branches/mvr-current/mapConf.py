@@ -10,8 +10,8 @@ class MapConf():
     init_zoom = MAP_MAX_ZOOM_LEVEL
     init_center = ((0,0),(128,128))
 
-    def get_configpath(self):
-        configpath = os.path.expanduser(DEFAULT_PATH)
+    def get_configpath(self, configpath=None):
+        configpath = os.path.expanduser(configpath or DEFAULT_PATH)
         configpath = os.path.join(configpath, 'gmapcatcher.conf')
         return configpath
 

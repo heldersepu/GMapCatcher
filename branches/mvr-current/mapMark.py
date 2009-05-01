@@ -15,8 +15,8 @@ class MyMarkers:
     def write_markers(self):
         fileUtils.write_file('marker', self.markerpath, self.positions)
 
-    def __init__(self):
-        self.configpath = os.path.expanduser(DEFAULT_PATH)
+    def __init__(self, configpath=None):
+        self.configpath = os.path.expanduser(configpath or DEFAULT_PATH)
         self.markerpath = os.path.join(self.configpath, 'markers')
         self.pixbuf = self.get_marker_pixbuf()
 
