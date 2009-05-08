@@ -30,7 +30,8 @@ class MapConf():
         config = ConfigParser.RawConfigParser()
         strSection = 'init'
         config.add_section(strSection)
-        config.set(strSection, 'path', self.init_path)
+        if self.init_path:
+            config.set(strSection, 'path', self.init_path)
         config.set(strSection, 'width', self.init_width)
         config.set(strSection, 'height', self.init_height)
         config.set(strSection, 'zoom', self.init_zoom)
