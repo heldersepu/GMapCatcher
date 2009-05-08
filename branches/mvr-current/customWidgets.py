@@ -137,7 +137,7 @@ class MySettings():
 
 class TreeView():
 
-    # Appends items to a list from the given file
+    ## Appends items to a list from the given file
     def __read_file(self, strInfo, strFilePath, liststore):
         locations = fileUtils.read_file(strInfo, strFilePath)
         # add rows with text
@@ -147,14 +147,14 @@ class TreeView():
                                   locations[strLoc][1], locations[strLoc][2]])
         return liststore
 
-    # Writes a given list to the file
+    ## Writes a given list to the file
     def __write_file(self, strInfo, strFilePath, liststore):
         locations = {}
         for row in liststore:
             locations[row[0]] = (float(row[1]), float(row[2]), int(row[3]))
         fileUtils.write_file(strInfo, strFilePath, locations)
 
-    # Handle the 'edited' event of the cells
+    ## Handle the 'edited' event of the cells
     def __cell_edited(self, cell, row, new_text, model, col):
         try:
             if col == 0:
@@ -166,19 +166,19 @@ class TreeView():
         except Exception:
             pass
 
-    # Change the selection
+    ## Change the selection
     def change_selection(self, myTree, intPath):
         if intPath >= 0:
             myTree.set_cursor(intPath)
             myTree.grab_focus()
 
-    # Add a row to the list
+    ## Add a row to the list
     def btn_add_clicked(self, button, liststore, myTree):
         iter = liststore.append([' New', 0, 0, MAP_MAX_ZOOM_LEVEL - 2])
         liststore.set_sort_column_id(0, gtk.SORT_ASCENDING)
         self.change_selection(myTree, liststore.get_path(iter))
 
-    # Remove selected row from the list
+    ## Remove selected row from the list
     def btn_remove_clicked(self, button, liststore, myTree):
         treeSelection = myTree.get_selection()
         model, iter = treeSelection.get_selected()
@@ -188,18 +188,18 @@ class TreeView():
             if model.get_iter_first():
                 self.change_selection(myTree, intPath)
 
-    # Reload the list from the file
+    ## Reload the list from the file
     def btn_revert_clicked(self, button, strInfo, filePath, liststore, myTree):
         liststore.clear()
         myTree.set_model(self.__read_file(strInfo, filePath, liststore))
         liststore.set_sort_column_id(0, gtk.SORT_ASCENDING)
         myTree.grab_focus()
 
-    # Save the curent list to the file
+    ## Save the curent list to the file
     def btn_save_clicked(self, button, strInfo, filePath, liststore):
         self.__write_file(strInfo, filePath, liststore)
 
-    # All the buttons below the list
+    ## All the buttons below the list
     def __action_buttons(self, strInfo, filePath, liststore, myTree):
         bbox = gtk.HButtonBox()
         bbox.set_layout(gtk.BUTTONBOX_END)
@@ -226,7 +226,7 @@ class TreeView():
         bbox.add(button)
         return bbox
 
-    # Handle the delete key
+    ## Handle the delete key
     def key_press_tree(self, w, event, liststore):
         if event.keyval == 65535:
             self.btn_remove_clicked(None, liststore, w)

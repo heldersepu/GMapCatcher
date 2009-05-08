@@ -1,8 +1,8 @@
-#A common location for all the File I/O Utilities
+## A common location for all the File I/O Utilities
 import os
 import re
 
-# return all the locations from a given file (filePath)
+## Return all the locations from a given file (filePath)
 def read_file(strInfo, filePath):
     fileData = {}
     if os.path.exists(filePath):
@@ -26,7 +26,7 @@ def read_file(strInfo, filePath):
         write_file(strInfo, filePath, fileData)
         return None
 
-# Writes all the locations (fileData) to given file (filePath)
+## Writes all the locations (fileData) to given file (filePath)
 def write_file(strInfo, filePath, fileData):
     try:
         file = open(filePath, "w")
@@ -52,7 +52,7 @@ def write_file(strInfo, filePath, fileData):
                   (l, fileData[l][0], fileData[l][1], fileData[l][2]))
     file.close()
 
-# Checks if a directory exist if not it will be created
+## Checks if a directory exist if not it will be created
 def check_dir(strPath, strSubPath=None):
     if (strSubPath != None):
         strPath = os.path.join(strPath, strSubPath)
