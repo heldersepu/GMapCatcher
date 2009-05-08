@@ -438,8 +438,8 @@ class MainWindow(gtk.Window):
         self.center = self.conf.init_center
         self.current_zoom_level = self.conf.init_zoom
 
-        self.marker = mapMark.MyMarkers()
-        self.ctx_map = googleMaps.GoogleMaps()
+        self.marker = mapMark.MyMarkers(self.conf.init_path)
+        self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path)
         self.downloader = mapDownloader.MapDownloader(self.ctx_map)
         self.layer=0
         gtk.Window.__init__(self)
