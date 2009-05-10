@@ -68,6 +68,23 @@ class MySettings():
             hbox.pack_start(lbl(" )) "), False)
             return _frame(" Center ", hbox)
 
+        def custom_path(conf):
+            vbox = gtk.VBox(False, 10)
+            vbox.set_border_width(10)
+            vbox.pack_start( \
+                lbl(" Enter None or leave blank to use default directory. "))
+            hbox = gtk.HBox(False, 10)
+            myEntry = gtk.Entry()
+            if conf.init_path:
+                myEntry.set_text(conf.init_path)
+            else:
+                myEntry.set_text("None")
+            hbox.pack_start(myEntry)
+            self.entry_custom_path = myEntry
+            # TODO ...add one of those "folder picker"
+            vbox.pack_start(hbox)
+            return _frame(" Custom Directory ", vbox)
+
         def _action_buttons(conf):
             def btn_revert_clicked(button):
                 self.s_center00.set_value(conf.init_center[0][0])
@@ -79,6 +96,11 @@ class MySettings():
                 self.s_width.set_value(conf.init_width)
                 self.s_height.set_value(conf.init_height)
 
+                if conf.init_path:
+                    self.entry_custom_path.set_text(conf.init_path)
+                else:
+                    self.entry_custom_path.set_text("None")
+
             def btn_save_clicked(button):
                 conf.init_center = ((self.s_center00.get_value_as_int()),
                                     (self.s_center01.get_value_as_int())), \
@@ -88,6 +110,11 @@ class MySettings():
                 conf.init_zoom = self.s_zoom.get_value_as_int()
                 conf.init_width = self.s_width.get_value_as_int()
                 conf.init_height = self.s_height.get_value_as_int()
+                strTemp = (self.entry_custom_path.get_text().lower()).strip()
+                if strTemp != "NONE" and strTemp != "NONE":
+                    conf.init_path = strTemp
+                else:
+                    conf.init_path = None
                 conf.save()
 
             bbox = gtk.HButtonBox()
@@ -129,6 +156,10 @@ class MySettings():
         bbox.add(button)
         hbox.pack_start(bbox)
 
+        vbox.pack_start(hbox, False)
+        hbox = gtk.HBox(False, 10)
+        hbox.set_border_width(20)
+        hbox.pack_start(custom_path(conf))
         vbox.pack_start(hbox, False)
         hpaned.pack1(vbox, True, True)
         hpaned.pack2(_action_buttons(conf), False, False)
