@@ -410,6 +410,7 @@ class MainWindow(gtk.Window):
 
     ## Handles the pressing of F11 & F12
     def full_screen(self, w, event):
+        # F11 = 65480
         if event.keyval == 65480:
             if self.get_decorated():
                 self.set_keep_above(True)
@@ -419,13 +420,16 @@ class MainWindow(gtk.Window):
                 self.set_keep_above(False)
                 self.set_decorated(True)
                 self.unmaximize()
-        elif event.keyval == 65481:
+        # F12 = 65481       
+        elif event.keyval == 65481: 
             if self.show_panels:
                 self.left_panel.hide()
                 self.top_panel.hide()
+                self.set_border_width(0)
             else:
                 self.left_panel.show()
                 self.top_panel.show()
+                self.set_border_width(10)
             self.show_panels = not self.show_panels
 
     def on_delete(self,*args):
