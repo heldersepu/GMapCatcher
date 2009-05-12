@@ -30,6 +30,18 @@ def _myEntry(strText, maxChars=8, isInt=True):
     myEntry.connect('insert-text', allow_only_numbers, maxChars, isInt)
     return myEntry
 
+## Folder chooser dialog
+def FolderChooser():
+    strFileName = False
+    dialog = gtk.FileChooserDialog("Select Folder", None,
+                                   gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                    gtk.STOCK_OK, gtk.RESPONSE_OK))
+    dialog.set_default_response(gtk.RESPONSE_OK)
+    if dialog.run() == gtk.RESPONSE_OK:
+        strFileName = dialog.get_filename()
+    dialog.destroy()
+    return strFileName
 
 class MySettings():
 
@@ -69,6 +81,11 @@ class MySettings():
             return _frame(" Center ", hbox)
 
         def custom_path(conf):
+            def get_folder(button):
+                fileName = FolderChooser()
+                if fileName:
+                    self.entry_custom_path.set_text(fileName)
+
             vbox = gtk.VBox(False, 10)
             vbox.set_border_width(10)
             vbox.pack_start( \
@@ -81,9 +98,11 @@ class MySettings():
                 myEntry.set_text("None")
             hbox.pack_start(myEntry)
             self.entry_custom_path = myEntry
-            # TODO ...add one of those "folder picker"
+            button = gtk.Button(" ... ")
+            button.connect('clicked', get_folder)
+            hbox.pack_start(button, False)
             vbox.pack_start(hbox)
-            return _frame(" Custom Directory ", vbox)
+            return _frame(" Custom Maps Directory ", vbox)
 
         def _action_buttons(conf):
             def btn_revert_clicked(button):
@@ -263,6 +282,7 @@ class TreeView():
             self.btn_remove_clicked(None, liststore, w)
             return True
 
+    ## Put all the TreeView Widgets together
     def show(self, strInfo, filePath):
         # create a liststore with one string column to use as the model
         liststore = gtk.ListStore(str, float, float, int)
@@ -303,3 +323,64 @@ class TreeView():
         buttons = self.__action_buttons(strInfo, filePath, liststore, myTree)
         hpaned.pack2(buttons, False, False)
         return hpaned
+
+class ChangeTheme():
+    ## All the buttons at the bottom
+    def __action_buttons(self):
+            def btn_revert_clicked(button):
+                self.s_center00.set_value(conf.init_center[0][0])
+                self.s_center01.set_value(conf.init_center[0][1])
+                self.s_center10.set_value(conf.init_center[1][0])
+                self.s_center11.set_value(conf.init_center[1][1])
+
+                self.s_zoom.set_value(conf.init_zoom)
+                self.s_width.set_value(conf.init_width)
+                self.s_height.set_value(conf.init_height)
+
+                if conf.init_path:
+                    self.entry_custom_path.set_text(conf.init_path)
+                else:
+                    self.entry_custom_path.set_text("None")
+
+            def btn_save_clicked(button):
+                conf.init_center = ((self.s_center00.get_value_as_int()),
+                                    (self.s_center01.get_value_as_int())), \
+                                   ((self.s_center10.get_value_as_int()),
+                                    (self.s_center11.get_value_as_int()))
+
+                conf.init_zoom = self.s_zoom.get_value_as_int()
+                conf.init_width = self.s_width.get_value_as_int()
+                conf.init_height = self.s_height.get_value_as_int()
+                strTemp = (self.entry_custom_path.get_text().lower()).strip()
+                if strTemp != "NONE" and strTemp != "NONE":
+                    conf.init_path = strTemp
+                else:
+                    conf.init_path = None
+                conf.save()
+
+            bbox = gtk.HButtonBox()
+            bbox.set_layout(gtk.BUTTONBOX_END)
+            bbox.set_border_width(10)
+            bbox.set_spacing(60)
+
+            button = gtk.Button(stock=gtk.STOCK_REVERT_TO_SAVED)
+            button.connect('clicked', btn_revert_clicked)
+            bbox.add(button)
+
+            button = gtk.Button(stock=gtk.STOCK_SAVE)
+            button.connect('clicked', btn_save_clicked)
+            bbox.add(button)
+            return bbox
+
+    ## Put all the ChangeTheme Widgets together
+    def show(self):
+        hpaned = gtk.VPaned()
+        scrolledwindow = gtk.ScrolledWindow()
+        scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        #scrolledwindow.add(myTree)
+        hpaned.pack1(scrolledwindow, True, True)
+
+        buttons = self.__action_buttons()
+        hpaned.pack2(buttons, False, False)
+        return hpaned
+
