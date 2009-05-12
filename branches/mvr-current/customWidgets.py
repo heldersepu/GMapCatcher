@@ -130,8 +130,8 @@ class MySettings():
                 conf.init_width = self.s_width.get_value_as_int()
                 conf.init_height = self.s_height.get_value_as_int()
                 strTemp = (self.entry_custom_path.get_text().lower()).strip()
-                if strTemp != "NONE" and strTemp != "NONE":
-                    conf.init_path = strTemp
+                if strTemp != "" and strTemp != "none":
+                    conf.init_path = self.entry_custom_path.get_text()
                 else:
                     conf.init_path = None
                 conf.save()
