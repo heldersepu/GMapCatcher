@@ -328,35 +328,10 @@ class ChangeTheme():
     ## All the buttons at the bottom
     def __action_buttons(self):
         def btn_revert_clicked(button):
-            self.s_center00.set_value(conf.init_center[0][0])
-            self.s_center01.set_value(conf.init_center[0][1])
-            self.s_center10.set_value(conf.init_center[1][0])
-            self.s_center11.set_value(conf.init_center[1][1])
-
-            self.s_zoom.set_value(conf.init_zoom)
-            self.s_width.set_value(conf.init_width)
-            self.s_height.set_value(conf.init_height)
-
-            if conf.init_path:
-                self.entry_custom_path.set_text(conf.init_path)
-            else:
-                self.entry_custom_path.set_text("None")
+            print "btn_revert_clicked"
 
         def btn_save_clicked(button):
-            conf.init_center = ((self.s_center00.get_value_as_int()),
-                                (self.s_center01.get_value_as_int())), \
-                               ((self.s_center10.get_value_as_int()),
-                                (self.s_center11.get_value_as_int()))
-
-            conf.init_zoom = self.s_zoom.get_value_as_int()
-            conf.init_width = self.s_width.get_value_as_int()
-            conf.init_height = self.s_height.get_value_as_int()
-            strTemp = (self.entry_custom_path.get_text().lower()).strip()
-            if strTemp != "NONE" and strTemp != "NONE":
-                conf.init_path = strTemp
-            else:
-                conf.init_path = None
-            conf.save()
+            print "btn_save_clicked"
 
         bbox = gtk.HButtonBox()
         bbox.set_layout(gtk.BUTTONBOX_END)
