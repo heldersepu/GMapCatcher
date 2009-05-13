@@ -51,6 +51,12 @@ class MapConf():
             strCenter = config.get(strSection, 'center')
             self.init_center = mapUtils.str_to_tuple(strCenter)
             self.init_path = config.get(strSection, 'path')
+            # Check directory; If it does not exists try to create it.
+            if not os.path.isdir(self.init_path):
+                try:
+                    os.mkdir(self.init_path)
+                except Exception:
+                    self.init_path = None
         except Exception:
             pass
 
