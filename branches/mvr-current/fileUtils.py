@@ -52,6 +52,24 @@ def write_file(strInfo, filePath, fileData):
                   (l, fileData[l][0], fileData[l][1], fileData[l][2]))
     file.close()
 
+## Writes a new gtkrc file 
+def write_gtkrc(strTheme):
+    filePath = '.\etc\gtk-2.0\gtkrc'
+    try:
+        file = open(filePath, "w")
+    except Exception:
+        print 'Error! Can NOT write file:'
+        print '  ' + filePath
+        return
+
+    file.write('# You can change the GMapCatcher theme here!\n'+\
+               '#\n'+\
+               '#gtk-theme-name = "Industrial"\n'+\
+               '#gtk-theme-name = "XFCE-4.2"\n'+\
+               '\n'+\
+               'gtk-theme-name = "' + strTheme + '"')
+    file.close()    
+    
 ## Checks if a directory exist if not it will be created
 def check_dir(strPath, strSubPath=None):
     if (strSubPath != None):

@@ -349,12 +349,22 @@ class ChangeTheme():
 
     ## Put all the ChangeTheme Widgets together
     def show(self):
-        hpaned = gtk.VPaned()
-        scrolledwindow = gtk.ScrolledWindow()
-        scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        #scrolledwindow.add(myTree)
-        hpaned.pack1(scrolledwindow, True, True)
+        def layer_changed(w):
+            fileUtils.write_gtkrc(w.get_active_text())
 
+        vbox = gtk.VBox(False, 10)
+        vbox.set_border_width(10)
+        vbox.pack_start( lbl("Select new theme and restart GMapCatcher."))
+        cmb_layer = gtk.combo_box_new_text()
+        cmb_layer.append_text("Industrial")
+        cmb_layer.append_text("XFCE-4.2")
+        cmb_layer.append_text("Human")
+        cmb_layer.set_active(0)
+        cmb_layer.connect('changed',layer_changed)
+        vbox.pack_start(_frame(" Available themes ", cmb_layer), False) 
+
+        hpaned = gtk.VPaned()
+        hpaned.pack1(vbox, True, True)
         buttons = self.__action_buttons()
         hpaned.pack2(buttons, False, False)
         return hpaned
