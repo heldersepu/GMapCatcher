@@ -18,7 +18,6 @@ class MainWindow(gtk.Window):
     draging_start = (0, 0)
     current_zoom_level = MAP_MAX_ZOOM_LEVEL
     default_text = "Enter location here!"
-    show_panels = True
 
     def error_msg(self, msg, buttons=gtk.BUTTONS_OK):
         dialog = gtk.MessageDialog(self,
@@ -422,7 +421,7 @@ class MainWindow(gtk.Window):
                 self.unmaximize()
         # F12 = 65481       
         elif event.keyval == 65481: 
-            if self.show_panels:
+            if self.get_border_width() > 0:
                 self.left_panel.hide()
                 self.top_panel.hide()
                 self.set_border_width(0)
@@ -430,7 +429,6 @@ class MainWindow(gtk.Window):
                 self.left_panel.show()
                 self.top_panel.show()
                 self.set_border_width(10)
-            self.show_panels = not self.show_panels
 
     def on_delete(self,*args):
         self.downloader.stop_all()
