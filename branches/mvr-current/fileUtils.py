@@ -52,9 +52,9 @@ def write_file(strInfo, filePath, fileData):
                   (l, fileData[l][0], fileData[l][1], fileData[l][2]))
     file.close()
 
-## Writes a new gtkrc file 
+## Writes a new gtkrc file with the given theme
 def write_gtkrc(strTheme):
-    filePath = '.\etc\gtk-2.0\gtkrc'
+    filePath = './etc/gtk-2.0/gtkrc'
     try:
         file = open(filePath, "w")
     except Exception:
@@ -68,8 +68,27 @@ def write_gtkrc(strTheme):
                '#gtk-theme-name = "XFCE-4.2"\n'+\
                '\n'+\
                'gtk-theme-name = "' + strTheme + '"')
-    file.close()    
-    
+    file.close()
+
+## Returns the current theme from the gtkrc file
+def read_gtkrc():
+    filePath = './etc/gtk-2.0/gtkrc'
+    if os.path.exists(filePath):
+        file = open(filePath, "r")
+        for line in file:
+            if line.startswith('gtk-theme-name'):
+                return line[17:]
+
+## Returns all the available themes
+def get_themes():
+    themesPath = './share/themes/'
+    myThemes = []
+    if os.path.isdir(themesPath):
+        for l in os.listdir(themesPath):
+            if os.path.isdir(themesPath + l) and (l[0] != '.'):
+                myThemes += [l]
+    return myThemes
+
 ## Checks if a directory exist if not it will be created
 def check_dir(strPath, strSubPath=None):
     if (strSubPath != None):
