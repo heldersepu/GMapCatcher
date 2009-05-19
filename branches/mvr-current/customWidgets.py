@@ -325,13 +325,31 @@ class TreeView():
         return hpaned
 
 class ChangeTheme():
+    ## Load the items into the Combo box
+    def load_combo(self, myCombo):
+        listThemes = fileUtils.get_themes()
+        actualTheme = fileUtils.read_gtkrc()
+        intTheme = 0
+        model = myCombo.get_model()
+        model.clear()
+        myCombo.set_model(None)
+        for l in range(len(listThemes)):
+            model.append([listThemes[l]])
+            if listThemes[l] == actualTheme:
+                intTheme = l
+        myCombo.set_model(model)
+        myCombo.set_active(intTheme)
+    
     ## All the buttons at the bottom
     def __action_buttons(self):
         def btn_revert_clicked(button):
-            print "btn_revert_clicked"
+            self.load_combo(self.cmb_themes)
 
         def btn_save_clicked(button):
-            print "btn_save_clicked"
+            if self.cmb_themes.get_model():
+                cmb_text = self.cmb_themes.get_active_text()
+                if cmb_text: 
+                    fileUtils.write_gtkrc(cmb_text)
 
         bbox = gtk.HButtonBox()
         bbox.set_layout(gtk.BUTTONBOX_END)
@@ -349,23 +367,16 @@ class ChangeTheme():
 
     ## Put all the ChangeTheme Widgets together
     def show(self):
-        def layer_changed(w):
-            fileUtils.write_gtkrc(w.get_active_text())
-
         hbox = gtk.HBox(False, 10)
         vbox = gtk.VBox(False, 10)
         vbox.set_border_width(10)
         hbox.pack_start(lbl("Select new theme and restart GMapCatcher."))
-        cmb_layer = gtk.combo_box_new_text()
+        self.cmb_themes = gtk.combo_box_new_text()
 
-        for l in fileUtils.get_themes():
-            cmb_layer.append_text(l)
-
-        cmb_layer.set_active(fileUtils.read_gtkrc())
-        cmb_layer.connect('changed',layer_changed)
-        hbox.pack_start(cmb_layer)
+        self.load_combo(self.cmb_themes)
+        hbox.pack_start(self.cmb_themes)
         vbox.pack_start(_frame(" Available themes ", hbox), False)
-        
+
         hpaned = gtk.VPaned()
         hpaned.pack1(vbox, True, True)
         buttons = self.__action_buttons()

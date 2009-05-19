@@ -76,8 +76,9 @@ def read_gtkrc():
     if os.path.exists(filePath):
         file = open(filePath, "r")
         for line in file:
+            line = line.strip()
             if line.startswith('gtk-theme-name'):
-                return line[17:]
+                return line[17:].strip('"')
 
 ## Returns all the available themes
 def get_themes():
