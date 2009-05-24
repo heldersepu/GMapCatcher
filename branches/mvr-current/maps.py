@@ -181,7 +181,7 @@ class MainWindow(gtk.Window):
         dlw=DLWindow(coord, km_px*rect.width, km_px*rect.height, self.layer)
         dlw.show()
 
-    
+
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
         combo = gtk.combo_box_entry_new_text()
@@ -419,8 +419,8 @@ class MainWindow(gtk.Window):
                 self.set_keep_above(False)
                 self.set_decorated(True)
                 self.unmaximize()
-        # F12 = 65481       
-        elif event.keyval == 65481: 
+        # F12 = 65481
+        elif event.keyval == 65481:
             if self.get_border_width() > 0:
                 self.left_panel.hide()
                 self.top_panel.hide()
