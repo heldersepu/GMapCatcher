@@ -18,7 +18,6 @@ class MainWindow(gtk.Window):
     draging_start = (0, 0)
     current_zoom_level = MAP_MAX_ZOOM_LEVEL
     default_text = "Enter location here!"
-    show_panels = True
 
     def error_msg(self, msg, buttons=gtk.BUTTONS_OK):
         dialog = gtk.MessageDialog(self,
@@ -64,41 +63,41 @@ class MainWindow(gtk.Window):
     def get_zoom_level(self):
         return int(self.scale.get_value())
 
-    # Automatically display after selecting
+    ## Automatically display after selecting
     def on_completion_match(self, completion, model, iter):
         self.entry.set_text(model[iter][0])
         self.confirm_clicked(self)
 
-    # Clean out the entry box if text = default
+    ## Clean out the entry box if text = default
     def clean_entry(self, *args):
         if (self.entry.get_text() == self.default_text):
             self.entry.set_text("")
             self.entry.grab_focus()
 
-    # Reset the default text if entry is empty
+    ## Reset the default text if entry is empty
     def default_entry(self, *args):
         if (self.entry.get_text().strip() == ''):
             self.entry.set_text(self.default_text)
 
-    # Handles the change event of the ComboBox
+    ## Handles the change event of the ComboBox
     def changed_combo(self, *args):
         str = self.entry.get_text()
         if (str.endswith(SEPARATOR)):
             self.entry.set_text(str.strip())
             self.confirm_clicked(self)
 
-    # Show the combo list if is not empty
+    ## Show the combo list if is not empty
     def combo_popup(self):
         if self.combo.get_model().get_iter_root() != None:
             self.combo.popup()
 
-    # Handles the pressing of arrow keys
+    ## Handles the pressing of arrow keys
     def key_press_combo(self, w, event):
         if event.keyval in [65362, 65364]:
             self.combo_popup()
             return True
 
-    # Create a gtk Menu with the given items
+    ## Create a gtk Menu with the given items
     def gtk_menu(self, listItems):
         myMenu = gtk.Menu()
         for str in listItems:
@@ -112,7 +111,7 @@ class MainWindow(gtk.Window):
             menu_items.show()
         return myMenu
 
-    # Handles the events in the Tools buttons
+    ## Handles the events in the Tools buttons
     def tools_button_event(self, w, event):
         if event.type == gtk.gdk.BUTTON_PRESS:
             w.popup(None, None, None, 1, event.time)
@@ -182,7 +181,8 @@ class MainWindow(gtk.Window):
         dlw=DLWindow(coord, km_px*rect.width, km_px*rect.height, self.layer)
         dlw.show()
 
-    # Creates a comboBox that will contain the locations
+    
+    ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
         combo = gtk.combo_box_entry_new_text()
         combo.connect('changed', self.changed_combo)
@@ -202,7 +202,7 @@ class MainWindow(gtk.Window):
         self.entry = entry
         return combo
 
-    # Creates the box that packs the comboBox & buttons
+    ## Creates the box that packs the comboBox & buttons
     def __create_upper_box(self):
         hbox = gtk.HBox(False, 5)
 
@@ -223,7 +223,7 @@ class MainWindow(gtk.Window):
         hbox.pack_start(bbox, False, True, 15)
         return hbox
 
-    # Creates the box with the CheckButtons
+    ## Creates the box with the CheckButtons
     def __create_check_buttons(self):
         hbox = gtk.HBox(False, 10)
 
@@ -307,7 +307,7 @@ class MainWindow(gtk.Window):
                 mapTools.main(self, intPos)
                 return True
 
-    # All the actions for the menu items
+    ## All the actions for the menu items
     def menu_item_response(self, w, strName):
         if strName.startswith("Zoom Out"):
             self.do_zoom(self.scale.get_value() + 1, True)
@@ -322,12 +322,12 @@ class MainWindow(gtk.Window):
         else:
             self.menu_tools(strName)
 
-    # Change the mouse cursor over the drawing_area
+    ## Change the mouse cursor over the drawing_area
     def da_set_cursor(self, dCursor = gtk.gdk.HAND1):
         cursor = gtk.gdk.Cursor(dCursor)
         self.drawing_area.window.set_cursor(cursor)
 
-    # Handles Right & Double clicks events in the drawing_area
+    ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
         # Right-Click event shows the popUp menu
         if (event.type == gtk.gdk.BUTTON_PRESS) and (event.button != 1):
@@ -336,18 +336,18 @@ class MainWindow(gtk.Window):
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
             self.do_zoom(self.scale.get_value() - 1, True)
 
-    # Handles left (press click) event in the drawing_area
+    ## Handles left (press click) event in the drawing_area
     def da_button_press(self, w, event):
         if (event.button == 1):
             self.draging_start = (event.x, event.y)
             self.da_set_cursor(gtk.gdk.FLEUR)
 
-    # Handles left (release click) event in the drawing_area
+    ## Handles left (release click) event in the drawing_area
     def da_button_release(self, w, event):
         if (event.button == 1):
             self.da_set_cursor()
 
-    # Handles the mouse motion over the drawing_area
+    ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
         x = event.x
         y = event.y
@@ -407,8 +407,9 @@ class MainWindow(gtk.Window):
                             da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                                   TILES_WIDTH, TILES_HEIGHT)
 
-    # Handles the pressing of F11 & F12
+    ## Handles the pressing of F11 & F12
     def full_screen(self, w, event):
+        # F11 = 65480
         if event.keyval == 65480:
             if self.get_decorated():
                 self.set_keep_above(True)
@@ -418,14 +419,16 @@ class MainWindow(gtk.Window):
                 self.set_keep_above(False)
                 self.set_decorated(True)
                 self.unmaximize()
-        elif event.keyval == 65481:
-            if self.show_panels:
+        # F12 = 65481       
+        elif event.keyval == 65481: 
+            if self.get_border_width() > 0:
                 self.left_panel.hide()
                 self.top_panel.hide()
+                self.set_border_width(0)
             else:
                 self.left_panel.show()
                 self.top_panel.show()
-            self.show_panels = not self.show_panels
+                self.set_border_width(10)
 
     def on_delete(self,*args):
         self.downloader.stop_all()
@@ -437,8 +440,8 @@ class MainWindow(gtk.Window):
         self.center = self.conf.init_center
         self.current_zoom_level = self.conf.init_zoom
 
-        self.marker = mapMark.MyMarkers()
-        self.ctx_map = googleMaps.GoogleMaps()
+        self.marker = mapMark.MyMarkers(self.conf.init_path)
+        self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path)
         self.downloader = mapDownloader.MapDownloader(self.ctx_map)
         self.layer=0
         gtk.Window.__init__(self)

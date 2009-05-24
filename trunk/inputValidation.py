@@ -1,4 +1,4 @@
-# Validate the text on all the "input" widgets
+## Validate the text on all the "input" widgets
 def allow_only_numbers(entry, text, length, position, max, isInt=True):
     # generate what the new text will be
     text = text[:length]
