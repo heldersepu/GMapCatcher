@@ -3,7 +3,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk, gobject
 
-# workaround for broken gtk threads in win32
+## workaround for broken gtk threads in win32
 if sys.platform=='win32':
     import time
     def do_gui_operation(function, *args, **kw):
@@ -26,7 +26,7 @@ else:
     gtk.gdk.threads_init()
     do_gui_operation=gobject.idle_add
 
-# may be used as decorator
+## may be used as decorator
 def gui_callback(function):
     def cb(inGuiThread, *args, **kwargs):
         if inGuiThread:

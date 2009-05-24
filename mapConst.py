@@ -14,4 +14,5 @@ LAYER_TERRAIN = 2
 LAYER_NAMES = ["Map", "Satellite", "Terrain"]
 LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles"]
 
-R_EARTH=6371.
+R_EARTH = 6371.
+DEFAULT_PATH = "~/.googlemaps"

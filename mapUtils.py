@@ -24,7 +24,7 @@ def mod(x,y):
     if r<0: r+=y
     return r
 
-# convert from coord(lat, lng, zoom_level) to (tile, offset)
+## convert from coord(lat, lng, zoom_level) to (tile, offset)
 def coord_to_tile(coord):
     world_tiles = tiles_on_level(coord[2])
     x = world_tiles / 360.0 * (coord[1] + 180.0)
@@ -35,7 +35,7 @@ def coord_to_tile(coord):
              int((y - int(y)) * TILES_HEIGHT)
     return (int(x) % world_tiles, int(y) % world_tiles), offset
 
-# convert ((tile, offset), zoom_level) to (lat, lon, zoom_level)
+## convert ((tile, offset), zoom_level) to (lat, lon, zoom_level)
 def tile_to_coord(tile, zoom):
     world_tiles = tiles_on_level(zoom)
     x = ( tile[0][0] + 1.0*tile[1][0]/TILES_WIDTH ) / (world_tiles/2.) - 1 # -1...1
@@ -46,12 +46,12 @@ def tile_to_coord(tile, zoom):
     lat = 180.0/math.pi * math.asin(e)
     return lat, lon, zoom
 
-# Find scale of the picture in km per pixel
+## Find scale of the picture in km per pixel
 def km_per_pixel(coord):
     world_tiles = tiles_on_level(coord[2])
     return 2*math.pi*R_EARTH/world_tiles/TILES_WIDTH * math.cos(coord[0]*math.pi/180.0)
 
-# Convert tuple-like string to real tuples
+## Convert tuple-like string to real tuples
 # eg: '((1, 2), (2, 3))' -> ((1, 2), (2, 3))
 def str_to_tuple(strCenter):
     strCenter = strCenter.strip()
