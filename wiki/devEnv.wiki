@@ -32,6 +32,7 @@
 
 
 
+
 After downloading & installing all requirements just double click *maps.py*
 
 
