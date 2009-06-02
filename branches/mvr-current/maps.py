@@ -175,10 +175,11 @@ class MainWindow(gtk.Window):
         self.repaint()
 
     def download_clicked(self,w):
-        coord=mapUtils.tile_to_coord(self.center, self.current_zoom_level)
+        coord = mapUtils.tile_to_coord(self.center, self.current_zoom_level)
         rect = self.drawing_area.get_allocation()
-        km_px=mapUtils.km_per_pixel(coord)
-        dlw=DLWindow(coord, km_px*rect.width, km_px*rect.height, self.layer)
+        km_px = mapUtils.km_per_pixel(coord)
+        dlw = DLWindow(coord, km_px*rect.width, km_px*rect.height, 
+                       self.layer, self.conf.init_path)
         dlw.show()
 
 
