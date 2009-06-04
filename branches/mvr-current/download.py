@@ -1,10 +1,12 @@
 #!/usr/bin/env python
+import mapConf
 import googleMaps
 import sys
 from mapUtils import *
 from mapDownloader import MapDownloader
 
-ctx_map = googleMaps.GoogleMaps()
+conf = mapConf.MapConf()
+ctx_map = googleMaps.GoogleMaps(conf.init_path)
 downloader = None
 max_zl = MAP_MAX_ZOOM_LEVEL
 min_zl = MAP_MIN_ZOOM_LEVEL + 4
