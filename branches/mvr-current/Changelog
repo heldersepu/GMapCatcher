@@ -1,3 +1,7 @@
+June 04 2009    H.S    <HelderSepu@gmail.com>
+    * 0.071 - At revision: 358
+    * Fix Issue with download tools (Issue 47)
+
 May 18 2009    H.S    <HelderSepu@gmail.com>
     * 0.070 - At revision: 341
     * Improve the fullscreen (F11) set_border_width(0)
