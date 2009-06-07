@@ -178,7 +178,7 @@ class MainWindow(gtk.Window):
         coord = mapUtils.tile_to_coord(self.center, self.current_zoom_level)
         rect = self.drawing_area.get_allocation()
         km_px = mapUtils.km_per_pixel(coord)
-        dlw = DLWindow(coord, km_px*rect.width, km_px*rect.height, 
+        dlw = DLWindow(coord, km_px*rect.width, km_px*rect.height,
                        self.layer, self.conf.init_path)
         dlw.show()
 
@@ -298,9 +298,12 @@ class MainWindow(gtk.Window):
         da.show()
         return self.drawing_area
 
-    def do_zoom(self, value, doForce=False):
+    def do_zoom(self, value, doForce=False, doGetPointer=True):
         if (MAP_MIN_ZOOM_LEVEL <= value <= MAP_MAX_ZOOM_LEVEL):
-            self.do_scale(value, self.drawing_area.get_pointer(), doForce)
+            if doGetPointer:
+                self.do_scale(value, self.drawing_area.get_pointer(), doForce)
+            else:
+                self.do_scale(value, None, doForce)
 
     def menu_tools(self, strName):
         for intPos in range(len(TOOLS_MENU)):
@@ -352,6 +355,10 @@ class MainWindow(gtk.Window):
     def da_motion(self, w, event):
         x = event.x
         y = event.y
+        self.da_move(x, y)
+
+    ## Move the drawing_area
+    def da_move(self, x, y):
         rect = self.drawing_area.get_allocation()
         if (0 <= x <= rect.width) and (0 <= y <= rect.height):
             center_offset = (self.center[1][0] + (self.draging_start[0] - x),
@@ -360,6 +367,27 @@ class MainWindow(gtk.Window):
                              self.center[0], center_offset)
             self.draging_start = (x, y)
             self.repaint()
+
+    ## Jumps in the drawing_area
+    def da_jump(self, intDirection, doBigJump=False):
+        # Left  = 1  Up   = 2
+        # Right = 3  Down = 4
+        intJump = 10
+        if doBigJump:
+            intJump = intJump * 10
+
+        if intDirection == 1:
+            self.draging_start = (0, 0)
+            self.da_move(intJump, 0)
+        elif intDirection == 2:
+            self.draging_start = (0, intJump)
+            self.da_move(0, 0)
+        elif intDirection == 3:
+            self.draging_start = (intJump, 0)
+            self.da_move(0, 0)
+        elif intDirection == 4:
+            self.draging_start = (0, 0)
+            self.da_move(0, intJump)
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
@@ -409,9 +437,9 @@ class MainWindow(gtk.Window):
                                                   TILES_WIDTH, TILES_HEIGHT)
 
     ## Handles the pressing of F11 & F12
-    def full_screen(self, w, event):
+    def full_screen(self,keyval):
         # F11 = 65480
-        if event.keyval == 65480:
+        if keyval == 65480:
             if self.get_decorated():
                 self.set_keep_above(True)
                 self.set_decorated(False)
@@ -421,7 +449,7 @@ class MainWindow(gtk.Window):
                 self.set_decorated(True)
                 self.unmaximize()
         # F12 = 65481
-        elif event.keyval == 65481:
+        elif keyval == 65481:
             if self.get_border_width() > 0:
                 self.left_panel.hide()
                 self.top_panel.hide()
@@ -430,6 +458,40 @@ class MainWindow(gtk.Window):
                 self.left_panel.show()
                 self.top_panel.show()
                 self.set_border_width(10)
+
+    ## Handles the keyboard navigation
+    def navigation(self, keyval):
+        # Left  = 65361  Up   = 65362
+        # Right = 65363  Down = 65364
+        if keyval in range(65361, 65365):
+            self.da_jump(keyval - 65360)
+
+        # Page Up = 65365  Page Down = 65366
+        # Home    = 65360  End       = 65367
+        elif keyval == 65365:
+           self.da_jump(2, True)
+        elif keyval == 65366:
+            self.da_jump(4, True)
+        elif keyval == 65360:
+           self.da_jump(1, True)
+        elif keyval == 65367:
+            self.da_jump(3, True)
+
+        # Minus = [45,65453]   Zoom Out
+        # Plus  = [61,65451]   Zoom In
+        elif keyval in [45,65453]:
+           self.do_zoom(self.scale.get_value() + 1, True, False)
+        elif keyval in [61,65451]:
+            self.do_zoom(self.scale.get_value() - 1, True, False)
+
+    ## Handles the Key pressing
+    def key_press_event(self, w, event):
+        # F11 = 65480, F12 = 65481
+        if event.keyval in [65480, 65481]:
+            self.full_screen(event.keyval)
+        # All Navigation Keys when in FullScreen
+        elif self.get_border_width() == 0:
+            self.navigation(event.keyval)
 
     def on_delete(self,*args):
         self.downloader.stop_all()
@@ -451,7 +513,7 @@ class MainWindow(gtk.Window):
         except AttributeError:
             self.connect("destroy", lambda *w: gtk.main_quit())
 
-        self.connect('key-press-event', self.full_screen)
+        self.connect('key-press-event', self.key_press_event)
         self.connect('delete-event', self.on_delete)
         vpaned = gtk.VPaned()
         hpaned = gtk.HPaned()
