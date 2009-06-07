@@ -376,18 +376,10 @@ class MainWindow(gtk.Window):
         if doBigJump:
             intJump = intJump * 10
 
-        if intDirection == 1:
-            self.draging_start = (0, 0)
-            self.da_move(intJump, 0)
-        elif intDirection == 2:
-            self.draging_start = (0, intJump)
-            self.da_move(0, 0)
-        elif intDirection == 3:
-            self.draging_start = (intJump, 0)
-            self.da_move(0, 0)
-        elif intDirection == 4:
-            self.draging_start = (0, 0)
-            self.da_move(0, intJump)
+        self.draging_start = (intJump * (intDirection == 3),
+                              intJump * (intDirection == 4))
+        self.da_move(intJump * (intDirection == 1),
+                     intJump * (intDirection == 2))
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
