@@ -39,7 +39,9 @@ class TilesRepositoryFS:
         try:
             missing = gtk.gdk.pixbuf_new_from_file('missing.png')
         except Exception:
-            missing = None
+            missing = gtk.gdk.pixbuf_new_from_data('\255\255\255' * 100000, 
+                gtk.gdk.COLORSPACE_RGB, False, 8, 
+                TILES_WIDTH, TILES_HEIGHT, TILES_HEIGHT * 3)
         return missing
 
     def load_pixbuf(self, coord, layer):
