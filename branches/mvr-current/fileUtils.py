@@ -102,3 +102,9 @@ def check_dir(strPath, strSubPath=None):
             print '  ' + strPath
     return strPath
 
+## Deletes a given file
+def del_file(filename):
+    try:
+        os.remove(filename)
+    except:
+        pass

@@ -35,28 +35,29 @@ class TilesRepositoryFS:
     def finish(self):
         pass
 
+    def pixbuf_missing(self):
+        try:
+            missing = gtk.gdk.pixbuf_new_from_file('missing.png')
+        except Exception:
+            missing = None
+        return missing
+
     def load_pixbuf(self, coord, layer):
         filename = self.coord_to_path(coord, layer)
-        if not os.path.isfile(filename):
-            filename = None
         if filename in self.tile_cache:
-            return self.tile_cache[filename]
-        w = gtk.Image()
-        if (filename == None):
-            w.set_from_file('missing.png')
+            pixbuf = self.tile_cache[filename]
         else:
-            w.set_from_file(filename)
-        try:
-            pb = w.get_pixbuf()
-            self.tile_cache[filename] = pb
-            return pb
-        except ValueError:
-            print "File corrupted: %s" % filename
-            try:
-                os.remove(filename)
-            finally:
-                w.set_from_file('missing.png')
-                return w.get_pixbuf()
+            if os.path.isfile(filename):
+                try:
+                    pixbuf = gtk.gdk.pixbuf_new_from_file(filename)
+                    self.tile_cache[filename] = pixbuf
+                except Exception:
+                    pixbuf = self.pixbuf_missing()
+                    print "File corrupted: %s" % filename
+                    fileUtils.del_file(filename)
+            else:
+                pixbuf = self.pixbuf_missing()
+        return pixbuf
 
     def get_png_file(self, coord, layer, filename, online, force_update):
         # remove tile only when online
@@ -107,4 +108,5 @@ class TilesRepositoryFS:
             if (self.get_png_file(coord, layer, filename, online, force_update)):
                 return filename
         return None
+
 
