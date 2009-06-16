@@ -91,6 +91,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#bfe92b180af7725d3b51468182bc94bb">da_motion</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Handles the mouse motion over the drawing_area.  <a href="#bfe92b180af7725d3b51468182bc94bb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#231db9fa6322dacfcbb1f3101d5bab43">da_move</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Move the drawing_area.  <a href="#231db9fa6322dacfcbb1f3101d5bab43"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#faaf2e1cac37f7511549918b5534c083">da_jump</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Jumps in the drawing_area.  <a href="#faaf2e1cac37f7511549918b5534c083"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#c30e9183f6b7f30c4f2e15f536fb2486">expose_cb</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#64f158a6df744aefc5e26e18cd36762e">repaint</a></td></tr>
@@ -104,6 +110,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#f8acfecfe8fe1fd2d948127bd7adf1c3">full_screen</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Handles the pressing of F11 &amp; F12.  <a href="#f8acfecfe8fe1fd2d948127bd7adf1c3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#3254553384d02e018a9dcb47718da930">navigation</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Handles the keyboard navigation.  <a href="#3254553384d02e018a9dcb47718da930"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#5b3e45259e18c37865aea4277659ba9c">key_press_event</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Handles the Key pressing.  <a href="#5b3e45259e18c37865aea4277659ba9c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#cd2236ca8e803eefb7b0df1a525ce96e">on_delete</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#2aa922762530969a503819bf9344e46c">__init__</a></td></tr>
@@ -151,8 +163,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#994ee18d79af9f5dfb744c3f75c4c3a8">current_zoom_level</a> = MAP_MAX_ZOOM_LEVEL</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#115c5e62c830ddf02567e24b0a49e9e7">default_text</a> = &quot;Enter location here!&quot;</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#f94dc06634b59be41623f2c636e9c07d">show_panels</a> = True</td></tr>
 
 </table>
 <hr><h2>Member Function Documentation</h2>
@@ -409,6 +419,43 @@ Handles Right &amp; Double clicks events in the drawing_area.
 
 </div>
 </div><p>
+<a class="anchor" name="faaf2e1cac37f7511549918b5534c083"></a><!-- doxytag: member="maps::MainWindow::da_jump" ref="faaf2e1cac37f7511549918b5534c083" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def maps.MainWindow.da_jump           </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>intDirection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>doBigJump</em> = <code>False</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Jumps in the drawing_area. 
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="bfe92b180af7725d3b51468182bc94bb"></a><!-- doxytag: member="maps::MainWindow::da_motion" ref="bfe92b180af7725d3b51468182bc94bb" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -442,6 +489,43 @@ Handles Right &amp; Double clicks events in the drawing_area.
 
 <p>
 Handles the mouse motion over the drawing_area. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="231db9fa6322dacfcbb1f3101d5bab43"></a><!-- doxytag: member="maps::MainWindow::da_move" ref="231db9fa6322dacfcbb1f3101d5bab43" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def maps.MainWindow.da_move           </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>y</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Move the drawing_area. 
 <p>
 
 </div>
@@ -569,7 +653,13 @@ Reset the default text if entry is empty.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>doForce</em> = <code>False</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>doForce</em> = <code>False</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>doGetPointer</em> = <code>True</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -697,13 +787,7 @@ Reset the default text if entry is empty.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>w</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>event</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>keyval</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -808,6 +892,43 @@ Handles the pressing of arrow keys.
 
 </div>
 </div><p>
+<a class="anchor" name="5b3e45259e18c37865aea4277659ba9c"></a><!-- doxytag: member="maps::MainWindow::key_press_event" ref="5b3e45259e18c37865aea4277659ba9c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def maps.MainWindow.key_press_event           </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>w</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>event</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Handles the Key pressing. 
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="ebd0446881021e372e1b0b7e04ce6258"></a><!-- doxytag: member="maps::MainWindow::layer_changed" ref="ebd0446881021e372e1b0b7e04ce6258" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -899,6 +1020,37 @@ All the actions for the menu items.
 </div>
 <div class="memdoc">
 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="3254553384d02e018a9dcb47718da930"></a><!-- doxytag: member="maps::MainWindow::navigation" ref="3254553384d02e018a9dcb47718da930" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def maps.MainWindow.navigation           </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>keyval</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Handles the keyboard navigation. 
 <p>
 
 </div>
@@ -1484,21 +1636,6 @@ Handles the events in the Tools buttons.
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classmaps_1_1_main_window.html#ab11a8690998e6be3aa86d04cb86e4e0">maps.MainWindow.scale</a>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="f94dc06634b59be41623f2c636e9c07d"></a><!-- doxytag: member="maps::MainWindow::show_panels" ref="f94dc06634b59be41623f2c636e9c07d" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classmaps_1_1_main_window.html#f94dc06634b59be41623f2c636e9c07d">maps.MainWindow.show_panels</a> = True<code> [static]</code>          </td>
         </tr>
       </table>
 </div>
