@@ -339,7 +339,7 @@ class ChangeTheme():
                 intTheme = l
         myCombo.set_model(model)
         myCombo.set_active(intTheme)
-    
+
     ## All the buttons at the bottom
     def __action_buttons(self):
         def btn_revert_clicked(button):
@@ -348,7 +348,7 @@ class ChangeTheme():
         def btn_save_clicked(button):
             if self.cmb_themes.get_model():
                 cmb_text = self.cmb_themes.get_active_text()
-                if cmb_text: 
+                if cmb_text:
                     fileUtils.write_gtkrc(cmb_text)
 
         bbox = gtk.HButtonBox()

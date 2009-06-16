@@ -13,7 +13,7 @@ from gtkThread import *
 
 
 class DLWindow(gtk.Window):
-    def __init__(self, coord, kmx, kmy, layer):
+    def __init__(self, coord, kmx, kmy, layer, init_path):
 
         def _zoom(zoom0, zoom1):
             out_hbox = gtk.HBox(False, 50)
@@ -71,7 +71,7 @@ class DLWindow(gtk.Window):
             hbbox.set_border_width(10)
             hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
             self.b_download = gtk.Button(stock=gtk.STOCK_HARDDISK)
-            self.b_download.connect('clicked', self.run)
+            self.b_download.connect('clicked', self.run, init_path)
             hbbox.pack_start(self.b_download)
 
             self.b_cancel = gtk.Button(stock='gtk-cancel')
@@ -113,7 +113,7 @@ class DLWindow(gtk.Window):
         self.connect('delete-event', self.on_delete)
         self.show_all()
 
-    def run(self,w):
+    def run(self, w, init_path):
         if self.processing: return
         try:
             lat0 = float(self.e_lat0.get_text())
@@ -133,15 +133,15 @@ class DLWindow(gtk.Window):
         self.b_download.set_sensitive(False)
         print ("lat0=%g lon0=%g kmx=%g kmy=%g zoom0=%d zoom1=%d layer=%d"
             % (lat0, lon0, kmx, kmy, zoom0, zoom1, layer))
-        dlon=kmx*180/math.pi/(R_EARTH*math.cos(lat0*math.pi/180))
-        dlat=kmy*180/math.pi/R_EARTH
-        self.gmap=googleMaps.GoogleMaps() # creating our own gmap
-        self.complete=[]
-        self.downloader=MapDownloader(self.gmap)
+        dlon = kmx*180/math.pi/(R_EARTH*math.cos(lat0*math.pi/180))
+        dlat = kmy*180/math.pi/R_EARTH
+        self.gmap = googleMaps.GoogleMaps(init_path) # creating our own gmap
+        self.complete = []
+        self.downloader = MapDownloader(self.gmap)
         if zoom0>zoom1:
-            zoom0,zoom1=zoom1,zoom0
-        self.all_placed=False
-        self.processing=True
+            zoom0,zoom1 = zoom1,zoom0
+        self.all_placed = False
+        self.processing = True
         for zoom in xrange(zoom1, zoom0-1,-1):
             self.downloader.query_region_around_location(
                 lat0,lon0,dlat,dlon,
@@ -149,13 +149,13 @@ class DLWindow(gtk.Window):
                 gui_callback(self.tile_received))
         if self.downloader.qsize()==0:
             self.download_complete()
-        self.all_placed=True
+        self.all_placed = True
 
     def tile_received(self, coord, layer):
         #print "tile_received(", coord, layer, self.processing, self.downloader!=None,")"
         self.complete.append((coord, layer))
-        ncomplete=len(self.complete)
-        nqueued=self.downloader.qsize() if self.downloader else 0
+        ncomplete = len(self.complete)
+        nqueued = self.downloader.qsize() if self.downloader else 0
         if nqueued==0 and self.all_placed:
             self.download_complete()
             return
@@ -167,16 +167,16 @@ class DLWindow(gtk.Window):
 
     def download_complete(self):
         if self.downloader: self.downloader.stop_all()
-        self.downloader=None
-        self.processing=False
+        self.downloader = None
+        self.processing = False
         self.b_cancel.set_sensitive(False)
         self.b_download.set_sensitive(True)
         self.update_pbar("Complete",0,1);
 
     def cancel(self,w):
         if self.downloader: self.downloader.stop_all()
-        self.downloader=None
-        self.processing=False
+        self.downloader = None
+        self.processing = False
         self.b_cancel.set_sensitive(False)
         self.b_download.set_sensitive(True)
         self.update_pbar("Canceled",0,1);

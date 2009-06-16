@@ -27,7 +27,7 @@ class MainWindow():
             elif str == TOOLS_MENU[0]:
                 frame.add(mySett.show(parent))
             elif str == TOOLS_MENU[3]:
-                frame.add(myTheme.show())    
+                frame.add(myTheme.show())
             else:
                 frame.add(gtk.Label(str + ' coming soon!! '))
             label = gtk.Label(str)
