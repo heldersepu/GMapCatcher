@@ -1,3 +1,8 @@
+June 16 2009    H.S    <HelderSepu@gmail.com>
+    * 0.080 - At revision: 364
+    * Add Keyboard Navigation when in FullScreen (see Issue 44)
+    * Fix Issue in load_pixbuf (Issue 48)
+
 June 04 2009    H.S    <HelderSepu@gmail.com>
     * 0.071 - At revision: 358
     * Fix Issue with download tools (Issue 47)
