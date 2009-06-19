@@ -1,7 +1,9 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import customWidgets
+import mapTreeView
+import mapMySettings
+import mapChangeTheme
 from mapConst import *
 
 
@@ -13,9 +15,9 @@ class MainWindow():
         notebook.set_tab_pos(gtk.POS_TOP)
         notebook.show()
 
-        myTree = customWidgets.TreeView()
-        mySett = customWidgets.MySettings()
-        myTheme = customWidgets.ChangeTheme()
+        myTree = mapTreeView.TreeView()
+        mySett = mapMySettings.MySettings()
+        myTheme = mapChangeTheme.ChangeTheme()
 
         # Append pages to the notebook
         for str in TOOLS_MENU:
