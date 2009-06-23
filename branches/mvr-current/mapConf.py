@@ -1,3 +1,6 @@
+## @file mapConf.py
+# Read and write to the configuration file
+
 import os
 import ConfigParser
 import mapUtils

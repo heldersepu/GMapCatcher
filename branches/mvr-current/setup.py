@@ -1,3 +1,6 @@
+## @file setup.py
+# ToDo
+
 from distutils.core import setup
 import py2exe
 

@@ -1,4 +1,4 @@
-## @package customWidgets
+## @file customWidgets.py
 # This is a collection of Custom Widgets
 
 import gtk

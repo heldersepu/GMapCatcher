@@ -1,3 +1,6 @@
+## @file mapDownloader.py
+# All downloading is done here
+
 from __future__ import division
 from mapConst import TILES_HEIGHT
 from threading import Thread

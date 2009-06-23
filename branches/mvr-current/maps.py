@@ -1,3 +1,6 @@
+## @file maps.py
+# This is the Main Window
+
 #!/usr/bin/env python
 from mapUtils import mod
 import mapMark

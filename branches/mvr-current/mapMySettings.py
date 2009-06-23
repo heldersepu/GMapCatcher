@@ -1,3 +1,6 @@
+## @file mapMySettings.py
+# ToDo
+
 import gtk
 from customWidgets import _SpinBtn, _frame, lbl, FolderChooser
 

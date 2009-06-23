@@ -1,3 +1,6 @@
+## @file gtkThread.py
+# ToDo
+
 import sys
 import pygtk
 pygtk.require('2.0')
