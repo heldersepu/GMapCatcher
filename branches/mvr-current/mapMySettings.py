@@ -1,5 +1,5 @@
 import gtk
-from customWidgets import _SpinBtn, _frame, lbl
+from customWidgets import _SpinBtn, _frame, lbl, FolderChooser
 
 
 class MySettings():

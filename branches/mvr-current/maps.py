@@ -11,6 +11,7 @@ from mapConst import *
 from DLWindow import DLWindow
 import mapDownloader
 import lrucache
+from customWidgets import myToolTip
 
 class MainWindow(gtk.Window):
 
@@ -211,6 +212,8 @@ class MainWindow(gtk.Window):
         button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
         menu = self.gtk_menu(TOOLS_MENU)
         button.connect_object("event", self.tools_button_event, menu)
+        button.props.has_tooltip = True
+        button.connect("query-tooltip", myToolTip, "Title", "Description here", "marker.png")        
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
