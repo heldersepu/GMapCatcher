@@ -1,5 +1,5 @@
 ## @file mapTools.py
-# ToDo
+# The tools widget, items are displayed in multiple tabs.
 
 import pygtk
 pygtk.require('2.0')

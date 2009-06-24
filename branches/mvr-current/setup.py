@@ -1,5 +1,5 @@
 ## @file setup.py
-# ToDo
+# Setup file used to build the installer
 
 from distutils.core import setup
 import py2exe

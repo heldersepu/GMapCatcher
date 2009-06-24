@@ -1,5 +1,5 @@
 ## @file DLWindow.py
-# ToDo
+# Widget that allows Download of entire locations
 
 import math
 import pygtk

@@ -1,5 +1,5 @@
 ## @file mapUtils.py
-# ToDo
+# A group of map utilities 
 
 import math
 import mapMark

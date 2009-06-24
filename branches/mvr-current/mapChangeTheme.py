@@ -1,5 +1,6 @@
 ## @file mapChangeTheme.py
-# ToDo
+# Change Theme widget used to change the GTK theme
+# Displayed inside a tab in mapTools.
 
 import gtk
 import fileUtils
