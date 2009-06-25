@@ -1,5 +1,5 @@
 ## @file download.py
-# ToDo
+# Downloader tool without GUI
 
 #!/usr/bin/env python
 import mapConf

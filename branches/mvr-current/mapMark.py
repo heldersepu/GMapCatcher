@@ -1,5 +1,5 @@
 ## @file mapMark.py
-# ToDo
+# Read and Write the locations of the Markers 
 
 import os
 import re

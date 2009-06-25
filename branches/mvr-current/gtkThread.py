@@ -1,5 +1,5 @@
 ## @file gtkThread.py
-# ToDo
+# ...
 
 import sys
 import pygtk
