@@ -1,5 +1,5 @@
 ## @file inputValidation.py
-# Validating all the user input.
+# Validation of all the user input.
 
 ## Validate the text on all the "input" widgets
 def allow_only_numbers(entry, text, length, position, max, isInt=True):

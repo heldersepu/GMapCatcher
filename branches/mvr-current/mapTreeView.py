@@ -1,5 +1,5 @@
 ## @file mapTreeView.py
-# TreeView widget used to display the list of the locations
+# TreeView widget used to display the list of the locations,
 # Displayed inside a tab in mapTools.
 
 import gtk
