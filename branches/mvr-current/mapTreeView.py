@@ -1,4 +1,4 @@
-## @file mapTreeView.py
+## @package mapTreeView
 # TreeView widget used to display the list of the locations,
 # Displayed inside a tab in mapTools.
 

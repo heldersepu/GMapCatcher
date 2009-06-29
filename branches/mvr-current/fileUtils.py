@@ -1,4 +1,4 @@
-## @file fileUtils.py
+## @package fileUtils
 # A common location for all the File I/O Utilities
 
 import os

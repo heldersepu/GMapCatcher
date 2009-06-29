@@ -1,4 +1,4 @@
-## @file gtkThread.py
+## @package gtkThread
 # ...
 
 import sys

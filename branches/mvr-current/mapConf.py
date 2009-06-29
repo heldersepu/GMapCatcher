@@ -1,4 +1,4 @@
-## @file mapConf.py
+## @package mapConf
 # Read and write to the configuration file
 
 import os

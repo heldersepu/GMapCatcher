@@ -1,4 +1,4 @@
-## @file inputValidation.py
+## @package inputValidation
 # Validation of all the user input.
 
 ## Validate the text on all the "input" widgets

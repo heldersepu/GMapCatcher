@@ -1,4 +1,4 @@
-## @file googleMaps.py
+## @package googleMaps
 # All the interaction with google.com
 
 import os

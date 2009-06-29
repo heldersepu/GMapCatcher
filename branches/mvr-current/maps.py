@@ -1,4 +1,4 @@
-## @file maps.py
+## @package maps
 # This is the Main Window
 
 #!/usr/bin/env python

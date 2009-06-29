@@ -1,4 +1,4 @@
-## @file mapUtils.py
+## @package mapUtils
 # A group of map utilities 
 
 import math

@@ -1,4 +1,4 @@
-## @file mapMark.py
+## @package mapMark
 # Read and Write the locations of the Markers 
 
 import os

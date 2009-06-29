@@ -1,4 +1,4 @@
-## @file DLWindow.py
+## @package DLWindow
 # Widget that allows Download of entire locations
 
 import math

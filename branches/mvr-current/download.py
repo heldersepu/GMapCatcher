@@ -1,4 +1,4 @@
-## @file download.py
+## @package download
 # Downloader tool without GUI
 
 #!/usr/bin/env python
