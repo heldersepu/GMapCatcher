@@ -8,6 +8,7 @@ import mapConf
 import mapUtils
 import googleMaps
 import mapTools
+import mapGPS
 
 from gtkThread import *
 from mapConst import *
@@ -174,6 +175,9 @@ class MainWindow(gtk.Window):
         if online:
              self.repaint()
 
+    def gps_changed(self, w):
+        print w.get_active()
+
     def layer_changed(self, w):
         self.layer = w.get_active()
         self.repaint()
@@ -242,8 +246,16 @@ class MainWindow(gtk.Window):
         self.cb_forceupdate = gtk.CheckButton("_Force update")
         self.cb_forceupdate.set_active(False)
         hbox.pack_start(self.cb_forceupdate)
-
+		
         bbox = gtk.HButtonBox()
+        if mapGPS.available:			
+            self.cmb_gps = gtk.combo_box_new_text()
+            for w in GPS_NAMES:
+                self.cmb_gps.append_text(w)
+            self.cmb_gps.set_active(0)
+            self.cmb_gps.connect('changed',self.gps_changed)
+            bbox.add(self.cmb_gps)
+
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
         gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_HARDDISK)
