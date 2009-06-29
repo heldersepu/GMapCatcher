@@ -176,7 +176,8 @@ class MainWindow(gtk.Window):
              self.repaint()
 
     def gps_changed(self, w):
-        print w.get_active()
+		if mapGPS.available:
+			self.gps.set_mode(w.get_active())
 
     def layer_changed(self, w):
         self.layer = w.get_active()
@@ -504,6 +505,8 @@ class MainWindow(gtk.Window):
             self.navigation(event.keyval)
 
     def on_delete(self,*args):
+        if mapGPS.available:
+            self.gps.stop_all()
         self.downloader.stop_all()
         self.ctx_map.finish()
         return False
@@ -512,6 +515,9 @@ class MainWindow(gtk.Window):
         self.conf = mapConf.MapConf()
         self.center = self.conf.init_center
         self.current_zoom_level = self.conf.init_zoom
+
+        if mapGPS.available:
+		    self.gps = mapGPS.GPS()
 
         self.marker = mapMark.MyMarkers(self.conf.init_path)
         self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path)
