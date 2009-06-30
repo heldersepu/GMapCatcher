@@ -1,4 +1,4 @@
-## @file mapGPS.py
+## @package mapGPS
 # GPS Support
 
 try:
