@@ -12,11 +12,12 @@ import mapConst
 
 
 class GPS:
-    def __init__(self):
+    def __init__(self, center_callback):
         global available
         # GPS Disabled at start
         self.mode = mapConst.GPS_DISABLED
         self.location = None
+        self.center_callback = center_callback
         
         try:
             # Open binding to GPS daemon
@@ -32,14 +33,13 @@ class GPS:
     ## Sets the behaviour of the GPS functionality
     def set_mode(self, mode):
         self.mode = mode
-        if mode == mapConst.GPS_DISABLED:
-            self.gps_updater.cancel()
-        elif mode == mapConst.GPS_MARKER:
-			# Hm, how to stop a thread?
+        self.gps_updater.cancel()
+        if mode == mapConst.GPS_MARKER:
             self.gps_updater = GPSUpdater(1.0, self.update)
             self.gps_updater.start()
         elif mode == mapConst.GPS_CENTER:
-            self.gps_updater.cancel()
+            self.gps_updater = GPSUpdater(1.0, self.update)
+            self.gps_updater.start()
 
     ## Get GPS position
     def get_location(self):
@@ -53,7 +53,9 @@ class GPS:
         self.gps_session.query('admosy')
         #print "GPS: Lat/Long: ", self.gps_session.fix.latitude, self.gps_session.fix.longitude
         self.location = (self.gps_session.fix.latitude, self.gps_session.fix.longitude)
-
+        
+        if self.mode == mapConst.GPS_CENTER:
+            self.center_callback(self.location)
 
 class GPSUpdater(Thread):
     """Continiously updates GPS coordinates.

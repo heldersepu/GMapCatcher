@@ -190,6 +190,9 @@ class MainWindow(gtk.Window):
                        self.layer, self.conf.init_path)
         dlw.show()
 
+    def gps_center_callback(self, coord):
+        self.center = mapUtils.coord_to_tile((coord[0], coord[1], self.current_zoom_level))
+        self.repaint()
 
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
@@ -527,7 +530,7 @@ class MainWindow(gtk.Window):
         self.current_zoom_level = self.conf.init_zoom
 
         if mapGPS.available:
-		    self.gps = mapGPS.GPS()
+		    self.gps = mapGPS.GPS(self.gps_center_callback)
 
         self.marker = mapMark.MyMarkers(self.conf.init_path)
         self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path)
