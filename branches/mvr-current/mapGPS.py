@@ -51,7 +51,7 @@ class GPS:
     def update(self):
         # Make new reading from GPS device
         self.gps_session.query('admosy')
-        print "GPS: Lat/Long: ", self.gps_session.fix.latitude, self.gps_session.fix.longitude
+        #print "GPS: Lat/Long: ", self.gps_session.fix.latitude, self.gps_session.fix.longitude
         self.location = (self.gps_session.fix.latitude, self.gps_session.fix.longitude)
 
 

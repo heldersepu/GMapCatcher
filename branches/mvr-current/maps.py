@@ -451,7 +451,7 @@ class MainWindow(gtk.Window):
 					location = self.gps.get_location()
 					if location is not None:
 						img = self.marker.pixbuf
-						mct = mapUtils.coord_to_tile((location[0], location[1], 16))
+						mct = mapUtils.coord_to_tile((location[0], location[1], self.current_zoom_level))
 						if tile_coord[0] == mct[0][0] and \
 						   tile_coord[1] == mct[0][1]:
 							da.window.draw_pixbuf(gc, img, 0, 0, x, y,
