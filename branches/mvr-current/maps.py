@@ -400,7 +400,7 @@ class MainWindow(gtk.Window):
                      intJump * (intDirection == 2))
 
     def expose_cb(self, drawing_area, event):
-        print "expose_cb"
+        #print "expose_cb"
         online = not self.cb_offline.get_active()
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
@@ -445,6 +445,17 @@ class MainWindow(gtk.Window):
                            tile_coord[1] == mct[0][1]:
                             da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                                   TILES_WIDTH, TILES_HEIGHT)
+
+				# Draw GPS position
+                if mapGPS.available:
+					location = self.gps.get_location()
+					if location is not None:
+						img = self.marker.pixbuf
+						mct = mapUtils.coord_to_tile((location[0], location[1], 16))
+						if tile_coord[0] == mct[0][0] and \
+						   tile_coord[1] == mct[0][1]:
+							da.window.draw_pixbuf(gc, img, 0, 0, x, y,
+												  TILES_WIDTH, TILES_HEIGHT)
 
     ## Handles the pressing of F11 & F12
     def full_screen(self,keyval):
