@@ -13,9 +13,14 @@ import mapConst
 
 class GPS:
     def __init__(self):
-        # Open binding to GPS daemon
-        self.gps_session = gps.gps()
-        self.gps_updater = GPSUpdater(1.0, self.update)
+		global available		
+		try:
+			# Open binding to GPS daemon
+			self.gps_session = gps.gps()
+			self.gps_updater = GPSUpdater(1.0, self.update)
+		except:
+			# No GPS connected
+			available = False
 
     def stop_all(self):
         self.gps_updater.cancel()

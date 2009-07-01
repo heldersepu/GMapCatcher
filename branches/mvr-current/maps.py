@@ -176,8 +176,7 @@ class MainWindow(gtk.Window):
              self.repaint()
 
     def gps_changed(self, w):
-		if mapGPS.available:
-			self.gps.set_mode(w.get_active())
+		self.gps.set_mode(w.get_active())
 
     def layer_changed(self, w):
         self.layer = w.get_active()
@@ -401,7 +400,7 @@ class MainWindow(gtk.Window):
                      intJump * (intDirection == 2))
 
     def expose_cb(self, drawing_area, event):
-        #print "expose_cb"
+        print "expose_cb"
         online = not self.cb_offline.get_active()
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
