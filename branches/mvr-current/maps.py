@@ -443,9 +443,11 @@ class MainWindow(gtk.Window):
                 if self.downloader.qsize() == 0:
                     img = self.marker.pixbuf
                     for str in self.marker.positions.keys():
-                        mct = mapUtils.coord_to_tile(self.marker.positions[str])
+                        mpos = self.marker.positions[str]
+                        mct = mapUtils.coord_to_tile((mpos[0], mpos[1], self.current_zoom_level))
                         if tile_coord[0] == mct[0][0] and \
-                           tile_coord[1] == mct[0][1]:
+                           tile_coord[1] == mct[0][1] and \
+                           tile_coord[2] <= mpos[2]:
                             da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                                   TILES_WIDTH, TILES_HEIGHT)
 
