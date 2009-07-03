@@ -176,7 +176,7 @@ class MainWindow(gtk.Window):
              self.repaint()
 
     def gps_changed(self, w):
-		self.gps.set_mode(w.get_active())
+        self.gps.set_mode(w.get_active())
 
     def layer_changed(self, w):
         self.layer = w.get_active()
@@ -223,7 +223,7 @@ class MainWindow(gtk.Window):
         menu = self.gtk_menu(TOOLS_MENU)
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
-        button.connect("query-tooltip", myToolTip, "Title", "Description here", "marker.png")        
+        button.connect("query-tooltip", myToolTip, "Title", "Description here", "marker.png")
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
@@ -249,9 +249,9 @@ class MainWindow(gtk.Window):
         self.cb_forceupdate = gtk.CheckButton("_Force update")
         self.cb_forceupdate.set_active(False)
         hbox.pack_start(self.cb_forceupdate)
-		
+
         bbox = gtk.HButtonBox()
-        if mapGPS.available:			
+        if mapGPS.available:
             self.cmb_gps = gtk.combo_box_new_text()
             for w in GPS_NAMES:
                 self.cmb_gps.append_text(w)
@@ -451,16 +451,16 @@ class MainWindow(gtk.Window):
                             da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                                   TILES_WIDTH, TILES_HEIGHT)
 
-				# Draw GPS position
+                # Draw GPS position
                 if mapGPS.available:
-					location = self.gps.get_location()
-					if location is not None:
-						img = self.marker.pixbuf
-						mct = mapUtils.coord_to_tile((location[0], location[1], self.current_zoom_level))
-						if tile_coord[0] == mct[0][0] and \
-						   tile_coord[1] == mct[0][1]:
-							da.window.draw_pixbuf(gc, img, 0, 0, x, y,
-												  TILES_WIDTH, TILES_HEIGHT)
+                    location = self.gps.get_location()
+                    if location is not None:
+                        img = self.marker.pixbuf
+                        mct = mapUtils.coord_to_tile((location[0], location[1], self.current_zoom_level))
+                        if tile_coord[0] == mct[0][0] and \
+                           tile_coord[1] == mct[0][1]:
+                            da.window.draw_pixbuf(gc, img, 0, 0, x, y,
+                                                  TILES_WIDTH, TILES_HEIGHT)
 
     ## Handles the pressing of F11 & F12
     def full_screen(self,keyval):
@@ -532,7 +532,7 @@ class MainWindow(gtk.Window):
         self.current_zoom_level = self.conf.init_zoom
 
         if mapGPS.available:
-		    self.gps = mapGPS.GPS(self.gps_center_callback)
+            self.gps = mapGPS.GPS(self.gps_center_callback)
 
         self.marker = mapMark.MyMarkers(self.conf.init_path)
         self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path)

@@ -1,5 +1,5 @@
 ## @package mapMark
-# Read and Write the locations of the Markers 
+# Read and Write the locations of the Markers
 
 import os
 import re

@@ -1,6 +1,6 @@
 ## @package mapMySettings
 # Settings widget used to display the list of the locations.
-# Displayed inside a tab in mapTools. 
+# Displayed inside a tab in mapTools.
 
 import gtk
 from customWidgets import _SpinBtn, _frame, lbl, FolderChooser

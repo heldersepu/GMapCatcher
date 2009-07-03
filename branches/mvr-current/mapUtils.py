@@ -1,5 +1,5 @@
 ## @package mapUtils
-# A group of map utilities 
+# A group of map utilities
 
 import math
 import mapMark

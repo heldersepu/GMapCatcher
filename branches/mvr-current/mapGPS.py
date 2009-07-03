@@ -5,7 +5,7 @@ try:
     import gps
     available = True
 except ImportError:
-    available = False 
+    available = False
 
 from threading import Event, Thread
 import mapConst
@@ -18,7 +18,7 @@ class GPS:
         self.mode = mapConst.GPS_DISABLED
         self.location = None
         self.center_callback = center_callback
-        
+
         try:
             # Open binding to GPS daemon
             self.gps_session = gps.gps()
@@ -53,7 +53,7 @@ class GPS:
         self.gps_session.query('admosy')
         #print "GPS: Lat/Long: ", self.gps_session.fix.latitude, self.gps_session.fix.longitude
         self.location = (self.gps_session.fix.latitude, self.gps_session.fix.longitude)
-        
+
         if self.mode == mapConst.GPS_CENTER:
             self.center_callback(self.location)
 
