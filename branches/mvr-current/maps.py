@@ -444,23 +444,27 @@ class MainWindow(gtk.Window):
                     img = self.marker.pixbuf
                     for str in self.marker.positions.keys():
                         mpos = self.marker.positions[str]
-                        mct = mapUtils.coord_to_tile((mpos[0], mpos[1], self.current_zoom_level))
+                        mct = mapUtils.coord_to_tile((mpos[0], mpos[1], \
+                                                      self.current_zoom_level))
                         if tile_coord[0] == mct[0][0] and \
                            tile_coord[1] == mct[0][1] and \
                            tile_coord[2] <= mpos[2]:
                             da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                                   TILES_WIDTH, TILES_HEIGHT)
-
+                
                 # Draw GPS position
                 if mapGPS.available:
                     location = self.gps.get_location()
-                    if location is not None:
-                        img = self.marker.pixbuf
-                        mct = mapUtils.coord_to_tile((location[0], location[1], self.current_zoom_level))
+                    if location is not None and self.current_zoom_level < 17:                        
+                        img = self.gps.pixbuf
+                        mct = mapUtils.coord_to_tile((location[0], location[1], \
+                                                      self.current_zoom_level))
                         if tile_coord[0] == mct[0][0] and \
-                           tile_coord[1] == mct[0][1]:
-                            da.window.draw_pixbuf(gc, img, 0, 0, x, y,
-                                                  TILES_WIDTH, TILES_HEIGHT)
+                           tile_coord[1] == mct[0][1]:                            
+                            da.window.draw_pixbuf(gc, img, 0, 0, \
+                                x + mct[1][0] - 24, \
+                                y + mct[1][1] - 24, \
+                                48, 48)
 
     ## Handles the pressing of F11 & F12
     def full_screen(self,keyval):

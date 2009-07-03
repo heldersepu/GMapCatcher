@@ -8,8 +8,9 @@ except ImportError:
     available = False
 
 from threading import Event, Thread
+import os
+import gtk
 import mapConst
-
 
 class GPS:
     def __init__(self, center_callback):
@@ -18,6 +19,7 @@ class GPS:
         self.mode = mapConst.GPS_DISABLED
         self.location = None
         self.center_callback = center_callback
+        self.pixbuf = self.get_marker_pixbuf()
 
         try:
             # Open binding to GPS daemon
@@ -57,6 +59,17 @@ class GPS:
         if self.mode == mapConst.GPS_CENTER:
             self.center_callback(self.location)
 
+	## Load GPS marker image
+    def get_marker_pixbuf(self):
+        filename = 'marker_gps.png'
+        if (os.path.exists(filename)):
+            w = gtk.Image()
+            w.set_from_file(filename)
+            try:
+                return w.get_pixbuf()
+            except ValueError:
+                print "File corrupted: %s" % filename
+				
 class GPSUpdater(Thread):
     """Continiously updates GPS coordinates.
     """
