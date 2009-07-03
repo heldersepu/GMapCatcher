@@ -13,12 +13,13 @@ import gtk
 import mapConst
 
 class GPS:
-    def __init__(self, center_callback):
+    def __init__(self, center_callback, marker_callback):
         global available
         # GPS Disabled at start
         self.mode = mapConst.GPS_DISABLED
         self.location = None
         self.center_callback = center_callback
+        self.marker_callback = marker_callback
         self.pixbuf = self.get_marker_pixbuf()
 
         try:
@@ -45,9 +46,10 @@ class GPS:
 
     ## Get GPS position
     def get_location(self):
-        if self.mode != mapConst.GPS_MARKER:
-            return None
-        return self.location
+        if self.mode == mapConst.GPS_MARKER or \
+           self.mode == mapConst.GPS_CENTER:
+            return self.location
+        return None
 
     ## Callback from the GPSUpdater
     def update(self):
@@ -58,6 +60,8 @@ class GPS:
 
         if self.mode == mapConst.GPS_CENTER:
             self.center_callback(self.location)
+        if self.mode == mapConst.GPS_MARKER:
+            self.marker_callback()
 
 	## Load GPS marker image
     def get_marker_pixbuf(self):

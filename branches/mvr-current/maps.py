@@ -190,10 +190,15 @@ class MainWindow(gtk.Window):
                        self.layer, self.conf.init_path)
         dlw.show()
 
+    ## Called when the map should be centered around a new GPS location
     def gps_center_callback(self, coord):
         self.center = mapUtils.coord_to_tile((coord[0], coord[1], self.current_zoom_level))
         self.repaint()
 
+    ## Called when the GPS marker should be moved to a new location
+    def gps_marker_callback(self):
+        self.repaint()
+        
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
         combo = gtk.combo_box_entry_new_text()
@@ -536,7 +541,8 @@ class MainWindow(gtk.Window):
         self.current_zoom_level = self.conf.init_zoom
 
         if mapGPS.available:
-            self.gps = mapGPS.GPS(self.gps_center_callback)
+            self.gps = mapGPS.GPS(self.gps_center_callback,
+                                  self.gps_marker_callback)
 
         self.marker = mapMark.MyMarkers(self.conf.init_path)
         self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path)
