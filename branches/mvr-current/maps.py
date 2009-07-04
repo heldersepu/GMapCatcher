@@ -457,20 +457,54 @@ class MainWindow(gtk.Window):
                             da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                                   TILES_WIDTH, TILES_HEIGHT)
                 
+        
                 # Draw GPS position
                 if mapGPS.available:
                     location = self.gps.get_location()
                     if location is not None and self.current_zoom_level < 17:                        
                         img = self.gps.pixbuf
+                        img_size = (48, 48)
                         mct = mapUtils.coord_to_tile((location[0], location[1], \
-                                                      self.current_zoom_level))
+                                                      self.current_zoom_level))                        
+                        dx, dy = 255 - mct[1][0], 255 - mct[1][1] 
+                        
                         if tile_coord[0] == mct[0][0] and \
-                           tile_coord[1] == mct[0][1]:                            
+                           tile_coord[1] == mct[0][1]:
                             da.window.draw_pixbuf(gc, img, 0, 0, \
-                                x + mct[1][0] - 24, \
-                                y + mct[1][1] - 24, \
-                                48, 48)
+                                x + mct[1][0] - img_size[0] / 2, 
+                                y + mct[1][1] - img_size[1] / 2, \
+                                img_size[0], img_size[1])
 
+                        if tile_coord[0] == mct[0][0]+1 and \
+                           tile_coord[1] == mct[0][1] and \
+                           dx < img_size[0] / 2:
+                            da.window.draw_pixbuf(gc, img, \
+                                img_size[0] / 2 + dx, 0, \
+                                x + mct[1][0] - 256 + dx, \
+                                y + mct[1][1] - img_size[1] / 2, 
+                                img_size[0] / 2 - dx, img_size[1])
+
+                        if tile_coord[0] == mct[0][0] and \
+                           tile_coord[1] == mct[0][1]+1 and \
+                           dy < img_size[1] / 2:
+                            da.window.draw_pixbuf(gc, img, \
+                                0, img_size[1] / 2 + dy, \
+                                x + mct[1][0] - img_size[0] / 2 \
+                                y + mct[1][1] - 256 + dy, \
+                                img_size[0], img_size[1] / 2 - dy)
+                                
+                        if tile_coord[0] == mct[0][0]+1 and \
+                           tile_coord[1] == mct[0][1]+1 and \
+                           dx < img_size[0] / 2 and \
+                           dy < img_size[1] / 2:
+                            da.window.draw_pixbuf(gc, img, \
+                                img_size[0] / 2 + dx, \
+                                img_size[1] / 2 + dy, \
+                                x + mct[1][0] - 256 + dx, \
+                                y + mct[1][1] - 256 + dy, \
+                                img_size[0] / 2 - dx, \
+                                img_size[1] / 2 - dy)
+                            
     ## Handles the pressing of F11 & F12
     def full_screen(self,keyval):
         # F11 = 65480
