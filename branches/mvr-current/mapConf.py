@@ -15,6 +15,7 @@ class MapConf():
     init_height = 400
     init_zoom = MAP_MAX_ZOOM_LEVEL
     init_center = ((0,0),(128,128))
+    gps_update_rate = 1.0
 
     ## Returns the Path to the configuration file
     def get_configpath(self):
@@ -44,6 +45,7 @@ class MapConf():
         config.set(strSection, 'height', self.init_height)
         config.set(strSection, 'zoom', self.init_zoom)
         config.set(strSection, 'center', self.init_center)
+        config.set(strSection, 'gps_update_rate', self.gps_update_rate)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -60,6 +62,7 @@ class MapConf():
             strCenter = config.get(strSection, 'center')
             self.init_center = mapUtils.str_to_tuple(strCenter)
             self.init_path = config.get(strSection, 'path')
+            self.gps_update_rate = config.get(strSection, 'gps_update_rate')
             if self.init_path.strip().lower() in ['none', '']:
                 self.init_path = None
             else:

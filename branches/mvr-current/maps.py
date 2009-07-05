@@ -576,7 +576,8 @@ class MainWindow(gtk.Window):
 
         if mapGPS.available:
             self.gps = mapGPS.GPS(self.gps_center_callback,
-                                  self.gps_marker_callback)
+                                  self.gps_marker_callback,
+                                  self.conf.gps_update_rate)
 
         self.marker = mapMark.MyMarkers(self.conf.init_path)
         self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path)

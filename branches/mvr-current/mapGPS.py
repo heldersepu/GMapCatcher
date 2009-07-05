@@ -13,7 +13,7 @@ import gtk
 import mapConst
 
 class GPS:
-    def __init__(self, center_callback, marker_callback):
+    def __init__(self, center_callback, marker_callback, update_rate):
         global available
         # GPS Disabled at start
         self.mode = mapConst.GPS_DISABLED
@@ -21,11 +21,12 @@ class GPS:
         self.center_callback = center_callback
         self.marker_callback = marker_callback
         self.pixbuf = self.get_marker_pixbuf()
+        self.update_rate = update_rate
 
         try:
             # Open binding to GPS daemon
             self.gps_session = gps.gps()
-            self.gps_updater = GPSUpdater(1.0, self.update)
+            self.gps_updater = GPSUpdater(self.update_rate, self.update)
         except:
             # No GPS connected
             available = False
@@ -38,10 +39,10 @@ class GPS:
         self.mode = mode
         self.gps_updater.cancel()
         if mode == mapConst.GPS_MARKER:
-            self.gps_updater = GPSUpdater(1.0, self.update)
+            self.gps_updater = GPSUpdater(self.update_rate, self.update)
             self.gps_updater.start()
         elif mode == mapConst.GPS_CENTER:
-            self.gps_updater = GPSUpdater(1.0, self.update)
+            self.gps_updater = GPSUpdater(self.update_rate, self.update)
             self.gps_updater.start()
 
     ## Get GPS position
