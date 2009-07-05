@@ -489,7 +489,7 @@ class MainWindow(gtk.Window):
                            dy < img_size[1] / 2:
                             da.window.draw_pixbuf(gc, img, \
                                 0, img_size[1] / 2 + dy, \
-                                x + mct[1][0] - img_size[0] / 2 \
+                                x + mct[1][0] - img_size[0] / 2, \
                                 y + mct[1][1] - 256 + dy, \
                                 img_size[0], img_size[1] / 2 - dy)
 
