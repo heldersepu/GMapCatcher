@@ -14,7 +14,7 @@ C:\PYTHON26\PYTHON.EXE setup.py py2exe
 :: Few seconds delay to show dependencies
 @COLOR F0
 @ECHO.
-::@PING 1.1 > NUL
+@PING 1.1 > NUL
 @COLOR 03
 
 :: Copy individual files
@@ -27,7 +27,7 @@ C:\PYTHON26\PYTHON.EXE setup.py py2exe
 
 :: Launch the NSIS setup
 @COLOR 07
-"C:\Program Files (x86)\NSIS\makensis.exe" setup.nsi
+"%programfiles%\NSIS\makensis.exe" setup.nsi
 
 @Echo.
 @PAUSE
