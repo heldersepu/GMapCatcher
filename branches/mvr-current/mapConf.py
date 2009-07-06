@@ -16,6 +16,7 @@ class MapConf():
     init_zoom = MAP_MAX_ZOOM_LEVEL
     init_center = ((0,0),(128,128))
     gps_update_rate = 1.0
+    show_cross = False
 
     ## Returns the Path to the configuration file
     def get_configpath(self):
@@ -46,11 +47,12 @@ class MapConf():
         config.set(strSection, 'zoom', self.init_zoom)
         config.set(strSection, 'center', self.init_center)
         config.set(strSection, 'gps_update_rate', self.gps_update_rate)
+        config.set(strSection, 'show_cross', self.show_cross)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
 
-    ## Reads from a given file the configuration
+    ## Reads the configuration from a given file
     def read(self, configpath):
         config = ConfigParser.RawConfigParser()
         config.read(configpath)
@@ -72,6 +74,7 @@ class MapConf():
                         os.mkdir(self.init_path)
                     except Exception:
                         self.init_path = None
+            self.show_cross = config.getboolean(strSection, 'show_cross')
         except Exception:
             pass
 

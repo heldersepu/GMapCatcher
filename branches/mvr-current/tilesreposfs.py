@@ -18,6 +18,7 @@ import sys
 import gtk
 
 import lrucache
+import mapPixbuf
 import fileUtils
 
 from threading import Lock
@@ -35,15 +36,6 @@ class TilesRepositoryFS:
     def finish(self):
         pass
 
-    def pixbuf_missing(self):
-        try:
-            missing = gtk.gdk.pixbuf_new_from_file('missing.png')
-        except Exception:
-            missing = gtk.gdk.pixbuf_new_from_data('\255\255\255' * 100000,
-                gtk.gdk.COLORSPACE_RGB, False, 8,
-                TILES_WIDTH, TILES_HEIGHT, TILES_HEIGHT * 3)
-        return missing
-
     def load_pixbuf(self, coord, layer):
         filename = self.coord_to_path(coord, layer)
         if filename in self.tile_cache:
@@ -54,11 +46,11 @@ class TilesRepositoryFS:
                     pixbuf = gtk.gdk.pixbuf_new_from_file(filename)
                     self.tile_cache[filename] = pixbuf
                 except Exception:
-                    pixbuf = self.pixbuf_missing()
+                    pixbuf = mapPixbuf.missing()
                     print "File corrupted: %s" % filename
                     fileUtils.del_file(filename)
             else:
-                pixbuf = self.pixbuf_missing()
+                pixbuf = mapPixbuf.missing()
         return pixbuf
 
     def get_png_file(self, coord, layer, filename, online, force_update):

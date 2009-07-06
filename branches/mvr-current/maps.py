@@ -2,19 +2,19 @@
 # This is the Main Window
 
 #!/usr/bin/env python
-from mapUtils import mod
 import mapMark
 import mapConf
 import mapUtils
 import googleMaps
 import mapTools
 import mapGPS
+import fileUtils
+import mapPixbuf
 
 from gtkThread import *
 from mapConst import *
 from DLWindow import DLWindow
 import mapDownloader
-import lrucache
 from customWidgets import myToolTip
 
 class MainWindow(gtk.Window):
@@ -416,8 +416,13 @@ class MainWindow(gtk.Window):
         self.downloader.query_region_around_point(
             self.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
-            online=online, force_update=force_update
-        )
+            online=online, force_update=force_update)
+
+        # Draw cross in the center
+        if self.conf.show_cross:
+            drawing_area.window.draw_pixbuf(
+                drawing_area.style.black_gc, mapPixbuf.cross(), 0, 0,
+                rect.width/2 - 12, rect.height/2 - 12, 12, 12)
 
     def repaint(self):
         self.drawing_area.queue_draw()
