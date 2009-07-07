@@ -80,7 +80,7 @@ class MapConf():
                         pass
                 else:
                     self.init_path = strPath
-            self.gps_update_rate = float(config.get(strSection, 'gps_update_rate'))
+            self.gps_update_rate = config.getfloat(strSection, 'gps_update_rate')
             self.show_cross = config.getboolean(strSection, 'show_cross')
         except Exception:
             pass
