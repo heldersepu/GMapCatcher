@@ -421,7 +421,7 @@ class MainWindow(gtk.Window):
         # Draw cross in the center
         if self.conf.show_cross:
             drawing_area.window.draw_pixbuf(
-                drawing_area.style.black_gc, mapPixbuf.cross(), 0, 0,
+                drawing_area.style.black_gc, self.crossPixbuf, 0, 0,
                 rect.width/2 - 12, rect.height/2 - 12, 12, 12)
 
     def repaint(self):
@@ -578,6 +578,7 @@ class MainWindow(gtk.Window):
         self.conf = mapConf.MapConf()
         self.center = self.conf.init_center
         self.current_zoom_level = self.conf.init_zoom
+        self.crossPixbuf = mapPixbuf.cross()
 
         if mapGPS.available:
             self.gps = mapGPS.GPS(self.gps_center_callback,

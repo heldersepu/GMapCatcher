@@ -32,6 +32,7 @@ class TilesRepositoryFS:
         self.instance_google_maps = googleMaps_inst
         self.lock = Lock()
         self.configpath = self.instance_google_maps.configpath
+        self.missingPixbuf = mapPixbuf.missing()
 
     def finish(self):
         pass
@@ -46,11 +47,11 @@ class TilesRepositoryFS:
                     pixbuf = gtk.gdk.pixbuf_new_from_file(filename)
                     self.tile_cache[filename] = pixbuf
                 except Exception:
-                    pixbuf = mapPixbuf.missing()
+                    pixbuf = self.missingPixbuf
                     print "File corrupted: %s" % filename
                     fileUtils.del_file(filename)
             else:
-                pixbuf = mapPixbuf.missing()
+                pixbuf = self.missingPixbuf
         return pixbuf
 
     def get_png_file(self, coord, layer, filename, online, force_update):
