@@ -2,7 +2,9 @@
 # Settings widget used to display the list of the locations.
 # Displayed inside a tab in mapTools.
 
+import os
 import gtk
+from mapConst import *
 from customWidgets import _SpinBtn, _frame, lbl, FolderChooser
 
 
@@ -49,10 +51,20 @@ class MySettings():
                 if fileName:
                     self.entry_custom_path.set_text(fileName)
 
-            vbox = gtk.VBox(False, 10)
-            vbox.set_border_width(10)
-            vbox.pack_start( \
-                lbl(" Enter None or leave blank to use default directory. "))
+            def set_folder(button):
+                self.entry_custom_path.set_text(
+                    os.path.join(os.path.expanduser(USER_PATH), TILES_PATH))
+
+            vbox = gtk.VBox(False, 5)
+            vbox.set_border_width(5)
+            hbox = gtk.HBox(False, 10)
+            hbox.pack_start( \
+                lbl(" This is the directory with all the images. "))
+            button = gtk.Button("Reset to default")
+            button.connect('clicked', set_folder)
+            hbox.pack_start(button)
+            vbox.pack_start(hbox)
+
             hbox = gtk.HBox(False, 10)
             myEntry = gtk.Entry()
             if conf.init_path:
