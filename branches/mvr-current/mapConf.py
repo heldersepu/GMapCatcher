@@ -10,7 +10,7 @@ from mapConst import *
 ## Class used to read and save the configuration values
 class MapConf():
 
-    init_path = None
+    init_path = os.path.join(os.path.expanduser(USER_PATH), TILES_PATH)
     init_width = 450
     init_height = 400
     init_zoom = MAP_MAX_ZOOM_LEVEL
@@ -63,17 +63,18 @@ class MapConf():
             self.init_zoom = config.getint(strSection, 'zoom')
             strCenter = config.get(strSection, 'center')
             self.init_center = mapUtils.str_to_tuple(strCenter)
-            self.init_path = config.get(strSection, 'path')
-            self.gps_update_rate = config.get(strSection, 'gps_update_rate')
-            if self.init_path.strip().lower() in ['none', '']:
-                self.init_path = None
-            else:
+            strPath = config.get(strSection, 'path')
+            if not strPath.strip().lower() in ['none', '']:
                 # Check directory; If it does not exists try to create it.
-                if not os.path.isdir(self.init_path):
+                if not os.path.isdir(strPath):
                     try:
-                        os.mkdir(self.init_path)
+                        os.mkdir(strPath)
+                        self.init_path = strPath
                     except Exception:
-                        self.init_path = None
+                        pass
+                else:
+                    self.init_path = strPath
+            self.gps_update_rate = config.get(strSection, 'gps_update_rate')
             self.show_cross = config.getboolean(strSection, 'show_cross')
         except Exception:
             pass

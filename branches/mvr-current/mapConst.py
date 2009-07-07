@@ -21,4 +21,6 @@ GPS_CENTER = 2
 GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center"]
 
 R_EARTH = 6371.
-DEFAULT_PATH = "~/.googlemaps"
+USER_PATH = "~"
+TILES_PATH = ".googlemaps"
+DEFAULT_PATH = USER_PATH + "/" + TILES_PATH
