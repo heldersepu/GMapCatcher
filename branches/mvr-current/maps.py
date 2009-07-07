@@ -422,7 +422,7 @@ class MainWindow(gtk.Window):
         if self.conf.show_cross:
             drawing_area.window.draw_pixbuf(
                 drawing_area.style.black_gc, self.crossPixbuf, 0, 0,
-                rect.width/2 - 12, rect.height/2 - 12, 12, 12)
+                rect.width/2 - 6, rect.height/2 - 6, 12, 12)
 
     def repaint(self):
         self.drawing_area.queue_draw()
