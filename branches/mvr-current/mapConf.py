@@ -54,7 +54,13 @@ class MapConf():
 
     ## Reads the configuration from a given file
     def read(self, configpath):
-        config = ConfigParser.RawConfigParser()
+        config = ConfigParser.SafeConfigParser({'width': 450, 
+                                                'height': 400,
+                                                'center': "((0, 0), (128, 128))",
+                                                'zoom': 17,
+                                                'show_cross': False,
+                                                'gps_update_rate': 1.0,
+                                                'path': ""})
         config.read(configpath)
         strSection = 'init'
         try:
@@ -77,6 +83,7 @@ class MapConf():
             self.gps_update_rate = config.get(strSection, 'gps_update_rate')
             self.show_cross = config.getboolean(strSection, 'show_cross')
         except Exception:
+            print Exception
             pass
 
     ## Write the configuration to the default file
