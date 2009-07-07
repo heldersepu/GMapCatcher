@@ -83,7 +83,6 @@ class MapConf():
             self.gps_update_rate = float(config.get(strSection, 'gps_update_rate'))
             self.show_cross = config.getboolean(strSection, 'show_cross')
         except Exception:
-            print Exception
             pass
 
     ## Write the configuration to the default file
