@@ -8,7 +8,6 @@ import mapUtils
 import googleMaps
 import mapTools
 import mapGPS
-import fileUtils
 import mapPixbuf
 
 from gtkThread import *
@@ -228,7 +227,7 @@ class MainWindow(gtk.Window):
         menu = self.gtk_menu(TOOLS_MENU)
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
-        button.connect("query-tooltip", myToolTip, "Title", "Description here", "marker.png")
+        button.connect("query-tooltip", myToolTip, "Title", "Description here")
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()

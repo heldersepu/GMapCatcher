@@ -2,6 +2,7 @@
 # This is a collection of Custom Widgets
 
 import gtk
+import mapPixbuf
 from mapConst import *
 from inputValidation import allow_only_numbers
 
@@ -50,13 +51,13 @@ def FolderChooser():
     return strFileName
 
 ## Display a Tooltip
-def myToolTip(widget, x, y, keyboard_mode, tooltip, title, desc, filename):
+def myToolTip(widget, x, y, keyboard_mode, tooltip, title, desc, filename=None):
     table = gtk.Table(2,2)
     table.set_row_spacings(2)
     table.set_col_spacings(6)
     table.set_border_width(4)
 
-    pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(filename, 56, 56)
+    pixbuf = mapPixbuf.getImage(filename)
     image = gtk.image_new_from_pixbuf(pixbuf)
     image.set_alignment(0, 0)
     table.attach(image, 0,1,0,2)
