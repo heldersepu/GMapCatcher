@@ -13,7 +13,7 @@ setup(
     windows = [
                   {
                       'script': 'maps.py',
-                      'icon_resources': [(1, "maps.ico")],
+                      'icon_resources': [(1, "images\maps.ico")],
                   }
               ],
 

@@ -35,7 +35,7 @@ class MyMarkers:
         return self.positions
 
     def get_marker_pixbuf(self):
-        filename = 'marker.png'
+        filename = 'images\marker.png'
         if (os.path.exists(filename)):
             w = gtk.Image()
             w.set_from_file(filename)
