@@ -213,7 +213,7 @@ class MainWindow(gtk.Window):
         menu = gtk_menu(TOOLS_MENU, self.menu_item_response)
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
-        button.connect("query-tooltip", myToolTip, "Title", "Description here")
+        button.connect("query-tooltip", myToolTip, "Title", "Description here", "images/marker.png")
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
@@ -402,7 +402,7 @@ class MainWindow(gtk.Window):
             self.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
             online=online, force_update=force_update)
-        self.draw_overlay(drawing_area)
+        self.draw_overlay(drawing_area, rect)
 
     def repaint(self):
         self.drawing_area.queue_draw()
@@ -418,13 +418,29 @@ class MainWindow(gtk.Window):
             self.do_scale(value)
         return
 
-    def draw_overlay(self, drawing_area):
+    def draw_overlay(self, drawing_area, rect):
+        gc = drawing_area.style.black_gc
+        zl = self.current_zoom_level
+        
         # Draw cross in the center
         if self.conf.show_cross:
-            rect = drawing_area.get_allocation()
-            drawing_area.window.draw_pixbuf(
-                drawing_area.style.black_gc, self.crossPixbuf, 0, 0,
+            drawing_area.window.draw_pixbuf(gc, self.crossPixbuf, 0, 0,
                 rect.width/2 - 6, rect.height/2 - 6, 12, 12)
+
+        # Draw the markers
+        img = self.marker.pixbuf
+        for str in self.marker.positions.keys():
+            mpos = self.marker.positions[str]
+            if zl <= mpos[2]:
+                mct = mapUtils.coord_to_tile((mpos[0], mpos[1], zl))
+                xy = mapUtils.tile_coord_to_screen(
+                    (mct[0][0], mct[0][1], zl), rect, self.center)
+                if xy:
+                    for x,y in xy:
+                        drawing_area.window.draw_pixbuf(gc, img, 0, 0, 
+                            x + mct[1][0] - TILES_WIDTH/2, 
+                            y + mct[1][1] - TILES_HEIGHT/2, 
+                            TILES_WIDTH, TILES_HEIGHT)
 
     def tile_received(self, tile_coord, layer):
         if self.layer == layer and self.current_zoom_level == tile_coord[2]:
@@ -437,21 +453,8 @@ class MainWindow(gtk.Window):
                 for x,y in xy:
                     da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                           TILES_WIDTH, TILES_HEIGHT)
-                self.draw_overlay(da)
 
-                # Draw the markers
-                if self.downloader.qsize() == 0:
-                    img = self.marker.pixbuf
-                    for str in self.marker.positions.keys():
-                        mpos = self.marker.positions[str]
-                        mct = mapUtils.coord_to_tile((mpos[0], mpos[1], \
-                                                      self.current_zoom_level))
-                        if tile_coord[0] == mct[0][0] and \
-                           tile_coord[1] == mct[0][1] and \
-                           tile_coord[2] <= mpos[2]:
-                            da.window.draw_pixbuf(gc, img, 0, 0, x, y,
-                                                  TILES_WIDTH, TILES_HEIGHT)
-
+                self.draw_overlay(da, rect)
 
                 # Draw GPS position
                 if mapGPS.available:
