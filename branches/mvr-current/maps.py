@@ -9,12 +9,12 @@ import googleMaps
 import mapTools
 import mapGPS
 import mapPixbuf
+import mapDownloader
 
 from gtkThread import *
 from mapConst import *
 from DLWindow import DLWindow
-import mapDownloader
-from customWidgets import myToolTip
+from customWidgets import myToolTip, gtk_menu
 
 class MainWindow(gtk.Window):
 
@@ -100,20 +100,6 @@ class MainWindow(gtk.Window):
         if event.keyval in [65362, 65364]:
             self.combo_popup()
             return True
-
-    ## Create a gtk Menu with the given items
-    def gtk_menu(self, listItems):
-        myMenu = gtk.Menu()
-        for str in listItems:
-            # An empty item inserts a separator
-            if str == "":
-                menu_items = gtk.MenuItem()
-            else:
-                menu_items = gtk.MenuItem(str)
-            myMenu.append(menu_items)
-            menu_items.connect("activate", self.menu_item_response, str)
-            menu_items.show()
-        return myMenu
 
     ## Handles the events in the Tools buttons
     def tools_button_event(self, w, event):
@@ -224,7 +210,7 @@ class MainWindow(gtk.Window):
 
         gtk.stock_add([(gtk.STOCK_PREFERENCES, "", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
-        menu = self.gtk_menu(TOOLS_MENU)
+        menu = gtk_menu(TOOLS_MENU, self.menu_item_response)
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
         button.connect("query-tooltip", myToolTip, "Title", "Description here")
@@ -313,8 +299,8 @@ class MainWindow(gtk.Window):
         da.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
 
-        menu = self.gtk_menu(["Zoom In", "Zoom Out", "Center map here",
-                              "Reset", "", "Batch Download"])
+        menu = gtk_menu(["Zoom In", "Zoom Out", "Center map here",
+                    "Reset", "", "Batch Download"], self.menu_item_response)
 
         da.connect_object("event", self.da_click_events, menu)
         da.connect('button-press-event', self.da_button_press)
@@ -416,12 +402,7 @@ class MainWindow(gtk.Window):
             self.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
             online=online, force_update=force_update)
-
-        # Draw cross in the center
-        if self.conf.show_cross:
-            drawing_area.window.draw_pixbuf(
-                drawing_area.style.black_gc, self.crossPixbuf, 0, 0,
-                rect.width/2 - 6, rect.height/2 - 6, 12, 12)
+        self.draw_overlay(drawing_area)
 
     def repaint(self):
         self.drawing_area.queue_draw()
@@ -437,6 +418,14 @@ class MainWindow(gtk.Window):
             self.do_scale(value)
         return
 
+    def draw_overlay(self, drawing_area):
+        # Draw cross in the center
+        if self.conf.show_cross:
+            rect = drawing_area.get_allocation()
+            drawing_area.window.draw_pixbuf(
+                drawing_area.style.black_gc, self.crossPixbuf, 0, 0,
+                rect.width/2 - 6, rect.height/2 - 6, 12, 12)
+
     def tile_received(self, tile_coord, layer):
         if self.layer == layer and self.current_zoom_level == tile_coord[2]:
             da = self.drawing_area
@@ -448,6 +437,8 @@ class MainWindow(gtk.Window):
                 for x,y in xy:
                     da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                           TILES_WIDTH, TILES_HEIGHT)
+                self.draw_overlay(da)
+
                 # Draw the markers
                 if self.downloader.qsize() == 0:
                     img = self.marker.pixbuf

@@ -74,3 +74,17 @@ def myToolTip(widget, x, y, keyboard_mode, tooltip, title, desc, filename=None):
     tooltip.set_custom(table)
     table.show_all()
     return True
+
+## Create a gtk Menu with the given items
+def gtk_menu(listItems, activate_action):
+    myMenu = gtk.Menu()
+    for str in listItems:
+        # An empty item inserts a separator
+        if str == "":
+            menu_items = gtk.MenuItem()
+        else:
+            menu_items = gtk.MenuItem(str)
+        myMenu.append(menu_items)
+        menu_items.connect("activate", activate_action, str)
+        menu_items.show()
+    return myMenu
