@@ -8,7 +8,7 @@ The GPS functionality is supported in linux only, using the gps daemon: http://g
 
 If a GPS unit is properly installed and the gps daemon is running the GPS menu will show up in the main menu when gmapcatcher is started.
 
-= Installation of python GPS module =
+= Installation of the GPS daemon =
 
   * Ubuntu: _sudo apt-get install python-gps_
 
