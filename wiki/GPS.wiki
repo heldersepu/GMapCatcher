@@ -1,0 +1,30 @@
+#summary How to get started using GPS with gmapcatcher
+
+= Introduction =
+
+The current implementation displays a GPS marker and can auto center the map to the GPS location.
+
+The GPS functionality is supported in linux only, using the gps daemon: http://gpsd.berlios.de .
+
+If a GPS unit is properly installed and the gps daemon is running the GPS menu will show up in the main menu when gmapcatcher is started.
+
+= Installation of python GPS module =
+
+  * Ubuntu: _sudo apt-get install python-gps_
+
+= Installation of bluetooth GPS =
+  * Run _hcitool scan_ to find the GPS id on the form xx:xx:xx:xx:xx:xx.
+  * Edit _/etc/bluetooth/rfcomm.conf_ and add the following:
+{{{
+rfcomm0 {
+  bind yes; 
+  device _xx:xx:xx:xx:xx:xx_; 
+  channel 1; 
+  comment "BT GPS"; 
+}
+}}}
+  * Restart bluetooth: _sudo /etc/init.d/bluetooth restart_
+
+= Using GPS module =
+  * Start gps daemon: _sudo gpsd -D 5 -nN /dev/rfcomm0_
+  * Start gmapcatcher: _python maps.py_
