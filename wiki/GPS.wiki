@@ -8,8 +8,11 @@ The GPS functionality is supported in linux only, using the gps daemon: http://g
 
 If a GPS unit is properly installed and the gps daemon is running the GPS menu will show up in the main menu when gmapcatcher is started.
 
-= Installation of the GPS daemon =
+= Starting gmapcatcher with GPS =
+  * Start gps daemon: _sudo gpsd -D 5 -nN /dev/rfcomm0_
+  * Start gmapcatcher: _python maps.py_
 
+= Installation of the GPS daemon =
   * Ubuntu: _sudo apt-get install python-gps_
 
 = Installation of bluetooth GPS =
@@ -24,7 +27,3 @@ rfcomm0 {
 }
 }}}
   * Restart bluetooth: _sudo /etc/init.d/bluetooth restart_
-
-= Using GPS module =
-  * Start gps daemon: _sudo gpsd -D 5 -nN /dev/rfcomm0_
-  * Start gmapcatcher: _python maps.py_
