@@ -2,13 +2,14 @@
 # Get the Pixbuf from image files.
 #
 
+import os
 import gtk
 from mapConst import *
 
 ## Get the Pixbuf from missing.png
 def missing():
     try:
-        pix_missing = gtk.gdk.pixbuf_new_from_file('images\missing.png')
+        pix_missing = gtk.gdk.pixbuf_new_from_file(os.path.join('images', 'missing.png'))
     except Exception:
         pix_missing = gtk.gdk.pixbuf_new_from_data('\255\255\255' * 100000,
             gtk.gdk.COLORSPACE_RGB, False, 8,
@@ -18,7 +19,7 @@ def missing():
 ## Get the Pixbuf from cross.png
 def cross():
     try:
-        pix_cross = gtk.gdk.pixbuf_new_from_file('images\cross.png')
+        pix_cross = gtk.gdk.pixbuf_new_from_file(os.path.join('images', 'cross.png'))
     except Exception:
         pix_cross = gtk.gdk.pixbuf_new_from_data(
             ('\255\255\255' * 4 + '\0\0\255' * 4 + '\255\255\255' * 4) * 4 +

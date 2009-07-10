@@ -1,5 +1,5 @@
 ## @package setup
-# Setup file used to build the installer
+# Setup file used to build the Windows Installer
 
 from distutils.core import setup
 import py2exe
