@@ -2,7 +2,7 @@
 Screenshots:
 
 v0.09 is coming soon
-http://gmapcatcher.googlecode.com/svn/wiki/v0.09.png
+http://gmapcatcher.googlecode.com/svn/wiki/v0.09.gif
 
 
 v0.054 is out with some kool features, thanks to Maxim.Razin !!!<br>
