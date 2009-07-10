@@ -421,7 +421,7 @@ class MainWindow(gtk.Window):
     def draw_overlay(self, drawing_area, rect):
         gc = drawing_area.style.black_gc
         zl = self.current_zoom_level
-        
+
         # Draw cross in the center
         if self.conf.show_cross:
             drawing_area.window.draw_pixbuf(gc, self.crossPixbuf, 0, 0,
@@ -437,10 +437,26 @@ class MainWindow(gtk.Window):
                     (mct[0][0], mct[0][1], zl), rect, self.center)
                 if xy:
                     for x,y in xy:
-                        drawing_area.window.draw_pixbuf(gc, img, 0, 0, 
-                            x + mct[1][0] - TILES_WIDTH/2, 
-                            y + mct[1][1] - TILES_HEIGHT/2, 
+                        drawing_area.window.draw_pixbuf(gc, img, 0, 0,
+                            x + mct[1][0] - TILES_WIDTH/2,
+                            y + mct[1][1] - TILES_HEIGHT/2,
                             TILES_WIDTH, TILES_HEIGHT)
+
+        # Draw GPS position
+        if mapGPS.available:
+            location = self.gps.get_location()
+            if location is not None and (zl < 17):
+                img = self.gps.pixbuf
+                img_size = (48, 48)
+                mct = mapUtils.coord_to_tile((location[0], location[1], zl))
+                xy = mapUtils.tile_coord_to_screen(
+                    (mct[0][0], mct[0][1], zl), rect, self.center)
+                if xy:
+                    for x,y in xy:
+                        drawing_area.window.draw_pixbuf(gc, img, 0, 0, \
+                            x + mct[1][0] - img_size[0] / 2,
+                            y + mct[1][1] - img_size[1] / 2, \
+                            img_size[0], img_size[1])
 
     def tile_received(self, tile_coord, layer):
         if self.layer == layer and self.current_zoom_level == tile_coord[2]:
@@ -455,53 +471,6 @@ class MainWindow(gtk.Window):
                                           TILES_WIDTH, TILES_HEIGHT)
 
                 self.draw_overlay(da, rect)
-
-                # Draw GPS position
-                if mapGPS.available:
-                    location = self.gps.get_location()
-                    if location is not None and self.current_zoom_level < 17:
-                        img = self.gps.pixbuf
-                        img_size = (48, 48)
-                        mct = mapUtils.coord_to_tile((location[0], location[1], \
-                                                      self.current_zoom_level))
-                        dx, dy = 255 - mct[1][0], 255 - mct[1][1]
-
-                        if tile_coord[0] == mct[0][0] and \
-                           tile_coord[1] == mct[0][1]:
-                            da.window.draw_pixbuf(gc, img, 0, 0, \
-                                x + mct[1][0] - img_size[0] / 2,
-                                y + mct[1][1] - img_size[1] / 2, \
-                                img_size[0], img_size[1])
-
-                        if tile_coord[0] == mct[0][0]+1 and \
-                           tile_coord[1] == mct[0][1] and \
-                           dx < img_size[0] / 2:
-                            da.window.draw_pixbuf(gc, img, \
-                                img_size[0] / 2 + dx, 0, \
-                                x + mct[1][0] - 256 + dx, \
-                                y + mct[1][1] - img_size[1] / 2,
-                                img_size[0] / 2 - dx, img_size[1])
-
-                        if tile_coord[0] == mct[0][0] and \
-                           tile_coord[1] == mct[0][1]+1 and \
-                           dy < img_size[1] / 2:
-                            da.window.draw_pixbuf(gc, img, \
-                                0, img_size[1] / 2 + dy, \
-                                x + mct[1][0] - img_size[0] / 2, \
-                                y + mct[1][1] - 256 + dy, \
-                                img_size[0], img_size[1] / 2 - dy)
-
-                        if tile_coord[0] == mct[0][0]+1 and \
-                           tile_coord[1] == mct[0][1]+1 and \
-                           dx < img_size[0] / 2 and \
-                           dy < img_size[1] / 2:
-                            da.window.draw_pixbuf(gc, img, \
-                                img_size[0] / 2 + dx, \
-                                img_size[1] / 2 + dy, \
-                                x + mct[1][0] - 256 + dx, \
-                                y + mct[1][1] - 256 + dy, \
-                                img_size[0] / 2 - dx, \
-                                img_size[1] / 2 - dy)
 
     ## Handles the pressing of F11 & F12
     def full_screen(self,keyval):
