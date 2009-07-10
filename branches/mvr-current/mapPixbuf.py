@@ -29,13 +29,17 @@ def cross():
 
 ## Get the Pixbuf from the given image.
 # This is used in myToolTip
-def getImage(filename):
+def getImage(filename, intWidth=56, intHeight=56):
     try:
-        pix_buf = gtk.gdk.pixbuf_new_from_file_at_size(filename, 56, 56)
+        pix_buf = gtk.gdk.pixbuf_new_from_file_at_size(filename, intWidth, intHeight)
     except Exception:
+        wCo = int(intWidth / 3)
+        wMe = intWidth - 2 * wCo
+        hCo = int(intHeight / 3)
+        hMe = intHeight - 2 * wCo
         pix_buf = gtk.gdk.pixbuf_new_from_data(
-            ('\255\0\0' * 18 + '\0\0\255' * 20 + '\255\0\0' * 18) * 18 +
-            ('\0\0\255' * 56) * 20 +
-            ('\255\0\0' * 18 + '\0\0\255' * 20 + '\255\0\0' * 18) * 18,
-            gtk.gdk.COLORSPACE_RGB, False, 8, 56, 56, 56 * 3)
+            ('\255\0\0' * wCo + '\0\0\255' * wMe + '\255\0\0' * wCo) * hCo +
+            ('\0\0\255' * intWidth) * hMe +
+            ('\255\0\0' * wCo + '\0\0\255' * wMe + '\255\0\0' * wCo) * hCo,
+            gtk.gdk.COLORSPACE_RGB, False, 8, intWidth, intHeight, intHeight * 3)
     return pix_buf

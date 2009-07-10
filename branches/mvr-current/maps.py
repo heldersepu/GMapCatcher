@@ -428,7 +428,8 @@ class MainWindow(gtk.Window):
                 rect.width/2 - 6, rect.height/2 - 6, 12, 12)
 
         # Draw the markers
-        img = self.marker.pixbuf
+        img = self.marker.get_marker_pixbuf(zl)
+        pixDim = self.marker.get_pixDim(zl)
         for str in self.marker.positions.keys():
             mpos = self.marker.positions[str]
             if zl <= mpos[2]:
@@ -438,9 +439,9 @@ class MainWindow(gtk.Window):
                 if xy:
                     for x,y in xy:
                         drawing_area.window.draw_pixbuf(gc, img, 0, 0,
-                            x + mct[1][0] - TILES_WIDTH/2,
-                            y + mct[1][1] - TILES_HEIGHT/2,
-                            TILES_WIDTH, TILES_HEIGHT)
+                            x + mct[1][0] - pixDim/2,
+                            y + mct[1][1] - pixDim/2,
+                            pixDim, pixDim)
 
         # Draw GPS position
         if mapGPS.available:
