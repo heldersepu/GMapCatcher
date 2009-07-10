@@ -66,7 +66,7 @@ class GPS:
 
 	## Load GPS marker image
     def get_marker_pixbuf(self):
-        filename = 'images\marker_gps.png'
+        filename = os.path.join('images', 'marker_gps.png')
         if (os.path.exists(filename)):
             w = gtk.Image()
             w.set_from_file(filename)

@@ -11,6 +11,7 @@ import mapGPS
 import mapPixbuf
 import mapDownloader
 
+import os
 from gtkThread import *
 from mapConst import *
 from DLWindow import DLWindow
@@ -213,7 +214,7 @@ class MainWindow(gtk.Window):
         menu = gtk_menu(TOOLS_MENU, self.menu_item_response)
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
-        button.connect("query-tooltip", myToolTip, "Title", "Description here", "images/marker.png")
+        button.connect("query-tooltip", myToolTip, "Title", "Description here", os.path.join("images", "marker.png"))
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()

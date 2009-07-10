@@ -44,4 +44,4 @@ class MyMarkers:
     
     def get_marker_pixbuf(self, zl):
         pixDim = self.get_pixDim(zl)
-        return mapPixbuf.getImage('images\marker.png', pixDim, pixDim)
+        return mapPixbuf.getImage(os.path.join('images', 'marker.png'), pixDim, pixDim)
