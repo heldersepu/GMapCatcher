@@ -11,7 +11,7 @@ If a GPS unit is properly installed and the gps daemon is running the GPS menu w
 
 = Starting gmapcatcher with GPS =
   * Start GPS daemon (bluetooth GPS): _sudo gpsd -D 5 -nN /dev/rfcomm0_
-  * Start gmapcatcher: _python maps.py_
+  * Start gmapcatcher
 
 = Installation of the GPS daemon =
   * Ubuntu: _sudo apt-get install python-gps_
