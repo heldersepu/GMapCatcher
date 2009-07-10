@@ -1,6 +1,10 @@
 ﻿#labels Featured
 Screenshots:
 
+v0.09 is coming soon
+http://gmapcatcher.googlecode.com/svn/wiki/v0.09.png
+
+
 v0.054 is out with some kool features, thanks to Maxim.Razin !!!<br>
 http://gmapcatcher.googlecode.com/svn/wiki/GMapCatcher-v0.054.gif
 http://gmapcatcher.googlecode.com/svn/wiki/GMapCatcher_Terrain.gif
