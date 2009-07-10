@@ -1,7 +1,7 @@
 ﻿#labels Featured
 Screenshots:
 
-v0.09 is coming soon
+v0.09 is coming soon!<br>
 http://gmapcatcher.googlecode.com/svn/wiki/v0.09.gif
 
 
