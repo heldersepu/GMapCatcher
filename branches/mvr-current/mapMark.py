@@ -37,7 +37,7 @@ class MyMarkers:
         maxZoom = MAP_MAX_ZOOM_LEVEL - 2
         if zl >= maxZoom :
             return 56
-        elif zl <= 0:
+        elif zl <= 1:
             return 256
         else:
             return 56 + int((maxZoom - zl) * 15)
