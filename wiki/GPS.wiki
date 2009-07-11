@@ -9,6 +9,10 @@ The GPS functionality is supported in linux only, using the gps daemon: http://g
 
 If a GPS unit is properly installed and the gps daemon is running the GPS menu will show up in the main menu when gmapcatcher is started.
 
+== Compatible Devices ==
+A List of compatible and tested devices is here:
+http://gpsd.berlios.de/hardware.html
+
 = Starting gmapcatcher with GPS =
   * Start GPS daemon (bluetooth GPS): _sudo gpsd -D 5 -nN /dev/rfcomm0_
   * Start gmapcatcher
