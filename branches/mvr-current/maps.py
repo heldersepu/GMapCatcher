@@ -472,7 +472,8 @@ class MainWindow(gtk.Window):
                     da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                           TILES_WIDTH, TILES_HEIGHT)
 
-                self.draw_overlay(da, rect)
+                if not self.cb_offline.get_active():
+                    self.draw_overlay(da, rect)
 
     ## Handles the pressing of F11 & F12
     def full_screen(self,keyval):
