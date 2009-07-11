@@ -75,8 +75,8 @@ class MapConf():
         
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float)
-        ## Show a small cross in the center of the map, default is False
-        self.show_cross = read_config('show_cross', False, bool)
+        ## Show a small cross in the center of the map, default is 0
+        self.show_cross = read_config('show_cross', 0, int)
 
     ## Write the configuration to the default file
     def save(self):
