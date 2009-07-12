@@ -74,7 +74,7 @@ Function OnCheckbox
     ${EndIf}
 FunctionEnd
 Function .onInstSuccess
-	${If} $boolCHECKBOX == "True"
+	${If} $boolCHECKBOX != "False"
         Exec '"$INSTDIR\maps.exe"'
     ${EndIf}
 FunctionEnd
