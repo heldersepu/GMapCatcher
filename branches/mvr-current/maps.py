@@ -447,7 +447,7 @@ class MainWindow(gtk.Window):
         # Draw GPS position
         if mapGPS.available:
             location = self.gps.get_location()
-            if location is not None and (zl < 17):
+            if location is not None and (zl <= self.conf.max_gps_zoom):
                 img = self.gps.pixbuf
                 img_size = (48, 48)
                 mct = mapUtils.coord_to_tile((location[0], location[1], zl))
