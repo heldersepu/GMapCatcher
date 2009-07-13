@@ -48,6 +48,8 @@ ShowUninstDetails show
 
 Var CHECKBOX
 Var boolCHECKBOX
+Var Image
+Var ImageHandle
 
 ;--------------------------------
 ; The final install page that asks to run the application
@@ -55,14 +57,20 @@ Function finalPage
 
 	nsDialogs::Create 1018
 	Pop $0    
-	${NSD_CreateLabel} 20u 30u 80% 8u "GMapCatcher was succesfully installed on your computer."
+	${NSD_CreateLabel} 75u 30u 80% 8u "GMapCatcher was succesfully installed on your computer."
 	Pop $0    	
-	${NSD_CreateCheckbox} 30u 50u 50% 8u 'Run GMapCatcher v${PRODUCT_VERSION}'
+	${NSD_CreateCheckbox} 80u 50u 50% 8u "Run GMapCatcher v${PRODUCT_VERSION}"
 	Pop $CHECKBOX
     SendMessage $CHECKBOX ${BM_SETCHECK} ${BST_CHECKED} 0
     GetFunctionAddress $1 OnCheckbox
 	nsDialogs::OnClick $CHECKBOX $1
+    
+    ; Add an image
+    ${NSD_CreateBitmap} 0 0 100% 40% ""
+    Pop $Image
+    ${NSD_SetImage} $Image "$INSTDIR\images\setup.bmp" $ImageHandle
 	nsDialogs::Show
+    ${NSD_freeImage} $ImageHandle
 
 FunctionEnd
 Function OnCheckbox
@@ -85,9 +93,9 @@ Function un.finalPage
 
 	nsDialogs::Create 1018
 	Pop $0    
-	${NSD_CreateLabel} 20u 30u 80% 8u "GMapCatcher was succesfully uninstalled from your computer."
+	${NSD_CreateLabel} 50u 30u 80% 8u "GMapCatcher was uninstalled from your computer."
 	Pop $0    	
-	${NSD_CreateCheckbox} 30u 50u 50% 8u 'Remove all images'
+	${NSD_CreateCheckbox} 60u 50u 50% 8u "Remove all downloaded images"
 	Pop $CHECKBOX
     GetFunctionAddress $1 un.OnCheckbox
 	nsDialogs::OnClick $CHECKBOX $1
@@ -111,7 +119,7 @@ FunctionEnd
 ;--------------------------------
 ; The stuff to install
 Section "${PRODUCT_NAME} (required)"
-
+    SetAutoClose true
     SectionIn RO
 
     ; Set output path to the installation directory.
@@ -171,7 +179,7 @@ SectionEnd
 ;--------------------------------
 ; Uninstaller
 Section "Uninstall"
-
+    SetAutoClose true
     ; Remove registry keys
     DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
     DeleteRegKey HKLM "SOFTWARE\${PRODUCT_NAME}"
