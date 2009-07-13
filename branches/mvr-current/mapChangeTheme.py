@@ -24,11 +24,13 @@ class ChangeTheme():
         myCombo.set_active(intTheme)
 
     ## All the buttons at the bottom
-    def __action_buttons(self):
-        def btn_revert_clicked(button):
+    def __action_buttons(self, conf):
+        def btn_revert_clicked(button, conf):
             self.load_combo(self.cmb_themes)
+            self.cb_show_cross.set_active(conf.show_cross)
 
-        def btn_save_clicked(button):
+        def btn_save_clicked(button, conf):
+            conf.show_cross = self.cb_show_cross.get_active()
             if self.cmb_themes.get_model():
                 cmb_text = self.cmb_themes.get_active_text()
                 if cmb_text:
@@ -40,16 +42,16 @@ class ChangeTheme():
         bbox.set_spacing(60)
 
         button = gtk.Button(stock=gtk.STOCK_REVERT_TO_SAVED)
-        button.connect('clicked', btn_revert_clicked)
+        button.connect('clicked', btn_revert_clicked, conf)
         bbox.add(button)
 
         button = gtk.Button(stock=gtk.STOCK_SAVE)
-        button.connect('clicked', btn_save_clicked)
+        button.connect('clicked', btn_save_clicked, conf)
         bbox.add(button)
         return bbox
 
     ## Put all the ChangeTheme Widgets together
-    def show(self):
+    def show(self, conf):
         hbox = gtk.HBox(False, 10)
         vbox = gtk.VBox(False, 10)
         vbox.set_border_width(10)
@@ -59,10 +61,14 @@ class ChangeTheme():
         self.load_combo(self.cmb_themes)
         hbox.pack_start(self.cmb_themes)
         vbox.pack_start(_frame(" Available themes ", hbox), False)
+        
+        self.cb_show_cross = gtk.CheckButton('Show a "+" in the center of the map')
+        self.cb_show_cross.set_active(conf.show_cross)
+        vbox.pack_start(_frame(" Center of the map ", self.cb_show_cross), False)
 
         hpaned = gtk.VPaned()
         hpaned.pack1(vbox, True, True)
-        buttons = self.__action_buttons()
+        buttons = self.__action_buttons(conf)
         hpaned.pack2(buttons, False, False)
         return hpaned
 
