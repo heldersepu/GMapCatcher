@@ -1,10 +1,11 @@
-July 12 2009    H.S    <HelderSepu@gmail.com>
-    * 0.090 - At revision: 431
+July 13 2009    H.S    <HelderSepu@gmail.com>
+    * 0.090 - At revision: 442
     * Add GPS support for Linux (thanks to Johan Strombom)
     * Complete the support for markers (Issues 22, 38)
     * Add option to show a small "+" mark in the center of the map (Issue 42)
     * Add support for Tooltips (Issue 36)
     * Always show the default path to the ".googlemaps" folder (Issue 59)
+    * Improve the windows installer (Issue 61)
 
 June 16 2009    H.S    <HelderSepu@gmail.com>
     * 0.080 - At revision: 364
