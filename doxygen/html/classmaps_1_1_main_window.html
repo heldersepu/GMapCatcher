@@ -52,9 +52,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#3528fc2f760c7305132d846e27559644">key_press_combo</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Handles the pressing of arrow keys.  <a href="#3528fc2f760c7305132d846e27559644"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#26f30fe5b6eec266d64288853f40a38f">gtk_menu</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a gtk Menu with the given items.  <a href="#26f30fe5b6eec266d64288853f40a38f"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#44eee122b997d15b6f498f4ea05ce85a">tools_button_event</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Handles the events in the Tools buttons.  <a href="#44eee122b997d15b6f498f4ea05ce85a"></a><br></td></tr>
@@ -70,6 +67,12 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#e8e6ad1dc3a5c619a58a2f97a1608335">download_clicked</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#1679d1bc66dc4cd605b009ae097203d7">gps_center_callback</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Called when the map should be centered around a new GPS location.  <a href="#1679d1bc66dc4cd605b009ae097203d7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#7f981dc1647f640a7dff33e3f62accb5">gps_marker_callback</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Called when the GPS marker should be moved to a new location.  <a href="#7f981dc1647f640a7dff33e3f62accb5"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#5b3cdcbb7f76c80d84cb9cdc5f8e07b3">do_zoom</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#314068daadba6c8eae537717db16d851">menu_tools</a></td></tr>
@@ -105,6 +108,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#57462287fabcd7ce0ef7a2ef66ac5e2a">scroll_cb</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#81e96b3e074ddeb8a10a53d5519ac846">scale_change_value</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#78bcc33f3a90a130768d6d964ff88f10">draw_overlay</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#14074da429d186b812ee2d9837afc595">tile_received</a></td></tr>
 
@@ -147,6 +152,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#0e8b3d522be6840ccb6163a78ddca2f9">draging_start</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#f7f183b04a536d0c425547af72bb9a6f">conf</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#134d8ddea4e45a5b47fd6b07f10ada07">crossPixbuf</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#6b8cf5c1b5b3ef55c920444119f4351e">gps</a></td></tr>
 
@@ -850,6 +857,41 @@ Reset the default text if entry is empty.
 
 </div>
 </div><p>
+<a class="anchor" name="78bcc33f3a90a130768d6d964ff88f10"></a><!-- doxytag: member="maps::MainWindow::draw_overlay" ref="78bcc33f3a90a130768d6d964ff88f10" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def maps.MainWindow.draw_overlay           </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>drawing_area</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>rect</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="36d75b3f6653fadbad04409f8051e611"></a><!-- doxytag: member="maps::MainWindow::error_msg" ref="36d75b3f6653fadbad04409f8051e611" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -971,6 +1013,37 @@ Handles the pressing of F11 &amp; F12.
 
 </div>
 </div><p>
+<a class="anchor" name="1679d1bc66dc4cd605b009ae097203d7"></a><!-- doxytag: member="maps::MainWindow::gps_center_callback" ref="1679d1bc66dc4cd605b009ae097203d7" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def maps.MainWindow.gps_center_callback           </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>coord</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Called when the map should be centered around a new GPS location. 
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="568dd8eb086070814ed214566fe568a8"></a><!-- doxytag: member="maps::MainWindow::gps_changed" ref="568dd8eb086070814ed214566fe568a8" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -1000,33 +1073,24 @@ Handles the pressing of F11 &amp; F12.
 
 </div>
 </div><p>
-<a class="anchor" name="26f30fe5b6eec266d64288853f40a38f"></a><!-- doxytag: member="maps::MainWindow::gtk_menu" ref="26f30fe5b6eec266d64288853f40a38f" args="" -->
+<a class="anchor" name="7f981dc1647f640a7dff33e3f62accb5"></a><!-- doxytag: member="maps::MainWindow::gps_marker_callback" ref="7f981dc1647f640a7dff33e3f62accb5" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">def maps.MainWindow.gtk_menu           </td>
+          <td class="memname">def maps.MainWindow.gps_marker_callback           </td>
           <td>(</td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>self</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"> <em>self</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
           <td></td>
-          <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>listItems</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Create a gtk Menu with the given items. 
+Called when the GPS marker should be moved to a new location. 
 <p>
 
 </div>
@@ -1647,6 +1711,21 @@ Handles the events in the Tools buttons.
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classmaps_1_1_main_window.html#f7f183b04a536d0c425547af72bb9a6f">maps.MainWindow.conf</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="134d8ddea4e45a5b47fd6b07f10ada07"></a><!-- doxytag: member="maps::MainWindow::crossPixbuf" ref="134d8ddea4e45a5b47fd6b07f10ada07" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmaps_1_1_main_window.html#134d8ddea4e45a5b47fd6b07f10ada07">maps.MainWindow.crossPixbuf</a>          </td>
         </tr>
       </table>
 </div>
