@@ -1,3 +1,6 @@
+## @package DLWindow
+# Widget that allows Download of entire locations
+
 import math
 import pygtk
 pygtk.require('2.0')

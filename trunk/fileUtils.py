@@ -1,4 +1,6 @@
-## A common location for all the File I/O Utilities
+## @package fileUtils
+# A common location for all the File I/O Utilities
+
 import os
 import re
 

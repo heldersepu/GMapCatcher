@@ -1,3 +1,6 @@
+## @package mapUtils
+# A group of map utilities
+
 import math
 import mapMark
 from mapConst import *

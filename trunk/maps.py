@@ -1,16 +1,21 @@
+## @package maps
+# This is the Main Window
+
 #!/usr/bin/env python
-from mapUtils import mod
 import mapMark
 import mapConf
 import mapUtils
 import googleMaps
 import mapTools
+import mapGPS
+import mapPixbuf
+import mapDownloader
 
+import os
 from gtkThread import *
 from mapConst import *
 from DLWindow import DLWindow
-import mapDownloader
-import lrucache
+from customWidgets import myToolTip, gtk_menu
 
 class MainWindow(gtk.Window):
 
@@ -97,20 +102,6 @@ class MainWindow(gtk.Window):
             self.combo_popup()
             return True
 
-    ## Create a gtk Menu with the given items
-    def gtk_menu(self, listItems):
-        myMenu = gtk.Menu()
-        for str in listItems:
-            # An empty item inserts a separator
-            if str == "":
-                menu_items = gtk.MenuItem()
-            else:
-                menu_items = gtk.MenuItem(str)
-            myMenu.append(menu_items)
-            menu_items.connect("activate", self.menu_item_response, str)
-            menu_items.show()
-        return myMenu
-
     ## Handles the events in the Tools buttons
     def tools_button_event(self, w, event):
         if event.type == gtk.gdk.BUTTON_PRESS:
@@ -170,6 +161,9 @@ class MainWindow(gtk.Window):
         if online:
              self.repaint()
 
+    def gps_changed(self, w):
+        self.gps.set_mode(w.get_active())
+
     def layer_changed(self, w):
         self.layer = w.get_active()
         self.repaint()
@@ -182,6 +176,14 @@ class MainWindow(gtk.Window):
                        self.layer, self.conf.init_path)
         dlw.show()
 
+    ## Called when the map should be centered around a new GPS location
+    def gps_center_callback(self, coord):
+        self.center = mapUtils.coord_to_tile((coord[0], coord[1], self.current_zoom_level))
+        self.repaint()
+
+    ## Called when the GPS marker should be moved to a new location
+    def gps_marker_callback(self):
+        self.repaint()
 
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
@@ -209,8 +211,10 @@ class MainWindow(gtk.Window):
 
         gtk.stock_add([(gtk.STOCK_PREFERENCES, "", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
-        menu = self.gtk_menu(TOOLS_MENU)
+        menu = gtk_menu(TOOLS_MENU, self.menu_item_response)
         button.connect_object("event", self.tools_button_event, menu)
+        button.props.has_tooltip = True
+        button.connect("query-tooltip", myToolTip, "Title", "Description here", os.path.join("images", "marker.png"))
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
@@ -238,6 +242,14 @@ class MainWindow(gtk.Window):
         hbox.pack_start(self.cb_forceupdate)
 
         bbox = gtk.HButtonBox()
+        if mapGPS.available:
+            self.cmb_gps = gtk.combo_box_new_text()
+            for w in GPS_NAMES:
+                self.cmb_gps.append_text(w)
+            self.cmb_gps.set_active(0)
+            self.cmb_gps.connect('changed',self.gps_changed)
+            bbox.add(self.cmb_gps)
+
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
         gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_HARDDISK)
@@ -288,8 +300,8 @@ class MainWindow(gtk.Window):
         da.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
 
-        menu = self.gtk_menu(["Zoom In", "Zoom Out", "Center map here",
-                              "Reset", "", "Batch Download"])
+        menu = gtk_menu(["Zoom In", "Zoom Out", "Center map here",
+                    "Reset", "", "Batch Download"], self.menu_item_response)
 
         da.connect_object("event", self.da_click_events, menu)
         da.connect('button-press-event', self.da_button_press)
@@ -390,8 +402,8 @@ class MainWindow(gtk.Window):
         self.downloader.query_region_around_point(
             self.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
-            online=online, force_update=force_update
-        )
+            online=online, force_update=force_update)
+        self.draw_overlay(drawing_area, rect)
 
     def repaint(self):
         self.drawing_area.queue_draw()
@@ -407,6 +419,47 @@ class MainWindow(gtk.Window):
             self.do_scale(value)
         return
 
+    def draw_overlay(self, drawing_area, rect):
+        gc = drawing_area.style.black_gc
+        zl = self.current_zoom_level
+
+        # Draw cross in the center
+        if self.conf.show_cross:
+            drawing_area.window.draw_pixbuf(gc, self.crossPixbuf, 0, 0,
+                rect.width/2 - 6, rect.height/2 - 6, 12, 12)
+
+        # Draw the markers
+        img = self.marker.get_marker_pixbuf(zl)
+        pixDim = self.marker.get_pixDim(zl)
+        for str in self.marker.positions.keys():
+            mpos = self.marker.positions[str]
+            if zl <= mpos[2]:
+                mct = mapUtils.coord_to_tile((mpos[0], mpos[1], zl))
+                xy = mapUtils.tile_coord_to_screen(
+                    (mct[0][0], mct[0][1], zl), rect, self.center)
+                if xy:
+                    for x,y in xy:
+                        drawing_area.window.draw_pixbuf(gc, img, 0, 0,
+                            x + mct[1][0] - pixDim/2,
+                            y + mct[1][1] - pixDim/2,
+                            pixDim, pixDim)
+
+        # Draw GPS position
+        if mapGPS.available:
+            location = self.gps.get_location()
+            if location is not None and (zl <= self.conf.max_gps_zoom):
+                img = self.gps.pixbuf
+                img_size = (48, 48)
+                mct = mapUtils.coord_to_tile((location[0], location[1], zl))
+                xy = mapUtils.tile_coord_to_screen(
+                    (mct[0][0], mct[0][1], zl), rect, self.center)
+                if xy:
+                    for x,y in xy:
+                        drawing_area.window.draw_pixbuf(gc, img, 0, 0, \
+                            x + mct[1][0] - img_size[0] / 2,
+                            y + mct[1][1] - img_size[1] / 2, \
+                            img_size[0], img_size[1])
+
     def tile_received(self, tile_coord, layer):
         if self.layer == layer and self.current_zoom_level == tile_coord[2]:
             da = self.drawing_area
@@ -418,15 +471,9 @@ class MainWindow(gtk.Window):
                 for x,y in xy:
                     da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                           TILES_WIDTH, TILES_HEIGHT)
-                # Draw the markers
-                if self.downloader.qsize() == 0:
-                    img = self.marker.pixbuf
-                    for str in self.marker.positions.keys():
-                        mct = mapUtils.coord_to_tile(self.marker.positions[str])
-                        if tile_coord[0] == mct[0][0] and \
-                           tile_coord[1] == mct[0][1]:
-                            da.window.draw_pixbuf(gc, img, 0, 0, x, y,
-                                                  TILES_WIDTH, TILES_HEIGHT)
+
+                if not self.cb_offline.get_active():
+                    self.draw_overlay(da, rect)
 
     ## Handles the pressing of F11 & F12
     def full_screen(self,keyval):
@@ -486,6 +533,8 @@ class MainWindow(gtk.Window):
             self.navigation(event.keyval)
 
     def on_delete(self,*args):
+        if mapGPS.available:
+            self.gps.stop_all()
         self.downloader.stop_all()
         self.ctx_map.finish()
         return False
@@ -494,6 +543,12 @@ class MainWindow(gtk.Window):
         self.conf = mapConf.MapConf()
         self.center = self.conf.init_center
         self.current_zoom_level = self.conf.init_zoom
+        self.crossPixbuf = mapPixbuf.cross()
+
+        if mapGPS.available:
+            self.gps = mapGPS.GPS(self.gps_center_callback,
+                                  self.gps_marker_callback,
+                                  self.conf.gps_update_rate)
 
         self.marker = mapMark.MyMarkers(self.conf.init_path)
         self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path)

@@ -1,3 +1,6 @@
+## @package download
+# Downloader tool without GUI
+
 #!/usr/bin/env python
 import mapConf
 import googleMaps

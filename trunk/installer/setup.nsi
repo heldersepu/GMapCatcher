@@ -1,6 +1,7 @@
 !define PRODUCT_NAME "GMapCatcher"
-!define PRODUCT_VERSION "0.080"
+!define PRODUCT_VERSION "0.090"
 !define PRODUCT_WEB_SITE "http://code.google.com/p/gmapcatcher/"
+!include nsDialogs.nsh
 
 ; The name of the installer
 Name "${PRODUCT_NAME}"
@@ -36,17 +37,89 @@ VIAddVersionKey "FileVersion" "${PRODUCT_VERSION}"
 Page components
 Page directory
 Page instfiles
+Page custom finalPage
 
 UninstPage uninstConfirm
 UninstPage instfiles
+UninstPage custom un.finalPage
 
 ShowInstDetails show
 ShowUninstDetails show
 
+Var CHECKBOX
+Var boolCHECKBOX
+Var Image
+Var ImageHandle
+
+;--------------------------------
+; The final install page that asks to run the application
+Function finalPage
+
+	nsDialogs::Create 1018
+	Pop $0
+	${NSD_CreateLabel} 75u 30u 80% 8u "GMapCatcher was succesfully installed on your computer."
+	Pop $0
+	${NSD_CreateCheckbox} 80u 50u 50% 8u "Run GMapCatcher v${PRODUCT_VERSION}"
+	Pop $CHECKBOX
+    SendMessage $CHECKBOX ${BM_SETCHECK} ${BST_CHECKED} 0
+    GetFunctionAddress $1 OnCheckbox
+	nsDialogs::OnClick $CHECKBOX $1
+
+    ; Add an image
+    ${NSD_CreateBitmap} 0 0 100% 40% ""
+    Pop $Image
+    ${NSD_SetImage} $Image "$INSTDIR\images\setup.bmp" $ImageHandle
+	nsDialogs::Show
+    ${NSD_freeImage} $ImageHandle
+
+FunctionEnd
+Function OnCheckbox
+    SendMessage $CHECKBOX ${BM_GETSTATE} 0 0 $1
+    ${If} $1 != 8
+        StrCpy $boolCHECKBOX "True"
+    ${Else}
+        StrCpy $boolCHECKBOX "False"
+    ${EndIf}
+FunctionEnd
+Function .onInstSuccess
+	${If} $boolCHECKBOX != "False"
+        Exec "$INSTDIR\maps.exe"
+    ${EndIf}
+FunctionEnd
+
+;--------------------------------
+; The final uninstall page that asks to remove all images
+Function un.finalPage
+
+	nsDialogs::Create 1018
+	Pop $0
+	${NSD_CreateLabel} 50u 30u 80% 8u "GMapCatcher was uninstalled from your computer."
+	Pop $0
+	${NSD_CreateCheckbox} 60u 50u 50% 8u "Remove all downloaded images"
+	Pop $CHECKBOX
+    GetFunctionAddress $1 un.OnCheckbox
+	nsDialogs::OnClick $CHECKBOX $1
+	nsDialogs::Show
+
+FunctionEnd
+Function un.OnCheckbox
+    SendMessage $CHECKBOX ${BM_GETSTATE} 0 0 $1
+    ${If} $1 != 8
+        StrCpy $boolCHECKBOX "True"
+    ${Else}
+        StrCpy $boolCHECKBOX "False"
+    ${EndIf}
+FunctionEnd
+Function un.onUninstSuccess
+    ${If} $boolCHECKBOX == "True"
+        RMDir /r "$PROFILE\.googlemaps"
+    ${EndIf}
+FunctionEnd
+
 ;--------------------------------
 ; The stuff to install
 Section "${PRODUCT_NAME} (required)"
-
+    SetAutoClose true
     SectionIn RO
 
     ; Set output path to the installation directory.
@@ -106,7 +179,7 @@ SectionEnd
 ;--------------------------------
 ; Uninstaller
 Section "Uninstall"
-
+    SetAutoClose true
     ; Remove registry keys
     DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
     DeleteRegKey HKLM "SOFTWARE\${PRODUCT_NAME}"

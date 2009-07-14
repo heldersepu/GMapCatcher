@@ -1,7 +1,12 @@
+## @package mapTools
+# The tools widget, items are displayed in multiple tabs.
+
 import pygtk
 pygtk.require('2.0')
 import gtk
-import customWidgets
+import mapTreeView
+import mapMySettings
+import mapChangeTheme
 from mapConst import *
 
 
@@ -13,9 +18,9 @@ class MainWindow():
         notebook.set_tab_pos(gtk.POS_TOP)
         notebook.show()
 
-        myTree = customWidgets.TreeView()
-        mySett = customWidgets.MySettings()
-        myTheme = customWidgets.ChangeTheme()
+        myTree = mapTreeView.TreeView()
+        mySett = mapMySettings.MySettings()
+        myTheme = mapChangeTheme.ChangeTheme()
 
         # Append pages to the notebook
         for str in TOOLS_MENU:
@@ -27,7 +32,7 @@ class MainWindow():
             elif str == TOOLS_MENU[0]:
                 frame.add(mySett.show(parent))
             elif str == TOOLS_MENU[3]:
-                frame.add(myTheme.show())
+                frame.add(myTheme.show(parent.conf))
             else:
                 frame.add(gtk.Label(str + ' coming soon!! '))
             label = gtk.Label(str)
