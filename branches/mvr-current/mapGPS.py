@@ -74,7 +74,7 @@ class GPS:
                 return w.get_pixbuf()
             except ValueError:
                 print "File corrupted: %s" % filename
-				
+
 class GPSUpdater(Thread):
     """Continiously updates GPS coordinates.
     """

@@ -7,7 +7,7 @@ TILES_WIDTH = 256
 TILES_HEIGHT = 256
 NR_MTS = 4
 SEPARATOR = "\t"
-TOOLS_MENU = ["Settings", "Edit locations", "Edit markers", 
+TOOLS_MENU = ["Settings", "Edit locations", "Edit markers",
               "Change Theme", "GPS Options"]
 
 LAYER_MAP = 0

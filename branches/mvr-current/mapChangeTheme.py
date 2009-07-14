@@ -62,7 +62,7 @@ class ChangeTheme():
         self.load_combo(self.cmb_themes)
         hbox.pack_start(self.cmb_themes)
         vbox.pack_start(_frame(" Available themes ", hbox), False)
-        
+
         self.cb_show_cross = gtk.CheckButton('Show a "+" in the center of the map')
         self.cb_show_cross.set_active(conf.show_cross)
         vbox.pack_start(_frame(" Center of the map ", self.cb_show_cross), False)

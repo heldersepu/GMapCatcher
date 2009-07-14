@@ -23,7 +23,7 @@ class MapConf():
     def __init__(self):
         configpath = self.get_configpath()
         self.read(configpath)
-        if not os.path.exists(configpath):            
+        if not os.path.exists(configpath):
             self.write(configpath)
 
     ## Write the configuration to the given file
@@ -43,7 +43,7 @@ class MapConf():
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
-        
+
     ## Reads the configuration from a given file
     def read(self, configpath):
         def read_config(keyOption, defaultValue, castFunction):
@@ -52,7 +52,7 @@ class MapConf():
                 return castFunction(strValue)
             except Exception:
                 return defaultValue
-            
+
         config = ConfigParser.RawConfigParser()
         config.read(configpath)
         strSection = 'init'
@@ -65,15 +65,15 @@ class MapConf():
         self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL, int)
         ## Initial map center, default is ((0,0),(128,128))
         self.init_center = read_config('center', ((0,0),(128,128)), str_to_tuple)
-        
+
         ## Directory path to the map images, default is "userProfile" folder
         self.init_path = os.path.join(os.path.expanduser(USER_PATH), TILES_PATH)
         strPath = read_config('path', self.init_path, str)
-        if not strPath.strip().lower() in ['none', '']:        
+        if not strPath.strip().lower() in ['none', '']:
             strPath = fileUtils.check_dir(strPath)
             if os.path.isdir(strPath):
                 self.init_path = strPath
-        
+
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float)
         ## Show a small cross in the center of the map, default is 0

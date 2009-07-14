@@ -56,15 +56,15 @@ Var ImageHandle
 Function finalPage
 
 	nsDialogs::Create 1018
-	Pop $0    
+	Pop $0
 	${NSD_CreateLabel} 75u 30u 80% 8u "GMapCatcher was succesfully installed on your computer."
-	Pop $0    	
+	Pop $0
 	${NSD_CreateCheckbox} 80u 50u 50% 8u "Run GMapCatcher v${PRODUCT_VERSION}"
 	Pop $CHECKBOX
     SendMessage $CHECKBOX ${BM_SETCHECK} ${BST_CHECKED} 0
     GetFunctionAddress $1 OnCheckbox
 	nsDialogs::OnClick $CHECKBOX $1
-    
+
     ; Add an image
     ${NSD_CreateBitmap} 0 0 100% 40% ""
     Pop $Image
@@ -83,25 +83,25 @@ Function OnCheckbox
 FunctionEnd
 Function .onInstSuccess
 	${If} $boolCHECKBOX != "False"
-        Exec '"$INSTDIR\maps.exe"'
+        Exec "$INSTDIR\maps.exe"
     ${EndIf}
 FunctionEnd
-  
+
 ;--------------------------------
-; The final uninstall page that asks to remove all images 
+; The final uninstall page that asks to remove all images
 Function un.finalPage
 
 	nsDialogs::Create 1018
-	Pop $0    
+	Pop $0
 	${NSD_CreateLabel} 50u 30u 80% 8u "GMapCatcher was uninstalled from your computer."
-	Pop $0    	
+	Pop $0
 	${NSD_CreateCheckbox} 60u 50u 50% 8u "Remove all downloaded images"
 	Pop $CHECKBOX
     GetFunctionAddress $1 un.OnCheckbox
 	nsDialogs::OnClick $CHECKBOX $1
 	nsDialogs::Show
 
-FunctionEnd  
+FunctionEnd
 Function un.OnCheckbox
     SendMessage $CHECKBOX ${BM_GETSTATE} 0 0 $1
     ${If} $1 != 8
@@ -115,7 +115,7 @@ Function un.onUninstSuccess
         RMDir /r "$PROFILE\.googlemaps"
     ${EndIf}
 FunctionEnd
-  
+
 ;--------------------------------
 ; The stuff to install
 Section "${PRODUCT_NAME} (required)"
