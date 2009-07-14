@@ -1,3 +1,6 @@
+## @package googleMaps
+# All the interaction with google.com
+
 import os
 import re
 import gtk

@@ -4,6 +4,9 @@
 @COLOR 02
 :: clean up before starting
 @DEL *.exe
+@COPY setup.* ..
+@CD ..
+@DEL *.exe
 @DEL *.pyc
 @RD dist /s /q
 @RD build /s /q
@@ -14,24 +17,27 @@ C:\PYTHON26\PYTHON.EXE setup.py py2exe
 :: Few seconds delay to show dependencies
 @COLOR F0
 @ECHO.
-@PING 1.1 > NUL
+@PING 1.1 /n 2 > NUL
 @COLOR 03
 
-:: Copy individual files
-@COPY missing.png dist
-@COPY marker.png dist
+:: Copy all the image files
+@MD dist\images
+@COPY images dist\images
 
-:: Need to copy the [etc, lib, share] directories from your GTK+ install (not the pygtk install) to the "dist" dir py2exe created.
+:: Need to copy the [etc, lib, share] directories from your GTK+ install 
+::(not the pygtk install) to the "dist" dir py2exe created.
 :: All the Required files should be in the "common" folder
 @XCOPY /E common\* dist
 
 :: Launch the NSIS setup
 @COLOR 07
-"%programfiles%\NSIS\makensis.exe" setup.nsi
+"%ProgramFiles%\NSIS\makensis.exe" setup.nsi
+@Echo.
 
+:: clean up at the end
+@MOVE *.exe installer
 @Echo.
 @PAUSE
-:: clean up at the end
+@DEL setup.* /q
 @RD build /s /q
 @RD dist /s /q
-
