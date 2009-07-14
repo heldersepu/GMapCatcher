@@ -31,6 +31,7 @@ class ChangeTheme():
 
         def btn_save_clicked(button, conf):
             conf.show_cross = self.cb_show_cross.get_active()
+            conf.save()
             if self.cmb_themes.get_model():
                 cmb_text = self.cmb_themes.get_active_text()
                 if cmb_text:
