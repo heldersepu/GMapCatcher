@@ -84,6 +84,7 @@ class DLWindow(gtk.Window):
             return hbbox
 
         print "DLWindow(", coord, kmx, kmy, layer, ')'
+        self.mapService = mapServ
         kmx = mapUtils.nice_round(kmx)
         kmy = mapUtils.nice_round(kmy)
         self.layer = layer
@@ -139,7 +140,7 @@ class DLWindow(gtk.Window):
         dlon = kmx*180/math.pi/(R_EARTH*math.cos(lat0*math.pi/180))
         dlat = kmy*180/math.pi/R_EARTH
         # creating our own gmap
-        self.gmap = googleMaps.GoogleMaps(init_path, mapServ) 
+        self.gmap = googleMaps.GoogleMaps(init_path, self.mapService) 
         self.complete = []
         self.downloader = MapDownloader(self.gmap)
         if zoom0>zoom1:
