@@ -4,7 +4,7 @@ This modul provides filebased tile repository functions
 Usage:
 
 - constructor requires googleMaps instance, because method
-'get_tile_from_url' is provided be the googleMaps
+'get_tile_from_coord' is provided in the googleMaps
 
 - this modul is not used directly. It is used via GoogleMaps() methods:
     - get_file()
@@ -68,7 +68,7 @@ class TilesRepositoryFS:
             return False
 
         try:
-            data = self.instance_google_maps.get_tile_from_url(coord, layer, online)
+            data = self.instance_google_maps.get_tile_from_coord(coord, layer, online)
             file = open( filename, 'wb' )
             file.write( data )
             file.close()

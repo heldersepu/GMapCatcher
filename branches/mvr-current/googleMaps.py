@@ -130,7 +130,7 @@ class GoogleMaps:
             return 'error=Unable to get latitude and longitude of %s ' % location
 
 
-    def get_tile_from_url(self, coord, layer, online):
+    def get_tile_from_coord(self, coord, layer, online):
         t=self.layer_url_template(layer,online)
         if not t:
             return False
