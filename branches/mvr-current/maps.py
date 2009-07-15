@@ -173,7 +173,7 @@ class MainWindow(gtk.Window):
         rect = self.drawing_area.get_allocation()
         km_px = mapUtils.km_per_pixel(coord)
         dlw = DLWindow(coord, km_px*rect.width, km_px*rect.height,
-                       self.layer, self.conf.init_path)
+                       self.layer, self.conf.init_path, self.conf.map_service)
         dlw.show()
 
     ## Called when the map should be centered around a new GPS location
