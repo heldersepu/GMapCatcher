@@ -138,10 +138,12 @@ class GoogleMaps:
         else:
             return 'error=Unable to get latitude and longitude of %s ' % location
 
+    ## Get the URL for the given coordinates
+    # In this function we point to the map service
     def get_url_from_coord(self, coord, layer, online):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
-        if self.mapService == 'OpenStreetMap':
+        if self.mapService == 'OpenStreetMap' and (layer == LAYER_MAP):
             return openStreetMaps.get_url(self.mt_counter, coord)
         else:
             return self.get_url(self.mt_counter, coord, layer, online)
