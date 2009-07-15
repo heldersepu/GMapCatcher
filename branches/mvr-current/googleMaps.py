@@ -9,6 +9,7 @@ import urllib
 import openanything
 import fileUtils
 import tilesreposfs
+import openStreetMaps
 
 from mapConst import *
 from gobject import TYPE_STRING
@@ -26,6 +27,7 @@ class GoogleMaps:
         else:
             return 10
 
+    ## Returns a template URL for the GoogleMaps
     def layer_url_template(self, layer, online):
         if layer not in self.known_layers:
             self.version_string=None
@@ -50,13 +52,20 @@ class GoogleMaps:
 
         return self.known_layers[layer]
 
+    ## Returns the URL to the GoogleMaps tile
+    def get_url(self, counter, coord, layer, online):
+        template = self.layer_url_template(layer, online)
+        if template:
+            return template % (counter, coord[0], coord[1], coord[2])
+
     def read_locations(self):
         self.locations = fileUtils.read_file('location', self.locationpath)
 
     def write_locations(self):
         fileUtils.write_file('location', self.locationpath, self.locations)
 
-    def __init__(self, configpath=None):
+    def __init__(self, configpath=None, mapServ='Google'):
+        self.mapService = mapServ
         configpath = os.path.expanduser(configpath or DEFAULT_PATH)
         self.mt_counter=0
         self.configpath = fileUtils.check_dir(configpath)
@@ -64,7 +73,7 @@ class GoogleMaps:
         self.known_layers = {}
         self.locations = {}
 
-        #implementaion of the method is set in maps.py:__init__()
+        #implementation of the method is set in maps.py:__init__()
         self.tile_repository = tilesreposfs.TilesRepositoryFS(self)
 
         if (os.path.exists(self.locationpath)):
@@ -129,26 +138,26 @@ class GoogleMaps:
         else:
             return 'error=Unable to get latitude and longitude of %s ' % location
 
-
-    def get_tile_from_coord(self, coord, layer, online):
-        t=self.layer_url_template(layer,online)
-        if not t:
-            return False
-
-        href = t % (
-                self.mt_counter,
-                coord[0], coord[1], coord[2])
+    def get_url_from_coord(self, coord, layer, online):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
-        try:
-            print 'downloading:', href
-            oa = openanything.fetch(href)
-            if oa['status']==200:
-                return oa['data']
-            else:
-                raise RuntimeError, ("HTTP Reponse is: " + str(oa['status']),)
-        except:
-            raise
+        if self.mapService == 'OpenStreetMap':
+            return openStreetMaps.get_url(self.mt_counter, coord)
+        else:
+            return self.get_url(self.mt_counter, coord, layer, online)
+
+    def get_tile_from_coord(self, coord, layer, online):
+        href = self.get_url_from_coord(coord, layer, online)
+        if href:
+            try:
+                print 'downloading:', href
+                oa = openanything.fetch(href)
+                if oa['status']==200:
+                    return oa['data']
+                else:
+                    raise RuntimeError, ("HTTP Reponse is: " + str(oa['status']),)
+            except:
+                raise
 
 
     def get_file(self, coord, layer, online, force_update):

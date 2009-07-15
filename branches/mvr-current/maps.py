@@ -551,7 +551,8 @@ class MainWindow(gtk.Window):
                                   self.conf.gps_update_rate)
 
         self.marker = mapMark.MyMarkers(self.conf.init_path)
-        self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path)
+        self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path, 
+                                             self.conf.map_service)
         self.downloader = mapDownloader.MapDownloader(self.ctx_map)
         self.layer=0
         gtk.Window.__init__(self)

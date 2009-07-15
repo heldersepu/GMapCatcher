@@ -40,6 +40,7 @@ class MapConf():
         config.set(strSection, 'gps_update_rate', self.gps_update_rate)
         config.set(strSection, 'show_cross', self.show_cross)
         config.set(strSection, 'max_gps_zoom', self.max_gps_zoom)
+        config.set(strSection, 'map_service', self.map_service)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -78,8 +79,10 @@ class MapConf():
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float)
         ## Show a small cross in the center of the map, default is 0
         self.show_cross = read_config('show_cross', 0, int)
-        ## Maximum zoom to show the GPS, deault is 16
+        ## Maximum zoom to show the GPS, default is 16
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int)
+        ## Map service to get images, default is Google
+        self.map_service = read_config('map_service', 'Google', str)
 
     ## Write the configuration to the default file
     def save(self):
