@@ -97,18 +97,20 @@ class GoogleMaps:
         if oa['status']!=200:
             return 'error=Can not connect to http://maps.google.com'
 
+        m = 0
         html = oa['data']
-        # List of patterns to look for the location name
-        paList = ['laddr:"([^"]+)"',
-                  'daddr:"([^"]+)"']
-        for srtPattern in paList:
-            p = re.compile(srtPattern)
-            m = p.search(html)
-            if m: break
+        if html.find('We could not understand the location') < 0:
+            # List of patterns to look for the location name
+            paList = ['laddr:"([^"]+)"',
+                      'daddr:"([^"]+)"']
+            for srtPattern in paList:
+                p = re.compile(srtPattern)
+                m = p.search(html)
+                if m: break
+
         if m:
             location = m.group(1)
         else:
-            m = p.search(html)
             return 'error=Location %s not found' % location
 
         # List of patterns to look for the latitude & longitude
