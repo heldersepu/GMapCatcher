@@ -1,4 +1,4 @@
-## @package googleMaps
+## @package src.googleMaps
 # All the interaction with google.com
 
 import os

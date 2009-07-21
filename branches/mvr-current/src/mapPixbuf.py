@@ -1,4 +1,4 @@
-## @package mapPixbuf
+## @package src.mapPixbuf
 # Get the Pixbuf from image files.
 #
 

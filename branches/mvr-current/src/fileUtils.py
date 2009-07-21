@@ -1,4 +1,4 @@
-## @package fileUtils
+## @package src.fileUtils
 # A common location for all the File I/O Utilities
 
 import os

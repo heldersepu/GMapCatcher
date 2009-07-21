@@ -1,4 +1,4 @@
-## @package inputValidation
+## @package src.inputValidation
 # Validation of all the user input.
 
 ## Validate the text on all the "input" widgets

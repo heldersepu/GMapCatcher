@@ -1,4 +1,4 @@
-## @package mapConf
+## @package src.mapConf
 # Read and write to the configuration file
 
 import os

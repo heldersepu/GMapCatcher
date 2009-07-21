@@ -2,20 +2,20 @@
 # This is the Main Window
 
 #!/usr/bin/env python
-import mapMark
-import mapConf
-import mapUtils
-import googleMaps
-import mapTools
-import mapGPS
-import mapPixbuf
-import mapDownloader
-
 import os
-from gtkThread import *
-from mapConst import *
-from DLWindow import DLWindow
-from customWidgets import myToolTip, gtk_menu
+import src.mapGPS as mapGPS
+import src.mapConf as mapConf
+import src.mapUtils as mapUtils
+import src.mapTools as mapTools
+import src.mapPixbuf as mapPixbuf
+
+from src.mapConst import *
+from src.gtkThread import *
+from src.mapMark import MyMarkers
+from src.DLWindow import DLWindow
+from src.googleMaps import GoogleMaps
+from src.mapDownloader import MapDownloader
+from src.customWidgets import myToolTip, gtk_menu
 
 class MainWindow(gtk.Window):
 
@@ -550,10 +550,10 @@ class MainWindow(gtk.Window):
                                   self.gps_marker_callback,
                                   self.conf.gps_update_rate)
 
-        self.marker = mapMark.MyMarkers(self.conf.init_path)
-        self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path, 
-                                             self.conf.map_service)
-        self.downloader = mapDownloader.MapDownloader(self.ctx_map)
+        self.marker = MyMarkers(self.conf.init_path)
+        self.ctx_map = GoogleMaps(self.conf.init_path, 
+                                  self.conf.map_service)
+        self.downloader = MapDownloader(self.ctx_map)
         self.layer=0
         gtk.Window.__init__(self)
         try:

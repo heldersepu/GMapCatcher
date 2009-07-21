@@ -1,4 +1,4 @@
-## @package mapGPS
+## @package src.mapGPS
 # GPS Support
 
 try:

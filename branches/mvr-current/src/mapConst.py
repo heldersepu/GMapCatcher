@@ -1,4 +1,4 @@
-## @package mapConst
+## @package src.mapConst
 # Place to keep all constants
 
 MAP_MAX_ZOOM_LEVEL = 17

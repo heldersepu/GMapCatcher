@@ -1,4 +1,4 @@
-## @package mapTools
+## @package src.mapTools
 # The tools widget, items are displayed in multiple tabs.
 
 import pygtk

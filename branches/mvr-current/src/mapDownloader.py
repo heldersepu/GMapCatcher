@@ -1,4 +1,4 @@
-## @package mapDownloader
+## @package src.mapDownloader
 # All downloading is done here
 
 from __future__ import division

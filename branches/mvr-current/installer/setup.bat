@@ -19,7 +19,7 @@
 @COPY setup.* ..
 @CD ..
 @DEL *.exe
-@DEL *.pyc
+@DEL *.pyc /s
 @RD dist /s /q
 @RD build /s /q
 
@@ -44,11 +44,11 @@ C:\PYTHON26\PYTHON.EXE setup.py py2exe
 :: Launch the NSIS setup
 @COLOR 07
 "%ProgramFiles%\NSIS\makensis.exe" setup.nsi
-@Echo.
+@ECHO.
 
 :: clean up at the end
 @MOVE *.exe installer
-@Echo.
+@ECHO.
 @PAUSE
 @DEL setup.* /q
 @RD build /s /q
