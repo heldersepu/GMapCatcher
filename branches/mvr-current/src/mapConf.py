@@ -41,6 +41,7 @@ class MapConf():
         config.set(strSection, 'show_cross', self.show_cross)
         config.set(strSection, 'max_gps_zoom', self.max_gps_zoom)
         config.set(strSection, 'map_service', self.map_service)
+        config.set(strSection, 'version_url', self.version_url)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -83,6 +84,9 @@ class MapConf():
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int)
         ## Map service to get images, default is Google
         self.map_service = read_config('map_service', 'Google', str)
+        ## URL with the latest version used for the notification updates.
+        self.version_url = read_config('version_url', 
+            'http://gmapcatcher.googlecode.com/svn/wiki/version.wiki', str)
 
     ## Write the configuration to the default file
     def save(self):
