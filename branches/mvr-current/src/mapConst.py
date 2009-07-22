@@ -1,6 +1,10 @@
 ## @package src.mapConst
 # Place to keep all constants
 
+NAME = "GMapCatcher"
+VERSION = "0.0.9.0"
+VERSION_NAME = ""
+
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
 TILES_WIDTH = 256
