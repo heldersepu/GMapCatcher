@@ -25,6 +25,7 @@ GPS_MARKER = 1
 GPS_CENTER = 2
 GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center"]
 
+SECTION_INIT  = 'init'
 R_EARTH = 6371.
 USER_PATH = "~"
 TILES_PATH = ".googlemaps"

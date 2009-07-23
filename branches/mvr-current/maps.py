@@ -4,15 +4,16 @@
 #!/usr/bin/env python
 import os
 import src.mapGPS as mapGPS
-import src.mapConf as mapConf
 import src.mapUtils as mapUtils
 import src.mapTools as mapTools
 import src.mapPixbuf as mapPixbuf
 
 from src.mapConst import *
 from src.gtkThread import *
+from src.mapConf import MapConf
 from src.mapMark import MyMarkers
 from src.DLWindow import DLWindow
+from src.mapUpdate import CheckForUpdates
 from src.googleMaps import GoogleMaps
 from src.mapDownloader import MapDownloader
 from src.customWidgets import myToolTip, gtk_menu
@@ -540,7 +541,7 @@ class MainWindow(gtk.Window):
         return False
 
     def __init__(self, parent=None):
-        self.conf = mapConf.MapConf()
+        self.conf = MapConf()
         self.center = self.conf.init_center
         self.current_zoom_level = self.conf.init_zoom
         self.crossPixbuf = mapPixbuf.cross()
@@ -584,6 +585,10 @@ class MainWindow(gtk.Window):
 
         self.da_set_cursor()
         self.entry.grab_focus()
+        
+        if self.conf.check_for_updates:
+            # 3 seconds delay before starting the check
+            CheckForUpdates(3, self.conf.version_url)
 
 def main():
     MainWindow()
