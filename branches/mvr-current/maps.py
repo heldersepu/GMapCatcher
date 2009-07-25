@@ -215,7 +215,9 @@ class MainWindow(gtk.Window):
         menu = gtk_menu(TOOLS_MENU, self.menu_item_response)
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
-        button.connect("query-tooltip", myToolTip, "Title", "Description here", os.path.join("images", "marker.png"))
+        button.connect("query-tooltip", myToolTip, "Tools", 
+                    "Set of tools to customise GMapCatcher", 
+                    os.path.join("images", "marker.png"))
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
