@@ -30,7 +30,9 @@ class MapUpdate():
 ## Launch the MapUpdate in a thread to prevent any slowdowns
 def UpdateThread(*strURL):
     update =  MapUpdate(strURL[0])
-    print "Latest Version: ", update.latest_version
+    if update.latest_version > VERSION:
+        print "New Version available"
+        print "Latest Version: ", update.latest_version
 
 ## Function that should be called to check for updates
 def CheckForUpdates(intDelay, strURL):
