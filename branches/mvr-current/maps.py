@@ -215,8 +215,8 @@ class MainWindow(gtk.Window):
         menu = gtk_menu(TOOLS_MENU, self.menu_item_response)
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
-        button.connect("query-tooltip", myToolTip, "Tools", 
-                    "Set of tools to customise GMapCatcher", 
+        button.connect("query-tooltip", myToolTip, "Tools",
+                    "Set of tools to customise GMapCatcher",
                     os.path.join("images", "marker.png"))
         hbox.pack_start(button, False)
 
@@ -479,7 +479,7 @@ class MainWindow(gtk.Window):
                     self.draw_overlay(da, rect)
 
     ## Handles the pressing of F11 & F12
-    def full_screen(self,keyval):
+    def full_screen(self, keyval):
         # F11 = 65480
         if keyval == 65480:
             if self.get_decorated():
@@ -500,6 +500,15 @@ class MainWindow(gtk.Window):
                 self.left_panel.show()
                 self.top_panel.show()
                 self.set_border_width(10)
+        # ESC = 65307
+        elif keyval == 65307:
+            self.left_panel.show()
+            self.top_panel.show()
+            self.set_border_width(10)
+            self.set_keep_above(False)
+            self.set_decorated(True)
+            self.unmaximize()
+
 
     ## Handles the keyboard navigation
     def navigation(self, keyval):
@@ -528,8 +537,8 @@ class MainWindow(gtk.Window):
 
     ## Handles the Key pressing
     def key_press_event(self, w, event):
-        # F11 = 65480, F12 = 65481
-        if event.keyval in [65480, 65481]:
+        # F11 = 65480, F12 = 65481, ESC = 65307
+        if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
@@ -554,7 +563,7 @@ class MainWindow(gtk.Window):
                                   self.conf.gps_update_rate)
 
         self.marker = MyMarkers(self.conf.init_path)
-        self.ctx_map = GoogleMaps(self.conf.init_path, 
+        self.ctx_map = GoogleMaps(self.conf.init_path,
                                   self.conf.map_service)
         self.downloader = MapDownloader(self.ctx_map)
         self.layer=0
@@ -587,7 +596,7 @@ class MainWindow(gtk.Window):
 
         self.da_set_cursor()
         self.entry.grab_focus()
-        
+
         if self.conf.check_for_updates:
             # 3 seconds delay before starting the check
             CheckForUpdates(3, self.conf.version_url)
