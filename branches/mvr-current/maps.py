@@ -15,6 +15,7 @@ from src.mapMark import MyMarkers
 from src.DLWindow import DLWindow
 from src.mapUpdate import CheckForUpdates
 from src.googleMaps import GoogleMaps
+from src.customMsgBox import error_msg
 from src.mapDownloader import MapDownloader
 from src.customWidgets import myToolTip, gtk_menu
 
@@ -24,14 +25,7 @@ class MainWindow(gtk.Window):
     draging_start = (0, 0)
     current_zoom_level = MAP_MAX_ZOOM_LEVEL
     default_text = "Enter location here!"
-
-    def error_msg(self, msg, buttons=gtk.BUTTONS_OK):
-        dialog = gtk.MessageDialog(self,
-                gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                gtk.MESSAGE_ERROR, buttons, msg)
-        resp = dialog.run()
-        dialog.destroy()
-        return resp
+    update = None
 
     def do_scale(self, pos, pointer=None, force=False):
         pos = int(round(pos, 0))
@@ -124,7 +118,7 @@ class MainWindow(gtk.Window):
     def confirm_clicked(self, button):
         location = self.entry.get_text()
         if (0 == len(location)):
-            self.error_msg("Need location")
+            error_msg(self, "Need location")
             self.entry.grab_focus()
             return
         if (location == self.default_text):
@@ -133,16 +127,16 @@ class MainWindow(gtk.Window):
             locations = self.ctx_map.get_locations()
             if (not location in locations.keys()):
                 if self.cb_offline.get_active():
-                    if self.error_msg("Offline mode, cannot do search!" + \
-                                      "      Would you like to get online?",
-                                      gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
+                    if error_msg(self, "Offline mode, cannot do search!" + \
+                                  "      Would you like to get online?",
+                                  gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
                         self.combo_popup()
                         return
                 self.cb_offline.set_active(False)
 
                 location = self.ctx_map.search_location(location)
                 if (location[:6] == "error="):
-                    self.error_msg(location[6:])
+                    error_msg(self, location[6:])
                     self.entry.grab_focus()
                     return
 
@@ -545,10 +539,13 @@ class MainWindow(gtk.Window):
             self.navigation(event.keyval)
 
     def on_delete(self,*args):
+        self.hide()
         if mapGPS.available:
             self.gps.stop_all()
         self.downloader.stop_all()
-        self.ctx_map.finish()
+        self.ctx_map.finish()        
+        if self.update:    
+            self.update.finish()
         return False
 
     def __init__(self, parent=None):
@@ -599,7 +596,7 @@ class MainWindow(gtk.Window):
 
         if self.conf.check_for_updates:
             # 3 seconds delay before starting the check
-            CheckForUpdates(3, self.conf.version_url)
+            self.update = CheckForUpdates(3, self.conf.version_url)
 
 def main():
     MainWindow()

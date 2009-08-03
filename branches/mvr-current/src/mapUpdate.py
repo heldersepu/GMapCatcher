@@ -1,9 +1,11 @@
 ## @package src.mapUpdate
 # All the update related logic
 
+import gtk
 import openanything
 from mapConst import *
 from threading import Timer
+from customMsgBox import error_msg
 
 
 ## Class used to get latest version info
@@ -27,18 +29,26 @@ class MapUpdate():
         except Exception:
             return False
 
-## Launch the MapUpdate in a thread to prevent any slowdowns
-def UpdateThread(*strURL):
-    update =  MapUpdate(strURL[0])
-    if update.latest_version > VERSION:
-        print "New Version available"
-        print "Latest Version: ", update.latest_version
 
-## Function that should be called to check for updates
-def CheckForUpdates(intDelay, strURL):
-    #Start after a few second delay
-    myThread = Timer(intDelay, UpdateThread, args=[strURL])
-    myThread.start()
+## Class that should be called to check for updates
+class CheckForUpdates():
+    def __init__(self, intDelay, strURL):
+        #Start after a few second delay
+        self.update = None
+        self.strURL = strURL
+        self.myThread = Timer(intDelay, self.UpdateThread)
+        self.myThread.start()
+
+    ## Launch the MapUpdate in a thread to prevent any slowdowns
+    def UpdateThread(self):
+        self.update = MapUpdate(self.strURL)
+
+    ## Finish the Thread and
+    def finish(self):
+        self.myThread.cancel()
+        if self.update:
+            if self.update.latest_version > VERSION:
+                error_msg(None, "Update detected")
 
 
 
