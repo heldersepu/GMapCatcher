@@ -5,6 +5,10 @@ NAME = "GMapCatcher"
 VERSION = "0.0.9.0"
 VERSION_NAME = ""
 
+GOOGLE = 0
+OSM = 1
+MAP_SERVERS = ["Google", "OpenStreetMap"]
+
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
 TILES_WIDTH = 256

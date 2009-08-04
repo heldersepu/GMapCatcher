@@ -82,7 +82,7 @@ class MapConf():
         ## Maximum zoom to show the GPS, default is 16
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int)
         ## Map service to get images, default is Google
-        self.map_service = read_config('map_service', 'Google', str)
+        self.map_service = read_config('map_service', MAP_SERVERS[GOOGLE], str)
         ## URL with the latest version used for the notification updates.
         self.version_url = read_config('version_url', 
             'http://gmapcatcher.googlecode.com/svn/wiki/version.wiki', str)
