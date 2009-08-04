@@ -14,11 +14,11 @@ import openStreetMaps
 from mapConst import *
 from gobject import TYPE_STRING
 
-
+## All the interaction with Google maps.
+#  Other map services can be added see def get_url_from_coord
 class GoogleMaps:
 
     # coord = (lat, lng, zoom_level)
-    map_server_query=["","h","p"]
 
     @staticmethod
     def set_zoom(intZoom):
@@ -33,8 +33,9 @@ class GoogleMaps:
             self.version_string=None
             if not online:
                 return None
+            map_server_query = ["", "h", "p"]
             oa = openanything.fetch(
-                'http://maps.google.com/maps?t='+self.map_server_query[layer])
+                'http://maps.google.com/maps?t=' + map_server_query[layer])
             if oa['status'] != 200:
                 print "Trying to fetch http://maps.google.com/maps but failed"
                 return None
