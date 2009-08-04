@@ -240,12 +240,12 @@ class MainWindow(gtk.Window):
 
         bbox = gtk.HButtonBox()
         if mapGPS.available:
-            self.cmb_gps = gtk.combo_box_new_text()
+            cmb_gps = gtk.combo_box_new_text()
             for w in GPS_NAMES:
-                self.cmb_gps.append_text(w)
-            self.cmb_gps.set_active(0)
-            self.cmb_gps.connect('changed',self.gps_changed)
-            bbox.add(self.cmb_gps)
+                cmb_gps.append_text(w)
+            cmb_gps.set_active(0)
+            cmb_gps.connect('changed',self.gps_changed)
+            bbox.add(cmb_gps)
 
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
         gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
@@ -253,12 +253,12 @@ class MainWindow(gtk.Window):
         button.connect('clicked', self.download_clicked)
         bbox.add(button)
 
-        self.cmb_layer = gtk.combo_box_new_text()
+        cmb_layer = gtk.combo_box_new_text()
         for w in LAYER_NAMES:
-            self.cmb_layer.append_text(w)
-        self.cmb_layer.set_active(0)
-        self.cmb_layer.connect('changed',self.layer_changed)
-        bbox.add(self.cmb_layer)
+            cmb_layer.append_text(w)
+        cmb_layer.set_active(0)
+        cmb_layer.connect('changed',self.layer_changed)
+        bbox.add(cmb_layer)
 
         hbox.pack_start(bbox)
         return hbox
