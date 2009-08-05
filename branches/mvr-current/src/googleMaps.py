@@ -65,8 +65,7 @@ class GoogleMaps:
     def write_locations(self):
         fileUtils.write_file('location', self.locationpath, self.locations)
 
-    def __init__(self, configpath=None, mapServ='Google'):
-        self.mapService = mapServ
+    def __init__(self, configpath=None):
         configpath = os.path.expanduser(configpath or DEFAULT_PATH)
         self.mt_counter=0
         self.configpath = fileUtils.check_dir(configpath)
@@ -143,16 +142,16 @@ class GoogleMaps:
 
     ## Get the URL for the given coordinates
     # In this function we point to the proper map service
-    def get_url_from_coord(self, coord, layer, online):
+    def get_url_from_coord(self, coord, layer, online, mapServ):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
-        if self.mapService == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
+        if mapServ == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
             return openStreetMaps.get_url(self.mt_counter, coord)
         else:
             return self.get_url(self.mt_counter, coord, layer, online)
 
-    def get_tile_from_coord(self, coord, layer, online):
-        href = self.get_url_from_coord(coord, layer, online)
+    def get_tile_from_coord(self, coord, layer, online, mapServ='Google'):
+        href = self.get_url_from_coord(coord, layer, online, mapServ)
         if href:
             try:
                 print 'downloading:', href
@@ -165,8 +164,9 @@ class GoogleMaps:
                 raise
 
 
-    def get_file(self, coord, layer, online, force_update):
-        return self.tile_repository.get_file(coord, layer, online, force_update)
+    def get_file(self, coord, layer, online, force_update, mapServ='Google'):
+        return self.tile_repository.get_file(coord, layer, online, 
+                                                force_update, mapServ)
 
     def load_pixbuf(self, coord, layer):
         return self.tile_repository.load_pixbuf(coord, layer)

@@ -399,7 +399,8 @@ class MainWindow(gtk.Window):
         self.downloader.query_region_around_point(
             self.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
-            online=online, force_update=force_update)
+            online=online, force_update=force_update, 
+            mapServ=self.conf.map_service)
         self.draw_overlay(drawing_area, rect)
 
     def repaint(self):
@@ -560,8 +561,7 @@ class MainWindow(gtk.Window):
                                   self.conf.gps_update_rate)
 
         self.marker = MyMarkers(self.conf.init_path)
-        self.ctx_map = GoogleMaps(self.conf.init_path,
-                                  self.conf.map_service)
+        self.ctx_map = GoogleMaps(self.conf.init_path)
         self.downloader = MapDownloader(self.ctx_map)
         self.layer=0
         gtk.Window.__init__(self)

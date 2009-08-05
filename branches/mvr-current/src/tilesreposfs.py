@@ -1,17 +1,15 @@
-"""
-This modul provides filebased tile repository functions
+## This modul provides filebased tile repository functions
+# 
+# Usage:
+# 
+# - constructor requires googleMaps instance, because method
+#  'get_tile_from_coord' is provided in the googleMaps
+# 
+# - this module is not used directly. It is used via GoogleMaps() methods:
+#     - get_file()
+#     - load_pixbuf()
+# - module is finalized from GoogleMaps.finish() method
 
-Usage:
-
-- constructor requires googleMaps instance, because method
-'get_tile_from_coord' is provided in the googleMaps
-
-- this modul is not used directly. It is used via GoogleMaps() methods:
-    - get_file()
-    - load_pixbuf()
-- module is finalized from GoogleMaps.finish() method
-
-"""
 
 import os
 import sys
@@ -54,7 +52,10 @@ class TilesRepositoryFS:
                 pixbuf = self.missingPixbuf
         return pixbuf
 
-    def get_png_file(self, coord, layer, filename, online, force_update):
+    ## Get the png file for the given location
+    # Returns true if the file is successfully retrieved
+    def get_png_file(self, coord, layer, filename, 
+                        online, force_update, mapServ):
         # remove tile only when online
         if (os.path.isfile(filename) and force_update and online):
             # Don't remove old tile unless it is downloaded more
@@ -68,7 +69,8 @@ class TilesRepositoryFS:
             return False
 
         try:
-            data = self.instance_google_maps.get_tile_from_coord(coord, layer, online)
+            data = self.instance_google_maps.get_tile_from_coord(coord, layer, 
+                                                            online, mapServ)
             file = open( filename, 'wb' )
             file.write( data )
             file.close()
@@ -92,7 +94,10 @@ class TilesRepositoryFS:
         self.lock.release()
         return os.path.join(path, "%d.png" % (coord[1] % 1024))
 
-    def get_file(self, coord, layer, online, force_update):
+    ## Get the image file for the given location
+    # Validates the given coordinates and,
+    # returns the local filename if successfully retrieved    
+    def get_file(self, coord, layer, online, force_update, mapServ='Google'):
         if (MAP_MIN_ZOOM_LEVEL <= coord[2] <= MAP_MAX_ZOOM_LEVEL):
             world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - coord[2])
             if (coord[0] > world_tiles) or (coord[1] > world_tiles):
@@ -100,7 +105,8 @@ class TilesRepositoryFS:
             ## Tiles dir structure
             filename = self.coord_to_path(coord, layer)
             # print "Coord to path: %s" % filename
-            if (self.get_png_file(coord, layer, filename, online, force_update)):
+            if self.get_png_file(coord, layer, filename, online, 
+                                    force_update, mapServ):
                 return filename
         return None
 
