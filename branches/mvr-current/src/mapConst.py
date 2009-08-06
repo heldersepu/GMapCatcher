@@ -2,7 +2,7 @@
 # Place to keep all constants
 
 NAME = "GMapCatcher"
-VERSION = "0.0.9.0"
+VERSION = "0.1.0.0"
 VERSION_NAME = ""
 
 GOOGLE = 0
