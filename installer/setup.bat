@@ -1,13 +1,25 @@
 :: Create an executable using py2exe then
 :: Make the installer using NSIS
 
+:: Tested with:
+::  python-2.6.2.msi
+::  gtk2-runtime-2.14.7-2009-01-13-ash.exe
+::  gtk2-themes-2008-10-22-ash.exe
+::  py2exe-0.6.9.win32-py2.6.exe
+::  pycairo-1.4.12-2.win32-py2.6.exe
+::  pygobject-2.14.2-2.win32-py2.6.exe
+::  pygtk-2.12.1-3.win32-py2.6.exe
+::  nsis-2.45-setup.exe
+::  AccessControl.zip
+
+
 @COLOR 02
 :: clean up before starting
 @DEL *.exe
 @COPY setup.* ..
 @CD ..
 @DEL *.exe
-@DEL *.pyc
+@DEL *.pyc /s
 @RD dist /s /q
 @RD build /s /q
 
@@ -32,11 +44,11 @@ C:\PYTHON26\PYTHON.EXE setup.py py2exe
 :: Launch the NSIS setup
 @COLOR 07
 "%ProgramFiles%\NSIS\makensis.exe" setup.nsi
-@Echo.
+@ECHO.
 
 :: clean up at the end
 @MOVE *.exe installer
-@Echo.
+@ECHO.
 @PAUSE
 @DEL setup.* /q
 @RD build /s /q

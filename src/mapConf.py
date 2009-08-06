@@ -1,4 +1,4 @@
-## @package mapConf
+## @package src.mapConf
 # Read and write to the configuration file
 
 import os
@@ -29,17 +29,19 @@ class MapConf():
     ## Write the configuration to the given file
     def write(self, configpath):
         config = ConfigParser.RawConfigParser()
-        strSection = 'init'
-        config.add_section(strSection)
+        config.add_section(SECTION_INIT)
         if self.init_path:
-            config.set(strSection, 'path', self.init_path)
-        config.set(strSection, 'width', self.init_width)
-        config.set(strSection, 'height', self.init_height)
-        config.set(strSection, 'zoom', self.init_zoom)
-        config.set(strSection, 'center', self.init_center)
-        config.set(strSection, 'gps_update_rate', self.gps_update_rate)
-        config.set(strSection, 'show_cross', self.show_cross)
-        config.set(strSection, 'max_gps_zoom', self.max_gps_zoom)
+            config.set(SECTION_INIT, 'path', self.init_path)
+        config.set(SECTION_INIT, 'width', self.init_width)
+        config.set(SECTION_INIT, 'height', self.init_height)
+        config.set(SECTION_INIT, 'zoom', self.init_zoom)
+        config.set(SECTION_INIT, 'center', self.init_center)
+        config.set(SECTION_INIT, 'gps_update_rate', self.gps_update_rate)
+        config.set(SECTION_INIT, 'show_cross', self.show_cross)
+        config.set(SECTION_INIT, 'max_gps_zoom', self.max_gps_zoom)
+        config.set(SECTION_INIT, 'map_service', self.map_service)
+        config.set(SECTION_INIT, 'version_url', self.version_url)
+        config.set(SECTION_INIT, 'check_for_updates', self.check_for_updates)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -48,14 +50,13 @@ class MapConf():
     def read(self, configpath):
         def read_config(keyOption, defaultValue, castFunction):
             try:
-                strValue = config.get(strSection, keyOption)
+                strValue = config.get(SECTION_INIT, keyOption)
                 return castFunction(strValue)
             except Exception:
                 return defaultValue
 
         config = ConfigParser.RawConfigParser()
         config.read(configpath)
-        strSection = 'init'
 
         ## Initial window width, default is 450
         self.init_width = read_config('width', 450, int)
@@ -78,8 +79,16 @@ class MapConf():
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float)
         ## Show a small cross in the center of the map, default is 0
         self.show_cross = read_config('show_cross', 0, int)
-        ## Maximum zoom to show the GPS, deault is 16
+        ## Maximum zoom to show the GPS, default is 16
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int)
+        ## Map service to get images, default is Google
+        self.map_service = read_config('map_service', MAP_SERVERS[GOOGLE], str)
+        ## URL with the latest version used for the notification updates.
+        self.version_url = read_config('version_url', 
+            'http://gmapcatcher.googlecode.com/svn/wiki/version.wiki', str)
+        ## Whether or not to check for updates, default is 1
+        self.check_for_updates = read_config('check_for_updates', 0, int)            
+          
 
     ## Write the configuration to the default file
     def save(self):

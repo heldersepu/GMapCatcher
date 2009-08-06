@@ -1,4 +1,4 @@
-## @package customWidgets
+## @package src.customWidgets
 # This is a collection of Custom Widgets
 
 import gtk

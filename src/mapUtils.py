@@ -1,4 +1,4 @@
-## @package mapUtils
+## @package src.mapUtils
 # A group of map utilities
 
 import math

@@ -1,4 +1,4 @@
-## @package mapTreeView
+## @package src.mapTreeView
 # TreeView widget used to display the list of the locations.
 # Displayed inside a tab in mapTools.
 

@@ -1,5 +1,13 @@
-## @package mapConst
+## @package src.mapConst
 # Place to keep all constants
+
+NAME = "GMapCatcher"
+VERSION = "0.1.0.0"
+VERSION_NAME = ""
+
+GOOGLE = 0
+OSM = 1
+MAP_SERVERS = ["Google", "OpenStreetMap"]
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
@@ -21,6 +29,7 @@ GPS_MARKER = 1
 GPS_CENTER = 2
 GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center"]
 
+SECTION_INIT  = 'init'
 R_EARTH = 6371.
 USER_PATH = "~"
 TILES_PATH = ".googlemaps"

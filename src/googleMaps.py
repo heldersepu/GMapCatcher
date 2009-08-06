@@ -1,4 +1,4 @@
-## @package googleMaps
+## @package src.googleMaps
 # All the interaction with google.com
 
 import os
@@ -9,15 +9,16 @@ import urllib
 import openanything
 import fileUtils
 import tilesreposfs
+import openStreetMaps
 
 from mapConst import *
 from gobject import TYPE_STRING
 
-
+## All the interaction with Google maps.
+#  Other map services can be added see def get_url_from_coord
 class GoogleMaps:
 
     # coord = (lat, lng, zoom_level)
-    map_server_query=["","h","p"]
 
     @staticmethod
     def set_zoom(intZoom):
@@ -26,13 +27,15 @@ class GoogleMaps:
         else:
             return 10
 
+    ## Returns a template URL for the GoogleMaps
     def layer_url_template(self, layer, online):
         if layer not in self.known_layers:
             self.version_string=None
             if not online:
                 return None
+            map_server_query = ["", "h", "p"]
             oa = openanything.fetch(
-                'http://maps.google.com/maps?t='+self.map_server_query[layer])
+                'http://maps.google.com/maps?t=' + map_server_query[layer])
             if oa['status'] != 200:
                 print "Trying to fetch http://maps.google.com/maps but failed"
                 return None
@@ -50,6 +53,12 @@ class GoogleMaps:
 
         return self.known_layers[layer]
 
+    ## Returns the URL to the GoogleMaps tile
+    def get_url(self, counter, coord, layer, online):
+        template = self.layer_url_template(layer, online)
+        if template:
+            return template % (counter, coord[0], coord[1], coord[2])
+
     def read_locations(self):
         self.locations = fileUtils.read_file('location', self.locationpath)
 
@@ -64,7 +73,7 @@ class GoogleMaps:
         self.known_layers = {}
         self.locations = {}
 
-        #implementaion of the method is set in maps.py:__init__()
+        #implementation of the method is set in maps.py:__init__()
         self.tile_repository = tilesreposfs.TilesRepositoryFS(self)
 
         if (os.path.exists(self.locationpath)):
@@ -88,18 +97,20 @@ class GoogleMaps:
         if oa['status']!=200:
             return 'error=Can not connect to http://maps.google.com'
 
+        m = 0
         html = oa['data']
-        # List of patterns to look for the location name
-        paList = ['laddr:"([^"]+)"',
-                  'daddr:"([^"]+)"']
-        for srtPattern in paList:
-            p = re.compile(srtPattern)
-            m = p.search(html)
-            if m: break
+        if html.find('We could not understand the location') < 0:
+            # List of patterns to look for the location name
+            paList = ['laddr:"([^"]+)"',
+                      'daddr:"([^"]+)"']
+            for srtPattern in paList:
+                p = re.compile(srtPattern)
+                m = p.search(html)
+                if m: break
+
         if m:
             location = m.group(1)
         else:
-            m = p.search(html)
             return 'error=Location %s not found' % location
 
         # List of patterns to look for the latitude & longitude
@@ -129,30 +140,33 @@ class GoogleMaps:
         else:
             return 'error=Unable to get latitude and longitude of %s ' % location
 
-
-    def get_tile_from_url(self, coord, layer, online):
-        t=self.layer_url_template(layer,online)
-        if not t:
-            return False
-
-        href = t % (
-                self.mt_counter,
-                coord[0], coord[1], coord[2])
+    ## Get the URL for the given coordinates
+    # In this function we point to the proper map service
+    def get_url_from_coord(self, coord, layer, online, mapServ):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
-        try:
-            print 'downloading:', href
-            oa = openanything.fetch(href)
-            if oa['status']==200:
-                return oa['data']
-            else:
-                raise RuntimeError, ("HTTP Reponse is: " + str(oa['status']),)
-        except:
-            raise
+        if mapServ == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
+            return openStreetMaps.get_url(self.mt_counter, coord)
+        else:
+            return self.get_url(self.mt_counter, coord, layer, online)
+
+    def get_tile_from_coord(self, coord, layer, online, mapServ='Google'):
+        href = self.get_url_from_coord(coord, layer, online, mapServ)
+        if href:
+            try:
+                print 'downloading:', href
+                oa = openanything.fetch(href)
+                if oa['status']==200:
+                    return oa['data']
+                else:
+                    raise RuntimeError, ("HTTP Reponse is: " + str(oa['status']),)
+            except:
+                raise
 
 
-    def get_file(self, coord, layer, online, force_update):
-        return self.tile_repository.get_file(coord, layer, online, force_update)
+    def get_file(self, coord, layer, online, force_update, mapServ='Google'):
+        return self.tile_repository.get_file(coord, layer, online, 
+                                                force_update, mapServ)
 
     def load_pixbuf(self, coord, layer):
         return self.tile_repository.load_pixbuf(coord, layer)
