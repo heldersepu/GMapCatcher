@@ -1,7 +1,11 @@
 ﻿#labels Featured
 Screenshots:
 
-v0.09 is coming soon!<br>
+GMapCatcher v0.09 showing new features<br>
+http://gmapcatcher.googlecode.com/svn/wiki/OpenStreetMap.gif
+
+
+GMapCatcher v0.09 showing new features<br>
 http://gmapcatcher.googlecode.com/svn/wiki/v0.09.gif
 
 
