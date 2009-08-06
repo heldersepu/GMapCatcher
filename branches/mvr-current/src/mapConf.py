@@ -87,7 +87,7 @@ class MapConf():
         self.version_url = read_config('version_url', 
             'http://gmapcatcher.googlecode.com/svn/wiki/version.wiki', str)
         ## Whether or not to check for updates, default is 1
-        self.check_for_updates = read_config('check_for_updates', 1, int)            
+        self.check_for_updates = read_config('check_for_updates', 0, int)            
           
 
     ## Write the configuration to the default file
