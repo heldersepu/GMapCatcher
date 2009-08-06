@@ -2,11 +2,12 @@
 # Downloader tool without GUI
 
 #!/usr/bin/env python
-import mapConf
-import googleMaps
 import sys
-from mapUtils import *
-from mapDownloader import MapDownloader
+import src.mapConf as mapConf
+import src.googleMaps as googleMaps
+
+from src.mapUtils import *
+from src.mapDownloader import MapDownloader
 
 conf = mapConf.MapConf()
 ctx_map = googleMaps.GoogleMaps(conf.init_path)
@@ -39,7 +40,6 @@ def print_help():
     print '                very useful to download maps of entire world'
     print ' '
     print 'SAMPLE USAGE'
-    print ' '
     print '  download.py --location="Paris, France"'
     print '  download.py --min-zoom=13 --full-range'
     print '  download.py --latitude=37.979180 --longitude=23.716647'

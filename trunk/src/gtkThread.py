@@ -1,4 +1,4 @@
-## @package gtkThread
+## @package src.gtkThread
 # ...
 
 import sys

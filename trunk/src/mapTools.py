@@ -1,4 +1,4 @@
-## @package mapTools
+## @package src.mapTools
 # The tools widget, items are displayed in multiple tabs.
 
 import pygtk
@@ -39,7 +39,7 @@ class MainWindow():
             notebook.append_page(frame, label)
         # Set what page to start at
         return notebook
-
+        
     def __init__(self, parent, start_page):
         win = gtk.Window(gtk.WINDOW_TOPLEVEL)
         win.set_border_width(10)

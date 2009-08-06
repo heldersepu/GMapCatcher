@@ -2,20 +2,22 @@
 # This is the Main Window
 
 #!/usr/bin/env python
-import mapMark
-import mapConf
-import mapUtils
-import googleMaps
-import mapTools
-import mapGPS
-import mapPixbuf
-import mapDownloader
-
 import os
-from gtkThread import *
-from mapConst import *
-from DLWindow import DLWindow
-from customWidgets import myToolTip, gtk_menu
+import src.mapGPS as mapGPS
+import src.mapUtils as mapUtils
+import src.mapTools as mapTools
+import src.mapPixbuf as mapPixbuf
+
+from src.mapConst import *
+from src.gtkThread import *
+from src.mapConf import MapConf
+from src.mapMark import MyMarkers
+from src.DLWindow import DLWindow
+from src.mapUpdate import CheckForUpdates
+from src.googleMaps import GoogleMaps
+from src.customMsgBox import error_msg
+from src.mapDownloader import MapDownloader
+from src.customWidgets import myToolTip, gtk_menu
 
 class MainWindow(gtk.Window):
 
@@ -23,14 +25,7 @@ class MainWindow(gtk.Window):
     draging_start = (0, 0)
     current_zoom_level = MAP_MAX_ZOOM_LEVEL
     default_text = "Enter location here!"
-
-    def error_msg(self, msg, buttons=gtk.BUTTONS_OK):
-        dialog = gtk.MessageDialog(self,
-                gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                gtk.MESSAGE_ERROR, buttons, msg)
-        resp = dialog.run()
-        dialog.destroy()
-        return resp
+    update = None
 
     def do_scale(self, pos, pointer=None, force=False):
         pos = int(round(pos, 0))
@@ -123,7 +118,7 @@ class MainWindow(gtk.Window):
     def confirm_clicked(self, button):
         location = self.entry.get_text()
         if (0 == len(location)):
-            self.error_msg("Need location")
+            error_msg(self, "Need location")
             self.entry.grab_focus()
             return
         if (location == self.default_text):
@@ -132,16 +127,16 @@ class MainWindow(gtk.Window):
             locations = self.ctx_map.get_locations()
             if (not location in locations.keys()):
                 if self.cb_offline.get_active():
-                    if self.error_msg("Offline mode, cannot do search!" + \
-                                      "      Would you like to get online?",
-                                      gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
+                    if error_msg(self, "Offline mode, cannot do search!" + \
+                                  "      Would you like to get online?",
+                                  gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
                         self.combo_popup()
                         return
                 self.cb_offline.set_active(False)
 
                 location = self.ctx_map.search_location(location)
                 if (location[:6] == "error="):
-                    self.error_msg(location[6:])
+                    error_msg(self, location[6:])
                     self.entry.grab_focus()
                     return
 
@@ -173,7 +168,7 @@ class MainWindow(gtk.Window):
         rect = self.drawing_area.get_allocation()
         km_px = mapUtils.km_per_pixel(coord)
         dlw = DLWindow(coord, km_px*rect.width, km_px*rect.height,
-                       self.layer, self.conf.init_path)
+                       self.layer, self.conf.init_path, self.conf.map_service)
         dlw.show()
 
     ## Called when the map should be centered around a new GPS location
@@ -214,7 +209,9 @@ class MainWindow(gtk.Window):
         menu = gtk_menu(TOOLS_MENU, self.menu_item_response)
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
-        button.connect("query-tooltip", myToolTip, "Title", "Description here", os.path.join("images", "marker.png"))
+        button.connect("query-tooltip", myToolTip, "Tools",
+                    "Set of tools to customise GMapCatcher",
+                    os.path.join("images", "marker.png"))
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
@@ -243,12 +240,12 @@ class MainWindow(gtk.Window):
 
         bbox = gtk.HButtonBox()
         if mapGPS.available:
-            self.cmb_gps = gtk.combo_box_new_text()
+            cmb_gps = gtk.combo_box_new_text()
             for w in GPS_NAMES:
-                self.cmb_gps.append_text(w)
-            self.cmb_gps.set_active(0)
-            self.cmb_gps.connect('changed',self.gps_changed)
-            bbox.add(self.cmb_gps)
+                cmb_gps.append_text(w)
+            cmb_gps.set_active(0)
+            cmb_gps.connect('changed',self.gps_changed)
+            bbox.add(cmb_gps)
 
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
         gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
@@ -256,12 +253,12 @@ class MainWindow(gtk.Window):
         button.connect('clicked', self.download_clicked)
         bbox.add(button)
 
-        self.cmb_layer = gtk.combo_box_new_text()
+        cmb_layer = gtk.combo_box_new_text()
         for w in LAYER_NAMES:
-            self.cmb_layer.append_text(w)
-        self.cmb_layer.set_active(0)
-        self.cmb_layer.connect('changed',self.layer_changed)
-        bbox.add(self.cmb_layer)
+            cmb_layer.append_text(w)
+        cmb_layer.set_active(0)
+        cmb_layer.connect('changed',self.layer_changed)
+        bbox.add(cmb_layer)
 
         hbox.pack_start(bbox)
         return hbox
@@ -402,7 +399,8 @@ class MainWindow(gtk.Window):
         self.downloader.query_region_around_point(
             self.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
-            online=online, force_update=force_update)
+            online=online, force_update=force_update, 
+            mapServ=self.conf.map_service)
         self.draw_overlay(drawing_area, rect)
 
     def repaint(self):
@@ -476,7 +474,7 @@ class MainWindow(gtk.Window):
                     self.draw_overlay(da, rect)
 
     ## Handles the pressing of F11 & F12
-    def full_screen(self,keyval):
+    def full_screen(self, keyval):
         # F11 = 65480
         if keyval == 65480:
             if self.get_decorated():
@@ -497,6 +495,15 @@ class MainWindow(gtk.Window):
                 self.left_panel.show()
                 self.top_panel.show()
                 self.set_border_width(10)
+        # ESC = 65307
+        elif keyval == 65307:
+            self.left_panel.show()
+            self.top_panel.show()
+            self.set_border_width(10)
+            self.set_keep_above(False)
+            self.set_decorated(True)
+            self.unmaximize()
+
 
     ## Handles the keyboard navigation
     def navigation(self, keyval):
@@ -525,22 +532,25 @@ class MainWindow(gtk.Window):
 
     ## Handles the Key pressing
     def key_press_event(self, w, event):
-        # F11 = 65480, F12 = 65481
-        if event.keyval in [65480, 65481]:
+        # F11 = 65480, F12 = 65481, ESC = 65307
+        if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
             self.navigation(event.keyval)
 
     def on_delete(self,*args):
+        self.hide()
         if mapGPS.available:
             self.gps.stop_all()
         self.downloader.stop_all()
-        self.ctx_map.finish()
+        self.ctx_map.finish()        
+        if self.update:    
+            self.update.finish()
         return False
 
     def __init__(self, parent=None):
-        self.conf = mapConf.MapConf()
+        self.conf = MapConf()
         self.center = self.conf.init_center
         self.current_zoom_level = self.conf.init_zoom
         self.crossPixbuf = mapPixbuf.cross()
@@ -550,9 +560,9 @@ class MainWindow(gtk.Window):
                                   self.gps_marker_callback,
                                   self.conf.gps_update_rate)
 
-        self.marker = mapMark.MyMarkers(self.conf.init_path)
-        self.ctx_map = googleMaps.GoogleMaps(self.conf.init_path)
-        self.downloader = mapDownloader.MapDownloader(self.ctx_map)
+        self.marker = MyMarkers(self.conf.init_path)
+        self.ctx_map = GoogleMaps(self.conf.init_path)
+        self.downloader = MapDownloader(self.ctx_map)
         self.layer=0
         gtk.Window.__init__(self)
         try:
@@ -583,6 +593,10 @@ class MainWindow(gtk.Window):
 
         self.da_set_cursor()
         self.entry.grab_focus()
+
+        if self.conf.check_for_updates:
+            # 3 seconds delay before starting the check
+            self.update = CheckForUpdates(3, self.conf.version_url)
 
 def main():
     MainWindow()

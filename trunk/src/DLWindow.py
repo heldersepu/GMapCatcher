@@ -1,4 +1,4 @@
-## @package DLWindow
+## @package src.DLWindow
 # Widget that allows Download of entire locations
 
 import math
@@ -16,7 +16,7 @@ from gtkThread import *
 
 
 class DLWindow(gtk.Window):
-    def __init__(self, coord, kmx, kmy, layer, init_path):
+    def __init__(self, coord, kmx, kmy, layer, init_path, mapServ):
 
         def _zoom(zoom0, zoom1):
             out_hbox = gtk.HBox(False, 50)
@@ -84,6 +84,7 @@ class DLWindow(gtk.Window):
             return hbbox
 
         print "DLWindow(", coord, kmx, kmy, layer, ')'
+        self.mapService = mapServ
         kmx = mapUtils.nice_round(kmx)
         kmy = mapUtils.nice_round(kmy)
         self.layer = layer
@@ -138,7 +139,8 @@ class DLWindow(gtk.Window):
             % (lat0, lon0, kmx, kmy, zoom0, zoom1, layer))
         dlon = kmx*180/math.pi/(R_EARTH*math.cos(lat0*math.pi/180))
         dlat = kmy*180/math.pi/R_EARTH
-        self.gmap = googleMaps.GoogleMaps(init_path) # creating our own gmap
+        # creating our own gmap
+        self.gmap = googleMaps.GoogleMaps(init_path, self.mapService) 
         self.complete = []
         self.downloader = MapDownloader(self.gmap)
         if zoom0>zoom1:

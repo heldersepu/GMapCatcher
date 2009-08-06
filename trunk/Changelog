@@ -1,3 +1,8 @@
+August 05 2009    H.S    <HelderSepu@gmail.com>
+    * 0.1.0.0 - At revision: 476
+    * Add Support for "OpenStreetMap.org" maps (Issue 63)
+    * Fix Bug "Invalid search is getting a valid location" (Issue 64)
+
 July 13 2009    H.S    <HelderSepu@gmail.com>
     * 0.090 - At revision: 442
     * Add GPS support for Linux (thanks to Johan Strombom)

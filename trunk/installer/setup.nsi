@@ -1,5 +1,5 @@
 !define PRODUCT_NAME "GMapCatcher"
-!define PRODUCT_VERSION "0.090"
+!define PRODUCT_VERSION "0.1.0.0"
 !define PRODUCT_WEB_SITE "http://code.google.com/p/gmapcatcher/"
 !include nsDialogs.nsh
 
@@ -25,7 +25,7 @@ RequestExecutionLevel admin
 
 ;--------------------------------
 ;Version Information
-VIProductVersion "${PRODUCT_VERSION}.0.0"
+VIProductVersion "${PRODUCT_VERSION}"
 VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
 VIAddVersionKey "Comments" "GMapCatcher is an offline viewer of google maps. It downloads google-map tiles automatically, display them using a specific GUI. User can view google map offline."
 VIAddVersionKey "LegalCopyright" "${PRODUCT_WEB_SITE}"

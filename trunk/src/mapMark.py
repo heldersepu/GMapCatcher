@@ -1,4 +1,4 @@
-## @package mapMark
+## @package src.mapMark
 # Read and Write the locations of the Markers
 
 import os
