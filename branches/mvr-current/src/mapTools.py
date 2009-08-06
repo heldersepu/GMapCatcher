@@ -47,7 +47,6 @@ class MainWindow():
         win.set_size_request(600, 400)
         win.set_destroy_with_parent(True)
         win.set_title(" GMapCatcher Tools ")
-        win.connect('delete-event', self.on_delete, parent)
 
         myNotebook = self.__create_notebook(parent)
         win.add(myNotebook)
