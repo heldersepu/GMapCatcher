@@ -1,5 +1,5 @@
 ## @package src.gtkThread
-# ...
+# ---
 
 import sys
 import pygtk
