@@ -28,8 +28,6 @@
 <a href="classmaps_1_1_main_window-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#36d75b3f6653fadbad04409f8051e611">error_msg</a></td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#96007fc80f2eb716c28388cd199dd296">do_scale</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#38c507bc029c7183c58cc90c3e832832">get_zoom_level</a></td></tr>
@@ -141,10 +139,6 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#a517b138f4ec5956e1301b840f3dbde2">cb_forceupdate</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#28aa6303bc6307ccaae329127071165c">cmb_gps</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#44183a405a61791091f8fc18fd8d5199">cmb_layer</a></td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#ab11a8690998e6be3aa86d04cb86e4e0">scale</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#89eedcfa691ac47c1f3bb79169903d1e">drawing_area</a></td></tr>
@@ -175,6 +169,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#994ee18d79af9f5dfb744c3f75c4c3a8">current_zoom_level</a> = MAP_MAX_ZOOM_LEVEL</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#115c5e62c830ddf02567e24b0a49e9e7">default_text</a> = &quot;Enter location here!&quot;</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#900e744481a1520dde06b52282bb33f3">update</a> = None</td></tr>
 
 <tr><td colspan="2"><br><h2>Private Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#18a0f04fe1a5b41ecc61adb28877244f">__create_combo_box</a></td></tr>
@@ -878,41 +874,6 @@ Reset the default text if entry is empty.
           <td></td>
           <td class="paramtype">&nbsp;</td>
           <td class="paramname"> <em>rect</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="36d75b3f6653fadbad04409f8051e611"></a><!-- doxytag: member="maps::MainWindow::error_msg" ref="36d75b3f6653fadbad04409f8051e611" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def maps.MainWindow.error_msg           </td>
-          <td>(</td>
-          <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>self</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>msg</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>buttons</em> = <code>gtk.BUTTONS_OK</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -1645,36 +1606,6 @@ Handles the events in the Tools buttons.
 
 </div>
 </div><p>
-<a class="anchor" name="28aa6303bc6307ccaae329127071165c"></a><!-- doxytag: member="maps::MainWindow::cmb_gps" ref="28aa6303bc6307ccaae329127071165c" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classmaps_1_1_main_window.html#28aa6303bc6307ccaae329127071165c">maps.MainWindow.cmb_gps</a>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="44183a405a61791091f8fc18fd8d5199"></a><!-- doxytag: member="maps::MainWindow::cmb_layer" ref="44183a405a61791091f8fc18fd8d5199" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classmaps_1_1_main_window.html#44183a405a61791091f8fc18fd8d5199">maps.MainWindow.cmb_layer</a>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <a class="anchor" name="a80727518fd84c583dba5adb342aff5b"></a><!-- doxytag: member="maps::MainWindow::combo" ref="a80727518fd84c583dba5adb342aff5b" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -1936,6 +1867,21 @@ Handles the events in the Tools buttons.
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classmaps_1_1_main_window.html#e9e51915e642843ce552eb10f3afafa7">maps.MainWindow.top_panel</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="900e744481a1520dde06b52282bb33f3"></a><!-- doxytag: member="maps::MainWindow::update" ref="900e744481a1520dde06b52282bb33f3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmaps_1_1_main_window.html#900e744481a1520dde06b52282bb33f3">maps.MainWindow.update</a> = None<code> [static]</code>          </td>
         </tr>
       </table>
 </div>
