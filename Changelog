@@ -1,6 +1,6 @@
 August 09 2009    H.S    <HelderSepu@gmail.com>
-    * 0.1.1.0 - At revision: 476
-    * Add GPS module, start support for windows (Issue 57)
+    * 0.1.1.0 - At revision: 487
+    * Add GPS module, start GPS support for windows (Issue 57)
     * Fix Bug introduced in last release preventing batch downloads
 
 August 05 2009    H.S    <HelderSepu@gmail.com>
