@@ -56,9 +56,14 @@ class GPS:
     def update(self):
         # Make new reading from GPS device
         self.gps_session.query('admosy')
-        #print "GPS: Lat/Long: ", self.gps_session.fix.latitude, self.gps_session.fix.longitude
-        self.location = (self.gps_session.fix.latitude, self.gps_session.fix.longitude)
 
+        # Only continue when GPS position is fixed
+        if self.gps_session.fix.mode <= gps.MODE_NO_FIX:
+            return
+        
+        # Store location
+        self.location = (self.gps_session.fix.latitude, self.gps_session.fix.longitude)
+        
         if self.mode == mapConst.GPS_CENTER:
             self.center_callback(self.location)
         if self.mode == mapConst.GPS_MARKER:
