@@ -154,10 +154,11 @@ class MainWindow(gtk.Window):
     def offline_clicked(self, w):
         online = not self.cb_offline.get_active()
         if online:
-             self.repaint()
+            self.repaint()
 
     def gps_changed(self, w):
         self.gps.set_mode(w.get_active())
+        self.repaint()
 
     def layer_changed(self, w):
         self.layer = w.get_active()
@@ -177,7 +178,7 @@ class MainWindow(gtk.Window):
         self.repaint()
 
     ## Called when the GPS marker should be moved to a new location
-    def gps_marker_callback(self):
+    def gps_marker_callback(self, mode):
         self.repaint()
 
     ## Creates a comboBox that will contain the locations
