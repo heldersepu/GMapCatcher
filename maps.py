@@ -244,7 +244,7 @@ class MainWindow(gtk.Window):
             cmb_gps = gtk.combo_box_new_text()
             for w in GPS_NAMES:
                 cmb_gps.append_text(w)
-            cmb_gps.set_active(0)
+            cmb_gps.set_active(self.conf.gps_mode)
             cmb_gps.connect('changed',self.gps_changed)
             bbox.add(cmb_gps)
 
@@ -559,7 +559,8 @@ class MainWindow(gtk.Window):
         if mapGPS.available:
             self.gps = mapGPS.GPS(self.gps_center_callback,
                                   self.gps_marker_callback,
-                                  self.conf.gps_update_rate)
+                                  self.conf.gps_update_rate,
+                                  self.conf.gps_mode)
 
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = GoogleMaps(self.conf.init_path)
