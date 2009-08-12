@@ -27,6 +27,8 @@ class GPS:
             # Open binding to GPS daemon
             self.gps_session = gps.gps()
             self.gps_updater = GPSUpdater(self.update_rate, self.update)
+            if gps_mode != mapConst.GPS_DISABLED:
+                self.set_mode(gps_mode)
         except:
             # No GPS connected
             available = False
