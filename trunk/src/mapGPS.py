@@ -13,10 +13,10 @@ import gtk
 import mapConst
 
 class GPS:
-    def __init__(self, center_callback, marker_callback, update_rate):
+    def __init__(self, center_callback, marker_callback, update_rate, gps_mode):
         global available
         # GPS Disabled at start
-        self.mode = mapConst.GPS_DISABLED
+        self.mode = gps_mode
         self.location = None
         self.center_callback = center_callback
         self.marker_callback = marker_callback

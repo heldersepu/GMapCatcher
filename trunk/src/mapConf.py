@@ -42,6 +42,7 @@ class MapConf():
         config.set(SECTION_INIT, 'map_service', self.map_service)
         config.set(SECTION_INIT, 'version_url', self.version_url)
         config.set(SECTION_INIT, 'check_for_updates', self.check_for_updates)
+        config.set(SECTION_INIT, 'gps_mode', self.gps_mode)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -84,11 +85,12 @@ class MapConf():
         ## Map service to get images, default is Google
         self.map_service = read_config('map_service', MAP_SERVERS[GOOGLE], str)
         ## URL with the latest version used for the notification updates.
-        self.version_url = read_config('version_url', 
+        self.version_url = read_config('version_url',
             'http://gmapcatcher.googlecode.com/svn/wiki/version.wiki', str)
         ## Whether or not to check for updates, default is 1
-        self.check_for_updates = read_config('check_for_updates', 0, int)            
-          
+        self.check_for_updates = read_config('check_for_updates', 0, int)
+        ## Initial GPS mode, default is GPS_DISABLED
+        self.gps_mode = read_config('gps_mode', GPS_DISABLED, int)
 
     ## Write the configuration to the default file
     def save(self):
