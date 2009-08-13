@@ -13,13 +13,12 @@ import gtk
 import mapConst
 
 class GPS:
-    def __init__(self, center_callback, marker_callback, update_rate, gps_mode):
+    def __init__(self, gps_callback, update_rate, gps_mode):
         global available
         # GPS Disabled at start
         self.mode = gps_mode
         self.location = None
-        self.center_callback = center_callback
-        self.marker_callback = marker_callback
+        self.gps_callback = gps_callback
         self.pixbuf = self.get_marker_pixbuf()
         self.update_rate = update_rate
 
@@ -60,13 +59,10 @@ class GPS:
             # Only continue when GPS position is fixed
             if self.gps_session.fix.mode > gps.MODE_NO_FIX:
                 # Store location
-                self.location = (self.gps_session.fix.latitude, 
+                self.location = (self.gps_session.fix.latitude,
                                  self.gps_session.fix.longitude)
-                
-                if self.mode == mapConst.GPS_CENTER:
-                    self.center_callback(self.location)
-                else:
-                    self.marker_callback(self.mode)
+                self.gps_callback(self.location, self.mode)
+
         except Exception as inst:
            available = False
            print type(inst), inst
@@ -82,8 +78,8 @@ class GPS:
             except ValueError:
                 print "File corrupted: %s" % filename
 
-                
-## Continuously updates GPS coordinates.                
+
+## Continuously updates GPS coordinates.
 class GPSUpdater(Thread):
     def __init__(self, interval, function):
         Thread.__init__(self)

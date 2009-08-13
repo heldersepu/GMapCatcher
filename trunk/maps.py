@@ -172,13 +172,16 @@ class MainWindow(gtk.Window):
                        self.layer, self.conf.init_path, self.conf.map_service)
         dlw.show()
 
-    ## Called when the map should be centered around a new GPS location
-    def gps_center_callback(self, coord):
-        self.center = mapUtils.coord_to_tile((coord[0], coord[1], self.current_zoom_level))
-        self.repaint()
-
-    ## Called when the GPS marker should be moved to a new location
-    def gps_marker_callback(self, mode):
+    ## Called when new coordinates are obtained from the GPS
+    def gps_callback(self, coord, mode):
+        tile = mapUtils.coord_to_tile((coord[0], coord[1], self.current_zoom_level))
+        # The map should be centered around a new GPS location
+        if mode == GPS_CENTER:
+            self.center = tile
+        # The map should be moved to keep GPS location on the screen
+        elif mode == GPS_ON_SCREEN:
+            rect = self.drawing_area.get_allocation()
+            pass
         self.repaint()
 
     ## Creates a comboBox that will contain the locations
@@ -400,7 +403,7 @@ class MainWindow(gtk.Window):
         self.downloader.query_region_around_point(
             self.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
-            online=online, force_update=force_update, 
+            online=online, force_update=force_update,
             mapServ=self.conf.map_service)
         self.draw_overlay(drawing_area, rect)
 
@@ -448,16 +451,15 @@ class MainWindow(gtk.Window):
             location = self.gps.get_location()
             if location is not None and (zl <= self.conf.max_gps_zoom):
                 img = self.gps.pixbuf
-                img_size = (48, 48)
                 mct = mapUtils.coord_to_tile((location[0], location[1], zl))
                 xy = mapUtils.tile_coord_to_screen(
                     (mct[0][0], mct[0][1], zl), rect, self.center)
                 if xy:
                     for x,y in xy:
                         drawing_area.window.draw_pixbuf(gc, img, 0, 0, \
-                            x + mct[1][0] - img_size[0] / 2,
-                            y + mct[1][1] - img_size[1] / 2, \
-                            img_size[0], img_size[1])
+                            x + mct[1][0] - GPS_IMG_SIZE[0] / 2,
+                            y + mct[1][1] - GPS_IMG_SIZE[1] / 2, \
+                            GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
 
     def tile_received(self, tile_coord, layer):
         if self.layer == layer and self.current_zoom_level == tile_coord[2]:
@@ -546,8 +548,8 @@ class MainWindow(gtk.Window):
         if mapGPS.available:
             self.gps.stop_all()
         self.downloader.stop_all()
-        self.ctx_map.finish()        
-        if self.update:    
+        self.ctx_map.finish()
+        if self.update:
             self.update.finish()
         return False
 
@@ -558,8 +560,7 @@ class MainWindow(gtk.Window):
         self.crossPixbuf = mapPixbuf.cross()
 
         if mapGPS.available:
-            self.gps = mapGPS.GPS(self.gps_center_callback,
-                                  self.gps_marker_callback,
+            self.gps = mapGPS.GPS(self.gps_callback,
                                   self.conf.gps_update_rate,
                                   self.conf.gps_mode)
 

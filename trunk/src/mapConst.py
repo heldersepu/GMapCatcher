@@ -24,10 +24,13 @@ LAYER_TERRAIN = 2
 LAYER_NAMES = ["Map", "Satellite", "Terrain"]
 LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles"]
 
+GPS_IMG_SIZE = (48, 48)
+
 GPS_DISABLED = 0
 GPS_MARKER = 1
 GPS_CENTER = 2
-GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center"]
+GPS_ON_SCREEN = 3
+GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center", "GPS on Screen"]
 
 SECTION_INIT  = 'init'
 R_EARTH = 6371.
