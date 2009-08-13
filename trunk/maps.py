@@ -479,6 +479,7 @@ class MainWindow(gtk.Window):
         # F11 = 65480
         if keyval == 65480:
             if self.get_decorated():
+                self.unmaximize()
                 self.set_keep_above(True)
                 self.set_decorated(False)
                 self.maximize()
