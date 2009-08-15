@@ -43,7 +43,9 @@ C:\PYTHON26\PYTHON.EXE setup.py py2exe
 
 :: Launch the NSIS setup
 @COLOR 07
-"%ProgramFiles%\NSIS\makensis.exe" setup.nsi
+SET NSIS="%ProgramFiles%\NSIS\makensis.exe"
+IF NOT EXIST %NSIS% SET NSIS="%ProgramFiles(x86)%\NSIS\makensis.exe"
+CALL %NSIS% setup.nsi
 @ECHO.
 
 :: clean up at the end
