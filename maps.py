@@ -174,14 +174,33 @@ class MainWindow(gtk.Window):
 
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self, coord, mode):
-        tile = mapUtils.coord_to_tile((coord[0], coord[1], self.current_zoom_level))
+        zl = self.current_zoom_level
+        tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
         # The map should be centered around a new GPS location
         if mode == GPS_CENTER:
             self.center = tile
-        # The map should be moved to keep GPS location on the screen
+        # The map should be moved only to keep GPS location on the screen
         elif mode == GPS_ON_SCREEN:
             rect = self.drawing_area.get_allocation()
-            pass
+            xy = mapUtils.tile_coord_to_screen(
+                (tile[0][0], tile[0][1], zl), rect, self.center)
+            if xy:
+                for x,y in xy:
+                    x = x + tile[1][0]
+                    y = y + tile[1][1]
+                    if not(0 < x < rect.width) or not(0 < y < rect.height):
+                        self.center = tile
+                    # else:
+                        # if GPS_IMG_SIZE[0] > x:
+                            # self.da_jump(1, True)
+                        # elif x > rect.width - GPS_IMG_SIZE[0]:
+                            # self.da_jump(2, True)
+                        # elif GPS_IMG_SIZE[1] > y:
+                            # self.da_jump(3, True)
+                        # elif y > rect.height - GPS_IMG_SIZE[1]):
+                            # self.da_jump(4, True)
+            else: 
+                self.center = tile
         self.repaint()
 
     ## Creates a comboBox that will contain the locations
