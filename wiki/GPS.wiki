@@ -5,7 +5,7 @@
 
 The current implementation displays a GPS marker and can auto center the map to the GPS location.
 
-The GPS functionality is supported in linux only, using the gps daemon: http://gpsd.berlios.de .
+The GPS functionality is supported using the gps daemon: http://gpsd.berlios.de .
 
 If a GPS unit is properly installed and the gps daemon is running the GPS menu will show up in the main menu when gmapcatcher is started.
 
@@ -19,6 +19,7 @@ http://gpsd.berlios.de/hardware.html
 
 = Installation of the GPS daemon =
   * Ubuntu: _sudo apt-get install python-gps_
+  * Windows: Download and install [http://code.google.com/p/gpsd-4-win/ GPSd for Windows]
 
 = Installation of bluetooth GPS =
   * Run _hcitool scan_ to find the GPS id on the form xx:xx:xx:xx:xx:xx.
