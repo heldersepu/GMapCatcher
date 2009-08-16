@@ -3,6 +3,7 @@
 
 import os
 import re
+from time import time
 
 ## Return all the locations from a given file (filePath)
 def read_file(strInfo, filePath):
@@ -110,3 +111,15 @@ def del_file(filename):
         os.remove(filename)
     except:
         pass
+
+## Remove file if is older than 24 hours
+#  (24h * 3600s) = 86400s
+def delete_old(filename):
+    if os.path.isfile(filename):
+        if (int(time() - os.path.getmtime(filename)) > 86400):
+            try:
+                os.remove(filename)
+                return True
+            except:
+                pass
+ 
