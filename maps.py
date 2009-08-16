@@ -190,15 +190,15 @@ class MainWindow(gtk.Window):
                     y = y + tile[1][1]
                     if not(0 < x < rect.width) or not(0 < y < rect.height):
                         self.center = tile
-                    # else:
-                        # if GPS_IMG_SIZE[0] > x:
-                            # self.da_jump(1, True)
-                        # elif x > rect.width - GPS_IMG_SIZE[0]:
-                            # self.da_jump(2, True)
-                        # elif GPS_IMG_SIZE[1] > y:
-                            # self.da_jump(3, True)
-                        # elif y > rect.height - GPS_IMG_SIZE[1]):
-                            # self.da_jump(4, True)
+                    else:
+                        if GPS_IMG_SIZE[0] > x:
+                            self.da_jump(1, True)
+                        elif x > rect.width - GPS_IMG_SIZE[0]:
+                            self.da_jump(3, True)
+                        elif GPS_IMG_SIZE[1] > y:
+                            self.da_jump(2, True)
+                        elif y > rect.height - GPS_IMG_SIZE[1]:
+                            self.da_jump(4, True)
             else: 
                 self.center = tile
         self.repaint()
