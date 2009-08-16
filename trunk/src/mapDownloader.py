@@ -6,10 +6,12 @@ from mapConst import TILES_HEIGHT
 from threading import Thread
 from Queue import Queue
 from traceback import print_exc
+
+import fileUtils
 import mapUtils
-from mapUtils import mod
 from mapConst import *
 from math import floor,ceil
+
 
 class DownloadTask:
     def __init__(self, coord, layer, callback=None,
@@ -109,16 +111,21 @@ class MapDownloader:
                     force_update=False, mapServ='Google'):
         #print "query_tile(",coord,layer,callback,online,force_update,")"
         world_tiles = mapUtils.tiles_on_level(coord[2])
-        coord = (mod(coord[0], world_tiles), mod(coord[1], world_tiles), coord[2])
+        coord = (mapUtils.mod(coord[0], world_tiles),
+                 mapUtils.mod(coord[1], world_tiles), coord[2])
         # try to get a tile offline
-        fn = self.ctx_map.get_file(coord,layer,False,False)
+        fn = self.ctx_map.get_file(coord, layer, False, False)
         if fn!=None or (not online):
-            callback(True,coord,layer)
-            return
-        else:
-            self.taskq.put(
-                DownloadTask(coord, layer, callback, force_update, mapServ)
-            )
+            deleted = False
+            if (force_update and online):
+                deleted = fileUtils.delete_old(fn)
+            if not deleted:
+                callback(True, coord, layer)
+                return
+
+        self.taskq.put(
+            DownloadTask(coord, layer, callback, force_update, mapServ)
+        )
 
     def query_region(self, xmin, xmax, ymin, ymax, zoom, *args, **kwargs):
         world_tiles = mapUtils.tiles_on_level(zoom)
@@ -143,7 +150,7 @@ class MapDownloader:
         ymax = int(y0 + ceil(dy1/TILES_HEIGHT)) - 1
         self.query_region(xmin, xmax, ymin, ymax, zoom, *args, **kwargs)
 
-    def query_region_around_location(self, lat0, lon0, dlat, dlon, zoom, 
+    def query_region_around_location(self, lat0, lon0, dlat, dlon, zoom,
                                         *args, **kwargs):
         top_left = mapUtils.coord_to_tile((lat0+dlat/2, lon0-dlon/2, zoom))
         bottom_right = mapUtils.coord_to_tile((lat0-dlat/2, lon0+dlon/2, zoom))
