@@ -1,7 +1,8 @@
+#!/usr/bin/env python
+
 ## @package maps
 # This is the Main Window
 
-#!/usr/bin/env python
 import os
 import src.mapGPS as mapGPS
 import src.mapUtils as mapUtils
