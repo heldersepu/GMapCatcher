@@ -3,26 +3,12 @@
 
 cd ..
 
-dVer=''
-dName=''
-dFile='cat src\mapConst.py'
+dName="`grep -w "NAME = " src/mapConst.py`"
+dName=${dName:8}
+dName=${dName/%\"}
 
-for dLine in $dFile
-do
-    if [$dLine = 'NAME =']
-    then
-        dName=''
-    else
-        if [$dLine = 'VERSION =']
-        then
-            dVer=''
-        fi
-    fi
+dVer="`grep -w "VERSION = " src/mapConst.py`"
+dVer=${dVer:11}
+dVer=${dVer/%\"}
 
-    # if [dName!='' && dVer='']
-    # then
-        # # Exit For
-    # fi
-done
-
-tar czf ../GMapCatcher-0.1.1.0.tar.gz *.py src images installer Changelog README
+tar czf ../$dName-$dVer.tar.gz *.py src images installer Changelog README
