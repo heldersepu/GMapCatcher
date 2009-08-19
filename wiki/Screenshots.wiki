@@ -1,7 +1,7 @@
 ﻿#labels Featured
 Screenshots:
 
-GMapCatcher v0.1 integrating OpenStreetMap<br>
+GMapCatcher v0.1 integrating [http://www.openstreetmap.org/ OpenStreetMap]<br>
 http://gmapcatcher.googlecode.com/svn/wiki/OpenStreetMap.gif
 
 
