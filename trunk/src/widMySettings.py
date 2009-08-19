@@ -1,4 +1,4 @@
-## @package src.mapMySettings
+## @package src.widMySettings
 # Settings widget used to display the list of the locations.
 # Displayed inside a tab in mapTools.
 
