@@ -39,18 +39,19 @@ class GoogleMaps:
             if oa['status'] != 200:
                 print "Trying to fetch http://maps.google.com/maps but failed"
                 return None
-            html=oa['data']
-            p=re.compile(
-                'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v=([a-z0-9.]+)&')
-            m=p.search(html)
+            html = oa['data']
+
+            # List of patterns add more as needed
+            paList = ['http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v=([a-z0-9.]+)&',
+                      'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v\\\\x3d([a-z0-9.]+)\\\\x26']
+            for srtPattern in paList:
+                p = re.compile(srtPattern)
+                m = p.search(html)
+                if m: break
             if not m:
-                # try another pattern
-                p=re.compile(
-                        'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v\\\\x3d([a-z0-9.]+)\\\\x26')
-                m=p.search(html)
-                if not m:
-                    print "Cannot parse result"
-                    return None
+                print "Cannot parse result"
+                return None
+
             self.known_layers[layer] = (
                 'http://%s%%d.google.com/%s/v=%s&hl=en&x=%%i&y=%%i&zoom=%%i'
                 % tuple(m.groups()))
@@ -170,7 +171,7 @@ class GoogleMaps:
 
 
     def get_file(self, coord, layer, online, force_update, mapServ='Google'):
-        return self.tile_repository.get_file(coord, layer, online, 
+        return self.tile_repository.get_file(coord, layer, online,
                                                 force_update, mapServ)
 
     def load_pixbuf(self, coord, layer):
