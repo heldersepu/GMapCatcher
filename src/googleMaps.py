@@ -45,12 +45,12 @@ class GoogleMaps:
             m=p.search(html)
             if not m:
                 # try another pattern
-		p=re.compile(
-			'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v\\\\x3d([a-z0-9.]+)\\\\x26')
-		m=p.search(html)
-		if not m:
-	            print "Cannot parse result"
-	            return None
+                p=re.compile(
+                        'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v\\\\x3d([a-z0-9.]+)\\\\x26')
+                m=p.search(html)
+                if not m:
+                    print "Cannot parse result"
+                    return None
             self.known_layers[layer] = (
                 'http://%s%%d.google.com/%s/v=%s&hl=en&x=%%i&y=%%i&zoom=%%i'
                 % tuple(m.groups()))
