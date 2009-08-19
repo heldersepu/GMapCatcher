@@ -4,9 +4,10 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import mapTreeView
-import mapMySettings
-import mapChangeTheme
+import widTreeView
+import widMySettings
+import widChangeTheme
+import widMyGPS
 from mapConst import *
 
 
@@ -18,9 +19,10 @@ class MainWindow():
         notebook.set_tab_pos(gtk.POS_TOP)
         notebook.show()
 
-        myTree = mapTreeView.TreeView()
-        mySett = mapMySettings.MySettings()
-        myTheme = mapChangeTheme.ChangeTheme()
+        myTree = widTreeView.TreeView()
+        mySett = widMySettings.MySettings()
+        myTheme = widChangeTheme.ChangeTheme()
+        myGPS = widMyGPS.MyGPS()
 
         # Append pages to the notebook
         for str in TOOLS_MENU:
@@ -33,6 +35,8 @@ class MainWindow():
                 frame.add(mySett.show(parent))
             elif str == TOOLS_MENU[3]:
                 frame.add(myTheme.show(parent.conf))
+            elif str == TOOLS_MENU[4]:
+                frame.add(myGPS.show(parent.conf))
             else:
                 frame.add(gtk.Label(str + ' coming soon!! '))
             label = gtk.Label(str)

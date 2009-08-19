@@ -1,4 +1,4 @@
-## @package src.mapChangeTheme
+## @package src.widMyGPS
 # Change Theme widget used to change the GTK theme.
 # Displayed inside a tab in mapTools.
 
@@ -8,7 +8,7 @@ from mapConst import *
 from customWidgets import _frame, lbl
 
 
-class ChangeTheme():
+class MyGPS():
     ## Load the items into the Combo box
     def load_combo(self, myCombo):
         listThemes = fileUtils.get_themes()
