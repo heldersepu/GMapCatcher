@@ -11,7 +11,7 @@ import widMyGPS
 from mapConst import *
 
 
-class MainWindow():
+class MapTools():
 
     def __create_notebook(self, parent):
         filePath = parent.ctx_map.configpath
@@ -43,7 +43,7 @@ class MainWindow():
             notebook.append_page(frame, label)
         # Set what page to start at
         return notebook
-        
+
     def __init__(self, parent, start_page):
         win = gtk.Window(gtk.WINDOW_TOPLEVEL)
         win.set_border_width(10)
@@ -58,7 +58,5 @@ class MainWindow():
         myNotebook.set_current_page(start_page)
 
 def main(parent, start_page):
-    MainWindow(parent, start_page)
+    MapTools(parent, start_page)
 
-if __name__ == "__main__":
-    main()
