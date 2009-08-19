@@ -1,6 +1,6 @@
 ## @package src.widTreeView
 # TreeView widget used to display the list of the locations.
-# Displayed inside a tab in mapTools.
+# Displayed inside a tab in MapTools.
 
 import gtk
 import fileUtils

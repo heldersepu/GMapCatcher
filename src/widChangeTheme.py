@@ -1,6 +1,6 @@
 ## @package src.widChangeTheme
 # Change Theme widget used to change the GTK theme.
-# Displayed inside a tab in mapTools.
+# Displayed inside a tab in MapTools.
 
 import gtk
 import fileUtils
@@ -63,8 +63,8 @@ class ChangeTheme():
         self.cb_show_cross = gtk.CheckButton('Show a "+" in the center of the map')
         self.cb_show_cross.set_active(show_cross)
         return _frame(" Mark center of the map ", self.cb_show_cross)
-        
-    ## ComboBox to change the map service 
+
+    ## ComboBox to change the map service
     def service_combo(self, map_service):
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(lbl("Select your favorite map service: "))
@@ -77,10 +77,10 @@ class ChangeTheme():
         self.cmb_service.set_active(intActive)
         hbox.pack_start(self.cmb_service)
         return _frame(" Map service ", hbox)
-        
+
     ## Put all the ChangeTheme Widgets together
     def show(self, conf):
-        def inner_box():           
+        def inner_box():
             vbox = gtk.VBox(False, 10)
             vbox.pack_start(self.cross_check_box(conf.show_cross))
             vbox.pack_start(self.service_combo(conf.map_service))
@@ -88,7 +88,7 @@ class ChangeTheme():
             hbox.set_border_width(20)
             hbox.pack_start(vbox)
             return hbox
-            
+
         vbox = gtk.VBox(False, 10)
         vbox.set_border_width(10)
         hbox = gtk.HBox(False, 10)
@@ -99,7 +99,7 @@ class ChangeTheme():
         hbox.pack_start(self.cmb_themes)
         vbox.pack_start(_frame(" Available themes ", hbox), False)
         vbox.pack_start(inner_box(), False)
-                
+
         hpaned = gtk.VPaned()
         hpaned.pack1(vbox, True, True)
         buttons = self.__action_buttons(conf)
