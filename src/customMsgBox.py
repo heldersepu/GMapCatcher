@@ -14,17 +14,21 @@ def error_msg(parent, strMessage, buttons=gtk.BUTTONS_OK):
     dialog.destroy()
     return resp
 
+## Message used in the updated notifications
 class updateMsgBox(gtk.Window):
     def __init__(self, strMessage, strUrl, strDownloadUrl):
 
         gtk.Window.__init__(self)
         self.connect("destroy", lambda *w: gtk.main_quit())
         self.set_border_width(10)
-        self.set_size_request(200, 200)
+        self.set_size_request(250, 200)
         self.set_title(' Automatic Updates ')
 
-        self.add(gtk.Label(strMessage))
-        #self.add(gtk.Label(strUrl))
-        #self.add(gtk.Label(strDownloadUrl))
+        hbox = gtk.HBox(False, 10)
+        hbox.pack_start(gtk.Label(strMessage))
 
+        vbox = gtk.VBox(False)
+        vbox.pack_start(hbox)
+        vbox.pack_start(gtk.Label(strUrl))
+        self.add(vbox)
         self.show_all()

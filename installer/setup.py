@@ -9,7 +9,7 @@ setup(
     name = NAME,
     description = 'Offline Google Map Viewer',
     version = VERSION,
-    url = "http://code.google.com/p/gmapcatcher/",
+    url = WEB_ADDRESS,
 
     windows = [
                   {

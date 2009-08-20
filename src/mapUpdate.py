@@ -48,10 +48,15 @@ class CheckForUpdates():
         self.myThread.cancel()
         if self.update:
             if self.update.latest_version > VERSION:
-                updateMsgBox("Update detected", "url", "url", )
+                updateMsgBox(
+                    "Update detected \n" +
+                    "Second Line \n\n" + 
+                    ("Your version is %s \n" % VERSION ) +
+                    ("Current version is %s" % self.update.latest_version ), 
+                    WEB_ADDRESS, 
+                    self.update.latest_installer 
+                )
                 gtk.main()
-
-
 
 if __name__ == "__main__":
     # Test some URLs
