@@ -5,7 +5,7 @@ import gtk
 import openanything
 from mapConst import *
 from threading import Timer
-from customMsgBox import error_msg
+from customMsgBox import updateMsgBox
 
 
 ## Class used to get latest version info
@@ -48,7 +48,8 @@ class CheckForUpdates():
         self.myThread.cancel()
         if self.update:
             if self.update.latest_version > VERSION:
-                error_msg(None, "Update detected")
+                updateMsgBox("Update detected", "url", "url", )
+                gtk.main()
 
 
 

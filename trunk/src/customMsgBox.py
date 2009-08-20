@@ -15,21 +15,16 @@ def error_msg(parent, strMessage, buttons=gtk.BUTTONS_OK):
     return resp
 
 class updateMsgBox(gtk.Window):
-    def __init__(self, strMessage):
+    def __init__(self, strMessage, strUrl, strDownloadUrl):
 
         gtk.Window.__init__(self)
+        self.connect("destroy", lambda *w: gtk.main_quit())
         self.set_border_width(10)
         self.set_size_request(200, 200)
         self.set_title(' Automatic Updates ')
 
-        #myNotebook = self.__create_notebook(parent)
-        self.add(gtk.Label('Automatic Updates Coming soon!! '))
-        self.connect('delete-event', self.on_delete)
+        self.add(gtk.Label(strMessage))
+        #self.add(gtk.Label(strUrl))
+        #self.add(gtk.Label(strDownloadUrl))
+
         self.show_all()
-    
-    def on_delete(self,*params):
-        return False
-        
-if __name__ == "__main__":
-    updateMsgBox("Test")
-    gtk.main()
