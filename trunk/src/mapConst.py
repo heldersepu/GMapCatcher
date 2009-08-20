@@ -4,6 +4,7 @@
 NAME = "GMapCatcher"
 VERSION = "0.1.1.0"
 VERSION_NAME = ""
+WEB_ADDRESS = "http://code.google.com/p/gmapcatcher/"
 
 GOOGLE = 0
 OSM = 1
