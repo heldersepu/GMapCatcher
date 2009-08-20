@@ -99,7 +99,7 @@ class gpsfix:
         self.mode = MODE_NO_FIX
         self.time = NaN
         self.ept = NaN
-        self.latitude = self.longitude = 0.0
+        self.latitude = self.longitude = None
         self.eph = NaN
         self.altitude = NaN         # Meters
         self.epv = NaN
