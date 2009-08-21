@@ -57,7 +57,8 @@ class GPS:
             self.gps_session.query('admosy')
             fix = self.gps_session.fix
             # Only continue when GPS position is fixed
-            if fix.mode > gps.MODE_NO_FIX and fix.latitude and fix.longitude:
+            if fix.mode > gps.MODE_NO_FIX and \
+                (fix.latitude is not None) and (fix.longitude is not None):
                 # Store location
                 self.location = (fix.latitude, fix.longitude)
                 self.gps_callback(self.location, self.mode)
