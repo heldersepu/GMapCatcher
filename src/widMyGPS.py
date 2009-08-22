@@ -20,7 +20,7 @@ class MyGPS():
         def btn_save_clicked(button, conf):
             conf.gps_update_rate = self.e_gps_updt_rate.get_text()
             conf.max_gps_zoom = self.s_gps_max_zoom.get_value_as_int()
-            conf.gps_mode = self.cmb_gps_mode.self.cmb_service.get_active()
+            conf.gps_mode = self.cmb_gps_mode.get_active()
             conf.save()
 
         bbox = gtk.HButtonBox()
