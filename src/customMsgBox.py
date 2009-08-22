@@ -26,7 +26,7 @@ def hyperlink(strUrl):
 
 ## Message used in the updated notifications
 class updateMsgBox(gtk.Window):
-    def btn_ok():
+    def btn_ok(self):
         button = gtk.Button(stock=gtk.STOCK_OK)
         button.connect("clicked", lambda *w: gtk.main_quit())
         hbox = gtk.HButtonBox()
