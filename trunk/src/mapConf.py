@@ -78,7 +78,7 @@ class MapConf():
 
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float)
-        ## Show a small cross in the center of the map, default is 0
+        ## Show a small cross in the center of the map, default is False (0)
         self.show_cross = read_config('show_cross', 0, int)
         ## Maximum zoom to show the GPS, default is 16
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int)
@@ -87,8 +87,8 @@ class MapConf():
         ## URL with the latest version used for the notification updates.
         self.version_url = read_config('version_url',
             'http://gmapcatcher.googlecode.com/svn/wiki/version.wiki', str)
-        ## Whether or not to check for updates, default is 1
-        self.check_for_updates = read_config('check_for_updates', 0, int)
+        ## Whether or not to check for updates, default is True (1)
+        self.check_for_updates = read_config('check_for_updates', 1, int)
         ## Initial GPS mode, default is GPS_DISABLED
         self.gps_mode = read_config('gps_mode', GPS_DISABLED, int)
 
