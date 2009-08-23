@@ -371,8 +371,8 @@ class MainWindow(gtk.Window):
             w.popup(None, None, None, event.button, event.time)
         # Double-Click event Zoom In
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
-            self.do_zoom(self.scale.get_value() - 1,
-                        self.drawing_area.get_pointer())
+            self.do_zoom(self.scale.get_value() - 1, True,
+                        (event.x, event.y))
 
     ## Handles left (press click) event in the drawing_area
     def da_button_press(self, w, event):
