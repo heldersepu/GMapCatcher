@@ -201,7 +201,7 @@ class MainWindow(gtk.Window):
                             self.da_jump(2, True)
                         elif y > rect.height - GPS_IMG_SIZE[1]:
                             self.da_jump(4, True)
-            else: 
+            else:
                 self.center = tile
         self.repaint()
 
@@ -371,7 +371,7 @@ class MainWindow(gtk.Window):
             w.popup(None, None, None, event.button, event.time)
         # Double-Click event Zoom In
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
-            self.do_zoom(self.scale.get_value() - 1, 
+            self.do_zoom(self.scale.get_value() - 1,
                         self.drawing_area.get_pointer())
 
     ## Handles left (press click) event in the drawing_area
@@ -551,7 +551,7 @@ class MainWindow(gtk.Window):
         # Minus = [45,65453]   Zoom Out
         # Plus  = [61,65451]   Zoom In
         elif keyval in [45,65453]:
-           self.do_zoom(self.scale.get_value() + 1, True)
+            self.do_zoom(self.scale.get_value() + 1, True)
         elif keyval in [61,65451]:
             self.do_zoom(self.scale.get_value() - 1, True)
 
