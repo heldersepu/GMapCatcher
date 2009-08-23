@@ -27,6 +27,7 @@ class MainWindow(gtk.Window):
     current_zoom_level = MAP_MAX_ZOOM_LEVEL
     default_text = "Enter location here!"
     update = None
+    myPointer = None
 
     def do_scale(self, pos, pointer=None, force=False):
         pos = int(round(pos, 0))
@@ -331,12 +332,10 @@ class MainWindow(gtk.Window):
         da.show()
         return self.drawing_area
 
-    def do_zoom(self, value, doForce=False, doGetPointer=True):
-        if (MAP_MIN_ZOOM_LEVEL <= value <= MAP_MAX_ZOOM_LEVEL):
-            if doGetPointer:
-                self.do_scale(value, self.drawing_area.get_pointer(), doForce)
-            else:
-                self.do_scale(value, None, doForce)
+    ## Zoom to the given pointer
+    def do_zoom(self, zoom_value, doForce=False, dPointer=None):
+        if (MAP_MIN_ZOOM_LEVEL <= zoom_value <= MAP_MAX_ZOOM_LEVEL):
+            self.do_scale(zoom_value, dPointer, doForce)
 
     def menu_tools(self, strName):
         for intPos in range(len(TOOLS_MENU)):
@@ -347,11 +346,11 @@ class MainWindow(gtk.Window):
     ## All the actions for the menu items
     def menu_item_response(self, w, strName):
         if strName.startswith("Zoom Out"):
-            self.do_zoom(self.scale.get_value() + 1, True)
+            self.do_zoom(self.scale.get_value() + 1, True, self.myPointer)
         elif strName.startswith("Zoom In"):
-            self.do_zoom(self.scale.get_value() - 1, True)
+            self.do_zoom(self.scale.get_value() - 1, True, self.myPointer)
         elif strName.startswith("Center map"):
-            self.do_zoom(self.scale.get_value(), True)
+            self.do_zoom(self.scale.get_value(), True, self.myPointer)
         elif strName.startswith("Reset"):
             self.do_zoom(MAP_MAX_ZOOM_LEVEL)
         elif strName.startswith("Batch Download"):
@@ -368,10 +367,12 @@ class MainWindow(gtk.Window):
     def da_click_events(self, w, event):
         # Right-Click event shows the popUp menu
         if (event.type == gtk.gdk.BUTTON_PRESS) and (event.button != 1):
+            self.myPointer = (event.x, event.y)
             w.popup(None, None, None, event.button, event.time)
         # Double-Click event Zoom In
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
-            self.do_zoom(self.scale.get_value() - 1, True)
+            self.do_zoom(self.scale.get_value() - 1, 
+                        self.drawing_area.get_pointer())
 
     ## Handles left (press click) event in the drawing_area
     def da_button_press(self, w, event):
@@ -550,9 +551,9 @@ class MainWindow(gtk.Window):
         # Minus = [45,65453]   Zoom Out
         # Plus  = [61,65451]   Zoom In
         elif keyval in [45,65453]:
-           self.do_zoom(self.scale.get_value() + 1, True, False)
+           self.do_zoom(self.scale.get_value() + 1, True)
         elif keyval in [61,65451]:
-            self.do_zoom(self.scale.get_value() - 1, True, False)
+            self.do_zoom(self.scale.get_value() - 1, True)
 
     ## Handles the Key pressing
     def key_press_event(self, w, event):
