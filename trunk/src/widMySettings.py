@@ -1,5 +1,5 @@
 ## @package src.widMySettings
-# Settings widget used to display the list of the locations.
+# Settings widget that displays common settings.
 # Displayed inside a tab in MapTools.
 
 import os
@@ -7,9 +7,9 @@ import gtk
 from mapConst import *
 from customWidgets import _SpinBtn, _frame, lbl, FolderChooser
 
-
+## This widget lets the user change common settings
 class MySettings():
-
+    ## Put all the settings Widgets together
     def show(self, parent):
         def _size(width, height):
             hbox = gtk.HBox(False, 10)

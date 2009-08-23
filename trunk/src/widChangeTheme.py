@@ -7,7 +7,7 @@ import fileUtils
 from mapConst import *
 from customWidgets import _frame, lbl
 
-
+## This widget lets the user change the visual theme
 class ChangeTheme():
     ## Load the items into the Combo box
     def load_combo(self, myCombo):
