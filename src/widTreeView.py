@@ -6,7 +6,7 @@ import gtk
 import fileUtils
 from mapConst import *
 
-
+## This widget allows the user to modify the locations and markers
 class TreeView():
 
     ## Appends items to a list from the given file

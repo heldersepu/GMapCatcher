@@ -1,5 +1,5 @@
 ## @package src.widMyGPS
-# Change Theme widget used to change the GTK theme.
+# GPS widget used to modify some GPS settings
 # Displayed inside a tab in MapTools.
 
 import gtk
@@ -7,9 +7,8 @@ import fileUtils
 from mapConst import *
 from customWidgets import _myEntry, _SpinBtn, _frame, lbl
 
-
+## This widget lets the user change GPS settings
 class MyGPS():
-
     ## All the buttons at the bottom
     def __action_buttons(self, conf):
         def btn_revert_clicked(button, conf):
