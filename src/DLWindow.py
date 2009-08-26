@@ -151,7 +151,8 @@ class DLWindow(gtk.Window):
             self.downloader.query_region_around_location(
                 lat0,lon0,dlat,dlon,
                 zoom,layer,
-                gui_callback(self.tile_received))
+                gui_callback(self.tile_received),
+                mapServ=self.mapService)
         if self.downloader.qsize()==0:
             self.download_complete()
         self.all_placed = True
