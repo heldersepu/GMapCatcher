@@ -1,3 +1,12 @@
+August 25 2009    H.S    <HelderSepu@gmail.com>
+    * 0.2.0.0 - At revision: 530
+    * Complete GPS support (Issue 32)
+    * Add updated notifications (Issue 51)
+    * Add a couple of GPS features (Issue 68, 70)
+    * Fix multiple GPS issues (Issues 66, 67, 69)
+    * Fix Regresion that broke the "Force update" (Issue 73)
+    * Fix bug zooming using the menu (Issue 76)
+
 August 09 2009    H.S    <HelderSepu@gmail.com>
     * 0.1.1.0 - At revision: 487
     * Add GPS module, start GPS support for windows (Issue 57)
