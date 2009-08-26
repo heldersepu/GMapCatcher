@@ -63,9 +63,8 @@ class GPS:
                 self.location = (fix.latitude, fix.longitude)
                 self.gps_callback(self.location, self.mode)
 
-        except Exception as inst:
+        except Exception:
            available = False
-           print type(inst), inst
 
 	## Load GPS marker image
     def get_marker_pixbuf(self):
