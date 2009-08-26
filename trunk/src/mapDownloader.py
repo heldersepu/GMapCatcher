@@ -15,7 +15,7 @@ from math import floor,ceil
 
 class DownloadTask:
     def __init__(self, coord, layer, callback=None,
-                    force_update=False, mapServ='Google'):
+                    force_update=False, mapServ=MAP_SERVERS[GOOGLE]):
         self.coord = coord
         self.layer = layer
         self.callback = callback
@@ -108,7 +108,7 @@ class MapDownloader:
         return self.taskq.qsize()
 
     def query_tile(self, coord, layer, callback, online=True,
-                    force_update=False, mapServ='Google'):
+                    force_update=False, mapServ=MAP_SERVERS[GOOGLE]):
         #print "query_tile(",coord,layer,callback,online,force_update,")"
         world_tiles = mapUtils.tiles_on_level(coord[2])
         coord = (mapUtils.mod(coord[0], world_tiles),
