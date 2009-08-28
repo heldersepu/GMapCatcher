@@ -27,7 +27,7 @@ def mod(x,y):
     if r<0: r+=y
     return r
 
-## convert from coord(lat, lng, zoom_level) to (tile, offset)
+## Convert from coord(lat, lng, zoom_level) to (tile, offset)
 def coord_to_tile(coord):
     world_tiles = tiles_on_level(coord[2])
     x = world_tiles / 360.0 * (coord[1] + 180.0)
@@ -38,7 +38,7 @@ def coord_to_tile(coord):
              int((y - int(y)) * TILES_HEIGHT)
     return (int(x) % world_tiles, int(y) % world_tiles), offset
 
-## convert ((tile, offset), zoom_level) to (lat, lon, zoom_level)
+## Convert from ((tile, offset), zoom_level) to coord(lat, lon, zoom_level)
 def tile_to_coord(tile, zoom):
     world_tiles = tiles_on_level(zoom)
     x = ( tile[0][0] + 1.0*tile[1][0]/TILES_WIDTH ) / (world_tiles/2.) - 1 # -1...1
@@ -68,14 +68,15 @@ def nice_round(f):
     n = int(math.log(f, 10))
     return round(f, 2 - n)
 
-def tile_coord_to_screen(coord, rect, center):
-    world_tiles = tiles_on_level(coord[2])
+##  Convert from ((tile, zoom), rect, center) to screen coordinates 
+def tile_coord_to_screen(tile_coord, rect, center):
+    world_tiles = tiles_on_level(tile_coord[2])
     x_rollup = world_tiles * TILES_WIDTH
     y_rollup = world_tiles * TILES_HEIGHT
     dx = mod(rect.width//2 - center[1][0] +
-        (coord[0] - center[0][0]) * TILES_WIDTH, x_rollup)
+        (tile_coord[0] - center[0][0]) * TILES_WIDTH, x_rollup)
     dy = mod(rect.height//2 - center[1][1] +
-        (coord[1] - center[0][1]) * TILES_HEIGHT, y_rollup)
+        (tile_coord[1] - center[0][1]) * TILES_HEIGHT, y_rollup)
 
     if dx + TILES_WIDTH >= x_rollup:
         dx -= x_rollup
