@@ -62,6 +62,7 @@ class MainWindow(gtk.Window):
         self.current_zoom_level = pos
         self.repaint()
 
+    ## Get the zoom level from the scale
     def get_zoom_level(self):
         return int(self.scale.get_value())
 
@@ -107,6 +108,7 @@ class MainWindow(gtk.Window):
              event.keyval in [65293, 32]:
             self.menu_tools(TOOLS_MENU[0])
 
+    ## Set the auto-completion for the entry box
     def set_completion(self):
         completion = gtk.EntryCompletion()
         completion.connect('match-selected', self.on_completion_match)
@@ -117,6 +119,7 @@ class MainWindow(gtk.Window):
         # Populate the dropdownlist
         self.combo.set_model(self.ctx_map.completion_model(SEPARATOR))
 
+    ## Search for the location in the Entry box
     def confirm_clicked(self, button):
         location = self.entry.get_text()
         if (0 == len(location)):
@@ -153,15 +156,25 @@ class MainWindow(gtk.Window):
             self.current_zoom_level = coord[2]
             self.do_scale(coord[2], force=True)
 
+    ## Handles the click in the offline check box
     def offline_clicked(self, w):
         online = not self.cb_offline.get_active()
         if online:
             self.repaint()
+            self.do_check_for_updates()
 
+    ## Start checking if there is an update
+    def do_check_for_updates(self):
+        if self.conf.check_for_updates and (self.update is None):
+            # 3 seconds delay before starting the check
+            self.update = CheckForUpdates(3, self.conf.version_url)
+
+    ## Handles the change in the GPS combo box
     def gps_changed(self, w):
         self.gps.set_mode(w.get_active())
         self.repaint()
 
+    ## Handles the change in the combo box Layer(Map, Sat.. )
     def layer_changed(self, w):
         self.layer = w.get_active()
         self.repaint()
@@ -564,12 +577,14 @@ class MainWindow(gtk.Window):
         elif self.get_border_width() == 0:
             self.navigation(event.keyval)
 
+    ## Final actions before main_quit
     def on_delete(self,*args):
         self.hide()
         if mapGPS.available:
             self.gps.stop_all()
         self.downloader.stop_all()
         self.ctx_map.finish()
+        # If there was an update show it
         if self.update:
             self.update.finish()
         return False
@@ -618,10 +633,6 @@ class MainWindow(gtk.Window):
 
         self.da_set_cursor()
         self.entry.grab_focus()
-
-        if self.conf.check_for_updates:
-            # 3 seconds delay before starting the check
-            self.update = CheckForUpdates(3, self.conf.version_url)
 
 def main():
     MainWindow()
