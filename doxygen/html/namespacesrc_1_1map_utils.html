@@ -36,15 +36,16 @@
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#a190befe163e198e07b505cb5d0ff68c7">tile_adjust</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#abdf480081a14394192d82a8c7245256b">mod</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#a9c0b872d7a9313a928dfe37bfb827568">coord_to_tile</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">convert from coord(lat, lng, zoom_level) to (tile, offset)  <a href="#a9c0b872d7a9313a928dfe37bfb827568"></a><br/></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert from coord(lat, lng, zoom_level) to (tile, offset).  <a href="#a9c0b872d7a9313a928dfe37bfb827568"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#a065b0cf50d1d62318d9bf87a1ee69314">tile_to_coord</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">convert ((tile, offset), zoom_level) to (lat, lon, zoom_level)  <a href="#a065b0cf50d1d62318d9bf87a1ee69314"></a><br/></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert from ((tile, offset), zoom_level) to coord(lat, lon, zoom_level).  <a href="#a065b0cf50d1d62318d9bf87a1ee69314"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#a9265a6b593353026e8b5e40e12df7c94">km_per_pixel</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Find scale of the picture in km per pixel.  <a href="#a9265a6b593353026e8b5e40e12df7c94"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#a8b1166efe10369d8f9a30f4ac81a43f0">str_to_tuple</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert tuple-like string to real tuples eg: '((1, 2), (2, 3))' -&gt; ((1, 2), (2, 3)).  <a href="#a8b1166efe10369d8f9a30f4ac81a43f0"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#a23ad8b55c24e4b103d594309c2842500">nice_round</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#aa1ddcb18a2e22372d69b7860ecc4980b">tile_coord_to_screen</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert from ((tile, zoom), rect, center) to screen coordinates.  <a href="#aa1ddcb18a2e22372d69b7860ecc4980b"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>A group of map utilities. </p>
@@ -65,7 +66,7 @@
 </div>
 <div class="memdoc">
 
-<p>convert from coord(lat, lng, zoom_level) to (tile, offset) </p>
+<p>Convert from coord(lat, lng, zoom_level) to (tile, offset). </p>
 
 </div>
 </div>
@@ -222,7 +223,7 @@
           <td class="memname">def src.mapUtils.tile_coord_to_screen </td>
           <td>(</td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>coord</em>, </td>
+          <td class="paramname"> <em>tile_coord</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -244,6 +245,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Convert from ((tile, zoom), rect, center) to screen coordinates. </p>
 
 </div>
 </div>
@@ -272,7 +275,7 @@
 </div>
 <div class="memdoc">
 
-<p>convert ((tile, offset), zoom_level) to (lat, lon, zoom_level) </p>
+<p>Convert from ((tile, offset), zoom_level) to coord(lat, lon, zoom_level). </p>
 
 </div>
 </div>

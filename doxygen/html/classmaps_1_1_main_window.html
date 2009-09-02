@@ -56,6 +56,7 @@
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#a6fbd1f48abff1b9c283304b5d15b88d7">gps_callback</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Called when new coordinates are obtained from the GPS.  <a href="#a6fbd1f48abff1b9c283304b5d15b88d7"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#a5b3cdcbb7f76c80d84cb9cdc5f8e07b3">do_zoom</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Zoom to the given pointer.  <a href="#a5b3cdcbb7f76c80d84cb9cdc5f8e07b3"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#a314068daadba6c8eae537717db16d851">menu_tools</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#ae88784d5836afc5e580361d9770b55e4">menu_item_response</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">All the actions for the menu items.  <a href="#ae88784d5836afc5e580361d9770b55e4"></a><br/></td></tr>
@@ -112,6 +113,7 @@
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#a994ee18d79af9f5dfb744c3f75c4c3a8">current_zoom_level</a> = MAP_MAX_ZOOM_LEVEL</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#a115c5e62c830ddf02567e24b0a49e9e7">default_text</a> = &quot;Enter location here!&quot;</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#a900e744481a1520dde06b52282bb33f3">update</a> = None</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#a4aba2f3ae7b2fba03e54be2eac22fb81">myPointer</a> = None</td></tr>
 <tr><td colspan="2"><h2>Private Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmaps_1_1_main_window.html#a18a0f04fe1a5b41ecc61adb28877244f">__create_combo_box</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a comboBox that will contain the locations.  <a href="#a18a0f04fe1a5b41ecc61adb28877244f"></a><br/></td></tr>
@@ -691,7 +693,7 @@
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>value</em>, </td>
+          <td class="paramname"> <em>zoom_value</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -703,7 +705,7 @@
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>doGetPointer</em> = <code>True</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>dPointer</em> = <code>None</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -713,6 +715,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Zoom to the given pointer. </p>
 
 </div>
 </div>
@@ -1631,6 +1635,19 @@
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classmaps_1_1_main_window.html#a625fe040973b88f6a95b703a8a524981">maps.MainWindow.marker</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4aba2f3ae7b2fba03e54be2eac22fb81"></a><!-- doxytag: member="maps::MainWindow::myPointer" ref="a4aba2f3ae7b2fba03e54be2eac22fb81" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmaps_1_1_main_window.html#a4aba2f3ae7b2fba03e54be2eac22fb81">maps.MainWindow.myPointer</a> = None<code> [static]</code></td>
         </tr>
       </table>
 </div>
