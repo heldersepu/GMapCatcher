@@ -1,32 +1,39 @@
 ﻿#labels Featured
 <wiki:toc max_depth="5" />
-Screenshots:
+
 
 ==== GMapCatcher v0.1 ====
-integrating [http://www.openstreetmap.org/ OpenStreetMap]<br>
+integration with [http://www.openstreetmap.org/ OpenStreetMap]<br>
 http://gmapcatcher.googlecode.com/svn/wiki/OpenStreetMap.gif
 
 
-GMapCatcher v0.09 showing new features<br>
+==== GMapCatcher v0.09 ====  
+showing new features<br>
 http://gmapcatcher.googlecode.com/svn/wiki/v0.09.gif
 
 
-v0.054 is out with some kool features, thanks to Maxim.Razin !!!<br>
+==== GMapCatcher v0.054 ====   
+Some kool features, thanks to Maxim.Razin !!!<br>
 http://gmapcatcher.googlecode.com/svn/wiki/GMapCatcher-v0.054.gif
 http://gmapcatcher.googlecode.com/svn/wiki/GMapCatcher_Terrain.gif
-
 
 We have a New look under Windows.<br>
 http://gmapcatcher.googlecode.com/svn/wiki/WinNewLook.PNG
 
-GMapCatcher v0.050 in XP & Ubuntu Showing new Features.<br>
-http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.050-ComboBoxEntry.PNG
-http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.050-Yes_No.PNG
 
-GMapCatcher v0.046 in Ubuntu.<br>
+==== GMapCatcher v0.050 ====
+Win XP & Ubuntu Showing the new Features.<br>
+http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.050-Yes_No.PNG
+http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.050-ComboBoxEntry.PNG
+
+
+==== GMapCatcher v0.046 ====
+In Ubuntu.<br>
 http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.046-Ubuntu.png
 
-GMapCatcher v0.043 in Windows XP (showing right click menu)<br>
+
+==== GMapCatcher v0.043 ====
+In Windows XP (showing right click menu)<br>
 http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.043-winXP.PNG
 
 
