@@ -1,7 +1,9 @@
 ﻿#labels Featured
+<wiki:toc max_depth="5" />
 Screenshots:
 
-GMapCatcher v0.1 integrating [http://www.openstreetmap.org/ OpenStreetMap]<br>
+==== GMapCatcher v0.1 ====
+integrating [http://www.openstreetmap.org/ OpenStreetMap]<br>
 http://gmapcatcher.googlecode.com/svn/wiki/OpenStreetMap.gif
 
 
