@@ -445,10 +445,11 @@ class MainWindow(gtk.Window):
         self.drawing_area.queue_draw()
 
     def scroll_cb(self, widget, event):
+        xyPointer = self.drawing_area.get_pointer()
         if (event.direction == gtk.gdk.SCROLL_UP):
-            self.do_zoom(self.scale.get_value() - 1)
+            self.do_zoom(self.scale.get_value() - 1, dPointer=xyPointer)
         else:
-            self.do_zoom(self.scale.get_value() + 1)
+            self.do_zoom(self.scale.get_value() + 1, dPointer=xyPointer)
 
     def scale_change_value(self, range, scroll, value):
         if (MAP_MIN_ZOOM_LEVEL <= value <= MAP_MAX_ZOOM_LEVEL):
