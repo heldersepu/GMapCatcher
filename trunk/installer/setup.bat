@@ -49,6 +49,7 @@ CALL %NSIS% setup.nsi
 @ECHO.
 
 :: clean up at the end
+@COLOR 0A
 @DEL *.pyc /s
 @MOVE *.exe installer
 @ECHO.
