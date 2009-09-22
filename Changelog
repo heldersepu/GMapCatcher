@@ -1,3 +1,7 @@
+September 22 2009    H.S    <HelderSepu@gmail.com>
+    * 0.2.1.0 - At revision: 549
+    * Add a new googleMaps pattern (Issue 84)
+
 August 25 2009    H.S    <HelderSepu@gmail.com>
     * 0.2.0.0 - At revision: 530
     * Complete GPS support (Issue 32)
