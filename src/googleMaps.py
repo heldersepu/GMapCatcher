@@ -43,6 +43,7 @@ class GoogleMaps:
 
             # List of patterns add more as needed
             paList = ['http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v=([a-z0-9.]+)&',
+                      'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]lyrs=([a-z@0-9.]+)&',
                       'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v\\\\x3d([a-z0-9.]+)\\\\x26']
             for srtPattern in paList:
                 p = re.compile(srtPattern)
