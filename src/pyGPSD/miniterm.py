@@ -3,10 +3,6 @@
 # Very simple serial terminal
 # (C)2002-2009 Chris Liechti <cliechti@gmx.net>
 
-# Input characters are sent directly (only LF -> CR/LF/CRLF translation is
-# done), received characters are displayed as is (or escaped trough pythons
-# repr, useful for debug purposes)
-
 
 import sys, threading
 import nmea.serial as serial
