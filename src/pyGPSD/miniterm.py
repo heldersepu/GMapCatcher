@@ -13,12 +13,9 @@ DEFAULT_BAUD = 4800
 
 
 class Miniterm:
-    def __init__(self, port, baudrate, parity, rtscts, xonxoff, echo=False):
-        self.serial = serial.serial_for_url(port, baudrate, parity=parity, rtscts=rtscts, xonxoff=xonxoff, timeout=1)
-        self.echo = echo
-        self.dtr_state = True
-        self.rts_state = True
-        self.break_state = False
+    def __init__(self, port, baudrate, parity, rtscts, xonxoff):
+        self.serial = serial.serial_for_url(port, baudrate, parity=parity, 
+                                rtscts=rtscts, xonxoff=xonxoff, timeout=1)
 
     def start(self):
         self.alive = True
