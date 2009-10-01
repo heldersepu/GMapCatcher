@@ -1,0 +1,6 @@
+#summary Keyboard Shortcuts
+#labels Featured
+
+|| *Shortcut Key* || *Description* ||
+||  F12           ||  FullScreen   ||
+||  F11           ||  FullScreen   ||
