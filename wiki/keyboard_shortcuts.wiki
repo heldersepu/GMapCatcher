@@ -1,6 +1,15 @@
 #summary Keyboard Shortcuts
 #labels Featured
 
+=== General ===
 || *Shortcut Key* || *Description* ||
-||  F12           ||  FullScreen   ||
+||  F12           ||  Hide/Unhide all buttons ||
 ||  F11           ||  FullScreen   ||
+||  ESC           ||  Undo F12 & F11 ||
+
+
+=== Navigation (only after hiding buttons)===
+|| *Shortcut Key* || *Description* ||
+||  Arrow Keys    ||  Move the map ||
+||  +             ||  Zoom in      ||
+||  -             ||  Zoom out     ||
