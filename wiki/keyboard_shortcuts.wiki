@@ -1,4 +1,4 @@
-#summary Keyboard Shortcuts
+#summary List of Keyboard Shortcuts
 #labels Featured
 
 === General ===
@@ -10,6 +10,10 @@
 
 === Navigation (only after hiding buttons)===
 || *Shortcut Key* || *Description* ||
-||  Arrow Keys    ||  Move the map ||
+||  Arrow Keys    ||  Pan Left, Right, Up and Down ||
 ||  +             ||  Zoom in      ||
 ||  -             ||  Zoom out     ||
+||  Page Up       ||  Pan wider Up ||
+||  Page Down     ||  Pan wider Down ||
+||  Home          ||  Pan wider Left ||
+||  End           ||  Pan wider Rigth ||
