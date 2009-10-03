@@ -28,6 +28,7 @@ class MainWindow(gtk.Window):
     default_text = "Enter location here!"
     update = None
     myPointer = None
+    reCenter_gps = False
 
     def do_scale(self, pos, pointer=None, force=False):
         pos = int(round(pos, 0))
@@ -192,7 +193,8 @@ class MainWindow(gtk.Window):
         zl = self.current_zoom_level
         tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
         # The map should be centered around a new GPS location
-        if mode == GPS_CENTER:
+        if mode == GPS_CENTER or self.reCenter_gps:
+            self.reCenter_gps = False
             self.center = tile
         # The map should be moved only to keep GPS location on the screen
         elif mode == GPS_ON_SCREEN:
@@ -568,6 +570,11 @@ class MainWindow(gtk.Window):
             self.do_zoom(self.scale.get_value() + 1, True)
         elif keyval in [61,65451]:
             self.do_zoom(self.scale.get_value() - 1, True)
+
+        # Space = 32   Refresh the GPS
+        elif keyval == 32:
+            self.reCenter_gps = True
+
 
     ## Handles the Key pressing
     def key_press_event(self, w, event):
