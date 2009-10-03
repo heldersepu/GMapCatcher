@@ -35,9 +35,11 @@ class TilesRepositoryFS:
     def finish(self):
         pass
 
-    def load_pixbuf(self, coord, layer):
+    ## Returns the PixBuf of the tile
+    # Uses a cache to optimise HDD read access
+    def load_pixbuf(self, coord, layer, force_update):
         filename = self.coord_to_path(coord, layer)
-        if filename in self.tile_cache:
+        if not force_update and (filename in self.tile_cache):
             pixbuf = self.tile_cache[filename]
         else:
             if os.path.isfile(filename):
