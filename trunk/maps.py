@@ -505,7 +505,8 @@ class MainWindow(gtk.Window):
             xy = mapUtils.tile_coord_to_screen(tile_coord, rect, self.center)
             if xy:
                 gc = da.style.black_gc
-                img = self.ctx_map.load_pixbuf(tile_coord, layer)
+                force_update = self.cb_forceupdate.get_active()
+                img = self.ctx_map.load_pixbuf(tile_coord, layer, force_update)
                 for x,y in xy:
                     da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                           TILES_WIDTH, TILES_HEIGHT)

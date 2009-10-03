@@ -175,8 +175,8 @@ class GoogleMaps:
         return self.tile_repository.get_file(coord, layer, online,
                                                 force_update, mapServ)
 
-    def load_pixbuf(self, coord, layer):
-        return self.tile_repository.load_pixbuf(coord, layer)
+    def load_pixbuf(self, coord, layer, force_update):
+        return self.tile_repository.load_pixbuf(coord, layer, force_update)
 
 
     def completion_model(self, strAppend=''):
