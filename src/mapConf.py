@@ -88,7 +88,7 @@ class MapConf():
         self.version_url = read_config('version_url',
             'http://gmapcatcher.googlecode.com/svn/wiki/version.wiki', str)
         ## Whether or not to check for updates, default is True (1)
-        self.check_for_updates = read_config('check_for_updates', 0, int)
+        self.check_for_updates = read_config('check_for_updates', 1, int)
         ## Initial GPS mode, default is GPS_DISABLED
         self.gps_mode = read_config('gps_mode', GPS_DISABLED, int)
 
