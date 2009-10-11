@@ -27,24 +27,52 @@ class GoogleMaps:
         else:
             return 10
 
-    ## Returns a template URL for the GoogleMaps
-    def layer_url_template(self, layer, online):
-        if layer not in self.known_layers:
-            self.version_string=None
-            if not online:
-                return None
-            map_server_query = ["", "h", "p"]
-            oa = openanything.fetch(
-                'http://maps.google.com/maps?t=' + map_server_query[layer])
-            if oa['status'] != 200:
-                print "Trying to fetch http://maps.google.com/maps but failed"
-                return None
-            html = oa['data']
+
+    ## parse maps.google.com/maps.
+    ## google always change this page and map api, we use a specific
+    ## method to do the parser work.
+    ## the return value is a url pattern like this:
+    ## http://mt%d.google.com/vt/lyrs=t@110&hl=en&x=%i&y=%i&z=%i
+    def parse_start_page(self, layer, html):
+	    ## fitst, we check the uniform url pattern.
+	    ## after Oct. 10, 2009, google use a uniform url:
+	    ##
+	    ## http://mt%d.google.com/vt/lyrs=??@110&hl=en&x=%i&y=%i&z=%i
+	    ##
+	    ## to fetch map, satellite and terrain tiles, where
+	    ## ?? is 'm' for map, 's' for satellite and 't' for terrain.
+	    ## google also use an 'h' layer for its route and labels.
+	    ##
+	    ## although google actually use 
+	    ##
+	    ## http://mt0.google.com/vt/v=w2p.110&hl=en&x=%i&y=%i&z=%i
+	    ##
+	    ## for terrain, the uniform URL pattern works.
+	    ## we first check the existance of the uniform URL pattern,
+	    ## if not, we fall back to the old method.
+
+            ## check for pattern:
+	    ## 'http://mt[0-9].google.com/vt/lyrs'
+
+	    upattern = 'http://mt[0-9].google.com/vt/lyrs\\\\x3dm@([0-9]+)'
+	    p = re.compile(upattern)
+	    m = p.search(html)
+
+	    ## if exist, we use upattern to form the retval
+	    if m:
+		    head_str = 'http://mt%d.google.com/vt/lyrs='
+		    layer_str = layer + '@' + m.group(1)
+		    match_str = '&hl=en&x=%i&y=%i&zoom=%i'
+		    retval = head_str + layer_str + match_str
+		    return retval;
+
+
+	    # if doesn't exist, we fall back to old method
 
             # List of patterns add more as needed
             paList = ['http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v=([a-z0-9.]+)&',
-                      'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]lyrs=([a-z@0-9.]+)&',
-                      'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v\\\\x3d([a-z0-9.]+)\\\\x26']
+		      'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]lyrs=([a-z@0-9.]+)&',
+		      'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v\\\\x3d([a-z0-9.]+)\\\\x26']
             for srtPattern in paList:
                 p = re.compile(srtPattern)
                 m = p.search(html)
@@ -53,10 +81,27 @@ class GoogleMaps:
                 print "Cannot parse result"
                 return None
 
-            self.known_layers[layer] = (
-                'http://%s%%d.google.com/%s/v=%s&hl=en&x=%%i&y=%%i&zoom=%%i'
-                % tuple(m.groups()))
-            # print "URL pattern for layer %i: %s" % (layer,self.known_layers[layer])
+	    return 'http://%s%%d.google.com/%s/v=%s&hl=en&x=%%i&y=%%i&zoom=%%i' % tuple(m.groups())
+
+    ## Returns a template URL for the GoogleMaps
+    def layer_url_template(self, layer, online):
+        if layer not in self.known_layers:
+            self.version_string=None
+            if not online:
+                return None
+            map_server_query = ["", "h", "p"]
+	    layers_name = ["m", "s", "t"]
+
+
+            oa = openanything.fetch(
+                'http://maps.google.com/maps?t=' + map_server_query[layer])
+
+            if oa['status'] != 200:
+                print "Trying to fetch http://maps.google.com/maps but failed"
+                return None
+            html = oa['data']
+
+            self.known_layers[layer] = self.parse_start_page(layers_name[layer], html)
 
         return self.known_layers[layer]
 
