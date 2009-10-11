@@ -43,11 +43,15 @@ class GoogleMaps:
         # ?? is 'm' for map, 's' for satellite and 't' for terrain.
         # google also use an 'h' layer for its route and labels.
         #
-        # although google actually use
+        # However, google actually use
         #
         # http://mt0.google.com/vt/v=w2p.110&hl=en&x=%i&y=%i&z=%i
         #
-        # for terrain, the uniform URL pattern works.
+        # for terrain.
+	# although the uniform URL pattern still works, the result
+	# from it is different from google map's web. the later contains
+	# more labels and routes. see Issue 94, comment 2
+	#
         # we first check the existance of the uniform URL pattern,
         # if not, we fall back to the old method.
 
@@ -64,7 +68,18 @@ class GoogleMaps:
             layer_str = layer + '@' + m.group(1)
             match_str = '&hl=en&x=%i&y=%i&zoom=%i'
             retval = head_str + layer_str + match_str
-            return retval;
+            if layer != 't':
+                return retval
+            ## for terrain, we check for another pattern
+            tpattern = 'http://mt[0-9].google.com/vt/v\\\\x3dw([0-9]+)p.([0-9]+)'
+            p = re.compile(tpattern)
+            m = p.search(html)
+            if m:
+                head_str = 'http://mt%%d.google.com/vt/v=w%sp.%s' \
+                    % tuple(m.groups())
+                match_str = '&hl=en&x=%i&y=%i&zoom=%i'
+                retval = head_str + match_str
+            return retval
 
 
         # if doesn't exist, we fall back to old method
