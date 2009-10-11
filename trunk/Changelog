@@ -1,3 +1,10 @@
+October 11 2009    H.S    <HelderSepu@gmail.com>
+    * 0.3.0.0 - At revision: 568
+    * Add an Update notifier (Issue 51)
+    * Add option to ReCenter GPS cursor (Issue 87)
+    * Fix a Force Update bug (Issue 88)
+    * Add a (Issue 94)
+
 September 22 2009    H.S    <HelderSepu@gmail.com>
     * 0.2.1.0 - At revision: 549
     * Add a new googleMaps pattern (Issue 84)
