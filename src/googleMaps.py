@@ -48,10 +48,10 @@ class GoogleMaps:
         # http://mt0.google.com/vt/v=w2p.110&hl=en&x=%i&y=%i&z=%i
         #
         # for terrain.
-	# although the uniform URL pattern still works, the result
-	# from it is different from google map's web. the later contains
-	# more labels and routes. see Issue 94, comment 2
-	#
+        # although the uniform URL pattern still works, the result
+        # from it is different from google map's web. the later contains
+        # more labels and routes. see Issue 94, comment 2
+        #
         # we first check the existance of the uniform URL pattern,
         # if not, we fall back to the old method.
 
