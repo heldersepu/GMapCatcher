@@ -16,5 +16,20 @@ dVer="`grep -w "VERSION = " src/mapConst.py`"
 dVer=${dVer:11}
 dVer=${dVer/%\"}
 
+# Copy all the files to a temp location
+mkdir -p ../temp/$dName
+cp -r * ../temp/$dName
+cd ../temp
+
+# Remove some files
+rm -r -f $dName/common
+find . -name \.svn | xargs rm -r -f
+
 # Create the tar.gz file
-tar czf ../$dName-$dVer.tar.gz *.py src images installer Changelog README
+tar czf ../$dName-$dVer.tar.gz $dName
+
+# Delete temp directory
+cd ..
+rm -r -f temp/
+
+
