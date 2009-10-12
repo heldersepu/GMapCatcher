@@ -17,16 +17,16 @@ dVer=${dVer:11}
 dVer=${dVer/%\"}
 
 # Copy all the files to a temp location
-mkdir -p ../temp/$dName
-cp -r * ../temp/$dName
+mkdir -p ../temp/$dName-$dVer
+cp -r * ../temp/$dName-$dVer
 cd ../temp
 
 # Remove some files
-rm -r -f $dName/common
+rm -r -f $dName-$dVer/common
 find . -name \.svn | xargs rm -r -f
 
 # Create the tar.gz file
-tar czf ../$dName-$dVer.tar.gz $dName
+tar czf ../$dName-$dVer.tar.gz $dName-$dVer
 
 # Delete temp directory
 cd ..
