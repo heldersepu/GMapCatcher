@@ -3,8 +3,8 @@
 
 cd ..
 # Clean up temporary files
-find . -name \*.pyc | xargs rm
-find . -name \*.py~ | xargs rm
+find . -name \*.pyc | xargs rm -f
+find . -name \*.py~ | xargs rm -f
 
 # Get the Name 
 dName="`grep -w "NAME = " src/mapConst.py`"
