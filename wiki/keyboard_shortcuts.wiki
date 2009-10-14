@@ -17,3 +17,7 @@
 ||  Page Down     ||  Pan wider Down ||
 ||  Home          ||  Pan wider Left ||
 ||  End           ||  Pan wider Rigth ||
+
+=== GPS related (only when GPS is enabled)===
+|| *Shortcut Key* || *Description* ||
+||  Space         ||  ReCenter GPS cursor ||
