@@ -2,14 +2,17 @@
 # Get the Pixbuf from image files.
 #
 
-import os
 import gtk
 from mapConst import *
+from os.path import join, dirname, abspath, exists
+
+## Absolute Path to the images directory
+_prefix = abspath(join(join(dirname(__file__), ".."), "images"))
 
 ## Get the Pixbuf from missing.png
 def missing():
     try:
-        pix_missing = gtk.gdk.pixbuf_new_from_file(os.path.join('images', 'missing.png'))
+        pix_missing = gtk.gdk.pixbuf_new_from_file(join(_prefix, 'missing.png'))
     except Exception:
         pix_missing = gtk.gdk.pixbuf_new_from_data('\255\255\255' * 100000,
             gtk.gdk.COLORSPACE_RGB, False, 8,
@@ -19,7 +22,7 @@ def missing():
 ## Get the Pixbuf from cross.png
 def cross():
     try:
-        pix_cross = gtk.gdk.pixbuf_new_from_file(os.path.join('images', 'cross.png'))
+        pix_cross = gtk.gdk.pixbuf_new_from_file(join(_prefix, 'cross.png'))
     except Exception:
         pix_cross = gtk.gdk.pixbuf_new_from_data(
             ('\255\255\255' * 4 + '\0\0\255' * 4 + '\255\255\255' * 4) * 4 +
@@ -32,6 +35,8 @@ def cross():
 # This is used in myToolTip
 def getImage(filename, intWidth=56, intHeight=56):
     try:
+        if not exists(filename):
+            filename = join(_prefix, filename)
         pix_buf = gtk.gdk.pixbuf_new_from_file_at_size(filename, intWidth, intHeight)
     except Exception:
         wCo = int(intWidth / 3)
