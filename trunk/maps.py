@@ -250,8 +250,7 @@ class MainWindow(gtk.Window):
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
         button.connect("query-tooltip", myToolTip, "Tools",
-                    "Set of tools to customise GMapCatcher",
-                    os.path.join("images", "marker.png"))
+                    "Set of tools to customise GMapCatcher", "marker.png")
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
