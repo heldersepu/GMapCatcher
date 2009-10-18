@@ -586,7 +586,7 @@ class MainWindow(gtk.Window):
             self.navigation(event.keyval)
 
     ## Final actions before main_quit
-    def on_delete(self,*args):
+    def on_delete(self, *args):
         self.hide()
         if mapGPS.available:
             self.gps.stop_all()

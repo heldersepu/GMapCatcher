@@ -12,20 +12,24 @@ class MyMarkers:
     # coord = (lat, lng, zoom_level)
     positions = {}
 
+    def refresh(self):
+        self.positions = {}
+        self.read_markers()
+
     def read_markers(self):
-        self.positions = fileUtils.read_file('marker', self.markerpath)
+        self.positions = fileUtils.read_file('marker', self.markerPath)
 
     def write_markers(self):
-        fileUtils.write_file('marker', self.markerpath, self.positions)
+        fileUtils.write_file('marker', self.markerPath, self.positions)
 
     def __init__(self, configpath=None):
-        self.configpath = os.path.expanduser(configpath or DEFAULT_PATH)
-        self.markerpath = os.path.join(self.configpath, 'markers')
+        localPath = os.path.expanduser(configpath or DEFAULT_PATH)
+        self.markerPath = os.path.join(localPath, 'markers')
 
-        if not os.path.isdir(self.configpath):
-            os.mkdir(self.configpath)
+        if not os.path.isdir(localPath):
+            os.mkdir(localPath)
 
-        if (os.path.exists(self.markerpath)):
+        if (os.path.exists(self.markerPath)):
             self.read_markers()
         else:
             self.write_markers()
