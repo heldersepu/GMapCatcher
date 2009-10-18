@@ -30,7 +30,9 @@ class MapTools():
             frame.set_border_width(10)
             frame.set_size_request(100, 75)
             if str in [TOOLS_MENU[1], TOOLS_MENU[2]]:
-                frame.add(myTree.show(str[5:-1], filePath +'/'+ str[5:]))
+                frame.add(
+                    myTree.show(str[5:-1], filePath +'/'+ str[5:], parent)
+                )
             elif str == TOOLS_MENU[0]:
                 frame.add(mySett.show(parent))
             elif str == TOOLS_MENU[3]:
