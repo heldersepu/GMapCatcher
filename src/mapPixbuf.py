@@ -7,7 +7,10 @@ from mapConst import *
 from os.path import join, dirname, abspath, exists
 
 ## Absolute Path to the images directory
-_prefix = abspath(join(join(dirname(__file__), ".."), "images"))
+if 'library.zip' in __file__:
+    _prefix = abspath(join(dirname(__file__), "../../images"))
+else:
+    _prefix = abspath(join(dirname(__file__), "../images"))
 
 ## Get the Pixbuf from missing.png
 def missing():
