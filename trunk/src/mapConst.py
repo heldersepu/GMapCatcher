@@ -8,7 +8,8 @@ WEB_ADDRESS = "http://code.google.com/p/gmapcatcher/"
 
 GOOGLE = 0
 OSM = 1
-MAP_SERVERS = ["Google", "OpenStreetMap"]
+CLOUDMADE = 2
+MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade"]
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2

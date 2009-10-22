@@ -10,6 +10,7 @@ import openanything
 import fileUtils
 import tilesreposfs
 import openStreetMaps
+import cloudMade
 
 from mapConst import *
 from gobject import TYPE_STRING
@@ -212,6 +213,8 @@ class GoogleMaps:
         self.mt_counter = self.mt_counter % NR_MTS
         if mapServ == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
             return openStreetMaps.get_url(self.mt_counter, coord)
+        elif mapServ == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
+            return cloudMade.get_url(self.mt_counter, coord)
         else:
             return self.get_url(self.mt_counter, coord, layer, online)
 
