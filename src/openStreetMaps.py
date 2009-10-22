@@ -1,7 +1,7 @@
 ## @package src.openStreetMaps
 # All the interaction with OpenStreetMap.org
 
-from mapConst import *
+from mapConst import MAP_MAX_ZOOM_LEVEL
 
 ## Returns a template URL for the openStreetMaps
 def layer_url_template():
