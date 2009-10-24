@@ -10,7 +10,7 @@ from mapConst import *
 from mapDownloader import MapDownloader
 from customWidgets import _SpinBtn, _myEntry, _frame, lbl
 
-import googleMaps
+import mapServices 
 import mapUtils
 from gtkThread import *
 
@@ -140,7 +140,7 @@ class DLWindow(gtk.Window):
         dlon = kmx*180/math.pi/(R_EARTH*math.cos(lat0*math.pi/180))
         dlat = kmy*180/math.pi/R_EARTH
         # creating our own gmap
-        self.gmap = googleMaps.GoogleMaps(init_path) 
+        self.gmap = mapServices.MapServ(init_path) 
         self.complete = []
         self.downloader = MapDownloader(self.gmap)
         if zoom0>zoom1:

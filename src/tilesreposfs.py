@@ -2,13 +2,13 @@
 #
 # Usage:
 #
-# - constructor requires googleMaps instance, because method
-#  'get_tile_from_coord' is provided in the googleMaps
+# - constructor requires MapServ instance, because method
+#  'get_tile_from_coord' is provided in the MapServ
 #
-# - this module is not used directly. It is used via GoogleMaps() methods:
+# - this module is not used directly. It is used via MapServ() methods:
 #     - get_file()
 #     - load_pixbuf()
-# - module is finalized from GoogleMaps.finish() method
+# - module is finalized from MapServ.finish() method
 
 
 import os
@@ -25,9 +25,9 @@ from mapConst import *
 
 class TilesRepositoryFS:
 
-    def __init__(self, googleMaps_inst):
+    def __init__(self, MapServ_inst):
         self.tile_cache = lrucache.LRUCache(1000)
-        self.instance_google_maps = googleMaps_inst
+        self.instance_google_maps = MapServ_inst
         self.lock = Lock()
         self.configpath = self.instance_google_maps.configpath
         self.missingPixbuf = mapPixbuf.missing()
