@@ -2,14 +2,11 @@
 # All the interaction with the map services
 
 import os
-import re
 import gtk
 import sys
-import urllib
-import openanything
 import fileUtils
 import tilesreposfs
-
+import openanything
 import googleMaps
 import openStreetMaps
 import cloudMade
@@ -23,13 +20,6 @@ class MapServ:
 
     # coord = (lat, lng, zoom_level)
 
-    @staticmethod
-    def set_zoom(intZoom):
-        if (MAP_MIN_ZOOM_LEVEL <= intZoom <= MAP_MAX_ZOOM_LEVEL):
-            return intZoom
-        else:
-            return 10
-
     def read_locations(self):
         self.locations = fileUtils.read_file('location', self.locationpath)
 
@@ -41,7 +31,6 @@ class MapServ:
         self.mt_counter=0
         self.configpath = fileUtils.check_dir(configpath)
         self.locationpath = os.path.join(self.configpath, 'locations')
-        self.known_layers = {}
         self.locations = {}
 
         #implementation of the method is set in maps.py:__init__()
@@ -59,7 +48,13 @@ class MapServ:
         return self.locations
 
     def search_location(self, location):
-        return googleMaps.search_location(location)
+        print location
+        location, coord = googleMaps.search_location(location)
+        print location
+        if (location[:6] != "error="):
+            self.locations[location] = coord
+            self.write_locations()
+        return location
         
     ## Get the URL for the given coordinates
     # In this function we point to the proper map service
