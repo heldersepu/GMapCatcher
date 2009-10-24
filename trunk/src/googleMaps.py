@@ -1,13 +1,16 @@
 ## @package src.googleMaps
 # All the interaction with google.com
 
-from mapConst import MAP_MAX_ZOOM_LEVEL
+import re
+import urllib
+import openanything
+from mapConst import MAP_MAX_ZOOM_LEVEL, MAP_MIN_ZOOM_LEVEL
 
+known_layers = {}
 
 ## Returns a template URL for the GoogleMaps
-def layer_url_template(self, layer, online):
-    if layer not in self.known_layers:
-        self.version_string=None
+def layer_url_template(layer, online):
+    if layer not in known_layers:
         if not online:
             return None
         map_server_query = ["", "h", "p"]
@@ -21,12 +24,12 @@ def layer_url_template(self, layer, online):
             return None
         html = oa['data']
 
-        self.known_layers[layer] = self.parse_start_page(layers_name[layer], html)
-    return self.known_layers[layer]
+        known_layers[layer] = parse_start_page(layers_name[layer], html)
+    return known_layers[layer]
 
 ## Returns the URL to the GoogleMaps tile
-def get_url(self, counter, coord, layer, online):
-    template = self.layer_url_template(layer, online)
+def get_url(counter, coord, layer, online):
+    template = layer_url_template(layer, online)
     if template:
         return template % (counter, coord[0], coord[1], coord[2])
 
@@ -36,7 +39,7 @@ def get_url(self, counter, coord, layer, online):
 #  method to do the parser work.
 #  the return value is a url pattern like this:
 #  http://mt%d.google.com/vt/lyrs=t@110&hl=en&x=%i&y=%i&z=%i
-def parse_start_page(self, layer, html):
+def parse_start_page(layer, html):
     # first, we check the uniform url pattern.
     # after Oct. 10, 2009, google use a uniform url:
     #
@@ -60,7 +63,6 @@ def parse_start_page(self, layer, html):
 
     # check for pattern:
     # 'http://mt[0-9].google.com/vt/lyrs'
-
     upattern = 'http://mt[0-9].google.com/vt/lyrs\\\\x3dm@([0-9]+)'
     p = re.compile(upattern)
     m = p.search(html)
@@ -101,16 +103,23 @@ def parse_start_page(self, layer, html):
 
     return 'http://%s%%d.google.com/%s/v=%s&hl=en&x=%%i&y=%%i&zoom=%%i' % tuple(m.groups())
 
+
+def set_zoom(intZoom):
+    if (MAP_MIN_ZOOM_LEVEL <= intZoom <= MAP_MAX_ZOOM_LEVEL):
+        return intZoom
+    else:
+        return 10    
+    
 ## Search a location in Google
-def search_location(self, location):
+def search_location(location):
     print 'downloading the following location:', location
     try:
         oa = openanything.fetch( 'http://maps.google.com/maps?q=' +
             urllib.quote_plus(location) )
     except Exception:
-        return 'error=Can not connect to http://maps.google.com'
+        return 'error=Can not connect to http://maps.google.com', None
     if oa['status']!=200:
-        return 'error=Can not connect to http://maps.google.com'
+        return 'error=Can not connect to http://maps.google.com', None
 
     m = 0
     html = oa['data']
@@ -126,7 +135,7 @@ def search_location(self, location):
     if m:
         location = m.group(1)
     else:
-        return 'error=Location %s not found' % location
+        return 'error=Location %s not found' % location, None
 
     # List of patterns to look for the latitude & longitude
     paList = ['center:{lat:([0-9.-]+),lng:([0-9.-]+)}.*zoom:([0-9.-]+)',
@@ -139,19 +148,17 @@ def search_location(self, location):
         if m: break
 
     if m:
-        lat, lng = float(m.group(1)), float(m.group(2))
         zoom = 10
         if m.group(0).find('zoom:') != -1:
-            zoom = self.set_zoom(MAP_MAX_ZOOM_LEVEL - int(m.group(3)))
+            zoom = set_zoom(MAP_MAX_ZOOM_LEVEL - int(m.group(3)))
         else:
             p = re.compile('center:.*zoom:([0-9.-]+).*mapType:')
             m = p.search(html)
             if m:
-                zoom = self.set_zoom(MAP_MAX_ZOOM_LEVEL - int(m.group(1)))
+                zoom = set_zoom(MAP_MAX_ZOOM_LEVEL - int(m.group(1)))
         location = unicode(location, errors='ignore')
-        self.locations[location] = (lat, lng, zoom)
-        self.write_locations()
-        return location
+        return location, (float(m.group(1)), float(m.group(2)), zoom)
+
     else:
         return 'error=Unable to get latitude and longitude of %s ' % location
 
