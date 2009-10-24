@@ -5,13 +5,13 @@
 
 import sys
 import src.mapConf as mapConf
-import src.googleMaps as googleMaps
 
 from src.mapUtils import *
+from src.mapServices import MapServ
 from src.mapDownloader import MapDownloader
 
 conf = mapConf.MapConf()
-ctx_map = googleMaps.GoogleMaps(conf.init_path)
+ctx_map = MapServ(conf.init_path)
 downloader = None
 max_zl = MAP_MAX_ZOOM_LEVEL
 min_zl = MAP_MIN_ZOOM_LEVEL + 4

@@ -15,7 +15,7 @@ from src.mapConf import MapConf
 from src.mapMark import MyMarkers
 from src.DLWindow import DLWindow
 from src.mapUpdate import CheckForUpdates
-from src.googleMaps import GoogleMaps
+from src.mapServices import MapServ
 from src.customMsgBox import error_msg
 from src.mapDownloader import MapDownloader
 from src.customWidgets import myToolTip, gtk_menu
@@ -609,7 +609,7 @@ class MainWindow(gtk.Window):
                                   self.conf.gps_mode)
 
         self.marker = MyMarkers(self.conf.init_path)
-        self.ctx_map = GoogleMaps(self.conf.init_path)
+        self.ctx_map = MapServ(self.conf.init_path)
         self.downloader = MapDownloader(self.ctx_map)
         self.layer=0
         gtk.Window.__init__(self)
