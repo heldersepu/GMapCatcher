@@ -52,7 +52,9 @@ def do_nothing(*args, **kwargs):
 def download(lat, lng, lat_range, lng_range, layer):
     for zl in range(max_zl, min_zl - 1, -1):
         print "Downloading zl %d" % zl
-        downloader.query_region_around_location(lat, lng, lat_range*2, lng_range*2, zl, layer, do_nothing)
+        downloader.query_region_around_location(lat, lng, 
+            lat_range*2, lng_range*2, zl, 
+            layer, do_nothing, mapServ=conf.map_service)
         downloader.wait_all()
 
 if __name__ == "__main__":
