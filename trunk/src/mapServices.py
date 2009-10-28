@@ -10,6 +10,7 @@ import openanything
 import googleMaps
 import openStreetMaps
 import cloudMade
+import yahoo
 
 from mapConst import *
 from gobject import TYPE_STRING
@@ -61,10 +62,13 @@ class MapServ:
     def get_url_from_coord(self, coord, layer, online, mapServ='Google'):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
+        
         if mapServ == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
             return openStreetMaps.get_url(self.mt_counter, coord)
         elif mapServ == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
             return cloudMade.get_url(self.mt_counter, coord)
+        elif mapServ == MAP_SERVERS[YAHOO] and (layer != LAYER_TERRAIN):
+            return yahoo.get_url(self.mt_counter, coord, layer)
         else:
             return googleMaps.get_url(self.mt_counter, coord, layer, online)
 
