@@ -7,10 +7,14 @@ import sys
 import fileUtils
 import tilesreposfs
 import openanything
+
 import googleMaps
 import openStreetMaps
 import cloudMade
 import yahoo
+import informationFreeway
+import openCycleMap
+import googleMapMaker
 
 from mapConst import *
 from gobject import TYPE_STRING
@@ -69,6 +73,12 @@ class MapServ:
             return cloudMade.get_url(self.mt_counter, coord)
         elif mapServ == MAP_SERVERS[YAHOO] and (layer != LAYER_TERRAIN):
             return yahoo.get_url(self.mt_counter, coord, layer)
+        elif mapServ == MAP_SERVERS[INFO_FREEWAY] and (layer == LAYER_MAP):
+            return informationFreeway.get_url(self.mt_counter, coord)            
+        elif mapServ == MAP_SERVERS[OPENCYCLEMAP] and (layer == LAYER_MAP):
+            return openCycleMap.get_url(self.mt_counter, coord)
+        elif mapServ == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
+            return googleMapMaker.get_url(self.mt_counter, coord)            
         else:
             return googleMaps.get_url(self.mt_counter, coord, layer, online)
 
