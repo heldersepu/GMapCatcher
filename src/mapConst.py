@@ -10,7 +10,11 @@ GOOGLE = 0
 OSM = 1
 CLOUDMADE = 2
 YAHOO = 3
-MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade", "Yahoo"]
+INFO_FREEWAY = 4
+OPENCYCLEMAP = 5
+GOOGLE_MAKER = 6
+MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade", "Yahoo", 
+               "InformationFreeway", "OpenCycleMap", "Google Map Maker"]
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
