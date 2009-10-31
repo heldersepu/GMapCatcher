@@ -1,9 +1,15 @@
+October 30 2009    H.S    <HelderSepu@gmail.com>
+    * 0.4.0.0 - At revision: 592
+    * Add more map services (Issue 82)
+    * Fix bug in the Path to images (Issue 95)
+    * Apply changes to the markers immediately (Issue 97)
+
 October 11 2009    H.S    <HelderSepu@gmail.com>
     * 0.3.0.0 - At revision: 568
     * Add an Update notifier (Issue 51)
     * Add option to ReCenter GPS cursor (Issue 87)
     * Fix a Force Update bug (Issue 88)
-    * Add a (Issue 94)
+    * Add a new pattern for Google maps (Issue 94)
 
 September 22 2009    H.S    <HelderSepu@gmail.com>
     * 0.2.1.0 - At revision: 549
