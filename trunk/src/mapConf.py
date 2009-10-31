@@ -43,7 +43,7 @@ class MapConf():
         config.set(SECTION_INIT, 'version_url', self.version_url)
         config.set(SECTION_INIT, 'check_for_updates', self.check_for_updates)
         config.set(SECTION_INIT, 'gps_mode', self.gps_mode)
-        config.set(SECTION_INIT, 'cloudMade_styleID', self.cloudMade_styleID)
+        config.set(SECTION_INIT, 'cloudmade_styleid', self.cloudMade_styleID)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -93,7 +93,7 @@ class MapConf():
         ## Initial GPS mode, default is GPS_DISABLED
         self.gps_mode = read_config('gps_mode', GPS_DISABLED, int)
         ## Initial style ID for the CloudMade maps
-        self.cloudMade_styleID = read_config('cloudMade_styleID', 1, int)
+        self.cloudMade_styleID = read_config('cloudmade_styleid', 1, int)
         
     ## Write the configuration to the default file
     def save(self):
