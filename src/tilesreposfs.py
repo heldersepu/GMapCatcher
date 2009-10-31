@@ -83,9 +83,9 @@ class TilesRepositoryFS:
         return False
 
     ## Return the absolute path to a tile
-    #  coord = (lat, lng, zoom_level)
+    #  coord = (tile_X, tile_Y, zoom_level)
     #  smaple of the Naming convention: 
-    #  \.googlemaps\tiles\zoom\0\1\0\1.png 
+    #  \.googlemaps\tiles\15\0\1\0\1.png 
     def coord_to_path(self, coord, layer):
         self.lock.acquire()
         ## at most 1024 files in one dir
