@@ -7,10 +7,10 @@ try:
 except ImportError:
     available = False
 
-from threading import Event, Thread
 import os
-import gtk
 import mapConst
+import mapPixbuf
+from threading import Event, Thread
 
 class GPS:
     def __init__(self, gps_callback, update_rate, gps_mode):
@@ -68,14 +68,7 @@ class GPS:
 
 	## Load GPS marker image
     def get_marker_pixbuf(self):
-        filename = os.path.join('images', 'marker_gps.png')
-        if (os.path.exists(filename)):
-            w = gtk.Image()
-            w.set_from_file(filename)
-            try:
-                return w.get_pixbuf()
-            except ValueError:
-                print "File corrupted: %s" % filename
+        return mapPixbuf.getImage('marker_gps.png', 48, 48)
 
 
 ## Continuously updates GPS coordinates.
