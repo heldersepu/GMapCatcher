@@ -60,30 +60,30 @@ class MapServ:
             self.locations[location] = coord
             self.write_locations()
         return location
-        
+
     ## Get the URL for the given coordinates
     # In this function we point to the proper map service
-    def get_url_from_coord(self, coord, layer, online, mapServ='Google'):
+    def get_url_from_coord(self, coord, layer, online, mapServ, styleID):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
-        
+
         if mapServ == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
             return openStreetMaps.get_url(self.mt_counter, coord)
         elif mapServ == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
-            return cloudMade.get_url(self.mt_counter, coord)
+            return cloudMade.get_url(self.mt_counter, coord, styleID)
         elif mapServ == MAP_SERVERS[YAHOO] and (layer != LAYER_TERRAIN):
             return yahoo.get_url(self.mt_counter, coord, layer)
         elif mapServ == MAP_SERVERS[INFO_FREEWAY] and (layer == LAYER_MAP):
-            return informationFreeway.get_url(self.mt_counter, coord)            
+            return informationFreeway.get_url(self.mt_counter, coord)
         elif mapServ == MAP_SERVERS[OPENCYCLEMAP] and (layer == LAYER_MAP):
             return openCycleMap.get_url(self.mt_counter, coord)
         elif mapServ == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
-            return googleMapMaker.get_url(self.mt_counter, coord)            
+            return googleMapMaker.get_url(self.mt_counter, coord)
         else:
             return googleMaps.get_url(self.mt_counter, coord, layer, online)
 
-    def get_tile_from_coord(self, coord, layer, online, mapServ='Google'):
-        href = self.get_url_from_coord(coord, layer, online, mapServ)
+    def get_tile_from_coord(self, coord, layer, online, mapServ, styleID):
+        href = self.get_url_from_coord(coord, layer, online, mapServ, styleID)
         if href:
             try:
                 print 'downloading:', href
@@ -95,10 +95,11 @@ class MapServ:
             except:
                 raise
 
-
-    def get_file(self, coord, layer, online, force_update, mapServ='Google'):
-        return self.tile_repository.get_file(coord, layer, online,
-                                                force_update, mapServ)
+    def get_file(self, coord, layer, online, force_update, 
+                                mapServ='Google', styleID =1):
+        return self.tile_repository.get_file(
+                    coord, layer, online, force_update, mapServ, styleID
+                )
 
     def load_pixbuf(self, coord, layer, force_update):
         return self.tile_repository.load_pixbuf(coord, layer, force_update)

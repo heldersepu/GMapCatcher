@@ -185,7 +185,10 @@ class MainWindow(gtk.Window):
         rect = self.drawing_area.get_allocation()
         km_px = mapUtils.km_per_pixel(coord)
         dlw = DLWindow(coord, km_px*rect.width, km_px*rect.height,
-                       self.layer, self.conf.init_path, self.conf.map_service)
+                        self.layer, self.conf.init_path, 
+                        self.conf.map_service,
+                        self.conf.cloudMade_styleID
+                    )
         dlw.show()
 
     ## Called when new coordinates are obtained from the GPS
@@ -439,7 +442,9 @@ class MainWindow(gtk.Window):
             self.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
             online=online, force_update=force_update,
-            mapServ=self.conf.map_service)
+            mapServ=self.conf.map_service,
+            styleID=self.conf.cloudMade_styleID
+        )
         self.draw_overlay(drawing_area, rect)
 
     def repaint(self):
