@@ -83,21 +83,21 @@ class TilesRepositoryFS:
         return False
 
     ## Return the absolute path to a tile
-    #  coord = (tile_X, tile_Y, zoom_level)
+    #  tile_coord = (tile_X, tile_Y, zoom_level)
     #  smaple of the Naming convention: 
     #  \.googlemaps\tiles\15\0\1\0\1.png 
-    def coord_to_path(self, coord, layer):
+    #  We only have 2 levels for one axis
+    #  at most 1024 files in one dir
+    def coord_to_path(self, tile_coord, layer):
         self.lock.acquire()
-        ## at most 1024 files in one dir
-        ## We only have 2 levels for one axis
         path = os.path.join(self.configpath, LAYER_DIRS[layer])
         path = fileUtils.check_dir(path)
-        path = fileUtils.check_dir(path, '%d' % coord[2])
-        path = fileUtils.check_dir(path, "%d" % (coord[0] / 1024))
-        path = fileUtils.check_dir(path, "%d" % (coord[0] % 1024))
-        path = fileUtils.check_dir(path, "%d" % (coord[1] / 1024))
+        path = fileUtils.check_dir(path, '%d' % tile_coord[2])
+        path = fileUtils.check_dir(path, "%d" % (tile_coord[0] / 1024))
+        path = fileUtils.check_dir(path, "%d" % (tile_coord[0] % 1024))
+        path = fileUtils.check_dir(path, "%d" % (tile_coord[1] / 1024))
         self.lock.release()
-        return os.path.join(path, "%d.png" % (coord[1] % 1024))
+        return os.path.join(path, "%d.png" % (tile_coord[1] % 1024))
 
     ## Get the image file for the given location
     # Validates the given coordinates and,
