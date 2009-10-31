@@ -47,14 +47,12 @@ class TreeView():
     ## Add a row to the list
     def btn_add_clicked(self, button, listStore, myTree):
         strName = ' New'
-        isDuplicate = True
-        while isDuplicate:
-            for row in listStore:
-                if row[0] == strName:
-                    strName = strName + "1"
-                elif row[0][0] > strName[0]:
-                    isDuplicate = False
-                    break
+        listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        for row in listStore:
+            if row[0] == strName:
+                strName = strName + "1"
+            elif row[0][0] > strName[0]:
+                break
         iter = listStore.append([strName, 0, 0, MAP_MAX_ZOOM_LEVEL - 2])
         listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
         self.change_selection(myTree, listStore.get_path(iter))
