@@ -15,16 +15,19 @@ from math import floor,ceil
 
 class DownloadTask:
     def __init__(self, coord, layer, callback=None,
-                    force_update=False, mapServ=MAP_SERVERS[GOOGLE]):
+                    force_update=False, 
+                    mapServ=MAP_SERVERS[GOOGLE],
+                    styleID=1):
         self.coord = coord
         self.layer = layer
         self.callback = callback
         self.force_update = force_update
         self.mapServ = mapServ
+        self.styleID = styleID
 
     def __str__(self):
-        return "DownloadTask(%s,%s,%s)" % \
-                (self.coord, self.layer, self.mapServ)
+        return "DownloadTask(%s,%s,%s,%s)" % \
+                (self.coord, self.layer, self.mapServ, self.styleID)
 
 ## Downloads tiles from the web.
 #
@@ -52,8 +55,10 @@ class DownloaderThread(Thread):
             self.inq.task_done()
 
     def process_task(self, task):
-        filename = self.ctx_map.get_file(task.coord, task.layer,
-                                        True, task.force_update, task.mapServ)
+        filename = self.ctx_map.get_file(
+            task.coord, task.layer, True, 
+            task.force_update, task.mapServ, task.styleID
+        )
         if task.callback:
             #print "process_task callback", task
             task.callback(False, task.coord, task.layer)
@@ -107,8 +112,9 @@ class MapDownloader:
     def qsize(self):
         return self.taskq.qsize()
 
-    def query_tile(self, coord, layer, callback, online=True,
-                    force_update=False, mapServ=MAP_SERVERS[GOOGLE]):
+    def query_tile(self, coord, layer, callback, 
+                    online=True, force_update=False, 
+                    mapServ=MAP_SERVERS[GOOGLE], styleID=1):
         #print "query_tile(",coord,layer,callback,online,force_update,")"
         world_tiles = mapUtils.tiles_on_level(coord[2])
         coord = (mapUtils.mod(coord[0], world_tiles),
@@ -124,7 +130,9 @@ class MapDownloader:
                 return
 
         self.taskq.put(
-            DownloadTask(coord, layer, callback, force_update, mapServ)
+            DownloadTask(
+                coord, layer, callback, force_update, mapServ, styleID
+            )
         )
 
     def query_region(self, xmin, xmax, ymin, ymax, zoom, *args, **kwargs):

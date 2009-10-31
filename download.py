@@ -54,7 +54,10 @@ def download(lat, lng, lat_range, lng_range, layer):
         print "Downloading zl %d" % zl
         downloader.query_region_around_location(lat, lng, 
             lat_range*2, lng_range*2, zl, 
-            layer, do_nothing, mapServ=conf.map_service)
+            layer, do_nothing, 
+            mapServ=conf.map_service,
+            styleID=conf.cloudMade_styleID
+        )
         downloader.wait_all()
 
 if __name__ == "__main__":

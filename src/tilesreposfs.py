@@ -27,9 +27,10 @@ class TilesRepositoryFS:
 
     def __init__(self, MapServ_inst):
         self.tile_cache = lrucache.LRUCache(1000)
-        self.instance_google_maps = MapServ_inst
+        self.mapServ_inst = MapServ_inst
         self.lock = Lock()
-        self.configpath = self.instance_google_maps.configpath
+        self.configpath = self.mapServ_inst.configpath
+        
         self.missingPixbuf = mapPixbuf.missing()
 
     def finish(self):
@@ -57,7 +58,7 @@ class TilesRepositoryFS:
     ## Get the png file for the given location
     # Returns true if the file is successfully retrieved
     def get_png_file(self, coord, layer, filename,
-                        online, force_update, mapServ):
+                        online, force_update, mapServ, styleID):
         # remove tile only when online
         if (force_update and online):
             fileUtils.delete_old(filename)
@@ -68,8 +69,9 @@ class TilesRepositoryFS:
             return False
 
         try:
-            data = self.instance_google_maps.get_tile_from_coord(coord, layer,
-                                                            online, mapServ)
+            data = self.mapServ_inst.get_tile_from_coord(
+                        coord, layer, online, mapServ, styleID
+                    )
             file = open( filename, 'wb' )
             file.write( data )
             file.close()
@@ -80,11 +82,15 @@ class TilesRepositoryFS:
             print '\tdownload failed -', sys.exc_info()[0]
         return False
 
+    ## Return the absolute path to a tile
+    #  coord = (lat, lng, zoom_level)
+    #  smaple of the Naming convention: 
+    #  \.googlemaps\tiles\zoom\0\1\0\1.png 
     def coord_to_path(self, coord, layer):
         self.lock.acquire()
         ## at most 1024 files in one dir
         ## We only have 2 levels for one axis
-        path=os.path.join(self.configpath,LAYER_DIRS[layer])
+        path = os.path.join(self.configpath, LAYER_DIRS[layer])
         path = fileUtils.check_dir(path)
         path = fileUtils.check_dir(path, '%d' % coord[2])
         path = fileUtils.check_dir(path, "%d" % (coord[0] / 1024))
@@ -96,7 +102,7 @@ class TilesRepositoryFS:
     ## Get the image file for the given location
     # Validates the given coordinates and,
     # returns the local filename if successfully retrieved
-    def get_file(self, coord, layer, online, force_update, mapServ='Google'):
+    def get_file(self, coord, layer, online, force_update, mapServ, styleID):
         if (MAP_MIN_ZOOM_LEVEL <= coord[2] <= MAP_MAX_ZOOM_LEVEL):
             world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - coord[2])
             if (coord[0] > world_tiles) or (coord[1] > world_tiles):
@@ -105,7 +111,7 @@ class TilesRepositoryFS:
             filename = self.coord_to_path(coord, layer)
             # print "Coord to path: %s" % filename
             if self.get_png_file(coord, layer, filename, online,
-                                    force_update, mapServ):
+                                    force_update, mapServ, styleID):
                 return filename
         return None
 

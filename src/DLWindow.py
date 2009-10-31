@@ -16,7 +16,7 @@ from gtkThread import *
 
 
 class DLWindow(gtk.Window):
-    def __init__(self, coord, kmx, kmy, layer, init_path, mapServ):
+    def __init__(self, coord, kmx, kmy, layer, init_path, mapServ, styleID):
 
         def _zoom(zoom0, zoom1):
             out_hbox = gtk.HBox(False, 50)
@@ -85,6 +85,7 @@ class DLWindow(gtk.Window):
 
         print "DLWindow(", coord, kmx, kmy, layer, ')'
         self.mapService = mapServ
+        self.styleID = styleID
         kmx = mapUtils.nice_round(kmx)
         kmy = mapUtils.nice_round(kmy)
         self.layer = layer
@@ -152,7 +153,9 @@ class DLWindow(gtk.Window):
                 lat0,lon0,dlat,dlon,
                 zoom,layer,
                 gui_callback(self.tile_received),
-                mapServ=self.mapService)
+                mapServ=self.mapService,
+                styleID=self.styleID
+            )
         if self.downloader.qsize()==0:
             self.download_complete()
         self.all_placed = True
