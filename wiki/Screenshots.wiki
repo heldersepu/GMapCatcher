@@ -1,6 +1,9 @@
 ﻿#labels Featured
 <wiki:toc max_depth="5" />
 
+==== GMapCatcher v0.4 ====
+adding a few new map providers<br>
+http://gmapcatcher.googlecode.com/svn/wiki/OpenStreetMap.gif
 
 ==== GMapCatcher v0.1 ====
 integration with [http://www.openstreetmap.org/ OpenStreetMap]<br>
