@@ -8,13 +8,13 @@ import fileUtils
 import tilesreposfs
 import openanything
 
-import googleMaps
-import openStreetMaps
-import cloudMade
-import yahoo
-import informationFreeway
-import openCycleMap
-import googleMapMaker
+import mapServers.googleMaps as googleMaps
+import mapServers.openStreetMaps as openStreetMaps
+import mapServers.cloudMade as cloudMade
+import mapServers.yahoo as yahoo
+import mapServers.informationFreeway as informationFreeway
+import mapServers.openCycleMap as openCycleMap
+import mapServers.googleMapMaker as googleMapMaker
 
 from mapConst import *
 from gobject import TYPE_STRING
@@ -69,16 +69,22 @@ class MapServ:
 
         if mapServ == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
             return openStreetMaps.get_url(self.mt_counter, coord)
+
         elif mapServ == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
             return cloudMade.get_url(self.mt_counter, coord, styleID)
+
         elif mapServ == MAP_SERVERS[YAHOO] and (layer != LAYER_TERRAIN):
             return yahoo.get_url(self.mt_counter, coord, layer)
+
         elif mapServ == MAP_SERVERS[INFO_FREEWAY] and (layer == LAYER_MAP):
             return informationFreeway.get_url(self.mt_counter, coord)
+
         elif mapServ == MAP_SERVERS[OPENCYCLEMAP] and (layer == LAYER_MAP):
             return openCycleMap.get_url(self.mt_counter, coord)
+
         elif mapServ == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
             return googleMapMaker.get_url(self.mt_counter, coord)
+
         else:
             return googleMaps.get_url(self.mt_counter, coord, layer, online)
 
@@ -95,7 +101,7 @@ class MapServ:
             except:
                 raise
 
-    def get_file(self, coord, layer, online, force_update, 
+    def get_file(self, coord, layer, online, force_update,
                                 mapServ='Google', styleID =1):
         return self.tile_repository.get_file(
                     coord, layer, online, force_update, mapServ, styleID

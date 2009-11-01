@@ -1,9 +1,9 @@
-## @package src.googleMapMaker
+## @package src.mapServers.googleMapMaker
 # All the interaction with Google Map Maker
 
 import re
-import openanything
-from mapConst import MAP_MAX_ZOOM_LEVEL
+import src.openanything as openanything
+from src.mapConst import MAP_MAX_ZOOM_LEVEL
 
 known_layers = {}
 

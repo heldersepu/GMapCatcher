@@ -1,10 +1,10 @@
-## @package src.googleMaps
+## @package src.mapServers.googleMaps
 # All the interaction with google.com
 
 import re
 import urllib
-import openanything
-from mapConst import MAP_MAX_ZOOM_LEVEL, MAP_MIN_ZOOM_LEVEL
+import src.openanything as openanything
+from src.mapConst import MAP_MAX_ZOOM_LEVEL, MAP_MIN_ZOOM_LEVEL
 
 known_layers = {}
 

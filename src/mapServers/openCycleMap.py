@@ -1,7 +1,7 @@
-## @package src.openCycleMap
+## @package src.mapServers.openCycleMap
 # All the interaction with OpenCycleMap.org
 
-from mapConst import MAP_MAX_ZOOM_LEVEL
+from src.mapConst import MAP_MAX_ZOOM_LEVEL
 
 ## Returns a template URL for the OpenCycleMap
 def layer_url_template():

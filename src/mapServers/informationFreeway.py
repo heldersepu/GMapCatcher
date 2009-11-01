@@ -1,7 +1,7 @@
-## @package src.informationFreeway
+## @package src.mapServers.informationFreeway
 # All the interaction with InformationFreeway.org
 
-from mapConst import MAP_MAX_ZOOM_LEVEL
+from src.mapConst import MAP_MAX_ZOOM_LEVEL
 
 ## Returns a template URL for the informationFreeway
 def layer_url_template():
