@@ -11,6 +11,8 @@ The GPS functionality is supported using the gps daemon: http://gpsd.berlios.de 
 
 If a GPS unit is properly installed and the gps daemon is running the GPS menu will show up in the main menu when gmapcatcher is started.
 
+[http://gmapcatcher.googlecode.com/svn/wiki/GPSv0.4.png]
+
 == Compatible Devices ==
 A List of compatible and tested devices is here:
 http://gpsd.berlios.de/hardware.html
