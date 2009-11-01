@@ -1,7 +1,7 @@
-## @package src.yahoo
+## @package src.mapServers.yahoo
 # All the interaction with yahoo.com
 
-from mapConst import MAP_MAX_ZOOM_LEVEL, LAYER_MAP
+from src.mapConst import MAP_MAX_ZOOM_LEVEL, LAYER_MAP
 
 ## Returns a template URL for the Yahoo mas
 def layer_url_template(layer):
