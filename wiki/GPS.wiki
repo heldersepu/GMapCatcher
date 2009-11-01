@@ -3,7 +3,9 @@
 
 = Introduction =
 
-The current implementation displays a GPS marker and can auto center the map to the GPS location.
+The current implementation displays a GPS marker 
+[http://gmapcatcher.googlecode.com/svn/trunk/images/marker_gps.png] 
+and can auto center the map to the GPS location.
 
 The GPS functionality is supported using the gps daemon: http://gpsd.berlios.de .
 
