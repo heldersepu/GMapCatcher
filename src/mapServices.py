@@ -107,6 +107,11 @@ class MapServ:
                     coord, layer, online, force_update, mapServ, styleID
                 )
 
+    def do_export(self, tcoord, layer, online, mapServ, styleID):
+        return self.tile_repository.do_export(
+                    tcoord, layer, online, mapServ, styleID
+                )
+
     def load_pixbuf(self, coord, layer, force_update):
         return self.tile_repository.load_pixbuf(coord, layer, force_update)
 
