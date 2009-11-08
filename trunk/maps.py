@@ -185,7 +185,7 @@ class MainWindow(gtk.Window):
         rect = self.drawing_area.get_allocation()
         km_px = mapUtils.km_per_pixel(coord)
         dlw = DLWindow(coord, km_px*rect.width, km_px*rect.height,
-                        self.layer, self.conf.init_path, 
+                        self.layer, self.conf.init_path,
                         self.conf.map_service,
                         self.conf.cloudMade_styleID
                     )
@@ -586,9 +586,17 @@ class MainWindow(gtk.Window):
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
+        # F2 = 65471
+        elif event.keyval == 65471:
+            self.ctx_map.do_export(
+                (self.center[0][0], self.center[0][1], self.current_zoom_level), 
+                self.layer, not self.cb_offline.get_active(), 
+                self.conf.map_service, self.conf.cloudMade_styleID
+            )
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
             self.navigation(event.keyval)
+
 
     ## Final actions before main_quit
     def on_delete(self, *args):

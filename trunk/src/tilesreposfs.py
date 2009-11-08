@@ -19,6 +19,7 @@ import lrucache
 import mapPixbuf
 import fileUtils
 
+from PIL import Image
 from threading import Lock
 from mapConst import *
 
@@ -30,7 +31,7 @@ class TilesRepositoryFS:
         self.mapServ_inst = MapServ_inst
         self.lock = Lock()
         self.configpath = self.mapServ_inst.configpath
-        
+
         self.missingPixbuf = mapPixbuf.missing()
 
     def finish(self):
@@ -84,8 +85,8 @@ class TilesRepositoryFS:
 
     ## Return the absolute path to a tile
     #  tile_coord = (tile_X, tile_Y, zoom_level)
-    #  smaple of the Naming convention: 
-    #  \.googlemaps\tiles\15\0\1\0\1.png 
+    #  smaple of the Naming convention:
+    #  \.googlemaps\tiles\15\0\1\0\1.png
     #  We only have 2 levels for one axis
     #  at most 1024 files in one dir
     def coord_to_path(self, tile_coord, layer):
@@ -100,19 +101,35 @@ class TilesRepositoryFS:
         return os.path.join(path, "%d.png" % (tile_coord[1] % 1024))
 
     ## Get the image file for the given location
-    # Validates the given coordinates and,
+    # Validates the given tile coordinates and,
     # returns the local filename if successfully retrieved
-    def get_file(self, coord, layer, online, force_update, mapServ, styleID):
-        if (MAP_MIN_ZOOM_LEVEL <= coord[2] <= MAP_MAX_ZOOM_LEVEL):
-            world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - coord[2])
-            if (coord[0] > world_tiles) or (coord[1] > world_tiles):
+    def get_file(self, tcoord, layer, online, force_update, mapServ, styleID):
+        if (MAP_MIN_ZOOM_LEVEL <= tcoord[2] <= MAP_MAX_ZOOM_LEVEL):
+            world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - tcoord[2])
+            if (tcoord[0] > world_tiles) or (tcoord[1] > world_tiles):
                 return None
             ## Tiles dir structure
-            filename = self.coord_to_path(coord, layer)
-            # print "Coord to path: %s" % filename
-            if self.get_png_file(coord, layer, filename, online,
+            filename = self.coord_to_path(tcoord, layer)
+            # print "tCoord to path: %s" % filename
+            if self.get_png_file(tcoord, layer, filename, online,
                                     force_update, mapServ, styleID):
                 return filename
         return None
 
 
+    ## Export tiles to map
+    def do_export(self, tcoord, layer, online, mapServ, styleID):
+        result = Image.new("RGBA", (1024, 1024))
+        x = 0
+        for i in range(tcoord[0] - 2 ,tcoord[0] + 2):
+            y = 0
+            for j in range(tcoord[1] - 2 ,tcoord[1] + 2):
+                filename = self.get_file(
+                    (i,j,tcoord[2]), layer, online, False, mapServ, styleID
+                )
+                if filename:
+                    im = Image.open(filename)
+                    result.paste(im, (x*256, y*256))
+                y += 1
+            x += 1
+        result.save("map.png")
