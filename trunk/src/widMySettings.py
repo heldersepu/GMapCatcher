@@ -131,6 +131,9 @@ class MySettings():
             self.s_center10.set_value(parent.center[1][0])
             self.s_center11.set_value(parent.center[1][1])
             self.s_zoom.set_value(parent.current_zoom_level)
+            dsize = parent.window.get_size()
+            self.s_width.set_value(dsize[0])
+            self.s_height.set_value(dsize[1])
 
         hpaned = gtk.VPaned()
         vbox = gtk.VBox()
