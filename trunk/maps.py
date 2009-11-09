@@ -341,8 +341,7 @@ class MainWindow(gtk.Window):
         da.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
 
-        menu = gtk_menu(["Zoom In", "Zoom Out", "Center map here",
-                    "Reset", "", "Batch Download"], self.menu_item_response)
+        menu = gtk_menu(DA_MENU, self.menu_item_response)
 
         da.connect_object("event", self.da_click_events, menu)
         da.connect('button-press-event', self.da_button_press)
@@ -364,18 +363,37 @@ class MainWindow(gtk.Window):
 
     ## All the actions for the menu items
     def menu_item_response(self, w, strName):
-        if strName.startswith("Zoom Out"):
+        if strName == DA_MENU[ZOOM_IN]:
             self.do_zoom(self.scale.get_value() + 1, True, self.myPointer)
-        elif strName.startswith("Zoom In"):
+        elif strName == DA_MENU[ZOOM_OUT]:
             self.do_zoom(self.scale.get_value() - 1, True, self.myPointer)
-        elif strName.startswith("Center map"):
+        elif strName == DA_MENU[CENTER_MAP]:
             self.do_zoom(self.scale.get_value(), True, self.myPointer)
-        elif strName.startswith("Reset"):
+        elif strName == DA_MENU[RESET]:
             self.do_zoom(MAP_MAX_ZOOM_LEVEL)
-        elif strName.startswith("Batch Download"):
+        elif strName == DA_MENU[BATCH_DOWN]:
             self.download_clicked(w, self.myPointer)
+        elif strName == DA_MENU[EXPORT]:
+            self.do_export(self.myPointer)
         else:
             self.menu_tools(strName)
+
+    ## Export tiles to one big map
+    def do_export(self, pointer=None):
+        self.da_set_cursor(gtk.gdk.CLOCK)
+        if (pointer == None):
+            tile = self.center[0]
+        else:
+            tile, offset = mapUtils.pointer_to_tile(
+                self.drawing_area.get_allocation(),
+                self.myPointer, self.center, self.current_zoom_level
+            )
+        self.ctx_map.do_export(
+            (tile[0], tile[1], self.current_zoom_level),
+            self.layer, not self.cb_offline.get_active(),
+            self.conf.map_service, self.conf.cloudMade_styleID
+        )
+        self.da_set_cursor()
 
     ## Change the mouse cursor over the drawing_area
     def da_set_cursor(self, dCursor = gtk.gdk.HAND1):
@@ -590,11 +608,7 @@ class MainWindow(gtk.Window):
             self.full_screen(event.keyval)
         # F2 = 65471
         elif event.keyval == 65471:
-            self.ctx_map.do_export(
-                (self.center[0][0], self.center[0][1], self.current_zoom_level),
-                self.layer, not self.cb_offline.get_active(),
-                self.conf.map_service, self.conf.cloudMade_styleID
-            )
+            self.do_export()
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
             self.navigation(event.keyval)

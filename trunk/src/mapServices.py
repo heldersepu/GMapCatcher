@@ -107,6 +107,8 @@ class MapServ:
                     coord, layer, online, force_update, mapServ, styleID
                 )
 
+    ## Call the do_export in the tile_repository
+    # Export tiles to one big map
     def do_export(self, tcoord, layer, online, mapServ, styleID):
         return self.tile_repository.do_export(
                     tcoord, layer, online, mapServ, styleID

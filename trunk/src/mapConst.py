@@ -13,7 +13,7 @@ YAHOO = 3
 INFO_FREEWAY = 4
 OPENCYCLEMAP = 5
 GOOGLE_MAKER = 6
-MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade", "Yahoo", 
+MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade", "Yahoo",
                "InformationFreeway", "OpenCycleMap", "Google Map Maker"]
 
 MAP_MAX_ZOOM_LEVEL = 17
@@ -24,6 +24,15 @@ NR_MTS = 4
 SEPARATOR = "\t"
 TOOLS_MENU = ["Settings", "Edit locations", "Edit markers",
               "Change Theme", "GPS Options"]
+
+ZOOM_IN = 0
+ZOOM_OUT = 1
+CENTER_MAP = 2
+RESET = 3
+BATCH_DOWN = 5
+EXPORT = 6
+DA_MENU = ["Zoom In", "Zoom Out", "Center map here",
+              "Reset", "", "Batch Download", "Export Map"]
 
 LAYER_MAP = 0
 LAYER_SATELLITE = 1
