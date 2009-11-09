@@ -68,7 +68,7 @@ def nice_round(f):
     n = int(math.log(f, 10))
     return round(f, 2 - n)
 
-##  Convert from ((tile, zoom), rect, center) to screen coordinates 
+##  Convert from ((tile, zoom), rect, center) to screen coordinates
 def tile_coord_to_screen(tile_coord, rect, center):
     world_tiles = tiles_on_level(tile_coord[2])
     x_rollup = world_tiles * TILES_WIDTH
@@ -91,3 +91,12 @@ def tile_coord_to_screen(tile_coord, rect, center):
     else:
         return None
 
+## Convert from screen pointer to tile
+def pointer_to_tile(rect, pointer, center, zl):
+    da_center = (rect.width // 2, rect.height // 2)
+
+    fix_tile = center[0]
+    fix_offset = center[1][0] + (pointer[0] - da_center[0]), \
+                 center[1][1] + (pointer[1] - da_center[1])
+
+    return tile_adjustEx(zl, fix_tile, fix_offset)
