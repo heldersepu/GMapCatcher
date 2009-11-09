@@ -117,7 +117,8 @@ class TilesRepositoryFS:
         return None
 
 
-    ## Export tiles to map
+    ## Export tiles to one big map
+    
     def do_export(self, tcoord, layer, online, mapServ, styleID):
         result = Image.new("RGBA", (1024, 1024))
         x = 0
