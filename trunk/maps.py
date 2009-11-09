@@ -36,19 +36,14 @@ class MainWindow(gtk.Window):
             return
         self.scale.set_value(pos)
 
+        rect = self.drawing_area.get_allocation()
+        da_center = (rect.width // 2, rect.height // 2)
         if (pointer == None):
             fix_tile, fix_offset = self.center
         else:
-            rect = self.drawing_area.get_allocation()
-            da_center = (rect.width // 2, rect.height // 2)
-
-            fix_tile = self.center[0]
-            fix_offset = self.center[1][0] + (pointer[0] - da_center[0]), \
-                         self.center[1][1] + (pointer[1] - da_center[1])
-
-            fix_tile, fix_offset = \
-                mapUtils.tile_adjustEx(self.current_zoom_level,
-                                       fix_tile, fix_offset)
+            fix_tile, fix_offset = mapUtils.pointer_to_tile(
+                rect, pointer, self.center, self.current_zoom_level
+            )
 
         scala = 2 ** (self.current_zoom_level - pos)
         x = int((fix_tile[0] * TILES_WIDTH  + fix_offset[0]) * scala)
@@ -180,9 +175,16 @@ class MainWindow(gtk.Window):
         self.layer = w.get_active()
         self.repaint()
 
-    def download_clicked(self,w):
-        coord = mapUtils.tile_to_coord(self.center, self.current_zoom_level)
+    def download_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
+        if (pointer == None):
+            tile = self.center
+        else:
+            tile = mapUtils.pointer_to_tile(
+                rect, pointer, self.center, self.current_zoom_level
+            )
+
+        coord = mapUtils.tile_to_coord(tile, self.current_zoom_level)
         km_px = mapUtils.km_per_pixel(coord)
         dlw = DLWindow(coord, km_px*rect.width, km_px*rect.height,
                         self.layer, self.conf.init_path,
@@ -371,7 +373,7 @@ class MainWindow(gtk.Window):
         elif strName.startswith("Reset"):
             self.do_zoom(MAP_MAX_ZOOM_LEVEL)
         elif strName.startswith("Batch Download"):
-            self.download_clicked(w)
+            self.download_clicked(w, self.myPointer)
         else:
             self.menu_tools(strName)
 
@@ -589,8 +591,8 @@ class MainWindow(gtk.Window):
         # F2 = 65471
         elif event.keyval == 65471:
             self.ctx_map.do_export(
-                (self.center[0][0], self.center[0][1], self.current_zoom_level), 
-                self.layer, not self.cb_offline.get_active(), 
+                (self.center[0][0], self.center[0][1], self.current_zoom_level),
+                self.layer, not self.cb_offline.get_active(),
                 self.conf.map_service, self.conf.cloudMade_styleID
             )
         # All Navigation Keys when in FullScreen
