@@ -150,8 +150,8 @@ class DLWindow(gtk.Window):
         self.processing = True
         for zoom in xrange(zoom1, zoom0-1,-1):
             self.downloader.query_region_around_location(
-                lat0,lon0,dlat,dlon,
-                zoom,layer,
+                lat0, lon0, dlat, dlon,
+                zoom, layer,
                 gui_callback(self.tile_received),
                 mapServ=self.mapService,
                 styleID=self.styleID
