@@ -5,7 +5,7 @@ import os
 import gtk
 import sys
 import fileUtils
-import tilesreposfs
+import tilesRepoFS
 import openanything
 
 import mapServers.googleMaps as googleMaps
@@ -39,7 +39,7 @@ class MapServ:
         self.locations = {}
 
         #implementation of the method is set in maps.py:__init__()
-        self.tile_repository = tilesreposfs.TilesRepositoryFS(self)
+        self.tile_repository = tilesRepoFS.TilesRepositoryFS(self)
 
         if (os.path.exists(self.locationpath)):
             self.read_locations()
