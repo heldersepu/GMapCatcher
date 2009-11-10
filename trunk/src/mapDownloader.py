@@ -15,7 +15,7 @@ from math import floor,ceil
 
 class DownloadTask:
     def __init__(self, coord, layer, callback=None,
-                    force_update=False, 
+                    force_update=False,
                     mapServ=MAP_SERVERS[GOOGLE],
                     styleID=1):
         self.coord = coord
@@ -56,7 +56,7 @@ class DownloaderThread(Thread):
 
     def process_task(self, task):
         filename = self.ctx_map.get_file(
-            task.coord, task.layer, True, 
+            task.coord, task.layer, True,
             task.force_update, task.mapServ, task.styleID
         )
         if task.callback:
@@ -112,8 +112,8 @@ class MapDownloader:
     def qsize(self):
         return self.taskq.qsize()
 
-    def query_tile(self, coord, layer, callback, 
-                    online=True, force_update=False, 
+    def query_tile(self, coord, layer, callback,
+                    online=True, force_update=False,
                     mapServ=MAP_SERVERS[GOOGLE], styleID=1):
         #print "query_tile(",coord,layer,callback,online,force_update,")"
         world_tiles = mapUtils.tiles_on_level(coord[2])
@@ -160,8 +160,19 @@ class MapDownloader:
 
     def query_region_around_location(self, lat0, lon0, dlat, dlon, zoom,
                                         *args, **kwargs):
-        top_left = mapUtils.coord_to_tile((lat0+dlat/2, lon0-dlon/2, zoom))
-        bottom_right = mapUtils.coord_to_tile((lat0-dlat/2, lon0+dlon/2, zoom))
+        if dlat > 170:
+            lat0 = 0
+            dlat = 170
+        if dlon > 358:
+            lon0 = 0
+            dlon = 358
+
+        top_left = mapUtils.coord_to_tile(
+            (lat0+dlat/2, lon0-dlon/2, zoom)
+        )
+        bottom_right = mapUtils.coord_to_tile(
+            (lat0-dlat/2, lon0+dlon/2, zoom)
+        )
         self.query_region(top_left[0][0], bottom_right[0][0],
                           top_left[0][1], bottom_right[0][1],
                           zoom, *args, **kwargs)
