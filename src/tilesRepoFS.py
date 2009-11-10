@@ -118,19 +118,23 @@ class TilesRepositoryFS:
 
 
     ## Export tiles to one big map
-    
-    def do_export(self, tcoord, layer, online, mapServ, styleID):
-        result = Image.new("RGBA", (1024, 1024))
+    #  tcoord are the tile coordinates of the upper left tile
+    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
+        # Convert given size to a tile size factor
+        xFact = int(size[0]/TILES_WIDTH)
+        yFact = int(size[1]/TILES_HEIGHT)
+        # Initialise the image
+        result = Image.new("RGBA", (xFact* TILES_WIDTH, yFact* TILES_HEIGHT))
         x = 0
-        for i in range(tcoord[0] - 2 ,tcoord[0] + 2):
+        for i in range(tcoord[0], tcoord[0] + xFact):
             y = 0
-            for j in range(tcoord[1] - 2 ,tcoord[1] + 2):
+            for j in range(tcoord[1], tcoord[1] + yFact):
                 filename = self.get_file(
                     (i,j,tcoord[2]), layer, online, False, mapServ, styleID
                 )
                 if filename:
                     im = Image.open(filename)
-                    result.paste(im, (x*256, y*256))
+                    result.paste(im, (x* TILES_WIDTH, y* TILES_HEIGHT))
                 y += 1
             x += 1
         result.save("map.png")

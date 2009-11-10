@@ -391,7 +391,8 @@ class MainWindow(gtk.Window):
         self.ctx_map.do_export(
             (tile[0], tile[1], self.current_zoom_level),
             self.layer, not self.cb_offline.get_active(),
-            self.conf.map_service, self.conf.cloudMade_styleID
+            self.conf.map_service, self.conf.cloudMade_styleID,
+            size=(1024, 1024)
         )
         self.da_set_cursor()
 

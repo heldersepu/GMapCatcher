@@ -109,9 +109,9 @@ class MapServ:
 
     ## Call the do_export in the tile_repository
     # Export tiles to one big map
-    def do_export(self, tcoord, layer, online, mapServ, styleID):
+    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
         return self.tile_repository.do_export(
-                    tcoord, layer, online, mapServ, styleID
+                    tcoord, layer, online, mapServ, styleID, size
                 )
 
     def load_pixbuf(self, coord, layer, force_update):
