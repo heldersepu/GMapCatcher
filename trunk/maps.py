@@ -364,9 +364,9 @@ class MainWindow(gtk.Window):
     ## All the actions for the menu items
     def menu_item_response(self, w, strName):
         if strName == DA_MENU[ZOOM_IN]:
-            self.do_zoom(self.scale.get_value() + 1, True, self.myPointer)
-        elif strName == DA_MENU[ZOOM_OUT]:
             self.do_zoom(self.scale.get_value() - 1, True, self.myPointer)
+        elif strName == DA_MENU[ZOOM_OUT]:
+            self.do_zoom(self.scale.get_value() + 1, True, self.myPointer)
         elif strName == DA_MENU[CENTER_MAP]:
             self.do_zoom(self.scale.get_value(), True, self.myPointer)
         elif strName == DA_MENU[RESET]:
