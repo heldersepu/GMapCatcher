@@ -380,7 +380,7 @@ class MainWindow(gtk.Window):
 
     ## Export tiles to one big map
     def do_export(self, pointer=None):
-        self.da_set_cursor(gtk.gdk.CLOCK)
+        self.da_set_cursor(gtk.gdk.WATCH)
         if (pointer == None):
             tile = self.center[0]
         else:
