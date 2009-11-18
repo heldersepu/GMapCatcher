@@ -60,14 +60,14 @@ class MapConf():
         config = ConfigParser.RawConfigParser()
         config.read(configpath)
 
-        ## Initial window width, default is 450
-        self.init_width = read_config('width', 450, int)
-        ## Initial window height, default is 400
-        self.init_height = read_config('height', 400, int)
-        ## Initial map zoom, default is MAP_MAX_ZOOM_LEVEL
-        self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL, int)
-        ## Initial map center, default is ((0,0),(128,128))
-        self.init_center = read_config('center', ((0,0),(128,128)), str_to_tuple)
+        ## Initial window width, default is 550
+        self.init_width = read_config('width', 550, int)
+        ## Initial window height, default is 450
+        self.init_height = read_config('height', 450, int)
+        ## Initial map zoom, default is MAP_MAX_ZOOM_LEVEL-1
+        self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL-1, int)
+        ## Initial map center, default is ((0,0),(250,200))
+        self.init_center = read_config('center', ((0,0),(250,200)), str_to_tuple)
 
         ## Directory path to the map images, default is "userProfile" folder
         self.init_path = os.path.join(os.path.expanduser(USER_PATH), TILES_PATH)
