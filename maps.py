@@ -251,6 +251,7 @@ class MainWindow(gtk.Window):
 
         gtk.stock_add([(gtk.STOCK_PREFERENCES, "", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
+        button.set_size_request(34, -1)
         menu = gtk_menu(TOOLS_MENU, self.menu_item_response)
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
