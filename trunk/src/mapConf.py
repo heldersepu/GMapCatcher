@@ -66,8 +66,8 @@ class MapConf():
         self.init_height = read_config('height', 450, int)
         ## Initial map zoom, default is MAP_MAX_ZOOM_LEVEL-1
         self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL-1, int)
-        ## Initial map center, default is ((0,0),(250,200))
-        self.init_center = read_config('center', ((0,0),(250,200)), str_to_tuple)
+        ## Initial map center, default is ((1,0), (9,200))
+        self.init_center = read_config('center', ((1,0),(9,200)), str_to_tuple)
 
         ## Directory path to the map images, default is "userProfile" folder
         self.init_path = os.path.join(os.path.expanduser(USER_PATH), TILES_PATH)
