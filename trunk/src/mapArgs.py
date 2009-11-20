@@ -1,4 +1,4 @@
-## @package mapArgs
+## @package src.mapArgs
 # Parsing of the array of arguments 
 
 from mapConst import *
