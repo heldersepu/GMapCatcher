@@ -2,8 +2,6 @@
 # Read and Write the locations of the Markers
 
 import os
-import re
-import gtk
 import fileUtils
 import mapPixbuf
 from mapConst import *
