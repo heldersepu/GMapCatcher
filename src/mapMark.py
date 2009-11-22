@@ -44,6 +44,6 @@ class MyMarkers:
         else:
             return 56 + int((maxZoom - zl) * 15)
 
-    def get_marker_pixbuf(self, zl):
+    def get_marker_pixbuf(self, zl, image='marker.png'):
         pixDim = self.get_pixDim(zl)
-        return mapPixbuf.getImage('marker.png', pixDim, pixDim)
+        return mapPixbuf.getImage(image, pixDim, pixDim)

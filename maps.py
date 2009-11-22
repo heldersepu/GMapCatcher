@@ -493,12 +493,30 @@ class MainWindow(gtk.Window):
             drawing_area.window.draw_pixbuf(gc, self.crossPixbuf, 0, 0,
                 rect.width/2 - 6, rect.height/2 - 6, 12, 12)
 
+        # Draw the selected location
+        pixDim = self.marker.get_pixDim(zl)
+        location = self.entry.get_text()
+        locations = self.ctx_map.get_locations()
+        if (location in locations.keys()):
+            coord = self.ctx_map.get_locations()[location]
+            img = self.marker.get_marker_pixbuf(zl, 'marker1.png')
+            mct = mapUtils.coord_to_tile((coord[0], coord[1], zl))
+            xy = mapUtils.tile_coord_to_screen(
+                (mct[0][0], mct[0][1], zl), rect, self.center)
+            if xy:
+                for x,y in xy:
+                    drawing_area.window.draw_pixbuf(gc, img, 0, 0,
+                        x + mct[1][0] - pixDim/2,
+                        y + mct[1][1] - pixDim/2,
+                        pixDim, pixDim)
+        else:
+            coord = (None, None, None)
+
         # Draw the markers
         img = self.marker.get_marker_pixbuf(zl)
-        pixDim = self.marker.get_pixDim(zl)
         for str in self.marker.positions.keys():
             mpos = self.marker.positions[str]
-            if zl <= mpos[2]:
+            if zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0]):
                 mct = mapUtils.coord_to_tile((mpos[0], mpos[1], zl))
                 xy = mapUtils.tile_coord_to_screen(
                     (mct[0][0], mct[0][1], zl), rect, self.center)
