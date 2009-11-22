@@ -1,3 +1,9 @@
+November 21 2009    H.S    <HelderSepu@gmail.com>
+    * 0.5.0.0 - At revision: 622
+    * Fix download of big areas (Issue 100)
+    * Keep selected location visible (Issue 102)
+    * Improve look in Ubuntu 9.10 (Issue 108)
+
 October 30 2009    H.S    <HelderSepu@gmail.com>
     * 0.4.0.0 - At revision: 592
     * Add more map services (Issue 82)
