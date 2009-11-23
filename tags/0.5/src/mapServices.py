@@ -1,0 +1,126 @@
+## @package src.mapServices
+# All the interaction with the map services
+
+import os
+import gtk
+import sys
+import fileUtils
+import tilesRepoFS
+import openanything
+
+import mapServers.googleMaps as googleMaps
+import mapServers.openStreetMaps as openStreetMaps
+import mapServers.cloudMade as cloudMade
+import mapServers.yahoo as yahoo
+import mapServers.informationFreeway as informationFreeway
+import mapServers.openCycleMap as openCycleMap
+import mapServers.googleMapMaker as googleMapMaker
+
+from mapConst import *
+from gobject import TYPE_STRING
+
+## All the interaction with the map services.
+#  Other map services can be added see def get_url_from_coord
+class MapServ:
+
+    # coord = (lat, lng, zoom_level)
+
+    def read_locations(self):
+        self.locations = fileUtils.read_file('location', self.locationpath)
+
+    def write_locations(self):
+        fileUtils.write_file('location', self.locationpath, self.locations)
+
+    def __init__(self, configpath=None):
+        configpath = os.path.expanduser(configpath or DEFAULT_PATH)
+        self.mt_counter=0
+        self.configpath = fileUtils.check_dir(configpath)
+        self.locationpath = os.path.join(self.configpath, 'locations')
+        self.locations = {}
+
+        #implementation of the method is set in maps.py:__init__()
+        self.tile_repository = tilesRepoFS.TilesRepositoryFS(self)
+
+        if (os.path.exists(self.locationpath)):
+            self.read_locations()
+        else:
+            self.write_locations()
+
+    def finish(self):
+        self.tile_repository.finish()
+
+    def get_locations(self):
+        return self.locations
+
+    def search_location(self, location):
+        print location
+        location, coord = googleMaps.search_location(location)
+        print location
+        if (location[:6] != "error="):
+            self.locations[location] = coord
+            self.write_locations()
+        return location
+
+    ## Get the URL for the given coordinates
+    # In this function we point to the proper map service
+    def get_url_from_coord(self, coord, layer, online, mapServ, styleID):
+        self.mt_counter += 1
+        self.mt_counter = self.mt_counter % NR_MTS
+
+        if mapServ == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
+            return openStreetMaps.get_url(self.mt_counter, coord)
+
+        elif mapServ == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
+            return cloudMade.get_url(self.mt_counter, coord, styleID)
+
+        elif mapServ == MAP_SERVERS[YAHOO] and (layer != LAYER_TERRAIN):
+            return yahoo.get_url(self.mt_counter, coord, layer)
+
+        elif mapServ == MAP_SERVERS[INFO_FREEWAY] and (layer == LAYER_MAP):
+            return informationFreeway.get_url(self.mt_counter, coord)
+
+        elif mapServ == MAP_SERVERS[OPENCYCLEMAP] and (layer == LAYER_MAP):
+            return openCycleMap.get_url(self.mt_counter, coord)
+
+        elif mapServ == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
+            return googleMapMaker.get_url(self.mt_counter, coord)
+
+        else:
+            return googleMaps.get_url(self.mt_counter, coord, layer, online)
+
+    def get_tile_from_coord(self, coord, layer, online, mapServ, styleID):
+        href = self.get_url_from_coord(coord, layer, online, mapServ, styleID)
+        if href:
+            try:
+                print 'downloading:', href
+                oa = openanything.fetch(href)
+                if oa['status']==200:
+                    return oa['data']
+                else:
+                    raise RuntimeError, ("HTTP Reponse is: " + str(oa['status']),)
+            except:
+                raise
+
+    def get_file(self, coord, layer, online, force_update,
+                                mapServ='Google', styleID =1):
+        return self.tile_repository.get_file(
+                    coord, layer, online, force_update, mapServ, styleID
+                )
+
+    ## Call the do_export in the tile_repository
+    # Export tiles to one big map
+    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
+        return self.tile_repository.do_export(
+                    tcoord, layer, online, mapServ, styleID, size
+                )
+
+    def load_pixbuf(self, coord, layer, force_update):
+        return self.tile_repository.load_pixbuf(coord, layer, force_update)
+
+
+    def completion_model(self, strAppend=''):
+        store = gtk.ListStore(TYPE_STRING)
+        for str in sorted(self.locations.keys()):
+            iter = store.append()
+            store.set(iter, 0, str + strAppend)
+        return store

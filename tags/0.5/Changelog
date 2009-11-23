@@ -1,0 +1,187 @@
+November 21 2009    H.S    <HelderSepu@gmail.com>
+    * 0.5.0.0 - At revision: 622
+    * Fix download of big areas (Issue 100)
+    * Keep selected location visible (Issue 102)
+    * Improve look in Ubuntu 9.10 (Issue 108)
+
+October 30 2009    H.S    <HelderSepu@gmail.com>
+    * 0.4.0.0 - At revision: 592
+    * Add more map services (Issue 82)
+    * Fix bug in the Path to images (Issue 95)
+    * Apply changes to the markers immediately (Issue 97)
+
+October 11 2009    H.S    <HelderSepu@gmail.com>
+    * 0.3.0.0 - At revision: 568
+    * Add an Update notifier (Issue 51)
+    * Add option to ReCenter GPS cursor (Issue 87)
+    * Fix a Force Update bug (Issue 88)
+    * Add a new pattern for Google maps (Issue 94)
+
+September 22 2009    H.S    <HelderSepu@gmail.com>
+    * 0.2.1.0 - At revision: 549
+    * Add a new googleMaps pattern (Issue 84)
+
+August 25 2009    H.S    <HelderSepu@gmail.com>
+    * 0.2.0.0 - At revision: 530
+    * Complete GPS support (Issue 32)
+    * Add updated notifications (Issue 51)
+    * Add a couple of GPS features (Issue 68, 70)
+    * Fix multiple GPS issues (Issues 66, 67, 69)
+    * Fix Regresion that broke the "Force update" (Issue 73)
+    * Fix bug zooming using the menu (Issue 76)
+
+August 09 2009    H.S    <HelderSepu@gmail.com>
+    * 0.1.1.0 - At revision: 487
+    * Add GPS module, start GPS support for windows (Issue 57)
+    * Fix Bug introduced in last release preventing batch downloads
+
+August 05 2009    H.S    <HelderSepu@gmail.com>
+    * 0.1.0.0 - At revision: 476
+    * Add Support for "OpenStreetMap.org" maps (Issue 63)
+    * Fix Bug "Invalid search is getting a valid location" (Issue 64)
+
+July 13 2009    H.S    <HelderSepu@gmail.com>
+    * 0.090 - At revision: 442
+    * Add GPS support for Linux (thanks to Johan Strombom)
+    * Complete the support for markers (Issues 22, 38)
+    * Add option to show a small "+" mark in the center of the map (Issue 42)
+    * Add support for Tooltips (Issue 36)
+    * Always show the default path to the ".googlemaps" folder (Issue 59)
+    * Improve the windows installer (Issue 61)
+
+June 16 2009    H.S    <HelderSepu@gmail.com>
+    * 0.080 - At revision: 364
+    * Add Keyboard Navigation when in FullScreen (Issue 44)
+    * Fix Issue in load_pixbuf (Issue 48)
+
+June 04 2009    H.S    <HelderSepu@gmail.com>
+    * 0.071 - At revision: 358
+    * Fix Issue with download tools (Issue 47)
+
+May 18 2009    H.S    <HelderSepu@gmail.com>
+    * 0.070 - At revision: 341
+    * Improve the fullscreen (F11) set_border_width(0)
+    * Configurable folder where GMapCatcher saves the tiles (Issue 37)
+    * Allow users to change theme (Issue 43)
+
+April 28 2009    H.S    <HelderSepu@gmail.com>
+    * 0.060 - At revision: 309
+    **  Major code reorganization **  (thanks to Maxim.Razin & Standa Mitrega)
+    * Show tiles as they are downloaded (Issue 20)
+    * Fix a crash browsing the map (Issue 24)
+    * Add Settings, now users can personalize GMapCatcher (Issue 33)
+    * Fix an Access Denied Error deleting tiles (Issue 39)
+
+April 2 2009    H.S    <HelderSepu@gmail.com>
+    * 0.054 - At revision: 264
+    * Add Map/Satellite/Terrain switch (by Maxim.Razin)
+    * Batch download from the map GUI  (by Maxim.Razin)
+    * Add action buttons to "Edit Locations"
+
+Mar 18 2009    H.S    <HelderSepu@gmail.com>
+    * 0.053
+    * Add a new button that will hold more options, such as:
+      - Settings
+      - Edit Locations
+    * Add Full-Screen functionality
+      - F11 = fullscreen
+      - F12 = remove buttons
+
+Mar 06 2009    H.S    <HelderSepu@gmail.com>
+    * 0.052
+    * Handle exceptions in fileUtils.py
+    * Use threads only when online (Issue 24)
+    * Improve the error messages searching for location
+
+Feb 28 2009    H.S    <HelderSepu@gmail.com>
+    * 0.051
+    * Sort the locations in the ComboBoxEntry
+    * Add a checkBox for the Satellite images (Issue 16)
+
+Feb 23 2009    H.S    <HelderSepu@gmail.com>
+    * 0.050
+    * Add a new icon
+    * Use MixedCase in the name (GMapCatcher)
+    * Start infrastructure for Satellite images
+    * Replace the Entry with a ComboBoxEntry
+
+Feb 19 2009    H.S    <HelderSepu@gmail.com>
+    * 0.049
+    * Add description to the locations file
+    * Add basic support for markers, (Issue 22)
+    * Adopt PEP 8 Style Guide for Python Code http://www.python.org/dev/peps/pep-0008/
+
+Feb 15 2009    H.S    <HelderSepu@gmail.com>
+    * 0.048
+    * Add description in the query entry box
+    * Add some info in the missing.png image
+    * Double-Click functionality in the Map
+
+Feb 08 2009    H.S    <HelderSepu@gmail.com>
+    * 0.047
+    * Use zoom when searching
+    * Center location (tile) after searching
+    * Fix Issue 21 (Error searching for "Beijing China")
+
+Feb 06 2009    N.W    <pi3orama@gmail.com>
+    * 0.046
+    * google's "http://maps.google.com/maps" changes, old code can't fetch version string
+    * use a simpler 'openhttp' to replace complex 'openanything'
+
+Feb 04 2009    H.S    <HelderSepu@gmail.com>
+    * 0.045
+    * Changes in the Windows installer
+      - Do not install VC++ 2008 runtimes if already installed.
+      - Add an Export Maps tool
+
+Feb 02 2009    H.S    <HelderSepu@gmail.com>
+    * 0.044
+    * Fix Bug with non unicode chars
+
+Jan 31 2009    H.S    <HelderSepu@gmail.com>
+    * 0.043
+    * Add a "Center map here" to the right Click menu
+
+Jan 28 2009    H.S    <HelderSepu@gmail.com>
+    * 0.042
+    * Add right Click functionality to the map
+
+Jan 28 2009    N.W    <pi3orama@gmail.com>
+    * SVN head
+    * Replace some 'print' error messages by dialogbox.
+    * See http://code.google.com/p/gmapcatcher/issues/detail?id=7
+
+Jan 22 2009    N.W    <pi3orama@gmail.com>
+    * 0.041
+    * Automatically search when hitting "enter";
+    * Automatically display after autocompletion.
+    Thanks to <HelderSepu@gmail.com>
+
+Jan 12 2009    N.W    <pi3orama@gmail.com>
+    * 0.04
+    * Add a "Force update" option, force redownload old tiles.
+
+Sep 27 2008    N.W    <pi3orama@gmail.com>
+    * 0.03
+    * Detect google map version string before download
+
+Jun 23 2008    N.W    <pi3orama@gmail.com>
+    * 0.02 hotfix
+    * google url changed again
+
+Mar 20 2008    N.W    <pi3orama@gmail.com>
+    * 0.02
+    * use multithread downloader while online
+    * fix a bug: when hit 'OK' button, doesn't change viewport
+
+Mar 02 2008    N.W    <pi3orama@gmail.com>
+    * 0.01 hotfix 2
+    * Google guys changed their tile url...
+
+Jan 04 2008    N.W    <pi3orama@gmail.com>
+    * 0.01 hotfix
+    * Fix a keyevent problem in windows
+
+Jan 02 2008    N.W    <pi3orama@gmail.com>
+    * Initial 0.01
+
