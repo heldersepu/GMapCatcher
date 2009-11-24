@@ -52,6 +52,11 @@ if __name__ == "__main__":
         args.lat = coord[0]
         args.lng = coord[1]
 
+    if args.width > 0:
+        args.lng_range = mapUtils.km_to_lat()
+    if args.height > 0:
+        args.lat_range = mapUtils.km_to_lon()
+    
     if (args.location == None):
         args.location = "somewhere"
     print "Download %s (%f, %f), range (%f, %f), zoom level: %d to %d" % \

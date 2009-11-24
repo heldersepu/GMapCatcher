@@ -13,6 +13,8 @@ class MapArgs():
     lng = None
     location = None
     layer = LAYER_MAP
+    width = 0
+    height = 0
 
     def print_help(self):
         print ' '
@@ -63,6 +65,10 @@ class MapArgs():
                         self.lat_range = float(arg[11:])
                     elif arg.startswith('--lngrange='):
                         self.lng_range = float(arg[11:])
+                    elif arg.startswith('--width='):
+                        self.width = float(arg[8:])
+                    elif arg.startswith('--height='):
+                        self.height = float(arg[9:])
                     elif arg.startswith('--threads='):
                         self.nr_threads = int(arg[10:])
                     elif arg.startswith('--satellite'):
@@ -78,5 +84,8 @@ class MapArgs():
 
     def __str__(self):
         return ("download.py --max-zoom=%s --min-zoom=%s" \
-                + " --latitude=%s --longitude=%s") % \
-            (self.max_zl, self.min_zl, self.lat, self.lng)
+                + " --latitude=%s --longitude=%s" \
+                + " --width=%s --height=%s") % \
+               (self.max_zl, self.min_zl, 
+                self.lat, self.lng, 
+                self.width, self.height)
