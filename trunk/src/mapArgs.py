@@ -1,5 +1,5 @@
 ## @package src.mapArgs
-# Parsing of the array of arguments 
+# Parsing of the array of arguments
 
 from mapConst import *
 
@@ -40,7 +40,7 @@ class MapArgs():
         print '  download.py --min-zoom=13 --full-range'
         print '  download.py --latitude=37.979180 --longitude=23.716647'
 
-    def __init__(self, arrArgs):
+    def __init__(self, arrArgs=()):
         if len(arrArgs) > 1:
             for arg in arrArgs[1:]:
                 if arg.startswith('--'):
@@ -75,3 +75,8 @@ class MapArgs():
                         self.lat = 0
                         self.lat_range = 85
                         self.lng_range = 179
+
+    def __str__(self):
+        return ("download.py --max-zoom=%s --min-zoom=%s" \
+                + " --latitude=%s --longitude=%s") % \
+            (self.max_zl, self.min_zl, self.lat, self.lng)
