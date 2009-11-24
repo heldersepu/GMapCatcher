@@ -11,10 +11,11 @@ from mapArgs import MapArgs
 from mapDownloader import MapDownloader
 from customWidgets import _SpinBtn, _myEntry, _frame, lbl
 
-import mapServices
 import mapUtils
+import mapServices
 from gtkThread import *
 from os.path import join
+from time import gmtime, strftime
 
 
 class DLWindow(gtk.Window):
@@ -171,7 +172,8 @@ class DLWindow(gtk.Window):
 
     ## Save the data to a text file
     def save_info(self, strPath, strInfo):
-        file = open(join(strPath,'gmap.bat'), "w")
+        timeStamp = strftime(" %d_%b_%Y %H.%M.%S", gmtime())
+        file = open(join(strPath, 'gmap'+ timeStamp +'.bat'), "w")
         file.write(strInfo)
         file.close()
 
