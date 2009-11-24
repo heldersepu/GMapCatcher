@@ -128,8 +128,8 @@ class DLWindow(gtk.Window):
         try:
             args.lat = float(self.e_lat0.get_text())
             args.lng = float(self.e_lon0.get_text())
-            kmx = float(self.e_kmx.get_text())
-            kmy = float(self.e_kmy.get_text())
+            args.width = float(self.e_kmx.get_text())
+            args.height = float(self.e_kmy.get_text())
             args.min_zl = self.s_zoom0.get_value_as_int()
             args.max_zl = self.s_zoom1.get_value_as_int()
             layer = self.layer
@@ -143,8 +143,8 @@ class DLWindow(gtk.Window):
         self.b_download.set_sensitive(False)
 
         # Conversion of Km to coord
-        dlon = kmx*180/math.pi/(R_EARTH*math.cos(args.lat*math.pi/180))
-        dlat = kmy*180/math.pi/R_EARTH
+        dlon = args.width*180/math.pi/(R_EARTH*math.cos(args.lat*math.pi/180))
+        dlat = args.height*180/math.pi/R_EARTH
 
         # creating our own gmap
         self.gmap = mapServices.MapServ(init_path)

@@ -100,3 +100,9 @@ def pointer_to_tile(rect, pointer, center, zl):
                  center[1][1] + (pointer[1] - da_center[1])
 
     return tile_adjustEx(zl, fix_tile, fix_offset)
+
+def km_to_lat():
+    return 0
+    
+def km_to_lon():
+    return 0
