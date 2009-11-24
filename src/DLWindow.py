@@ -7,12 +7,14 @@ pygtk.require('2.0')
 import gtk
 
 from mapConst import *
+from mapArgs import MapArgs
 from mapDownloader import MapDownloader
 from customWidgets import _SpinBtn, _myEntry, _frame, lbl
 
-import mapServices 
+import mapServices
 import mapUtils
 from gtkThread import *
+from os.path import join
 
 
 class DLWindow(gtk.Window):
@@ -118,15 +120,17 @@ class DLWindow(gtk.Window):
         self.connect('delete-event', self.on_delete)
         self.show_all()
 
+    ## Start the download
     def run(self, w, init_path):
+        args = MapArgs()
         if self.processing: return
         try:
-            lat0 = float(self.e_lat0.get_text())
-            lon0 = float(self.e_lon0.get_text())
+            args.lat = float(self.e_lat0.get_text())
+            args.lng = float(self.e_lon0.get_text())
             kmx = float(self.e_kmx.get_text())
             kmy = float(self.e_kmy.get_text())
-            zoom0 = self.s_zoom0.get_value_as_int()
-            zoom1 = self.s_zoom1.get_value_as_int()
+            args.min_zl = self.s_zoom0.get_value_as_int()
+            args.max_zl = self.s_zoom1.get_value_as_int()
             layer = self.layer
         except ValueError:
             d = gtk.MessageDialog(self, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
@@ -136,21 +140,26 @@ class DLWindow(gtk.Window):
             return
         self.b_cancel.set_sensitive(True)
         self.b_download.set_sensitive(False)
-        print ("lat0=%g lon0=%g kmx=%g kmy=%g zoom0=%d zoom1=%d layer=%d"
-            % (lat0, lon0, kmx, kmy, zoom0, zoom1, layer))
-        dlon = kmx*180/math.pi/(R_EARTH*math.cos(lat0*math.pi/180))
+
+        # Conversion of Km to coord
+        dlon = kmx*180/math.pi/(R_EARTH*math.cos(args.lat*math.pi/180))
         dlat = kmy*180/math.pi/R_EARTH
+
         # creating our own gmap
-        self.gmap = mapServices.MapServ(init_path) 
+        self.gmap = mapServices.MapServ(init_path)
         self.complete = []
         self.downloader = MapDownloader(self.gmap)
-        if zoom0>zoom1:
-            zoom0,zoom1 = zoom1,zoom0
+        if args.min_zl > args.max_zl:
+            args.min_zl,args.max_zl = args.max_zl,args.min_zl
+
+        # Save the map info
+        self.save_info(init_path, str(args))
+
         self.all_placed = False
         self.processing = True
-        for zoom in xrange(zoom1, zoom0-1,-1):
+        for zoom in xrange(args.max_zl, args.min_zl-1, -1):
             self.downloader.query_region_around_location(
-                lat0, lon0, dlat, dlon,
+                args.lat, args.lng, dlat, dlon,
                 zoom, layer,
                 gui_callback(self.tile_received),
                 mapServ=self.mapService,
@@ -159,6 +168,12 @@ class DLWindow(gtk.Window):
         if self.downloader.qsize()==0:
             self.download_complete()
         self.all_placed = True
+
+    ## Save the data to a text file
+    def save_info(self, strPath, strInfo):
+        file = open(join(strPath,'gmap.bat'), "w")
+        file.write(strInfo)
+        file.close()
 
     def tile_received(self, coord, layer):
         #print "tile_received(", coord, layer, self.processing, self.downloader!=None,")"
