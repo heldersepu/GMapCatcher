@@ -1,18 +1,17 @@
 ## @package src.DLWindow
 # Widget that allows Download of entire locations
 
-import math
 import pygtk
 pygtk.require('2.0')
 import gtk
 
-from mapConst import *
 from mapArgs import MapArgs
 from mapDownloader import MapDownloader
 from customWidgets import _SpinBtn, _myEntry, _frame, lbl
 
 import mapUtils
 import mapServices
+from mapConst import *
 from gtkThread import *
 from os.path import join
 from time import gmtime, strftime
@@ -143,10 +142,10 @@ class DLWindow(gtk.Window):
         self.b_download.set_sensitive(False)
 
         # Conversion of Km to coord
-        dlon = args.width*180/math.pi/(R_EARTH*math.cos(args.lat*math.pi/180))
-        dlat = args.height*180/math.pi/R_EARTH
+        dlon = mapUtils.km_to_lon(args.width, args.lat)
+        dlat = mapUtils.km_to_lat(args.height)
 
-        # creating our own gmap
+        # Creating our own gmap
         self.gmap = mapServices.MapServ(init_path)
         self.complete = []
         self.downloader = MapDownloader(self.gmap)

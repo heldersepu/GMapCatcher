@@ -101,8 +101,8 @@ def pointer_to_tile(rect, pointer, center, zl):
 
     return tile_adjustEx(zl, fix_tile, fix_offset)
 
-def km_to_lat():
-    return 0
+def km_to_lat(height):
+    return height*180/math.pi/R_EARTH
     
-def km_to_lon():
-    return 0
+def km_to_lon(width, lat):
+    return width*180/math.pi/(R_EARTH*math.cos(lat*math.pi/180))
