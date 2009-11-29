@@ -17,6 +17,7 @@ import mapServers.openCycleMap as openCycleMap
 import mapServers.googleMapMaker as googleMapMaker
 
 from mapConst import *
+from threading import Timer
 from gobject import TYPE_STRING
 
 ## All the interaction with the map services.
@@ -24,6 +25,7 @@ from gobject import TYPE_STRING
 class MapServ:
 
     # coord = (lat, lng, zoom_level)
+    exThread = None
 
     def read_locations(self):
         self.locations = fileUtils.read_file('location', self.locationpath)
@@ -48,6 +50,8 @@ class MapServ:
 
     def finish(self):
         self.tile_repository.finish()
+        if self.exThread:
+            self.exThread.cancel()
 
     def get_locations(self):
         return self.locations
@@ -110,9 +114,14 @@ class MapServ:
     ## Call the do_export in the tile_repository
     # Export tiles to one big map
     def do_export(self, tcoord, layer, online, mapServ, styleID, size):
-        return self.tile_repository.do_export(
-                    tcoord, layer, online, mapServ, styleID, size
-                )
+        def exportThread():
+            self.tile_repository.do_export(
+                tcoord, layer, online, mapServ, styleID, size
+            )
+            print "Export completed!"
+        self.exThread = Timer(0, exportThread)
+        self.exThread.start()
+        
 
     def load_pixbuf(self, coord, layer, force_update):
         return self.tile_repository.load_pixbuf(coord, layer, force_update)
