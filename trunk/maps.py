@@ -154,9 +154,8 @@ class MainWindow(gtk.Window):
 
     ## Handles the click in the offline check box
     def offline_clicked(self, w):
-        online = not self.cb_offline.get_active()
-        if online:
-            self.repaint()
+        self.repaint()
+        if not self.cb_offline.get_active():
             self.do_check_for_updates()
 
     ## Start checking if there is an update
@@ -377,7 +376,7 @@ class MainWindow(gtk.Window):
         elif strName == DA_MENU[EXPORT_MAP]:
             self.do_export(self.myPointer)
         elif strName == DA_MENU[ADD_MARKER]:
-            self.add_marker(self.myPointer)    
+            self.add_marker(self.myPointer)
         else:
             self.menu_tools(strName)
 
@@ -391,7 +390,7 @@ class MainWindow(gtk.Window):
         self.marker.append_marker(coord)
         self.marker.refresh()
         self.repaint()
-        
+
     ## Export tiles to one big map
     def do_export(self, pointer=None):
         self.da_set_cursor(gtk.gdk.WATCH)
