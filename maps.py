@@ -374,11 +374,24 @@ class MainWindow(gtk.Window):
             self.do_zoom(MAP_MAX_ZOOM_LEVEL)
         elif strName == DA_MENU[BATCH_DOWN]:
             self.download_clicked(w, self.myPointer)
-        elif strName == DA_MENU[EXPORT]:
+        elif strName == DA_MENU[EXPORT_MAP]:
             self.do_export(self.myPointer)
+        elif strName == DA_MENU[ADD_MARKER]:
+            self.add_marker(self.myPointer)    
         else:
             self.menu_tools(strName)
 
+    ## Add a marker
+    def add_marker(self, pointer=None):
+        tile = mapUtils.pointer_to_tile(
+            self.drawing_area.get_allocation(),
+            pointer, self.center, self.current_zoom_level
+        )
+        coord = mapUtils.tile_to_coord(tile, self.current_zoom_level)
+        self.marker.append_marker(coord)
+        self.marker.refresh()
+        self.repaint()
+        
     ## Export tiles to one big map
     def do_export(self, pointer=None):
         self.da_set_cursor(gtk.gdk.WATCH)
@@ -387,7 +400,7 @@ class MainWindow(gtk.Window):
         else:
             tile, offset = mapUtils.pointer_to_tile(
                 self.drawing_area.get_allocation(),
-                self.myPointer, self.center, self.current_zoom_level
+                pointer, self.center, self.current_zoom_level
             )
         self.ctx_map.do_export(
             (tile[0], tile[1], self.current_zoom_level),

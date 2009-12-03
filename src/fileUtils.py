@@ -55,6 +55,19 @@ def write_file(strInfo, filePath, fileData):
                   (l, fileData[l][0], fileData[l][1], fileData[l][2]))
     file.close()
 
+## Append the location (strData) to given file (filePath)
+def append_file(strInfo, filePath, strData, strName):
+    try:
+        file = open(filePath, "a")
+    except Exception:
+        print 'Error! Can NOT write file:'
+        print '  ' + filePath
+        return
+
+    file.write(strInfo + '="%s"\tlat="%s"\tlng="%s"\tzoom="%i"\n' %
+              (strName, strData[0], strData[1], strData[2]+2))
+    file.close()
+
 ## Writes a new gtkrc file with the given theme
 def write_gtkrc(strTheme):
     filePath = './etc/gtk-2.0/gtkrc'
@@ -112,14 +125,13 @@ def del_file(filename):
     except:
         pass
 
-## Remove file if is older than 24 hours
+## Remove file if is older than given time
 #  (24h * 3600s) = 86400s
-def delete_old(filename):
+def delete_old(filename, intSeconds=86400):
     if os.path.isfile(filename):
-        if (int(time() - os.path.getmtime(filename)) > 86400):
+        if (int(time() - os.path.getmtime(filename)) > intSeconds):
             try:
                 os.remove(filename)
                 return True
             except:
                 pass
- 

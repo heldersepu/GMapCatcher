@@ -30,9 +30,10 @@ ZOOM_OUT = 1
 CENTER_MAP = 2
 RESET = 3
 BATCH_DOWN = 5
-EXPORT = 6
+EXPORT_MAP = 6
+ADD_MARKER = 7
 DA_MENU = ["Zoom In", "Zoom Out", "Center map here",
-              "Reset", "", "Batch Download", "Export Map"]
+        "Reset", "", "Batch Download", "Export Map", "Add Marker"]
 
 LAYER_MAP = 0
 LAYER_SATELLITE = 1
