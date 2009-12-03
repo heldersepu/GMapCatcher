@@ -1,5 +1,11 @@
-﻿#labels Featured
+﻿#summary Some Screenshots
+#labels Featured
+
 <wiki:toc max_depth="5" />
+
+==== GMapCatcher v0.6 ====
+Showing the new Right-Click Actions<br>
+http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.6.png
 
 ==== GMapCatcher v0.4 ====
 adding a few new map providers<br>
