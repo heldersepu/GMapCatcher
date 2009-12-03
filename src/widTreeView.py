@@ -116,7 +116,7 @@ class TreeView():
     ## Put all the TreeView Widgets together
     def show(self, strInfo, filePath, parent):
         # create a listStore with one string column to use as the model
-        listStore = gtk.ListStore(str, float, float, int)
+        listStore = gtk.ListStore(str, str, str, int)
 
         # create the TreeView using listStore
         myTree = gtk.TreeView(self.__read_file(strInfo, filePath, listStore))
