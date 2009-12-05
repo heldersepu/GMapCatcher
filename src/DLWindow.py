@@ -14,10 +14,11 @@ import mapUtils
 import mapServices
 from mapConst import *
 from gtkThread import *
-from os.path import join
+from os.path import join, isdir
 
 
 class DLWindow(gtk.Window):
+
     def __init__(self, coord, kmx, kmy, layer, init_path, mapServ, styleID):
 
         def _zoom(zoom0, zoom1):
@@ -71,20 +72,30 @@ class DLWindow(gtk.Window):
             vbox.pack_start(hbox)
             return _frame(" Area (km) ", vbox)
 
-        def _buttons():
+        def _buttons(strFolder):
             hbbox = gtk.HButtonBox()
             hbbox.set_border_width(10)
             hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
+
             self.b_download = gtk.Button(stock=gtk.STOCK_HARDDISK)
-            self.b_download.connect('clicked', self.run, init_path)
+            self.b_download.connect('clicked', self.run, init_path, strFolder)
             hbbox.pack_start(self.b_download)
+
+            hbox = gtk.HBox()
+            gtk.stock_add([(gtk.STOCK_UNDELETE, "", 0, 0, "")])
+            self.b_open = gtk.Button(stock=gtk.STOCK_UNDELETE)
+            #self.b_open.connect('clicked', self.do_open, strFolder)
+            hbox.pack_start(self.b_open, padding=25)
+            hbbox.pack_start(hbox)
 
             self.b_cancel = gtk.Button(stock='gtk-cancel')
             self.b_cancel.connect('clicked', self.cancel)
             self.b_cancel.set_sensitive(False)
+
             hbbox.pack_start(self.b_cancel)
             return hbbox
 
+        fldDown = join(init_path, 'download')
         print "DLWindow(", coord, kmx, kmy, layer, ')'
         self.mapService = mapServ
         self.styleID = styleID
@@ -103,7 +114,7 @@ class DLWindow(gtk.Window):
         hbox.pack_start(_area(kmx, kmy))
         vbox.pack_start(hbox)
         vbox.pack_start(_zoom(zoom0, zoom1))
-        vbox.pack_start(_buttons())
+        vbox.pack_start(_buttons(fldDown))
 
         self.pbar = gtk.ProgressBar()
         self.pbar.set_text(" ")
@@ -119,9 +130,11 @@ class DLWindow(gtk.Window):
         self.downloader=None
         self.connect('delete-event', self.on_delete)
         self.show_all()
+        if not isdir(fldDown):
+            self.b_open.hide()
 
     ## Start the download
-    def run(self, w, init_path):
+    def run(self, w, init_path, strFolder):
         args = MapArgs()
         if self.processing: return
         try:
@@ -153,7 +166,7 @@ class DLWindow(gtk.Window):
             args.min_zl,args.max_zl = args.max_zl,args.min_zl
 
         # Save the map info
-        self.save_info(check_dir(init_path, 'download'), str(args))
+        self.save_info(check_dir(strFolder), str(args))
 
         self.all_placed = False
         self.processing = True
