@@ -497,6 +497,18 @@ class MainWindow(gtk.Window):
         return
 
     def draw_overlay(self, drawing_area, rect):
+        def draw_image(imgPos, img, width, height):
+            mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
+            xy = mapUtils.tile_coord_to_screen(
+                (mct[0][0], mct[0][1], zl), rect, self.center)
+            if xy:
+                for x,y in xy:
+                    drawing_area.window.draw_pixbuf(gc, img, 0, 0,
+                        x + mct[1][0] - width/2,
+                        y + mct[1][1] - height/2,
+                        width, height
+                    )
+
         gc = drawing_area.style.black_gc
         zl = self.current_zoom_level
 
@@ -512,15 +524,7 @@ class MainWindow(gtk.Window):
         if (location in locations.keys()):
             coord = self.ctx_map.get_locations()[location]
             img = self.marker.get_marker_pixbuf(zl, 'marker1.png')
-            mct = mapUtils.coord_to_tile((coord[0], coord[1], zl))
-            xy = mapUtils.tile_coord_to_screen(
-                (mct[0][0], mct[0][1], zl), rect, self.center)
-            if xy:
-                for x,y in xy:
-                    drawing_area.window.draw_pixbuf(gc, img, 0, 0,
-                        x + mct[1][0] - pixDim/2,
-                        y + mct[1][1] - pixDim/2,
-                        pixDim, pixDim)
+            draw_image(coord, img, pixDim, pixDim)
         else:
             coord = (None, None, None)
 
@@ -529,30 +533,14 @@ class MainWindow(gtk.Window):
         for str in self.marker.positions.keys():
             mpos = self.marker.positions[str]
             if zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0]):
-                mct = mapUtils.coord_to_tile((mpos[0], mpos[1], zl))
-                xy = mapUtils.tile_coord_to_screen(
-                    (mct[0][0], mct[0][1], zl), rect, self.center)
-                if xy:
-                    for x,y in xy:
-                        drawing_area.window.draw_pixbuf(gc, img, 0, 0,
-                            x + mct[1][0] - pixDim/2,
-                            y + mct[1][1] - pixDim/2,
-                            pixDim, pixDim)
+                draw_image(mpos, img, pixDim, pixDim)
 
         # Draw GPS position
         if mapGPS.available:
             location = self.gps.get_location()
             if location is not None and (zl <= self.conf.max_gps_zoom):
                 img = self.gps.pixbuf
-                mct = mapUtils.coord_to_tile((location[0], location[1], zl))
-                xy = mapUtils.tile_coord_to_screen(
-                    (mct[0][0], mct[0][1], zl), rect, self.center)
-                if xy:
-                    for x,y in xy:
-                        drawing_area.window.draw_pixbuf(gc, img, 0, 0, \
-                            x + mct[1][0] - GPS_IMG_SIZE[0] / 2,
-                            y + mct[1][1] - GPS_IMG_SIZE[1] / 2, \
-                            GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
+                draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
 
     def tile_received(self, tile_coord, layer):
         if self.layer == layer and self.current_zoom_level == tile_coord[2]:
