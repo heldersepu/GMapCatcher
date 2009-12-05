@@ -6,6 +6,7 @@ pygtk.require('2.0')
 import gtk
 
 from mapArgs import MapArgs
+from fileUtils import check_dir
 from mapDownloader import MapDownloader
 from customWidgets import _SpinBtn, _myEntry, _frame, lbl
 
@@ -14,7 +15,6 @@ import mapServices
 from mapConst import *
 from gtkThread import *
 from os.path import join
-from time import gmtime, strftime
 
 
 class DLWindow(gtk.Window):
@@ -153,7 +153,7 @@ class DLWindow(gtk.Window):
             args.min_zl,args.max_zl = args.max_zl,args.min_zl
 
         # Save the map info
-        self.save_info(init_path, str(args))
+        self.save_info(check_dir(init_path, 'download'), str(args))
 
         self.all_placed = False
         self.processing = True
@@ -171,8 +171,7 @@ class DLWindow(gtk.Window):
 
     ## Save the data to a text file
     def save_info(self, strPath, strInfo):
-        timeStamp = strftime(" %d_%b_%Y %H.%M.%S", gmtime())
-        file = open(join(strPath, 'gmap'+ timeStamp +'.bat'), "w")
+        file = open(join(strPath, 'gmap'+ mapUtils.timeStamp() +'.bat'), "w")
         file.write(strInfo)
         file.close()
 
