@@ -4,6 +4,7 @@
 import math
 import mapMark
 from mapConst import *
+from time import gmtime, strftime
 
 def tiles_on_level(zoom_level):
     return 1<<(MAP_MAX_ZOOM_LEVEL-int(zoom_level))
@@ -101,8 +102,14 @@ def pointer_to_tile(rect, pointer, center, zl):
 
     return tile_adjustEx(zl, fix_tile, fix_offset)
 
+## Convert km to latitude
 def km_to_lat(height):
     return height*180/math.pi/R_EARTH
-    
+
+## Convert km to longitude
 def km_to_lon(width, lat):
     return width*180/math.pi/(R_EARTH*math.cos(lat*math.pi/180))
+
+## Return Date & Time
+def timeStamp():
+    return strftime(" %d_%b_%Y %H.%M.%S", gmtime())
