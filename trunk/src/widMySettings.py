@@ -47,9 +47,9 @@ class MySettings():
 
         def custom_path(conf):
             def get_folder(button):
-                fileName = FolderChooser()
-                if fileName:
-                    self.entry_custom_path.set_text(fileName)
+                folderName = FolderChooser()
+                if folderName:
+                    self.entry_custom_path.set_text(folderName)
 
             def set_folder(button):
                 self.entry_custom_path.set_text(
