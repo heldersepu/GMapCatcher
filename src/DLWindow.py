@@ -8,7 +8,7 @@ import gtk
 from mapArgs import MapArgs
 from fileUtils import check_dir
 from mapDownloader import MapDownloader
-from customWidgets import _SpinBtn, _myEntry, _frame, lbl
+from customWidgets import _SpinBtn, _myEntry, _frame, lbl, FileChooser
 
 import mapUtils
 import mapServices
@@ -61,13 +61,13 @@ class DLWindow(gtk.Window):
             vbox = gtk.VBox(False, 5)
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("width:"))
-            self.e_kmx = _myEntry("%.6g" % kmx, 10)
+            self.e_kmx = _myEntry("%.6g" % kmx, 10, False)
             hbox.pack_start(self.e_kmx, False)
             vbox.pack_start(hbox)
 
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("height:"))
-            self.e_kmy = _myEntry("%.6g" % kmy, 10)
+            self.e_kmy = _myEntry("%.6g" % kmy, 10, False)
             hbox.pack_start(self.e_kmy, False)
             vbox.pack_start(hbox)
             return _frame(" Area (km) ", vbox)
@@ -84,9 +84,10 @@ class DLWindow(gtk.Window):
             hbox = gtk.HBox()
             gtk.stock_add([(gtk.STOCK_UNDELETE, "", 0, 0, "")])
             self.b_open = gtk.Button(stock=gtk.STOCK_UNDELETE)
-            #self.b_open.connect('clicked', self.do_open, strFolder)
+            self.b_open.connect('clicked', self.do_open, strFolder)
             hbox.pack_start(self.b_open, padding=25)
-            hbbox.pack_start(hbox)
+            if isdir(fldDown):
+                hbbox.pack_start(hbox)
 
             self.b_cancel = gtk.Button(stock='gtk-cancel')
             self.b_cancel.connect('clicked', self.cancel)
@@ -130,8 +131,6 @@ class DLWindow(gtk.Window):
         self.downloader=None
         self.connect('delete-event', self.on_delete)
         self.show_all()
-        if not isdir(fldDown):
-            self.b_open.hide()
 
     ## Start the download
     def run(self, w, init_path, strFolder):
@@ -153,6 +152,7 @@ class DLWindow(gtk.Window):
             return
         self.b_cancel.set_sensitive(True)
         self.b_download.set_sensitive(False)
+        self.b_open.set_sensitive(False)
 
         # Conversion of Km to coord
         dlon = mapUtils.km_to_lon(args.width, args.lat)
@@ -182,6 +182,24 @@ class DLWindow(gtk.Window):
             self.download_complete()
         self.all_placed = True
 
+    # Open a previously saved file and auto-populate the fields
+    def do_open(self, w, strPath):
+        fileName = FileChooser(strPath)
+        if fileName:
+            file = open(fileName, "r")
+            for line in file:
+                args = MapArgs(line.split(" "))
+
+                self.e_lat0.set_text(str(args.lat))
+                self.e_lon0.set_text(str(args.lng))
+
+                self.e_kmx.set_text(str(args.width))
+                self.e_kmy.set_text(str(args.height))
+
+                self.s_zoom0.set_text(str(args.min_zl))
+                self.s_zoom1.set_text(str(args.max_zl))
+                return
+
     ## Save the data to a text file
     def save_info(self, strPath, strInfo):
         file = open(join(strPath, 'gmap'+ mapUtils.timeStamp() +'.bat'), "w")
@@ -208,6 +226,7 @@ class DLWindow(gtk.Window):
         self.processing = False
         self.b_cancel.set_sensitive(False)
         self.b_download.set_sensitive(True)
+        self.b_open.set_sensitive(True)
         self.update_pbar("Complete",0,1);
 
     def cancel(self,w):
@@ -216,6 +235,7 @@ class DLWindow(gtk.Window):
         self.processing = False
         self.b_cancel.set_sensitive(False)
         self.b_download.set_sensitive(True)
+        self.b_open.set_sensitive(True)
         self.update_pbar("Canceled",0,1);
 
     def on_delete(self,*params):

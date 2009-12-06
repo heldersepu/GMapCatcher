@@ -50,6 +50,20 @@ def FolderChooser():
     dialog.destroy()
     return strFileName
 
+## Prompt user to select a Folder
+def FileChooser(strPath):
+    strFileName = False
+    dialog = gtk.FileChooserDialog("Select File", None, 
+                                   gtk.FILE_CHOOSER_ACTION_OPEN, 
+                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                    gtk.STOCK_OK, gtk.RESPONSE_OK))
+    dialog.set_default_response(gtk.RESPONSE_OK)
+    dialog.set_current_folder(strPath)
+    if dialog.run() == gtk.RESPONSE_OK:
+        strFileName = dialog.get_filename()
+    dialog.destroy()
+    return strFileName
+
 ## Display a Tooltip
 def myToolTip(widget, x, y, keyboard_mode, tooltip, title, desc, filename=None):
     table = gtk.Table(2,2)
