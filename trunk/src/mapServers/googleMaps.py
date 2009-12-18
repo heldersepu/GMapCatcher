@@ -31,7 +31,7 @@ def layer_url_template(layer, online):
 def get_url(counter, coord, layer, online):
     template = layer_url_template(layer, online)
     if template:
-        return template % (counter, coord[0], coord[1], coord[2])
+        return template % (counter, coord[0], coord[1], 17 - coord[2])
 
 
 ## Parse maps.google.com/maps.
@@ -56,7 +56,7 @@ def parse_start_page(layer, html):
     # from it is different from google map's web. the later contains
     # more labels and routes. see Issue 94, comment 2
 
-    match_str = '&hl=en&x=%i&y=%i&zoom=%i'
+    match_str = '&hl=en&x=%i&y=%i&z=%i'
     
     # we first check the existence of the uniform URL pattern,
     # if not, we fall back to the old method.
