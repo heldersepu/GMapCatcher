@@ -49,43 +49,27 @@ def parse_start_page(layer, html):
     # ?? is 'm' for map, 's' for satellite and 't' for terrain.
     # google also use an 'h' layer for its route and labels.
     #
-    # However, google actually use
-    #
+    # However, google actually uses:
     # http://mt0.google.com/vt/v=w2p.110&hl=en&x=%i&y=%i&z=%i
-    #
     # for terrain.
-    # although the uniform URL pattern still works, the result
+    #  although the uniform URL pattern still works, the result
     # from it is different from google map's web. the later contains
     # more labels and routes. see Issue 94, comment 2
-    #
-    # we first check the existance of the uniform URL pattern,
-    # if not, we fall back to the old method.
 
-    # check for pattern:
-    # 'http://mt[0-9].google.com/vt/lyrs'
     match_str = '&hl=en&x=%i&y=%i&zoom=%i'
     
-    upattern = 'http://mt[0-9].google.com/vt/lyrs\\\\x3dm@([0-9]+)'
-    p = re.compile(upattern)
-    m = p.search(html)
-
-    ## if exist, we use upattern to form the retval
-    if m:
-        head_str = 'http://mt%d.google.com/vt/lyrs='
-        layer_str = layer + '@' + m.group(1)
-        if layer != 't':
-            return head_str + layer_str + match_str
-        ## for terrain, we check for another pattern
-        tpattern = 'http://mt[0-9].google.com/vt/v\\\\x3dw([0-9]+)p.([0-9]+)'
-        p = re.compile(tpattern)
+    # we first check the existence of the uniform URL pattern,
+    # if not, we fall back to the old method.
+    if layer != 't':
+        upattern = 'http://mt[0-9].google.com/vt/lyrs\\\\x3dm@([0-9]+)'
+        p = re.compile(upattern)
         m = p.search(html)
+
+        ## if exist, we use upattern to form the retval
         if m:
-            head_str = 'http://mt%%d.google.com/vt/v=w%sp.%s' \
-                % tuple(m.groups())
-        return head_str + match_str
-
-
-    # if doesn't exist, we fall back to old method
+            head_str = 'http://mt%d.google.com/vt/lyrs='
+            layer_str = layer + '@' + m.group(1)
+            return head_str + layer_str + match_str    
 
     # List of patterns add more as needed
     paList = ['http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v=([a-z0-9.]+)&',
