@@ -63,6 +63,8 @@ def parse_start_page(layer, html):
 
     # check for pattern:
     # 'http://mt[0-9].google.com/vt/lyrs'
+    match_str = '&hl=en&x=%i&y=%i&zoom=%i'
+    
     upattern = 'http://mt[0-9].google.com/vt/lyrs\\\\x3dm@([0-9]+)'
     p = re.compile(upattern)
     m = p.search(html)
@@ -71,10 +73,8 @@ def parse_start_page(layer, html):
     if m:
         head_str = 'http://mt%d.google.com/vt/lyrs='
         layer_str = layer + '@' + m.group(1)
-        match_str = '&hl=en&x=%i&y=%i&zoom=%i'
-        retval = head_str + layer_str + match_str
         if layer != 't':
-            return retval
+            return head_str + layer_str + match_str
         ## for terrain, we check for another pattern
         tpattern = 'http://mt[0-9].google.com/vt/v\\\\x3dw([0-9]+)p.([0-9]+)'
         p = re.compile(tpattern)
@@ -82,9 +82,7 @@ def parse_start_page(layer, html):
         if m:
             head_str = 'http://mt%%d.google.com/vt/v=w%sp.%s' \
                 % tuple(m.groups())
-            match_str = '&hl=en&x=%i&y=%i&zoom=%i'
-            retval = head_str + match_str
-        return retval
+        return head_str + match_str
 
 
     # if doesn't exist, we fall back to old method
@@ -101,7 +99,7 @@ def parse_start_page(layer, html):
         print "Cannot parse result"
         return None
 
-    return 'http://%s%%d.google.com/%s/v=%s&hl=en&x=%%i&y=%%i&zoom=%%i' % tuple(m.groups())
+    return 'http://%s%%d.google.com/%s/v=%s' % tuple(m.groups()) + match_str
 
 
 def set_zoom(intZoom):
