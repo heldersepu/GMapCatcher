@@ -15,6 +15,7 @@ import mapServers.yahoo as yahoo
 import mapServers.informationFreeway as informationFreeway
 import mapServers.openCycleMap as openCycleMap
 import mapServers.googleMapMaker as googleMapMaker
+import mapServers.virtualEarth as virtualEarth
 
 from mapConst import *
 from threading import Timer
@@ -88,6 +89,9 @@ class MapServ:
 
         elif mapServ == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
             return googleMapMaker.get_url(self.mt_counter, coord)
+
+        elif mapServ == MAP_SERVERS[VIRTUAL_EARTH] and (layer == LAYER_MAP):
+            return virtualEarth.get_url(self.mt_counter, coord)
 
         else:
             return googleMaps.get_url(self.mt_counter, coord, layer, online)
