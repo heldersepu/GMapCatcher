@@ -13,8 +13,10 @@ YAHOO = 3
 INFO_FREEWAY = 4
 OPENCYCLEMAP = 5
 GOOGLE_MAKER = 6
+VIRTUAL_EARTH = 7
 MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade", "Yahoo",
-               "InformationFreeway", "OpenCycleMap", "Google Map Maker"]
+               "InformationFreeway", "OpenCycleMap", "Google Map Maker",
+               "Virtual Earth"]
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
