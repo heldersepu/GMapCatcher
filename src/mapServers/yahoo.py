@@ -10,7 +10,7 @@ def layer_url_template(layer):
     else:
         return 'http://maps.yimg.com/ae/ximg?v=9&t=s&imgtype=png&s=256&x=%i&y=%i&z=%i'
 
-## Returns the URL to the Yahoo mas tile
+## Returns the URL to the Yahoo map tile
 def get_url(counter, coord, layer):
     #server = ['a', 'b', 'c']
     return layer_url_template(layer) % (
