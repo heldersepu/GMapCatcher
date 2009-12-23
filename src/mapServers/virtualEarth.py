@@ -5,7 +5,7 @@
 
 ## Returns a template URL for the virtualEarth
 def layer_url_template():
-    return 'http://r%i.ortho.tiles.virtualearth.net/tiles/r%i.png?g=%i'
+    return 'http://r%i.ortho.tiles.virtualearth.net/tiles/r%s.png?g=%i'
 
 ## Returns the URL to the virtualEarth tile
 def get_url(counter, coord):
