@@ -4,13 +4,16 @@
 #from src.mapConst import MAP_MAX_ZOOM_LEVEL
 
 ## Returns a template URL for the virtualEarth
-def layer_url_template():
-    return 'http://r%i.ortho.tiles.virtualearth.net/tiles/r%s.png?g=%i'
+def layer_url_template(layer):
+    layers_name = ["r", "a", "h"]
+    return 'http://' + layers_name[layer] + \
+           '%i.ortho.tiles.virtualearth.net/tiles/' + \
+           layers_name[layer] + '%s.png?g=%i'
 
 ## Returns the URL to the virtualEarth tile
-def get_url(counter, coord):
+def get_url(counter, coord, layer):
     version = 392
-    return layer_url_template() % (counter, tile_to_quadkey(coord), version)
+    return layer_url_template(layer) % (counter, tile_to_quadkey(coord), version)
 
 def tile_to_quadkey(coord):
     quadKey = []
