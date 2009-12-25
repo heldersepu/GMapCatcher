@@ -90,8 +90,8 @@ class MapServ:
         elif mapServ == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
             return googleMapMaker.get_url(self.mt_counter, coord)
 
-        elif mapServ == MAP_SERVERS[VIRTUAL_EARTH] and (layer == LAYER_MAP):
-            return virtualEarth.get_url(self.mt_counter, coord)
+        elif mapServ == MAP_SERVERS[VIRTUAL_EARTH] and (layer != LAYER_TERRAIN):
+            return virtualEarth.get_url(self.mt_counter, coord, layer)
 
         else:
             return googleMaps.get_url(self.mt_counter, coord, layer)
