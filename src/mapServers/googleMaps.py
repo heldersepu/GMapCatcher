@@ -9,10 +9,8 @@ from src.mapConst import MAP_MAX_ZOOM_LEVEL, MAP_MIN_ZOOM_LEVEL
 known_layers = {}
 
 ## Returns a template URL for the GoogleMaps
-def layer_url_template(layer, online):
+def layer_url_template(layer):
     if layer not in known_layers:
-        if not online:
-            return None
         map_server_query = ["", "h", "p"]
         layers_name = ["m", "s", "t"]
 
@@ -28,8 +26,8 @@ def layer_url_template(layer, online):
     return known_layers[layer]
 
 ## Returns the URL to the GoogleMaps tile
-def get_url(counter, coord, layer, online):
-    template = layer_url_template(layer, online)
+def get_url(counter, coord, layer):
+    template = layer_url_template(layer)
     if template:
         return template % (counter, coord[0], coord[1], 17 - coord[2])
 

@@ -2,7 +2,7 @@
 # Place to keep all constants
 
 NAME = "GMapCatcher"
-VERSION = "0.5.0.0"
+VERSION = "0.6.0.0"
 VERSION_NAME = ""
 WEB_ADDRESS = "http://code.google.com/p/gmapcatcher/"
 

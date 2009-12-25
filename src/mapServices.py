@@ -68,7 +68,7 @@ class MapServ:
 
     ## Get the URL for the given coordinates
     # In this function we point to the proper map service
-    def get_url_from_coord(self, coord, layer, online, mapServ, styleID):
+    def get_url_from_coord(self, coord, layer, mapServ, styleID):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
 
@@ -94,10 +94,10 @@ class MapServ:
             return virtualEarth.get_url(self.mt_counter, coord)
 
         else:
-            return googleMaps.get_url(self.mt_counter, coord, layer, online)
+            return googleMaps.get_url(self.mt_counter, coord, layer)
 
-    def get_tile_from_coord(self, coord, layer, online, mapServ, styleID):
-        href = self.get_url_from_coord(coord, layer, online, mapServ, styleID)
+    def get_tile_from_coord(self, coord, layer, mapServ, styleID):
+        href = self.get_url_from_coord(coord, layer, mapServ, styleID)
         if href:
             try:
                 print 'downloading:', href

@@ -71,7 +71,7 @@ class TilesRepositoryFS:
 
         try:
             data = self.mapServ_inst.get_tile_from_coord(
-                        coord, layer, online, mapServ, styleID
+                        coord, layer, mapServ, styleID
                     )
             file = open( filename, 'wb' )
             file.write( data )
