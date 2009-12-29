@@ -19,7 +19,6 @@ import lrucache
 import mapPixbuf
 import fileUtils
 
-from PIL import Image
 from threading import Lock
 from mapConst import *
 
@@ -120,6 +119,7 @@ class TilesRepositoryFS:
     ## Export tiles to one big map
     #  tcoord are the tile coordinates of the upper left tile
     def do_export(self, tcoord, layer, online, mapServ, styleID, size):
+        from PIL import Image
         # Convert given size to a tile size factor
         xFact = int(size[0]/TILES_WIDTH)
         yFact = int(size[1]/TILES_HEIGHT)
