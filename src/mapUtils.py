@@ -113,3 +113,11 @@ def km_to_lon(width, lat):
 ## Return Date & Time
 def timeStamp():
     return strftime(" %d_%b_%Y %H.%M.%S", gmtime())
+
+## Convert altitude (meters) to zoom
+def altitude_to_zoom(altitude):
+    if int(altitude) <= 0:
+        zoom = MAP_MIN_ZOOM_LEVEL + 2
+    else:
+        zoom = int(math.log(int(altitude))/math.log(2))
+    return min(max(zoom, MAP_MIN_ZOOM_LEVEL + 2), MAP_MAX_ZOOM_LEVEL)

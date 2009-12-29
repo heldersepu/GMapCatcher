@@ -1,3 +1,5 @@
+from mapUtils import altitude_to_zoom
+
 def import_kml(strFileName):
     from xml.dom.minidom import parse
 
@@ -20,9 +22,15 @@ def import_kml(strFileName):
         except:
             pass
         else:
-            print getText(NameElement.childNodes)
-            print getText(CoordElement.childNodes)
-            print " "
+            strName = getText(NameElement.childNodes)
+            Coord = getText(CoordElement.childNodes).split(',')
+            if len(Coord) >= 2:
+                if len(Coord) >= 3:
+                    zoom = altitude_to_zoom(Coord[2])
+                else:
+                    zoom = 10
+                print strName, Coord[0], Coord[1], Coord[2], zoom
+    dom.unlink() 
 
 if __name__ == "__main__":
     import_kml('KML_Samples.kml')
