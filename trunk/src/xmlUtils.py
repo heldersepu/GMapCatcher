@@ -1,8 +1,7 @@
-
 def import_kml(strFileName):
     from xml.dom.minidom import parse
 
-    def getText(nodelist):mua
+    def getText(nodelist):
         rc = ""
         for node in nodelist:
             if node.nodeType == node.TEXT_NODE:
