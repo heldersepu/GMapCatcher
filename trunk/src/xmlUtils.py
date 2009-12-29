@@ -1,6 +1,6 @@
 from mapUtils import altitude_to_zoom
 
-def import_kml(strFileName):
+def kml_to_markers(strFileName, marker):
     from xml.dom.minidom import parse
 
     def getText(nodelist):
@@ -29,8 +29,7 @@ def import_kml(strFileName):
                     zoom = altitude_to_zoom(Coord[2])
                 else:
                     zoom = 10
-                print strName, Coord[0], Coord[1], Coord[2], zoom
+                marker.append_marker((Coord[0], Coord[1], zoom), strName)
+                marker.refresh()
     dom.unlink() 
 
-if __name__ == "__main__":
-    import_kml('KML_Samples.kml')
