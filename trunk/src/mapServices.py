@@ -125,7 +125,7 @@ class MapServ:
             print "Export completed!"
         self.exThread = Timer(0, exportThread)
         self.exThread.start()
-        
+
 
     def load_pixbuf(self, coord, layer, force_update):
         return self.tile_repository.load_pixbuf(coord, layer, force_update)
