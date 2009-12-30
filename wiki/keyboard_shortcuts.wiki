@@ -3,6 +3,7 @@
 
 === General ===
 || *Shortcut Key* || *Description* ||
+||  F4            ||  Import markers from KML file ||
 ||  F12           ||  Hide/Unhide all buttons ||
 ||  F11           ||  FullScreen   ||
 ||  ESC           ||  Undo F12 & F11 ||
