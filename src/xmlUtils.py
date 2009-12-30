@@ -10,9 +10,11 @@ def kml_to_markers(strFileName, marker):
                 rc = rc + node.data
         return rc
 
-    dom = parse(strFileName)
-
-    PlacemarkElements = dom.getElementsByTagName("Placemark")
+    try:
+        dom = parse(strFileName)
+        PlacemarkElements = dom.getElementsByTagName("Placemark")
+    except:
+        return False
 
     for element in PlacemarkElements:
         try:
@@ -31,5 +33,5 @@ def kml_to_markers(strFileName, marker):
                     zoom = 10
                 marker.append_marker((Coord[0], Coord[1], zoom), strName)
                 marker.refresh()
-    dom.unlink() 
+    dom.unlink()
 
