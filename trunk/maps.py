@@ -3,7 +3,6 @@
 ## @package maps
 # This is the Main Window
 
-import os
 import src.mapGPS as mapGPS
 import src.mapUtils as mapUtils
 import src.mapTools as mapTools
@@ -632,7 +631,7 @@ class MainWindow(gtk.Window):
             self.do_export()
         # F4 = 65473     
         elif event.keyval == 65473:
-            fileName = FileChooser('.', 'Select KML File')
+            fileName = FileChooser('.', 'Select KML File to import')
             if fileName:
                 kml_to_markers(fileName, self.marker)
         # All Navigation Keys when in FullScreen
