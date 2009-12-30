@@ -51,9 +51,9 @@ def FolderChooser():
     return strFileName
 
 ## Prompt user to select a Folder
-def FileChooser(strPath):
+def FileChooser(strPath, strTitle="Select File"):
     strFileName = False
-    dialog = gtk.FileChooserDialog("Select File", None, 
+    dialog = gtk.FileChooserDialog(strTitle, None, 
                                    gtk.FILE_CHOOSER_ACTION_OPEN, 
                                    (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                     gtk.STOCK_OK, gtk.RESPONSE_OK))

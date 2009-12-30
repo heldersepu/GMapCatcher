@@ -18,7 +18,7 @@ from src.mapUpdate import CheckForUpdates
 from src.mapServices import MapServ
 from src.customMsgBox import error_msg
 from src.mapDownloader import MapDownloader
-from src.customWidgets import myToolTip, gtk_menu
+from src.customWidgets import myToolTip, gtk_menu, FileChooser
 from src.xmlUtils import kml_to_markers
 
 class MainWindow(gtk.Window):
@@ -632,7 +632,9 @@ class MainWindow(gtk.Window):
             self.do_export()
         # F4 = 65473     
         elif event.keyval == 65473:
-            kml_to_markers('KML_Samples.kml', self.marker)
+            fileName = FileChooser('.', 'Select KML File')
+            if fileName:
+                kml_to_markers(fileName, self.marker)
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
             self.navigation(event.keyval)
