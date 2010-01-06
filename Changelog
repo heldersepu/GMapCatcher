@@ -1,3 +1,10 @@
+January 5 2010    H.S    <HelderSepu@gmail.com>
+    * 0.6.0.0 - At revision: 662
+    * Use Google's new URL pattern (Issue 112)
+    * Add support for VirtualEarth (Issue 114)
+    * Import markers from KML files (Issue 65)
+    * Add a "Add Marker" to the right Click menu (Issue 65)
+
 November 21 2009    H.S    <HelderSepu@gmail.com>
     * 0.5.0.0 - At revision: 622
     * Fix download of big areas (Issue 100)
