@@ -48,10 +48,38 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert from ((tile, zoom), rect, center) to screen coordinates.  <a href="#aa1ddcb18a2e22372d69b7860ecc4980b"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#add93f22332f5cdf5dec338504482897e">pointer_to_tile</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert from screen pointer to tile.  <a href="#add93f22332f5cdf5dec338504482897e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#a6ee4f543bc0e9bab86361297ddbe49a2">km_to_lat</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert km to latitude.  <a href="#a6ee4f543bc0e9bab86361297ddbe49a2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#a869cc9310eec2cf18fa686d614f39c7f">km_to_lon</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert km to longitude.  <a href="#a869cc9310eec2cf18fa686d614f39c7f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#a241892c9a295e5ad79a99d33fa84bb9b">timeStamp</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return Date &amp; Time.  <a href="#a241892c9a295e5ad79a99d33fa84bb9b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesrc_1_1map_utils.html#af411fe9bc8260d4c9e168e60d27fc784">altitude_to_zoom</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert altitude (meters) to zoom.  <a href="#af411fe9bc8260d4c9e168e60d27fc784"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>A group of map utilities. </p>
 <hr/><h2>Function Documentation</h2>
+<a class="anchor" id="af411fe9bc8260d4c9e168e60d27fc784"></a><!-- doxytag: member="src::mapUtils::altitude_to_zoom" ref="af411fe9bc8260d4c9e168e60d27fc784" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def src.mapUtils.altitude_to_zoom </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>altitude</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Convert altitude (meters) to zoom. </p>
+
+</div>
+</div>
 <a class="anchor" id="a9c0b872d7a9313a928dfe37bfb827568"></a><!-- doxytag: member="src::mapUtils::coord_to_tile" ref="a9c0b872d7a9313a928dfe37bfb827568" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -89,6 +117,55 @@
 <div class="memdoc">
 
 <p>Find scale of the picture in km per pixel. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6ee4f543bc0e9bab86361297ddbe49a2"></a><!-- doxytag: member="src::mapUtils::km_to_lat" ref="a6ee4f543bc0e9bab86361297ddbe49a2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def src.mapUtils.km_to_lat </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>height</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Convert km to latitude. </p>
+
+</div>
+</div>
+<a class="anchor" id="a869cc9310eec2cf18fa686d614f39c7f"></a><!-- doxytag: member="src::mapUtils::km_to_lon" ref="a869cc9310eec2cf18fa686d614f39c7f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def src.mapUtils.km_to_lon </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>lat</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Convert km to longitude. </p>
 
 </div>
 </div>
@@ -337,6 +414,25 @@
       </table>
 </div>
 <div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a241892c9a295e5ad79a99d33fa84bb9b"></a><!-- doxytag: member="src::mapUtils::timeStamp" ref="a241892c9a295e5ad79a99d33fa84bb9b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def src.mapUtils.timeStamp </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Return Date &amp; Time. </p>
 
 </div>
 </div>

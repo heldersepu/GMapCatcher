@@ -33,10 +33,13 @@
 <tr><td colspan="2"><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a9fe336d6841568cd35a17750b85f3cb8">print_help</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#ac06865009d0586f80aaa8265073e2b06">__init__</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a23c43a3a05d1cb6f34b671afb3d6e0df">__str__</a></td></tr>
 <tr><td colspan="2"><h2>Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a8a57dc9469de45efa9ebb111c8aaa6c2">min_zl</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a32341cda76381388e47faf5cb74ce036">lat_range</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a047cbf43525d996cae7f8d7aa2529823">lng_range</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a5b73b50cfce39e84c44f9d2a97124823">width</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#af83dd1c301b05f96dc9183605e28ed1b">height</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a424dafb43f22faba4103699b0ef1b405">nr_threads</a></td></tr>
 <tr><td colspan="2"><h2>Static Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a47f7c2b4a06f652543202cca1048d170">max_zl</a> = MAP_MAX_ZOOM_LEVEL</td></tr>
@@ -48,6 +51,8 @@
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#abfacf3476f78b7450b63c05c9bf31d83">lng</a> = None</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a81a8132d9039d962ffe08b9065fddc43">location</a> = None</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a0a6bd9b3e5aa620175ccf1ffb094d3e3">layer</a> = LAYER_MAP</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a0496c1e94a90e1b6e49355099010828b">width</a> = 0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a92e6cd7fa1ed3e716cf0ea9660700989">height</a> = 0</td></tr>
 </table>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="ac06865009d0586f80aaa8265073e2b06"></a><!-- doxytag: member="src::mapArgs::MapArgs::__init__" ref="ac06865009d0586f80aaa8265073e2b06" args="" -->
@@ -64,12 +69,30 @@
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>arrArgs</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>arrArgs</em> = <code>()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
           <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a23c43a3a05d1cb6f34b671afb3d6e0df"></a><!-- doxytag: member="src::mapArgs::MapArgs::__str__" ref="a23c43a3a05d1cb6f34b671afb3d6e0df" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def src.mapArgs.MapArgs.__str__ </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>self</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
         </tr>
       </table>
 </div>
@@ -96,6 +119,32 @@
 </div>
 </div>
 <hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="af83dd1c301b05f96dc9183605e28ed1b"></a><!-- doxytag: member="src::mapArgs::MapArgs::height" ref="af83dd1c301b05f96dc9183605e28ed1b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a92e6cd7fa1ed3e716cf0ea9660700989">src.mapArgs.MapArgs.height</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a92e6cd7fa1ed3e716cf0ea9660700989"></a><!-- doxytag: member="src::mapArgs::MapArgs::height" ref="a92e6cd7fa1ed3e716cf0ea9660700989" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a92e6cd7fa1ed3e716cf0ea9660700989">src.mapArgs.MapArgs.height</a> = 0<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ac7314549fb29dcf59e586cc4b84cd104"></a><!-- doxytag: member="src::mapArgs::MapArgs::lat" ref="ac7314549fb29dcf59e586cc4b84cd104" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -258,6 +307,32 @@
       <table class="memname">
         <tr>
           <td class="memname">int <a class="el" href="classsrc_1_1map_args_1_1_map_args.html#afd42e78db4105bc8759b4cb756b5e1c1">src.mapArgs.MapArgs.nr_threads</a> = 5<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a5b73b50cfce39e84c44f9d2a97124823"></a><!-- doxytag: member="src::mapArgs::MapArgs::width" ref="a5b73b50cfce39e84c44f9d2a97124823" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a0496c1e94a90e1b6e49355099010828b">src.mapArgs.MapArgs.width</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0496c1e94a90e1b6e49355099010828b"></a><!-- doxytag: member="src::mapArgs::MapArgs::width" ref="a0496c1e94a90e1b6e49355099010828b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classsrc_1_1map_args_1_1_map_args.html#a0496c1e94a90e1b6e49355099010828b">src.mapArgs.MapArgs.width</a> = 0<code> [static]</code></td>
         </tr>
       </table>
 </div>
