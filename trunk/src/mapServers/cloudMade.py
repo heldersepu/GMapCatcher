@@ -1,5 +1,5 @@
 ## @package src.mapServers.cloudMade
-# All the interaction with CloudMade.com 
+# All the interaction with CloudMade.com
 
 from src.mapConst import MAP_MAX_ZOOM_LEVEL
 

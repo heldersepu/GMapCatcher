@@ -50,11 +50,11 @@ class CheckForUpdates():
             if self.update.latest_version > VERSION:
                 updateMsgBox(
                     "Update detected! \n" +
-                    ("A new version of %s is available \n\n" % NAME) + 
+                    ("A new version of %s is available \n\n" % NAME) +
                     ("Your version is %s \n" % VERSION ) +
-                    ("Current version is %s" % self.update.latest_version ), 
-                    WEB_ADDRESS, 
-                    self.update.latest_installer 
+                    ("Current version is %s" % self.update.latest_version ),
+                    WEB_ADDRESS,
+                    self.update.latest_installer
                 )
                 gtk.main()
 

@@ -55,7 +55,7 @@ def parse_start_page(layer, html):
     # more labels and routes. see Issue 94, comment 2
 
     match_str = '&hl=en&x=%i&y=%i&z=%i'
-    
+
     # we first check the existence of the uniform URL pattern,
     # if not, we fall back to the old method.
     if layer != 't':
@@ -67,7 +67,7 @@ def parse_start_page(layer, html):
         if m:
             head_str = 'http://mt%d.google.com/vt/lyrs='
             layer_str = layer + '@' + m.group(1)
-            return head_str + layer_str + match_str    
+            return head_str + layer_str + match_str
 
     # List of patterns add more as needed
     paList = ['http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v=([a-z0-9.]+)&',
@@ -88,8 +88,8 @@ def set_zoom(intZoom):
     if (MAP_MIN_ZOOM_LEVEL <= intZoom <= MAP_MAX_ZOOM_LEVEL):
         return intZoom
     else:
-        return 10    
-    
+        return 10
+
 ## Search a location in Google
 def search_location(location):
     print 'downloading the following location:', location
