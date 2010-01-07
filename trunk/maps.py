@@ -19,47 +19,17 @@ from src.customMsgBox import error_msg
 from src.mapDownloader import MapDownloader
 from src.customWidgets import myToolTip, gtk_menu, FileChooser
 from src.xmlUtils import kml_to_markers
+from src.widDrawingArea import DrawingArea
 
 class MainWindow(gtk.Window):
 
-    center = ((0,0),(128,128))
-    draging_start = (0, 0)
-    current_zoom_level = MAP_MAX_ZOOM_LEVEL
     default_text = "Enter location here!"
     update = None
     myPointer = None
     reCenter_gps = False
 
-    def do_scale(self, pos, pointer=None, force=False):
-        pos = int(round(pos, 0))
-        if (pos == round(self.scale.get_value(), 0)) and not force:
-            return
-        self.scale.set_value(pos)
-
-        rect = self.drawing_area.get_allocation()
-        da_center = (rect.width // 2, rect.height // 2)
-        if (pointer is None):
-            fix_tile, fix_offset = self.center
-        else:
-            fix_tile, fix_offset = mapUtils.pointer_to_tile(
-                rect, pointer, self.center, self.current_zoom_level
-            )
-
-        scala = 2 ** (self.current_zoom_level - pos)
-        x = int((fix_tile[0] * TILES_WIDTH  + fix_offset[0]) * scala)
-        y = int((fix_tile[1] * TILES_HEIGHT + fix_offset[1]) * scala)
-        if (pointer is not None) and not force:
-            x = x - (pointer[0] - da_center[0])
-            y = y - (pointer[1] - da_center[1])
-
-        self.center = (x / TILES_WIDTH, y / TILES_HEIGHT), \
-                      (x % TILES_WIDTH, y % TILES_HEIGHT)
-
-        self.current_zoom_level = pos
-        self.repaint()
-
     ## Get the zoom level from the scale
-    def get_zoom_level(self):
+    def get_zoom(self):
         return int(self.scale.get_value())
 
     ## Automatically display after selecting
@@ -148,13 +118,13 @@ class MainWindow(gtk.Window):
                 coord = locations[location]
             print "%s at %f, %f" % (location, coord[0], coord[1])
 
-            self.center = mapUtils.coord_to_tile(coord)
-            self.current_zoom_level = coord[2]
-            self.do_scale(coord[2], force=True)
+            self.drawing_area.center = mapUtils.coord_to_tile(coord)
+            self.scale.set_value(coord[2])
+            self.do_zoom(coord[2], True)
 
     ## Handles the click in the offline check box
     def offline_clicked(self, w):
-        self.repaint()
+        self.drawing_area.repaint()
         if not self.cb_offline.get_active():
             self.do_check_for_updates()
 
@@ -167,23 +137,23 @@ class MainWindow(gtk.Window):
     ## Handles the change in the GPS combo box
     def gps_changed(self, w):
         self.gps.set_mode(w.get_active())
-        self.repaint()
+        self.drawing_area.repaint()
 
     ## Handles the change in the combo box Layer(Map, Sat.. )
     def layer_changed(self, w):
         self.layer = w.get_active()
-        self.repaint()
+        self.drawing_area.repaint()
 
     def download_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
         if (pointer is None):
-            tile = self.center
+            tile = self.drawing_area.center
         else:
             tile = mapUtils.pointer_to_tile(
-                rect, pointer, self.center, self.current_zoom_level
+                rect, pointer, self.drawing_area.center, self.get_zoom()
             )
 
-        coord = mapUtils.tile_to_coord(tile, self.current_zoom_level)
+        coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         km_px = mapUtils.km_per_pixel(coord)
         dlw = DLWindow(coord, km_px*rect.width, km_px*rect.height,
                         self.layer, self.conf.init_path,
@@ -194,35 +164,35 @@ class MainWindow(gtk.Window):
 
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self, coord, mode):
-        zl = self.current_zoom_level
+        zl = self.get_zoom()
         tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
         # The map should be centered around a new GPS location
         if mode == GPS_CENTER or self.reCenter_gps:
             self.reCenter_gps = False
-            self.center = tile
+            self.drawing_area.center = tile
         # The map should be moved only to keep GPS location on the screen
         elif mode == GPS_ON_SCREEN:
             rect = self.drawing_area.get_allocation()
             xy = mapUtils.tile_coord_to_screen(
-                (tile[0][0], tile[0][1], zl), rect, self.center)
+                (tile[0][0], tile[0][1], zl), rect, self.drawing_area.center)
             if xy:
                 for x,y in xy:
                     x = x + tile[1][0]
                     y = y + tile[1][1]
                     if not(0 < x < rect.width) or not(0 < y < rect.height):
-                        self.center = tile
+                        self.drawing_area.center = tile
                     else:
                         if GPS_IMG_SIZE[0] > x:
-                            self.da_jump(1, True)
+                            self.drawing_area.da_jump(1, zl, True)
                         elif x > rect.width - GPS_IMG_SIZE[0]:
-                            self.da_jump(3, True)
+                            self.drawing_area.da_jump(3, zl, True)
                         elif GPS_IMG_SIZE[1] > y:
-                            self.da_jump(2, True)
+                            self.drawing_area.da_jump(2, zl, True)
                         elif y > rect.height - GPS_IMG_SIZE[1]:
-                            self.da_jump(4, True)
+                            self.drawing_area.da_jump(4, zl, True)
             else:
-                self.center = tile
-        self.repaint()
+                self.drawing_area.center = tile
+        self.drawing_area.repaint()
 
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
@@ -251,7 +221,7 @@ class MainWindow(gtk.Window):
         gtk.stock_add([(gtk.STOCK_PREFERENCES, "", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
         button.set_size_request(34, -1)
-        menu = gtk_menu(TOOLS_MENU, self.menu_item_response)
+        menu = gtk_menu(TOOLS_MENU, self.menu_tools)
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
         button.connect("query-tooltip", myToolTip, "Tools",
@@ -324,38 +294,37 @@ class MainWindow(gtk.Window):
         scale.set_size_request(30, -1)
         scale.set_increments(1,1)
         scale.set_digits(0)
-        scale.set_value(self.current_zoom_level)
+        scale.set_value(self.conf.init_zoom)
         scale.connect("change-value", self.scale_change_value)
         scale.show()
         self.scale = scale
         return scale
 
     def __create_right_paned(self):
-        da = gtk.DrawingArea()
+        da = DrawingArea(self.scale)
         self.drawing_area = da
         da.connect("expose-event", self.expose_cb)
+
         da.add_events(gtk.gdk.SCROLL_MASK)
         da.connect("scroll-event", self.scroll_cb)
 
-        da.add_events(gtk.gdk.BUTTON_PRESS_MASK)
-        da.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
+        da.connect('motion-notify-event', self.da_motion)
 
         menu = gtk_menu(DA_MENU, self.menu_item_response)
-
         da.connect_object("event", self.da_click_events, menu)
-        da.connect('button-press-event', self.da_button_press)
-        da.connect('button-release-event', self.da_button_release)
-        da.connect('motion-notify-event', self.da_motion)
-        da.show()
+
         return self.drawing_area
 
-    ## Zoom to the given pointer
-    def do_zoom(self, zoom_value, doForce=False, dPointer=None):
-        if (MAP_MIN_ZOOM_LEVEL <= zoom_value <= MAP_MAX_ZOOM_LEVEL):
-            self.do_scale(zoom_value, dPointer, doForce)
+        ## Zoom to the given pointer
+    def do_zoom(self, zoom, doForce=False, dPointer=False):
+        if (MAP_MIN_ZOOM_LEVEL <= zoom <= MAP_MAX_ZOOM_LEVEL):
+            self.drawing_area.do_scale(
+                zoom, self.get_zoom(), doForce, dPointer
+            )
+            self.scale.set_value(zoom)
 
-    def menu_tools(self, strName):
+    def menu_tools(self, w, strName):
         for intPos in range(len(TOOLS_MENU)):
             if strName.startswith(TOOLS_MENU[intPos]):
                 mapTools.main(self, intPos)
@@ -364,11 +333,11 @@ class MainWindow(gtk.Window):
     ## All the actions for the menu items
     def menu_item_response(self, w, strName):
         if strName == DA_MENU[ZOOM_IN]:
-            self.do_zoom(self.scale.get_value() - 1, True, self.myPointer)
+            self.do_zoom(self.get_zoom() - 1, True, self.myPointer)
         elif strName == DA_MENU[ZOOM_OUT]:
-            self.do_zoom(self.scale.get_value() + 1, True, self.myPointer)
+            self.do_zoom(self.get_zoom() + 1, True, self.myPointer)
         elif strName == DA_MENU[CENTER_MAP]:
-            self.do_zoom(self.scale.get_value(), True, self.myPointer)
+            self.do_zoom(self.get_zoom(), True, self.myPointer)
         elif strName == DA_MENU[RESET]:
             self.do_zoom(MAP_MAX_ZOOM_LEVEL)
         elif strName == DA_MENU[BATCH_DOWN]:
@@ -377,42 +346,34 @@ class MainWindow(gtk.Window):
             self.do_export(self.myPointer)
         elif strName == DA_MENU[ADD_MARKER]:
             self.add_marker(self.myPointer)
-        else:
-            self.menu_tools(strName)
 
     ## Add a marker
     def add_marker(self, pointer=None):
         tile = mapUtils.pointer_to_tile(
             self.drawing_area.get_allocation(),
-            pointer, self.center, self.current_zoom_level
+            pointer, self.drawing_area.center, self.get_zoom()
         )
-        coord = mapUtils.tile_to_coord(tile, self.current_zoom_level)
+        coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         self.marker.append_marker(coord)
         self.marker.refresh()
-        self.repaint()
+        self.drawing_area.repaint()
 
     ## Export tiles to one big map
     def do_export(self, pointer=None):
-        self.da_set_cursor(gtk.gdk.WATCH)
         if (pointer is None):
-            tile = self.center[0]
+            tile = self.drawing_area.center[0]
         else:
             tile, offset = mapUtils.pointer_to_tile(
                 self.drawing_area.get_allocation(),
-                pointer, self.center, self.current_zoom_level
+                pointer, self.drawing_area.center, self.get_zoom()
             )
         self.ctx_map.do_export(
-            (tile[0], tile[1], self.current_zoom_level),
+            (tile[0], tile[1], self.get_zoom()),
             self.layer, not self.cb_offline.get_active(),
             self.conf.map_service, self.conf.cloudMade_styleID,
             size=(1024, 1024)
         )
-        self.da_set_cursor()
 
-    ## Change the mouse cursor over the drawing_area
-    def da_set_cursor(self, dCursor = gtk.gdk.HAND1):
-        cursor = gtk.gdk.Cursor(dCursor)
-        self.drawing_area.window.set_cursor(cursor)
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
@@ -422,58 +383,21 @@ class MainWindow(gtk.Window):
             w.popup(None, None, None, event.button, event.time)
         # Double-Click event Zoom In
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
-            self.do_zoom(self.scale.get_value() - 1, True,
+            self.do_zoom(self.get_zoom() - 1, True,
                         (event.x, event.y))
-
-    ## Handles left (press click) event in the drawing_area
-    def da_button_press(self, w, event):
-        if (event.button == 1):
-            self.draging_start = (event.x, event.y)
-            self.da_set_cursor(gtk.gdk.FLEUR)
-
-    ## Handles left (release click) event in the drawing_area
-    def da_button_release(self, w, event):
-        if (event.button == 1):
-            self.da_set_cursor()
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
-        x = event.x
-        y = event.y
-        self.da_move(x, y)
-
-    ## Move the drawing_area
-    def da_move(self, x, y):
-        rect = self.drawing_area.get_allocation()
-        if (0 <= x <= rect.width) and (0 <= y <= rect.height):
-            center_offset = (self.center[1][0] + (self.draging_start[0] - x),
-                             self.center[1][1] + (self.draging_start[1] - y))
-            self.center = mapUtils.tile_adjustEx(self.get_zoom_level(),
-                             self.center[0], center_offset)
-            self.draging_start = (x, y)
-            self.repaint()
-
-    ## Jumps in the drawing_area
-    def da_jump(self, intDirection, doBigJump=False):
-        # Left  = 1  Up   = 2
-        # Right = 3  Down = 4
-        intJump = 10
-        if doBigJump:
-            intJump = intJump * 10
-
-        self.draging_start = (intJump * (intDirection == 3),
-                              intJump * (intDirection == 4))
-        self.da_move(intJump * (intDirection == 1),
-                     intJump * (intDirection == 2))
+        self.drawing_area.da_move(event.x, event.y, self.get_zoom())
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
         online = not self.cb_offline.get_active()
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
-        zl = self.get_zoom_level()
+        zl = self.get_zoom()
         self.downloader.query_region_around_point(
-            self.center, (rect.width, rect.height), zl, self.layer,
+            self.drawing_area.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
             online=online, force_update=force_update,
             mapServ=self.conf.map_service,
@@ -481,26 +405,21 @@ class MainWindow(gtk.Window):
         )
         self.draw_overlay(drawing_area, rect)
 
-    def repaint(self):
-        self.drawing_area.queue_draw()
-
     def scroll_cb(self, widget, event):
         xyPointer = self.drawing_area.get_pointer()
         if (event.direction == gtk.gdk.SCROLL_UP):
-            self.do_zoom(self.scale.get_value() - 1, dPointer=xyPointer)
+            self.do_zoom(self.get_zoom() - 1, dPointer=xyPointer)
         else:
-            self.do_zoom(self.scale.get_value() + 1, dPointer=xyPointer)
+            self.do_zoom(self.get_zoom() + 1, dPointer=xyPointer)
 
     def scale_change_value(self, range, scroll, value):
-        if (MAP_MIN_ZOOM_LEVEL <= value <= MAP_MAX_ZOOM_LEVEL):
-            self.do_scale(value)
-        return
+        self.do_zoom(value)
 
     def draw_overlay(self, drawing_area, rect):
         def draw_image(imgPos, img, width, height):
             mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
             xy = mapUtils.tile_coord_to_screen(
-                (mct[0][0], mct[0][1], zl), rect, self.center)
+                (mct[0][0], mct[0][1], zl), rect, self.drawing_area.center)
             if xy:
                 for x,y in xy:
                     drawing_area.window.draw_pixbuf(gc, img, 0, 0,
@@ -510,7 +429,7 @@ class MainWindow(gtk.Window):
                     )
 
         gc = drawing_area.style.black_gc
-        zl = self.current_zoom_level
+        zl = self.get_zoom()
 
         # Draw cross in the center
         if self.conf.show_cross:
@@ -543,10 +462,10 @@ class MainWindow(gtk.Window):
                 draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
 
     def tile_received(self, tile_coord, layer):
-        if self.layer == layer and self.current_zoom_level == tile_coord[2]:
+        if self.layer == layer and self.get_zoom() == tile_coord[2]:
             da = self.drawing_area
             rect = da.get_allocation()
-            xy = mapUtils.tile_coord_to_screen(tile_coord, rect, self.center)
+            xy = mapUtils.tile_coord_to_screen(tile_coord, rect, self.drawing_area.center)
             if xy:
                 gc = da.style.black_gc
                 force_update = self.cb_forceupdate.get_active()
@@ -590,37 +509,35 @@ class MainWindow(gtk.Window):
             self.set_decorated(True)
             self.unmaximize()
 
-
     ## Handles the keyboard navigation
-    def navigation(self, keyval):
+    def navigation(self, keyval, zoom):
         # Left  = 65361  Up   = 65362
         # Right = 65363  Down = 65364
         if keyval in range(65361, 65365):
-            self.da_jump(keyval - 65360)
+            self.drawing_area.da_jump(keyval - 65360, zoom)
 
         # Page Up = 65365  Page Down = 65366
         # Home    = 65360  End       = 65367
         elif keyval == 65365:
-           self.da_jump(2, True)
+           self.drawing_area.da_jump(2, zoom, True)
         elif keyval == 65366:
-            self.da_jump(4, True)
+            self.drawing_area.da_jump(4, zoom, True)
         elif keyval == 65360:
-           self.da_jump(1, True)
+           self.drawing_area.da_jump(1, zoom, True)
         elif keyval == 65367:
-            self.da_jump(3, True)
+            self.drawing_area.da_jump(3, zoom, True)
 
         # Minus = [45,65453]   Zoom Out
         # Plus  = [61,65451]   Zoom In
         elif keyval in [45,65453]:
-            self.do_zoom(self.scale.get_value() + 1, True)
+            self.do_zoom(zoom+1, True)
         elif keyval in [61,65451]:
-            self.do_zoom(self.scale.get_value() - 1, True)
-
+            self.do_zoom(zoom-1, True)
+            
         # Space = 32   Refresh the GPS
-        elif keyval == 32:
-            self.reCenter_gps = True
-
-
+        elif event.keyval == 32:
+            self.reCenter_gps = True    
+            
     ## Handles the Key pressing
     def key_press_event(self, w, event):
         # F11 = 65480, F12 = 65481, ESC = 65307
@@ -634,10 +551,11 @@ class MainWindow(gtk.Window):
             fileName = FileChooser('.', 'Select KML File to import')
             if fileName:
                 kml_to_markers(fileName, self.marker)
+
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
-            self.navigation(event.keyval)
-
+            self.navigation(event.keyval, self.get_zoom())
+            
 
     ## Final actions before main_quit
     def on_delete(self, *args):
@@ -653,8 +571,6 @@ class MainWindow(gtk.Window):
 
     def __init__(self, parent=None):
         self.conf = MapConf()
-        self.center = self.conf.init_center
-        self.current_zoom_level = self.conf.init_zoom
         self.crossPixbuf = mapPixbuf.cross()
 
         if mapGPS.available:
@@ -665,7 +581,7 @@ class MainWindow(gtk.Window):
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path)
         self.downloader = MapDownloader(self.ctx_map)
-        self.layer=0
+        self.layer = 0
         gtk.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
@@ -691,9 +607,10 @@ class MainWindow(gtk.Window):
         self.set_default_size(self.conf.init_width, self.conf.init_height)
         self.set_completion()
         self.default_entry()
+        self.drawing_area.center = self.conf.init_center
         self.show_all()
 
-        self.da_set_cursor()
+        self.drawing_area.da_set_cursor()
         self.entry.grab_focus()
 
 def main():
@@ -702,4 +619,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
