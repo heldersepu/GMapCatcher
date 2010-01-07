@@ -108,7 +108,7 @@ def get_themes():
 
 ## Checks if a directory exist if not it will be created
 def check_dir(strPath, strSubPath=None):
-    if (strSubPath != None):
+    if (strSubPath is not None):
         strPath = os.path.join(strPath, strSubPath)
     if not os.path.isdir(strPath):
         try:

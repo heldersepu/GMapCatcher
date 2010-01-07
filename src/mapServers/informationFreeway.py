@@ -10,5 +10,5 @@ def layer_url_template():
 ## Returns the URL to the informationFreeway tile
 def get_url(counter, coord):
     server = ['a', 'b', 'c']
-    return layer_url_template() % (server[counter % 3], 
+    return layer_url_template() % (server[counter % 3],
                 MAP_MAX_ZOOM_LEVEL - coord[2], coord[0], coord[1])

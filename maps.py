@@ -38,7 +38,7 @@ class MainWindow(gtk.Window):
 
         rect = self.drawing_area.get_allocation()
         da_center = (rect.width // 2, rect.height // 2)
-        if (pointer == None):
+        if (pointer is None):
             fix_tile, fix_offset = self.center
         else:
             fix_tile, fix_offset = mapUtils.pointer_to_tile(
@@ -48,7 +48,7 @@ class MainWindow(gtk.Window):
         scala = 2 ** (self.current_zoom_level - pos)
         x = int((fix_tile[0] * TILES_WIDTH  + fix_offset[0]) * scala)
         y = int((fix_tile[1] * TILES_HEIGHT + fix_offset[1]) * scala)
-        if (pointer != None) and not force:
+        if (pointer is not None) and not force:
             x = x - (pointer[0] - da_center[0])
             y = y - (pointer[1] - da_center[1])
 
@@ -87,7 +87,7 @@ class MainWindow(gtk.Window):
 
     ## Show the combo list if is not empty
     def combo_popup(self):
-        if self.combo.get_model().get_iter_root() != None:
+        if self.combo.get_model().get_iter_root() is not None:
             self.combo.popup()
 
     ## Handles the pressing of arrow keys
@@ -176,7 +176,7 @@ class MainWindow(gtk.Window):
 
     def download_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
-        if (pointer == None):
+        if (pointer is None):
             tile = self.center
         else:
             tile = mapUtils.pointer_to_tile(
@@ -394,7 +394,7 @@ class MainWindow(gtk.Window):
     ## Export tiles to one big map
     def do_export(self, pointer=None):
         self.da_set_cursor(gtk.gdk.WATCH)
-        if (pointer == None):
+        if (pointer is None):
             tile = self.center[0]
         else:
             tile, offset = mapUtils.pointer_to_tile(
@@ -629,7 +629,7 @@ class MainWindow(gtk.Window):
         # F2 = 65471
         elif event.keyval == 65471:
             self.do_export()
-        # F4 = 65473     
+        # F4 = 65473
         elif event.keyval == 65473:
             fileName = FileChooser('.', 'Select KML File to import')
             if fileName:

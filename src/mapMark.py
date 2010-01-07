@@ -21,7 +21,7 @@ class MyMarkers:
         fileUtils.write_file('marker', self.markerPath, self.positions)
 
     def append_marker(self, coord, strName=None):
-        if strName == None:
+        if strName is None:
             strName = str(coord[0]) + '_' + str(coord[1])
         fileUtils.append_file('marker', self.markerPath, coord, strName)
 

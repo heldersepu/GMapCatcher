@@ -126,7 +126,7 @@ class gpsdata:
             )
 
     def __init__(self):
-        # Initialize all data members 
+        # Initialize all data members
         self.online = 0                 # NZ if GPS on, zero if not
 
         self.valid = 0
@@ -524,7 +524,7 @@ def isotime(s):
         else:
             date = s
             msec = "0"
-        # Note: no leap-second correction! 
+        # Note: no leap-second correction!
         return calendar.timegm(time.strptime(date, "%Y-%m-%dT%H:%M:%S")) + float("0." + msec)
     else:
         raise TypeError

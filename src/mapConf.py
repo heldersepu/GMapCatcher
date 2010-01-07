@@ -94,7 +94,7 @@ class MapConf():
         self.gps_mode = read_config('gps_mode', GPS_DISABLED, int)
         ## Initial style ID for the CloudMade maps
         self.cloudMade_styleID = read_config('cloudmade_styleid', 1, int)
-        
+
     ## Write the configuration to the default file
     def save(self):
         configpath = self.get_configpath()

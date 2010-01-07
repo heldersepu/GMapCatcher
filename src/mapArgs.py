@@ -86,6 +86,6 @@ class MapArgs():
         return ("download.py --max-zoom=%s --min-zoom=%s" \
                 + " --latitude=%s --longitude=%s" \
                 + " --width=%s --height=%s") % \
-               (self.max_zl, self.min_zl, 
-                self.lat, self.lng, 
+               (self.max_zl, self.min_zl,
+                self.lat, self.lng,
                 self.width, self.height)

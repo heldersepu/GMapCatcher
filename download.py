@@ -35,12 +35,12 @@ if __name__ == "__main__":
 
     args = MapArgs(sys.argv)
 
-    if (args.location == None) and ((args.lat == None) or (args.lng == None)):
+    if (args.location is None) and ((args.lat is None) or (args.lng is None)):
         args.print_help()
         exit(0)
-        
+
     print "location = %s" % args.location
-    if ((args.lat == None) or (args.lng == None)):
+    if ((args.lat is None) or (args.lng is None)):
         locations = ctx_map.get_locations()
         if (not args.location in locations.keys()):
             args.location = ctx_map.search_location(args.location)
@@ -56,17 +56,17 @@ if __name__ == "__main__":
         args.lng_range = mapUtils.km_to_lat(args.width, args.lat)
     if args.height > 0:
         args.lat_range = mapUtils.km_to_lon(args.height)
-    
-    if (args.location == None):
+
+    if (args.location is None):
         args.location = "somewhere"
     print "Download %s (%f, %f), range (%f, %f), zoom level: %d to %d" % \
-            (args.location, args.lat, args.lng, 
-             args.lat_range, args.lng_range, 
+            (args.location, args.lat, args.lng,
+             args.lat_range, args.lng_range,
              args.max_zl, args.min_zl)
 
     downloader = MapDownloader(ctx_map, args.nr_threads)
     try:
-        download(args.lat, args.lng, args.lat_range, args.lng_range, 
+        download(args.lat, args.lng, args.lat_range, args.lng_range,
                  args.max_zl, args.min_zl, args.layer)
     finally:
         print "Waiting..."

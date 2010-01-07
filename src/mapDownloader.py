@@ -46,7 +46,7 @@ class DownloaderThread(Thread):
         while True:
             task = self.inq.get()
             #print "task=",task
-            if (task == None):
+            if (task is None):
                 return
             try:
                 self.process_task(task)
