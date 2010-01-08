@@ -2,14 +2,16 @@ This is stub of a user guide. It will grow step by step to become a complete use
 
 Please send all errors and enhancements as a comment to issue 118.
 
-= Introduction =
+= Table of contents =
 
-Add your content here.
+1. Overview
 
+2. Getting started
 
-= Details =
+3. Keyboard shortcuts
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+= Overview =
+
+= Getting started =
+
+= Keyboard shortcuts =
