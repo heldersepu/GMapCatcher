@@ -31,7 +31,7 @@ def kml_to_markers(strFileName, marker):
                     zoom = altitude_to_zoom(Coord[2])
                 else:
                     zoom = 10
-                marker.append_marker((Coord[0], Coord[1], zoom), strName)
+                marker.append_marker((Coord[1], Coord[0], zoom), strName)
                 marker.refresh()
     dom.unlink()
 
