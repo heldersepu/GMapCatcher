@@ -1,3 +1,7 @@
+January 8 2010    H.S    <HelderSepu@gmail.com>
+    * 0.6.1.0 - At revision: 670
+    * Fix bug Importing markers from KML files (Issue 65)
+
 January 5 2010    H.S    <HelderSepu@gmail.com>
     * 0.6.0.0 - At revision: 662
     * Use Google's new URL pattern (Issue 112)
