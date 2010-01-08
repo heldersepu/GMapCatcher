@@ -1,6 +1,0 @@
-1) Obtain and install a pySerial from:
-
-http://pyserial.wiki.sourceforge.net/pySerial
-
-
-2) Copy the entire nmea folder into your site-packages folder.
