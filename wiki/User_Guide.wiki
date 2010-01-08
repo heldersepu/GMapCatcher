@@ -1,4 +1,6 @@
-This is stub of a user guide. It will grow step by step to become a complete user Guide. Please send all errors and enhancements as a comment to issue 118.
+This is stub of a user guide. It will grow step by step to become a complete user Guide. 
+
+Please send all errors and enhancements as a comment to issue 118.
 
 = Introduction =
 
