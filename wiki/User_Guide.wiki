@@ -1,3 +1,4 @@
+#labels Featured
 *NOTE:*
 
 This is stub. It will grow step by step to become a complete user guide of GMapCatcher.
@@ -28,11 +29,34 @@ Users can choose their preferred map and watch it while online. All viewed map s
 = User interface =
 
 After starting the programme the GUI shows the map, a small size scroll bar on the left and a toolbar on top. By using the scroll bar the resolution/scale of the map can be changed. The toolbar offers the following actions and settings:
-  * Main configuration
+  * Main configuration button
   * Drop down menu for stored locations
-  * Download configuration
-  * Work online/offline
-  * Force update
-  * Map type (map, terrain, sattelite) selection
+  * Download configuration button
+  * Check box to indicate working mode online or offline
+  * Check box to indicate force update facility
+  * Drop down menu for map type (map, terrain, sattelite) selection
 
 = Keyboard shortcuts =
+
+=== General ===
+|| *Shortcut Key* || *Description* ||
+||  F4            ||  Import markers from KML file ||
+||  F12           ||  Hide/Unhide all buttons ||
+||  F11           ||  FullScreen   ||
+||  ESC           ||  Undo F12 & F11 ||
+
+<BR>
+=== Navigation (only after hiding buttons)===
+|| *Shortcut Key* || *Description* ||
+||  Arrow Keys    ||  Pan Left, Right, Up and Down ||
+||  +             ||  Zoom in      ||
+||  -             ||  Zoom out     ||
+||  Page Up       ||  Pan wider Up ||
+||  Page Down     ||  Pan wider Down ||
+||  Home          ||  Pan wider Left ||
+||  End           ||  Pan wider Rigth ||
+
+<BR>
+=== GPS related (only when GPS is enabled)===
+|| *Shortcut Key* || *Description* ||
+||  Space         ||  ReCenter GPS cursor ||
