@@ -11,7 +11,7 @@ Any comment may help to make it better.
 
 <font size="5">*Table of contents*</font> 
 
-<wiki:toc max_depth="1" />
+<wiki:toc max_depth="3" />
 
 = Overview =
 
@@ -38,15 +38,15 @@ After starting the programme the GUI shows the map, a small size scroll bar on t
 
 = Keyboard shortcuts =
 
-=== General ===
+== General ==
 || *Shortcut Key* || *Description* ||
 ||  F4            ||  Import markers from KML file ||
-||  F12           ||  Hide/Unhide all buttons ||
-||  F11           ||  FullScreen   ||
+||  F12           ||  Hide/unhide all buttons ||
+||  F11           ||  Full screen   ||
 ||  ESC           ||  Undo F12 & F11 ||
 
 <BR>
-=== Navigation (only after hiding buttons)===
+== Navigation (only after hiding buttons)==
 || *Shortcut Key* || *Description* ||
 ||  Arrow Keys    ||  Pan Left, Right, Up and Down ||
 ||  +             ||  Zoom in      ||
@@ -57,6 +57,6 @@ After starting the programme the GUI shows the map, a small size scroll bar on t
 ||  End           ||  Pan wider Rigth ||
 
 <BR>
-=== GPS related (only when GPS is enabled)===
+== GPS related (only when GPS is enabled)==
 || *Shortcut Key* || *Description* ||
-||  Space         ||  ReCenter GPS cursor ||
+||  Space         ||  Re center GPS cursor ||
