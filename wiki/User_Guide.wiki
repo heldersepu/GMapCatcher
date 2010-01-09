@@ -1,4 +1,4 @@
-This is stub. It will grow step by step to become a complete user guide. 
+This is stub. It will grow step by step to become a complete user guide of GMapCatcher.
 
 Please send all errors and enhancements as a comment to issue 118.
 
@@ -12,6 +12,25 @@ Please send all errors and enhancements as a comment to issue 118.
 
 = Overview =
 
-= Getting started =
+GMapCatcher is an online and offline map viewer. Currently the following maps are supported:
+  * CloudMade
+  * OpenStreetMap
+  * Google Map 
+  * Yahoo
+  * InformationFreeway
+  * OpenCycleMap
+  * Google Map Maker
+
+Users can choose their preferred map and watch it while online. All viewed map section will be stored on disk and may be viewed offline. Additionally a downloading tool is provided which saves a user defined area to disk for offline viewing.
+
+= User interface =
+
+After starting the programme the GUI shows the map, a small size scroll bar on the left and a toolbar on top. By using the scroll bar the resolution/scale of the map can be changed. The toolbar offers the following actions and settings:
+  * Main configuration
+  * Drop down menu for stored places
+  * Download configuration
+  * Work online/offline
+  * Force update
+  * Map type (map, terrain, sattelite) selection
 
 = Keyboard shortcuts =
