@@ -1,14 +1,16 @@
+*NOTE:*
+
 This is stub. It will grow step by step to become a complete user guide of GMapCatcher.
 
-Please send all errors and enhancements as a comment to issue 118.
+*_Please send all errors, enhancements and spelling mistakes (British English is used) as a comment to issue 118._*
 
-= Table of contents =
+Any comment may help to make it better.
 
-1. Overview
+<font size="5">*User guide for GMapCatcher 0.7*</font>
 
-2. Getting started
+<font size="5">*Table of contents*</font> 
 
-3. Keyboard shortcuts
+<wiki:toc max_depth="1" />
 
 = Overview =
 
