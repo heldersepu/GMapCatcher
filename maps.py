@@ -270,8 +270,9 @@ class MainWindow(gtk.Window):
         cmb_layer = gtk.combo_box_new_text()
         for w in LAYER_NAMES:
             cmb_layer.append_text(w)
-        cmb_layer.set_active(0)
+        cmb_layer.set_active(LAYER_MAP)
         cmb_layer.connect('changed',self.layer_changed)
+        self.cmb_layer = cmb_layer
         bbox.add(cmb_layer)
 
         hbox.pack_start(bbox)
@@ -519,11 +520,11 @@ class MainWindow(gtk.Window):
         # Page Up = 65365  Page Down = 65366
         # Home    = 65360  End       = 65367
         elif keyval == 65365:
-           self.drawing_area.da_jump(2, zoom, True)
+            self.drawing_area.da_jump(2, zoom, True)
         elif keyval == 65366:
             self.drawing_area.da_jump(4, zoom, True)
         elif keyval == 65360:
-           self.drawing_area.da_jump(1, zoom, True)
+            self.drawing_area.da_jump(1, zoom, True)
         elif keyval == 65367:
             self.drawing_area.da_jump(3, zoom, True)
 
@@ -533,11 +534,20 @@ class MainWindow(gtk.Window):
             self.do_zoom(zoom+1, True)
         elif keyval in [61,65451]:
             self.do_zoom(zoom-1, True)
-            
+
         # Space = 32   Refresh the GPS
-        elif event.keyval == 32:
-            self.reCenter_gps = True    
-            
+        elif keyval == 32:
+            self.reCenter_gps = True
+
+        # M = 77,109  S = 83,115  T = 84,116
+        elif keyval in [77, 109]:
+            self.cmb_layer.set_active(LAYER_MAP)
+        elif keyval in [83, 115]:
+            self.cmb_layer.set_active(LAYER_SATELLITE)
+        elif keyval in [84, 116]:
+            self.cmb_layer.set_active(LAYER_TERRAIN)
+
+
     ## Handles the Key pressing
     def key_press_event(self, w, event):
         # F11 = 65480, F12 = 65481, ESC = 65307
@@ -555,7 +565,7 @@ class MainWindow(gtk.Window):
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
             self.navigation(event.keyval, self.get_zoom())
-            
+
 
     ## Final actions before main_quit
     def on_delete(self, *args):
