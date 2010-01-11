@@ -16,13 +16,14 @@ Any comment may help to make it better.
 = Overview =
 
 GMapCatcher is an online and offline map viewer. Currently the following map providers are supported:
-  * !CloudMade
-  * !OpenStreetMap
-  * Google Map 
-  * Yahoo
-  * !InformationFreeway
-  * !OpenCycleMap
-  * Google Map Maker
+  * [http://maps.cloudmade.com/ CloudMade]
+  * [http://www.openstreetmap.org/ OpenStreetMap]
+  * [http://maps.google.com/ Google Maps]
+  * [http://maps.yahoo.com/ Yahoo]
+  * [http://www.informationfreeway.org/ InformationFreeway]
+  * [http://www.opencyclemap.org/ OpenCycleMap]
+  * [http://www.google.com/mapmaker Google Map Maker]
+  * [http://www.bing.com/maps/ Virtual Earth]
 
 Users can choose their preferred map and watch it while online. All viewed map section will be stored on disk and may be viewed offline. Additionally a downloading tool is provided which saves a user defined area to disk for offline viewing.
 
