@@ -35,7 +35,7 @@ After starting the programme the GUI shows the map, a small size scroll bar on t
   * Download configuration button
   * Check box to indicate working mode online or offline
   * Check box to indicate force update facility
-  * Drop down menu for map type (map, terrain, sattelite) selection
+  * Drop down menu for map type (Map, Terrain, Satellite) selection
 
 = Keyboard shortcuts =
 
