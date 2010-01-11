@@ -55,6 +55,9 @@ After starting the programme the GUI shows the map, a small size scroll bar on t
 ||  Page Down     ||  Pan wider Down ||
 ||  Home          ||  Pan wider Left ||
 ||  End           ||  Pan wider Rigth ||
+||   M            ||  Show Map Layer ||
+||   S            ||  Show Satellite Layer ||
+||   T            ||  Show Terrain Layer ||
 
 <BR>
 == GPS related (only when GPS is enabled)==
