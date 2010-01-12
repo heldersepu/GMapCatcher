@@ -535,7 +535,7 @@ class MainWindow(gtk.Window):
         elif keyval in [61,65451]:
             self.do_zoom(zoom-1, True)
 
-        # Space = 32   Refresh the GPS
+        # Space = 32   ReCenter the GPS
         elif keyval == 32:
             self.reCenter_gps = True
 
@@ -553,6 +553,10 @@ class MainWindow(gtk.Window):
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
+        # F1 = 65471  Help
+        elif event.keyval == 65470:
+            import webbrowser
+            webbrowser.open(WEB_ADDRESS)
         # F2 = 65471
         elif event.keyval == 65471:
             self.do_export()
@@ -561,11 +565,17 @@ class MainWindow(gtk.Window):
             fileName = FileChooser('.', 'Select KML File to import')
             if fileName:
                 kml_to_markers(fileName, self.marker)
+        # F5 = 65474
+        elif event.keyval == 65474:
+            self.refresh()
 
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
             self.navigation(event.keyval, self.get_zoom())
 
+    ## All the refresh operations
+    def refresh(self):
+        self.drawing_area.repaint()
 
     ## Final actions before main_quit
     def on_delete(self, *args):
