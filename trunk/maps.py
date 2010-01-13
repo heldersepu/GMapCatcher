@@ -27,6 +27,7 @@ class MainWindow(gtk.Window):
     update = None
     myPointer = None
     reCenter_gps = False
+    showMarkers = True
 
     ## Get the zoom level from the scale
     def get_zoom(self):
@@ -449,11 +450,12 @@ class MainWindow(gtk.Window):
             coord = (None, None, None)
 
         # Draw the markers
-        img = self.marker.get_marker_pixbuf(zl)
-        for str in self.marker.positions.keys():
-            mpos = self.marker.positions[str]
-            if zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0]):
-                draw_image(mpos, img, pixDim, pixDim)
+        if self.showMarkers:            
+            img = self.marker.get_marker_pixbuf(zl)
+            for str in self.marker.positions.keys():
+                mpos = self.marker.positions[str]
+                if zl <= mpos[2] and (mpos[0], mpos[1] != coord[0], coord[1]):
+                    draw_image(mpos, img, pixDim, pixDim)
 
         # Draw GPS position
         if mapGPS.available:
@@ -568,6 +570,10 @@ class MainWindow(gtk.Window):
         # F5 = 65474
         elif event.keyval == 65474:
             self.refresh()
+        # F8 = 65477
+        elif event.keyval == 65477:
+            self.showMarkers = not self.showMarkers
+            self.drawing_area.repaint()
 
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
