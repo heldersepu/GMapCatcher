@@ -5,6 +5,7 @@ import sys
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject
+from threading import Timer
 
 ## workaround for broken gtk threads in win32
 if sys.platform=='win32':
@@ -37,3 +38,14 @@ def gui_callback(function):
         else:
             do_gui_operation(function, *args, **kwargs)
     return cb
+
+## Open the given page in a browser
+def webbrowser_open(strPage):
+    def openThread():
+        import webbrowser
+        webbrowser.open(strPage)
+    try:
+        oThread = Timer(0, openThread)
+        oThread.start()
+    except:
+        pass

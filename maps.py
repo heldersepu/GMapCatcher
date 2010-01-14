@@ -518,8 +518,7 @@ class MainWindow(gtk.Window):
             self.full_screen(event.keyval)
         # F1 = 65471  Help
         elif event.keyval == 65470:
-            import webbrowser
-            webbrowser.open(WEB_ADDRESS)
+            webbrowser_open(WEB_ADDRESS)
         # F2 = 65471
         elif event.keyval == 65471:
             self.do_export()
