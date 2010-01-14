@@ -3,7 +3,7 @@
 
 import gtk
 import mapUtils
-from src.mapConst import *
+from mapConst import *
 
 ## This widget is where the map is drawn
 class DrawingArea(gtk.DrawingArea):
@@ -53,12 +53,13 @@ class DrawingArea(gtk.DrawingArea):
     def da_move(self, x, y, zoom):
         rect = self.get_allocation()
         if (0 <= x <= rect.width) and (0 <= y <= rect.height):
-            center_offset = (self.center[1][0] + (self.draging_start[0] - x),
-                             self.center[1][1] + (self.draging_start[1] - y))
-            self.center = mapUtils.tile_adjustEx(zoom, self.center[0], center_offset)
+            offset = (self.center[1][0] + (self.draging_start[0] - x),
+                      self.center[1][1] + (self.draging_start[1] - y))
+            self.center = mapUtils.tile_adjustEx(zoom, self.center[0], offset)
             self.draging_start = (x, y)
             self.repaint()
 
+    ## Scale in the drawing area (zoom in or out)
     def do_scale(self, zoom, current_zoom_level, doForce, dPointer):
         if (zoom == current_zoom_level) and not doForce:
             return
@@ -84,6 +85,7 @@ class DrawingArea(gtk.DrawingArea):
                       (x % TILES_WIDTH, y % TILES_HEIGHT)
         self.repaint()
 
+    ## Repaint the drawing area
     def repaint(self):
         self.queue_draw()
 
@@ -126,7 +128,7 @@ class DrawingArea(gtk.DrawingArea):
             img = marker.get_marker_pixbuf(zl)
             for str in marker.positions.keys():
                 mpos = marker.positions[str]
-                if zl <= mpos[2] and (mpos[0], mpos[1] != coord[0], coord[1]):
+                if zl <= mpos[2] and (mpos[0],mpos[1]) != (coord[0],coord[1]):
                     draw_image(mpos, img, pixDim, pixDim)
 
         # Draw GPS position
