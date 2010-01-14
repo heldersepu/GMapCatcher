@@ -2,8 +2,8 @@
 # DrawingArea widget used to display the map
 
 import gtk
+import mapUtils
 from src.mapConst import *
-from mapUtils import tile_adjustEx, pointer_to_tile
 
 ## This widget is where the map is drawn
 class DrawingArea(gtk.DrawingArea):
@@ -55,7 +55,7 @@ class DrawingArea(gtk.DrawingArea):
         if (0 <= x <= rect.width) and (0 <= y <= rect.height):
             center_offset = (self.center[1][0] + (self.draging_start[0] - x),
                              self.center[1][1] + (self.draging_start[1] - y))
-            self.center = tile_adjustEx(zoom, self.center[0], center_offset)
+            self.center = mapUtils.tile_adjustEx(zoom, self.center[0], center_offset)
             self.draging_start = (x, y)
             self.repaint()
 
@@ -66,12 +66,12 @@ class DrawingArea(gtk.DrawingArea):
         rect = self.get_allocation()
         da_center = (rect.width // 2, rect.height // 2)
         if dPointer:
-            fix_tile, fix_offset = pointer_to_tile(
+            fix_tile, fix_offset = mapUtils.pointer_to_tile(
                 rect, dPointer, self.center, current_zoom_level
-            )        
+            )
         else:
             fix_tile, fix_offset = self.center
-            
+
 
         scala = 2 ** (current_zoom_level - zoom)
         x = int((fix_tile[0] * TILES_WIDTH  + fix_offset[0]) * scala)
@@ -86,3 +86,52 @@ class DrawingArea(gtk.DrawingArea):
 
     def repaint(self):
         self.queue_draw()
+
+    ## Draw the second layer of elements
+    def draw_overlay(self, zl, conf, crossPixbuf, marker, locations, 
+                     entry_name, showMarkers, gps):
+        def draw_image(imgPos, img, width, height):
+            mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
+            xy = mapUtils.tile_coord_to_screen(
+                (mct[0][0], mct[0][1], zl), rect, self.center
+            )
+            if xy:
+                for x,y in xy:
+                    self.window.draw_pixbuf(
+                        self.style.black_gc, img, 0, 0,
+                        x + mct[1][0] - width/2,
+                        y + mct[1][1] - height/2,
+                        width, height
+                    )
+
+        rect = self.get_allocation()
+        # Draw cross in the center
+        if conf.show_cross:
+            self.window.draw_pixbuf(
+                self.style.black_gc, crossPixbuf, 0, 0,
+                rect.width/2 - 6, rect.height/2 - 6, 12, 12
+            )
+
+        # Draw the selected location
+        pixDim = marker.get_pixDim(zl)
+        if (entry_name in locations.keys()):
+            coord = locations[entry_name]
+            img = marker.get_marker_pixbuf(zl, 'marker1.png')
+            draw_image(coord, img, pixDim, pixDim)
+        else:
+            coord = (None, None, None)
+
+        # Draw the markers
+        if showMarkers:
+            img = marker.get_marker_pixbuf(zl)
+            for str in marker.positions.keys():
+                mpos = marker.positions[str]
+                if zl <= mpos[2] and (mpos[0], mpos[1] != coord[0], coord[1]):
+                    draw_image(mpos, img, pixDim, pixDim)
+
+        # Draw GPS position
+        if gps is not None:
+            location = gps.get_location()
+            if location is not None and (zl <= conf.max_gps_zoom):
+                img = gps.pixbuf
+                draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])

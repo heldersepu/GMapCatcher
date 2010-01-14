@@ -24,6 +24,7 @@ from src.widDrawingArea import DrawingArea
 class MainWindow(gtk.Window):
 
     default_text = "Enter location here!"
+    gps = None
     update = None
     myPointer = None
     reCenter_gps = False
@@ -405,8 +406,8 @@ class MainWindow(gtk.Window):
             mapServ=self.conf.map_service,
             styleID=self.conf.cloudMade_styleID
         )
-        self.draw_overlay(drawing_area, rect)
-
+        self.draw_overlay()
+    
     def scroll_cb(self, widget, event):
         xyPointer = self.drawing_area.get_pointer()
         if (event.direction == gtk.gdk.SCROLL_UP):
@@ -416,53 +417,6 @@ class MainWindow(gtk.Window):
 
     def scale_change_value(self, range, scroll, value):
         self.do_zoom(value)
-
-    def draw_overlay(self, drawing_area, rect):
-        def draw_image(imgPos, img, width, height):
-            mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
-            xy = mapUtils.tile_coord_to_screen(
-                (mct[0][0], mct[0][1], zl), rect, self.drawing_area.center)
-            if xy:
-                for x,y in xy:
-                    drawing_area.window.draw_pixbuf(gc, img, 0, 0,
-                        x + mct[1][0] - width/2,
-                        y + mct[1][1] - height/2,
-                        width, height
-                    )
-
-        gc = drawing_area.style.black_gc
-        zl = self.get_zoom()
-
-        # Draw cross in the center
-        if self.conf.show_cross:
-            drawing_area.window.draw_pixbuf(gc, self.crossPixbuf, 0, 0,
-                rect.width/2 - 6, rect.height/2 - 6, 12, 12)
-
-        # Draw the selected location
-        pixDim = self.marker.get_pixDim(zl)
-        location = self.entry.get_text()
-        locations = self.ctx_map.get_locations()
-        if (location in locations.keys()):
-            coord = self.ctx_map.get_locations()[location]
-            img = self.marker.get_marker_pixbuf(zl, 'marker1.png')
-            draw_image(coord, img, pixDim, pixDim)
-        else:
-            coord = (None, None, None)
-
-        # Draw the markers
-        if self.showMarkers:            
-            img = self.marker.get_marker_pixbuf(zl)
-            for str in self.marker.positions.keys():
-                mpos = self.marker.positions[str]
-                if zl <= mpos[2] and (mpos[0], mpos[1] != coord[0], coord[1]):
-                    draw_image(mpos, img, pixDim, pixDim)
-
-        # Draw GPS position
-        if mapGPS.available:
-            location = self.gps.get_location()
-            if location is not None and (zl <= self.conf.max_gps_zoom):
-                img = self.gps.pixbuf
-                draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
 
     def tile_received(self, tile_coord, layer):
         if self.layer == layer and self.get_zoom() == tile_coord[2]:
@@ -478,8 +432,15 @@ class MainWindow(gtk.Window):
                                           TILES_WIDTH, TILES_HEIGHT)
 
                 if not self.cb_offline.get_active():
-                    self.draw_overlay(da, rect)
-
+                    self.draw_overlay()
+    
+    def draw_overlay(self):
+        self.drawing_area.draw_overlay(
+            self.get_zoom(), self.conf, self.crossPixbuf,
+            self.marker, self.ctx_map.get_locations(),
+            self.entry.get_text(), self.showMarkers, self.gps
+        )
+        
     ## Handles the pressing of F11 & F12
     def full_screen(self, keyval):
         # F11 = 65480
