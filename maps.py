@@ -358,8 +358,7 @@ class MainWindow(gtk.Window):
         )
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         self.marker.append_marker(coord)
-        self.marker.refresh()
-        self.drawing_area.repaint()
+        self.refresh()
 
     ## Export tiles to one big map
     def do_export(self, pointer=None):
@@ -407,7 +406,7 @@ class MainWindow(gtk.Window):
             styleID=self.conf.cloudMade_styleID
         )
         self.draw_overlay()
-    
+
     def scroll_cb(self, widget, event):
         xyPointer = self.drawing_area.get_pointer()
         if (event.direction == gtk.gdk.SCROLL_UP):
@@ -433,14 +432,14 @@ class MainWindow(gtk.Window):
 
                 if not self.cb_offline.get_active():
                     self.draw_overlay()
-    
+
     def draw_overlay(self):
         self.drawing_area.draw_overlay(
             self.get_zoom(), self.conf, self.crossPixbuf,
             self.marker, self.ctx_map.get_locations(),
             self.entry.get_text(), self.showMarkers, self.gps
         )
-        
+
     ## Handles the pressing of F11 & F12
     def full_screen(self, keyval):
         # F11 = 65480
@@ -541,6 +540,8 @@ class MainWindow(gtk.Window):
 
     ## All the refresh operations
     def refresh(self):
+        self.enable_gps()
+        self.marker.refresh()
         self.drawing_area.repaint()
 
     ## Final actions before main_quit
@@ -555,19 +556,23 @@ class MainWindow(gtk.Window):
             self.update.finish()
         return False
 
+    def enable_gps(self):
+        if mapGPS.available:
+            self.gps = mapGPS.GPS(
+                self.gps_callback,
+                self.conf.gps_update_rate,
+                self.conf.gps_mode
+            )
+
     def __init__(self, parent=None):
         self.conf = MapConf()
         self.crossPixbuf = mapPixbuf.cross()
-
-        if mapGPS.available:
-            self.gps = mapGPS.GPS(self.gps_callback,
-                                  self.conf.gps_update_rate,
-                                  self.conf.gps_mode)
-
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path)
         self.downloader = MapDownloader(self.ctx_map)
-        self.layer = 0
+        self.layer = LAYER_MAP
+        self.enable_gps()
+
         gtk.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
@@ -577,16 +582,16 @@ class MainWindow(gtk.Window):
         self.connect('key-press-event', self.key_press_event)
         self.connect('delete-event', self.on_delete)
         vpaned = gtk.VPaned()
-        hpaned = gtk.HPaned()
         self.top_panel = self.__create_top_paned()
         self.left_panel = self.__create_left_paned()
 
         vpaned.pack1(self.top_panel, False, False)
+        hpaned = gtk.HPaned()
         hpaned.pack1(self.left_panel, False, False)
         hpaned.pack2(self.__create_right_paned(), True, True)
         vpaned.add2(hpaned)
-
         self.add(vpaned)
+
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 400)
