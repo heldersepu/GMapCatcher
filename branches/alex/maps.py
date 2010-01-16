@@ -162,6 +162,15 @@ class MainWindow(gtk.Window):
                     )
         dlw.show()
 
+
+    def validate_path(self, w):
+    	print "VALIDATING!!"
+    	for str in self.marker.positions.keys():
+    		AKpos = self.marker.positions[str]
+    		print AKpos;
+    
+
+
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self, coord, mode):
         zl = self.get_zoom()
@@ -260,6 +269,13 @@ class MainWindow(gtk.Window):
             cmb_gps.set_active(self.conf.gps_mode)
             cmb_gps.connect('changed',self.gps_changed)
             bbox.add(cmb_gps)
+
+	bbox.set_layout(gtk.BUTTONBOX_SPREAD)
+	gtk.stock_add([(gtk.STOCK_APPLY, "_Validate", 0, 0, "")])
+	button = gtk.Button(stock=gtk.STOCK_APPLY)
+	button.connect('clicked', self.validate_path)
+	bbox.add(button)
+
 
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
         gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
