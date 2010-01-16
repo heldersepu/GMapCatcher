@@ -162,13 +162,15 @@ class MainWindow(gtk.Window):
                     )
         dlw.show()
 
-
+    ## Validation of the markers
+    #  looking for intersections with no-go areas
     def validate_path(self, w):
-    	print "VALIDATING!!"
-    	for str in self.marker.positions.keys():
-    		AKpos = self.marker.positions[str]
-    		print AKpos;
-    
+        print "VALIDATING!!"
+        for strName in self.marker.positions.keys():
+            AKpos = self.marker.positions[strName]
+            print "Name =", strName
+            print "Coord =", AKpos
+            print ""
 
 
     ## Called when new coordinates are obtained from the GPS
@@ -270,11 +272,11 @@ class MainWindow(gtk.Window):
             cmb_gps.connect('changed',self.gps_changed)
             bbox.add(cmb_gps)
 
-	bbox.set_layout(gtk.BUTTONBOX_SPREAD)
-	gtk.stock_add([(gtk.STOCK_APPLY, "_Validate", 0, 0, "")])
-	button = gtk.Button(stock=gtk.STOCK_APPLY)
-	button.connect('clicked', self.validate_path)
-	bbox.add(button)
+        bbox.set_layout(gtk.BUTTONBOX_SPREAD)
+        gtk.stock_add([(gtk.STOCK_APPLY, "_Validate", 0, 0, "")])
+        button = gtk.Button(stock=gtk.STOCK_APPLY)
+        button.connect('clicked', self.validate_path)
+        bbox.add(button)
 
 
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
@@ -559,6 +561,9 @@ class MainWindow(gtk.Window):
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
+        # F9 = 65478
+        elif event.keyval == 65478:
+            self.validate_path(w)
         # F2 = 65471
         elif event.keyval == 65471:
             self.do_export()
