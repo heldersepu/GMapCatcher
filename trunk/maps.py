@@ -287,8 +287,8 @@ class MainWindow(gtk.Window):
         vbox.pack_start(self.__create_upper_box())
         vbox.pack_start(self.__create_check_buttons())
         frame.add(vbox)
-        return frame    
-    
+        return frame
+
     def __create_bottom_paned(self):
         frame = gtk.Frame(" Export map to PNG image ")
         vbox = gtk.VBox(False, 5)
@@ -298,24 +298,24 @@ class MainWindow(gtk.Window):
         entry2 = gtk.Entry()
         entry3 = gtk.Entry()
         entry4 = gtk.Entry()
-                
+
         hbox1 = gtk.HBox(False, 5)
         hbox1.pack_start(lbl(" one "))
         hbox1.pack_start(entry1)
         hbox1.pack_start(entry2)
         vbox.pack_start(hbox1)
-        
+
         hbox2 = gtk.HBox(False, 5)
         hbox2.pack_start(lbl(" two "))
         hbox2.pack_start(entry3)
         hbox2.pack_start(entry4)
         vbox.pack_start(hbox2)
-        
+
         button = gtk.Button(stock='gtk-ok')
         button.connect('clicked', self.do_export)
         bbox = gtk.HButtonBox()
         bbox.add(button)
-        
+
         hbox = gtk.HBox(False, 5)
         hbox.pack_start(vbox)
         hbox.pack_start(bbox)
@@ -393,14 +393,14 @@ class MainWindow(gtk.Window):
         self.marker.append_marker(coord)
         self.refresh()
 
-    ## Show the bottom panel with the export 
+    ## Show the bottom panel with the export
     def show_export(self, pointer=None):
         self.left_panel.hide()
-        self.top_panel.hide()   
-        self.bottom_panel.show()        
-    
+        self.top_panel.hide()
+        self.bottom_panel.show()
+
     ## Export tiles to one big map
-    def do_export(self, button, pointer=None):      
+    def do_export(self, button, pointer=None):
         if (pointer is None):
             tile = self.drawing_area.center[0]
         else:
@@ -414,7 +414,7 @@ class MainWindow(gtk.Window):
             self.conf.map_service, self.conf.cloudMade_styleID,
             size=(1024, 1024)
         )
-        
+
         self.bottom_panel.hide()
         self.left_panel.show()
         self.top_panel.show()
@@ -626,7 +626,7 @@ class MainWindow(gtk.Window):
 
         self.connect('key-press-event', self.key_press_event)
         self.connect('delete-event', self.on_delete)
-        
+
         self.top_panel = self.__create_top_paned()
         self.left_panel = self.__create_left_paned()
         self.bottom_panel = self.__create_bottom_paned()
@@ -635,13 +635,13 @@ class MainWindow(gtk.Window):
         vpaned.pack1(self.top_panel, False, False)
         hpaned = gtk.HPaned()
         hpaned.pack1(self.left_panel, False, False)
-        
+
         inner_vp = gtk.VPaned()
         inner_vp.pack1(self.__create_right_paned(), True, True)
         inner_vp.pack2(self.bottom_panel, False, False)
-        
+
         hpaned.pack2(inner_vp, True, True)
-        vpaned.add2(hpaned)        
+        vpaned.add2(hpaned)
         self.add(vpaned)
 
         self.set_title(" GMapCatcher ")
