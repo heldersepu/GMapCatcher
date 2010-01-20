@@ -13,6 +13,7 @@ from src.gtkThread import *
 from src.mapConf import MapConf
 from src.mapMark import MyMarkers
 from src.DLWindow import DLWindow
+from src.ASALTWindow import ASALTWindow
 from src.mapUpdate import CheckForUpdates
 from src.mapServices import MapServ
 from src.customMsgBox import error_msg
@@ -128,6 +129,11 @@ class MainWindow(gtk.Window):
         if not self.cb_offline.get_active():
             self.do_check_for_updates()
 
+    ## Enables drop marker mode
+    def drop_marker_mode(self,w):
+        print "drop marker enabled"
+
+
     ## Start checking if there is an update
     def do_check_for_updates(self):
         if self.conf.check_for_updates and (self.update is None):
@@ -171,6 +177,14 @@ class MainWindow(gtk.Window):
             print "Name =", strName
             print "Coord =", AKpos
             print ""
+
+        asltw = ASALTWindow(
+	                        self.layer, self.conf.init_path,
+	                        self.conf.map_service,
+	                        self.conf.cloudMade_styleID
+	                    )
+        asltw.show()
+
 
 
     ## Called when new coordinates are obtained from the GPS
@@ -263,6 +277,12 @@ class MainWindow(gtk.Window):
         self.cb_forceupdate.set_active(False)
         hbox.pack_start(self.cb_forceupdate)
 
+        self.cb_dropmarker = gtk.CheckButton("_Drop Markers")
+        self.cb_dropmarker.set_active(False)
+        self.cb_dropmarker.connect('clicked',self.drop_marker_mode)
+        hbox.pack_start(self.cb_dropmarker)
+
+
         bbox = gtk.HButtonBox()
         if mapGPS.available:
             cmb_gps = gtk.combo_box_new_text()
@@ -271,6 +291,8 @@ class MainWindow(gtk.Window):
             cmb_gps.set_active(self.conf.gps_mode)
             cmb_gps.connect('changed',self.gps_changed)
             bbox.add(cmb_gps)
+
+        
 
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
         gtk.stock_add([(gtk.STOCK_APPLY, "_Validate", 0, 0, "")])
@@ -403,10 +425,14 @@ class MainWindow(gtk.Window):
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
             self.do_zoom(self.get_zoom() - 1, True,
                         (event.x, event.y))
+        elif (event.type == gtk.gdk.BUTTON_PRESS) and (event.button == 1) and (self.cb_dropmarker.get_active()):
+            self.myPointer = (event.x, event.y)
+            self.add_marker(self.myPointer)
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
         self.drawing_area.da_move(event.x, event.y, self.get_zoom())
+	
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
