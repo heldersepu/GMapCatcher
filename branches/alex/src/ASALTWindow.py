@@ -42,14 +42,30 @@ class ASALTWindow(gtk.Window):
         def _console():
             vbox = gtk.VBox(False, 5)
             hbox = gtk.HBox(False, 10)
-            hbox.pack_start(lbl("latitude:"))
             
-            vbox.pack_start(hbox)
+            #hbox.pack_start(lbl("latitude:"))
+            
+            #vbox.pack_start(hbox)
 
-            hbox = gtk.HBox(False, 10)
-            hbox.pack_start(lbl("longitude:"))
+            #hbox = gtk.HBox(False, 10)
+            #hbox.pack_start(lbl("longitude:"))
             
-            vbox.pack_start(hbox)
+            #vbox.pack_start(hbox)
+            
+            
+            sw = gtk.ScrolledWindow()
+	    sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+	    textview = gtk.TextView()
+	    textbuffer = textview.get_buffer()
+	    sw.add(textview)
+	    sw.show()
+	    textview.show()
+            
+            vbox.pack_start(sw)
+ 
+            
+            
+            
             return _frame(" Console ", vbox)
 
         def _area():
