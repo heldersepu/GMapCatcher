@@ -14,6 +14,16 @@ from gtkThread import *
 from os.path import join, isdir
 
 
+class TextViewConsole(gtk.TextView):
+    def __init__(self):
+        super(TextViewConsole, self).__init__()
+        self.set_editable(False)
+
+    def append_text(self, strText):
+        textbuffer = self.get_buffer()
+        textbuffer.insert_at_cursor(strText)
+
+
 class ASALTWindow(gtk.Window):
 
 
@@ -39,14 +49,10 @@ class ASALTWindow(gtk.Window):
 
             sw = gtk.ScrolledWindow()
             sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-            self.textview = gtk.TextView()
-            self.textview.set_editable(False)
-            textbuffer = textview.get_buffer()
-            textbuffer.insert_at_cursor("AKFYAH!\n")
+            self.textview = TextViewConsole()
+            self.textview.append_text("AKFYAH!\n")
 
-            sw.add(textview)
-            sw.show()
-            textview.show()
+            sw.add(self.textview)
 
             vbox.pack_start(sw)
 
@@ -107,12 +113,15 @@ class ASALTWindow(gtk.Window):
 
 
     def transmit(self,w):
+        self.textview.append_text("transmitting!\n")
         print "transmitting!"
 
     def do_open(self):
+        self.textview.append_text("opening!\n")
         print "opening!"
 
     def cancel(self,w):
+        self.textview.append_text("cancel!\n")
         print "cancel!"
 
 
