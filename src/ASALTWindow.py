@@ -1,16 +1,11 @@
-## @package src.DLWindow
-# Widget that allows Download of entire locations
+## @package src.ASALTWindow
+# Widget that for the ASALT vehicle
 
 import pygtk
 pygtk.require('2.0')
 import gtk
 
 from customWidgets import _SpinBtn, _myEntry, _frame, lbl, FileChooser
-
-import mapUtils
-import mapServices
-from mapConst import *
-from gtkThread import *
 from os.path import join, isdir
 
 
@@ -26,26 +21,17 @@ class TextViewConsole(gtk.TextView):
 
 class ASALTWindow(gtk.Window):
 
-
-
     def __init__(self, layer, init_path, mapServ, styleID):
-
-
-
 
         def _console():
             vbox = gtk.VBox(False, 5)
             hbox = gtk.HBox(False, 10)
 
             #hbox.pack_start(lbl("latitude:"))
-
             #vbox.pack_start(hbox)
-
             #hbox = gtk.HBox(False, 10)
             #hbox.pack_start(lbl("longitude:"))
-
             #vbox.pack_start(hbox)
-
 
             sw = gtk.ScrolledWindow()
             sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -53,12 +39,7 @@ class ASALTWindow(gtk.Window):
             self.textview.append_text("AKFYAH!\n")
 
             sw.add(self.textview)
-
             vbox.pack_start(sw)
-
-
-
-
             return _frame(" Console ", vbox)
 
 
@@ -71,9 +52,6 @@ class ASALTWindow(gtk.Window):
             self.b_download = gtk.Button(stock=gtk.STOCK_APPLY)
             self.b_download.connect('clicked', self.transmit)
             hbbox.pack_start(self.b_download)
-
-            hbox = gtk.HBox()
-
 
             self.b_cancel = gtk.Button(stock='gtk-cancel')
             self.b_cancel.connect('clicked', self.cancel)
@@ -96,7 +74,6 @@ class ASALTWindow(gtk.Window):
         vbox.pack_start(hbox)
 
         vbox.pack_start(_buttons(fldDown))
-
 
         self.add(vbox)
 
@@ -124,11 +101,5 @@ class ASALTWindow(gtk.Window):
         self.textview.append_text("cancel!\n")
         print "cancel!"
 
-
     def on_delete(self,*params):
         return False
-
-    def txt_to_console(self, text):
-        #code to insert text to console
-        buf = self.textview.get_buffer()
-        buf.insert_at_cursor(text)
