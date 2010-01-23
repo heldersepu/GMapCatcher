@@ -20,8 +20,7 @@ class ASALTWindow(gtk.Window):
 
     def __init__(self, layer, init_path, mapServ, styleID):
 
-        def txt_to_console(self, text):
-            #code to insert text to console
+        
 
 
         def _console():
@@ -40,11 +39,11 @@ class ASALTWindow(gtk.Window):
             
             sw = gtk.ScrolledWindow()
 	    sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-	    textview = gtk.TextView()
-	    textview.set_editable(False)
+	    self.textview = gtk.TextView()
+	    self.textview.set_editable(False)
 	    textbuffer = textview.get_buffer()
 	    textbuffer.insert_at_cursor("AKFYAH!\n")
-	    txt_to_console(self, "foobar")
+	    
 	    sw.add(textview)
 	    sw.show()
 	    textview.show()
@@ -118,4 +117,9 @@ class ASALTWindow(gtk.Window):
         
         
     def on_delete(self,*params):
-        return False    
+        return False 
+    
+    def txt_to_console(self, text):
+        #code to insert text to console
+        buf = self.textview.get_buffer()
+        buf.insert_at_cursor(text)
