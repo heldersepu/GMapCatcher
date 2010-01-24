@@ -29,13 +29,29 @@ Users can choose their preferred map and watch it while online. All viewed map s
 
 = User interface =
 
-After starting the programme the GUI shows the map, a small size scroll bar on the left and a toolbar on top. By using the scroll bar the resolution/scale of the map can be changed. The toolbar offers the following actions and settings:
-  * Main configuration button
-  * Drop down menu for stored locations
-  * Download configuration button
-  * Check box to indicate working mode online or offline
-  * Check box to indicate force update facility
-  * Drop down menu for map type (Map, Terrain, Satellite) selection
+After starting the programme the GUI shows the map, a small size scroll bar on the left and a toolbar on top. 
+
+http://gmapcatcher.googlecode.com/svn/wiki/snapshot.gif
+
+By using the scroll bar the resolution/scale of the map can be changed. The toolbar consists of two rows and offers the following actions and settings (first row to second row, left to right):
+  * *Main configuration button*
+  Pressing the button opens a drop down menu with 5 configuration categories. Choosing one of them opens the complete programme setup where the chosen category is active.
+
+  * *Drop down menu/edit field for new and stored locations*
+  By using the drop down menu one of the stored locations is selected. By entering text a place with this name is searched (currently only available if online).
+
+  * *Confirmation button*
+  Confirms entered text in drop down menu/edit field (alternative to pressing 'ENTER' in edit field).
+
+  * *Check box to indicate working mode (online or offline)*
+
+  * *Check box to indicate force update facility*
+
+  * *Download configuration button*
+  Pressing the button opens a dialog for entering area and zoom level to download a map section. The dialog stays alive during the download.
+
+  * *Drop down menu for map type (Map, Terrain, Satellite) selection*
+  One of the three map types (Map, Terrain, Satellite) can be selected; a combination of satellite and text is currently not supported.
 
 = Keyboard shortcuts =
 
