@@ -57,10 +57,17 @@ By using the scroll bar the resolution/scale of the map can be changed. The tool
 
 == General ==
 || *Shortcut Key* || *Description* ||
+||  F1            ||  Open help page ||
+||  F2            ||  Export map to image ||
 ||  F4            ||  Import markers from KML file ||
-||  F12           ||  Hide/unhide all buttons ||
+||  F5            ||  Refresh ||
+||  F8            ||  Hide/Show the markers ||
+||  F12           ||  Hide/Show all buttons ||
 ||  F11           ||  Full screen   ||
 ||  ESC           ||  Undo F12 & F11 ||
+||  Ctrl + Click  ||  Add marker ||
+||  Alt + 2Click  ||  Zoom out ||
+||  2Click        ||  Zoom in ||
 
 <BR>
 == Navigation (only after hiding buttons)==
@@ -75,6 +82,7 @@ By using the scroll bar the resolution/scale of the map can be changed. The tool
 ||   M            ||  Show Map Layer ||
 ||   S            ||  Show Satellite Layer ||
 ||   T            ||  Show Terrain Layer ||
+
 
 <BR>
 == GPS related (only when GPS is enabled)==
