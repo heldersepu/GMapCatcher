@@ -29,6 +29,7 @@ class MainWindow(gtk.Window):
     myPointer = None
     reCenter_gps = False
     showMarkers = True
+    key_down = None
 
     ## Get the zoom level from the scale
     def get_zoom(self):
@@ -422,14 +423,23 @@ class MainWindow(gtk.Window):
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
-        # Right-Click event shows the popUp menu
-        if (event.type == gtk.gdk.BUTTON_PRESS) and (event.button != 1):
-            self.myPointer = (event.x, event.y)
-            w.popup(None, None, None, event.button, event.time)
-        # Double-Click event Zoom In
+        # Single click event
+        if (event.type == gtk.gdk.BUTTON_PRESS):
+            # Right-Click event shows the popUp menu
+            if (event.button != 1):
+                self.myPointer = (event.x, event.y)
+                w.popup(None, None, None, event.button, event.time)
+            # Ctrl + Click adds a marker
+            elif (self.key_down == 65507):
+                self.add_marker((event.x, event.y))
+        # Double-Click event Zoom In or Out
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
-            self.do_zoom(self.get_zoom() - 1, True,
-                        (event.x, event.y))
+            # Alt + 2Click Zoom Out
+            if (self.key_down == 65513):
+                self.do_zoom(self.get_zoom() + 1, True, (event.x, event.y))
+            # 2Click Zoom In
+            else:
+                self.do_zoom(self.get_zoom() - 1, True, (event.x, event.y))
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
@@ -555,8 +565,14 @@ class MainWindow(gtk.Window):
             self.cmb_layer.set_active(LAYER_TERRAIN)
 
 
+    ## Handles the Key release
+    def key_release_event(self, w, event):
+        print self.key_down
+        self.key_down = None
+
     ## Handles the Key pressing
     def key_press_event(self, w, event):
+        self.key_down = event.keyval
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
@@ -625,6 +641,7 @@ class MainWindow(gtk.Window):
             self.connect("destroy", lambda *w: gtk.main_quit())
 
         self.connect('key-press-event', self.key_press_event)
+        self.connect('key-release-event', self.key_release_event)
         self.connect('delete-event', self.on_delete)
 
         self.top_panel = self.__create_top_paned()
