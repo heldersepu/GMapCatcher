@@ -487,11 +487,16 @@ class MainWindow(gtk.Window):
                     self.draw_overlay()
 
     def draw_overlay(self):
-        self.drawing_area.draw_overlay(
-            self.get_zoom(), self.conf, self.crossPixbuf,
-            self.marker, self.ctx_map.get_locations(),
-            self.entry.get_text(), self.showMarkers, self.gps
-        )
+        if self.bottom_panel.flags() & gtk.VISIBLE:
+            self.drawing_area.draw_overlay(
+                self.get_zoom(), self.conf, self.crossPixbuf,
+            )
+        else:
+            self.drawing_area.draw_overlay(
+                self.get_zoom(), self.conf, self.crossPixbuf,
+                self.marker, self.ctx_map.get_locations(),
+                self.entry.get_text(), self.showMarkers, self.gps
+            )
 
     ## Handles the pressing of F11 & F12
     def full_screen(self, keyval):
