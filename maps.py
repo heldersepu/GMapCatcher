@@ -567,7 +567,6 @@ class MainWindow(gtk.Window):
 
     ## Handles the Key release
     def key_release_event(self, w, event):
-        print self.key_down
         self.key_down = None
 
     ## Handles the Key pressing
