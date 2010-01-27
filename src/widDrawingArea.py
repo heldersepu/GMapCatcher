@@ -90,8 +90,8 @@ class DrawingArea(gtk.DrawingArea):
         self.queue_draw()
 
     ## Draw the second layer of elements
-    def draw_overlay(self, zl, conf, crossPixbuf, marker, locations, 
-                     entry_name, showMarkers, gps):
+    def draw_overlay(self, zl, conf, crossPixbuf, marker=None, locations={},
+                     entry_name="", showMarkers=False, gps=None):
         def draw_image(imgPos, img, width, height):
             mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
             xy = mapUtils.tile_coord_to_screen(
@@ -115,8 +115,8 @@ class DrawingArea(gtk.DrawingArea):
             )
 
         # Draw the selected location
-        pixDim = marker.get_pixDim(zl)
         if (entry_name in locations.keys()):
+            pixDim = marker.get_pixDim(zl)
             coord = locations[entry_name]
             img = marker.get_marker_pixbuf(zl, 'marker1.png')
             draw_image(coord, img, pixDim, pixDim)
@@ -125,6 +125,7 @@ class DrawingArea(gtk.DrawingArea):
 
         # Draw the markers
         if showMarkers:
+            pixDim = marker.get_pixDim(zl)
             img = marker.get_marker_pixbuf(zl)
             for str in marker.positions.keys():
                 mpos = marker.positions[str]
