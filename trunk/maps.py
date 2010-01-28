@@ -17,7 +17,7 @@ from src.mapUpdate import CheckForUpdates
 from src.mapServices import MapServ
 from src.customMsgBox import error_msg
 from src.mapDownloader import MapDownloader
-from src.customWidgets import myToolTip, gtk_menu, FileChooser, lbl
+from src.customWidgets import myToolTip, gtk_menu, FileChooser, lbl, _frame
 from src.xmlUtils import kml_to_markers
 from src.widDrawingArea import DrawingArea
 
@@ -282,16 +282,13 @@ class MainWindow(gtk.Window):
         return hbox
 
     def __create_top_paned(self):
-        frame = gtk.Frame("Query")
         vbox = gtk.VBox(False, 5)
         vbox.set_border_width(5)
         vbox.pack_start(self.__create_upper_box())
         vbox.pack_start(self.__create_check_buttons())
-        frame.add(vbox)
-        return frame
+        return _frame(" Query ", vbox, 0)
 
     def __create_bottom_paned(self):
-        frame = gtk.Frame(" Export map to PNG image ")
         vbox = gtk.VBox(False, 5)
         vbox.set_border_width(5)
 
@@ -320,8 +317,7 @@ class MainWindow(gtk.Window):
         hbox = gtk.HBox(False, 5)
         hbox.pack_start(vbox)
         hbox.pack_start(bbox)
-        frame.add(hbox)
-        return frame
+        return _frame(" Export map to PNG image ", hbox)
 
     def __create_left_paned(self):
         scale = gtk.VScale()
