@@ -36,7 +36,7 @@ C:\PYTHON26\PYTHON.EXE setup.py py2exe
 @MD dist\images
 @COPY images dist\images
 
-:: Need to copy the [etc, lib, share] directories from your GTK+ install 
+:: Need to copy the [etc, lib, share] directories from your GTK+ install
 ::(not the pygtk install) to the "dist" dir py2exe created.
 :: All the Required files should be in the "common" folder
 @XCOPY /E common\* dist
