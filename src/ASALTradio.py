@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import serial
+import pyGPSD.nmea.serial as serial
 
 
 ser = serial.Serial()
