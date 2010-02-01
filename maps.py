@@ -17,7 +17,7 @@ from src.mapUpdate import CheckForUpdates
 from src.mapServices import MapServ
 from src.customMsgBox import error_msg
 from src.mapDownloader import MapDownloader
-from src.customWidgets import myToolTip, gtk_menu, FileChooser, lbl, _frame
+from src.customWidgets import myToolTip, gtk_menu, FileChooser, lbl, _frame, _myEntry
 from src.xmlUtils import kml_to_markers
 from src.widDrawingArea import DrawingArea
 
@@ -289,33 +289,43 @@ class MainWindow(gtk.Window):
         return _frame(" Query ", vbox, 0)
 
     def __create_bottom_paned(self):
-        vbox = gtk.VBox(False, 5)
-        vbox.set_border_width(5)
+        vboxCoord = gtk.VBox(False, 5)
+        vboxCoord.set_border_width(5)
 
         entry1 = gtk.Entry()
         entry2 = gtk.Entry()
         entry3 = gtk.Entry()
         entry4 = gtk.Entry()
 
-        hbox1 = gtk.HBox(False, 5)
-        hbox1.pack_start(lbl(" one "))
-        hbox1.pack_start(entry1)
-        hbox1.pack_start(entry2)
-        vbox.pack_start(hbox1)
+        hbox = gtk.HBox(False, 5)
+        hbox.pack_start(lbl(" lat: "), False, True)
+        hbox.pack_start(entry1)
+        hbox.pack_start(lbl(" lon: "), False, True)
+        hbox.pack_start(entry2)
+        vboxCoord.pack_start(_frame(" Upper ", hbox))
 
-        hbox2 = gtk.HBox(False, 5)
-        hbox2.pack_start(lbl(" two "))
-        hbox2.pack_start(entry3)
-        hbox2.pack_start(entry4)
-        vbox.pack_start(hbox2)
+        hbox = gtk.HBox(False, 5)
+        hbox.pack_start(lbl(" lat: "), False, True)
+        hbox.pack_start(entry3)
+        hbox.pack_start(lbl(" lon: "), False, True)
+        hbox.pack_start(entry4)
+        vboxCoord.pack_start(_frame(" Lower ", hbox))
 
+        vboxSize = gtk.VBox(False, 5)
+        hbox = gtk.HBox(False, 5)
+        vboxSize.pack_start(lbl(" Width: "), False, True)
+        vboxSize.pack_start(_myEntry("1024"))
+        vboxSize.pack_start(lbl(" Height: "), False, True)
+        vboxSize.pack_start(_myEntry("1024"))
+        
         button = gtk.Button(stock='gtk-ok')
         button.connect('clicked', self.do_export)
         bbox = gtk.HButtonBox()
         bbox.add(button)
 
         hbox = gtk.HBox(False, 5)
-        hbox.pack_start(vbox)
+        hbox.pack_start(vboxCoord)
+        hbox.pack_start(_frame(" Image Size ", vboxSize))
         hbox.pack_start(bbox)
         return _frame(" Export map to PNG image ", hbox)
 
@@ -392,6 +402,7 @@ class MainWindow(gtk.Window):
 
     ## Show the bottom panel with the export
     def show_export(self, pointer=None):
+        self.maximize()
         self.left_panel.hide()
         self.top_panel.hide()
         self.bottom_panel.show()
