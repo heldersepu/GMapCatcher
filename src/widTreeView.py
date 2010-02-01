@@ -78,7 +78,7 @@ class TreeView():
     def btn_save_clicked(self, button, strInfo, filePath, listStore, parent):
         self.__write_file(strInfo, filePath, listStore)
         parent.marker.refresh()
-        parent.repaint()
+        parent.drawing_area.repaint()
 
     ## All the buttons below the list
     def __action_buttons(self, strInfo, filePath, listStore, myTree, parent):
