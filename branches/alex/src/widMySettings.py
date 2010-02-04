@@ -126,11 +126,11 @@ class MySettings():
             return bbox
 
         def btn_use_current(button, parent):
-            self.s_center00.set_value(parent.center[0][0])
-            self.s_center01.set_value(parent.center[0][1])
-            self.s_center10.set_value(parent.center[1][0])
-            self.s_center11.set_value(parent.center[1][1])
-            self.s_zoom.set_value(parent.current_zoom_level)
+            self.s_center00.set_value(parent.drawing_area.center[0][0])
+            self.s_center01.set_value(parent.drawing_area.center[0][1])
+            self.s_center10.set_value(parent.drawing_area.center[1][0])
+            self.s_center11.set_value(parent.drawing_area.center[1][1])
+            self.s_zoom.set_value(parent.get_zoom())
             dsize = parent.window.get_size()
             self.s_width.set_value(dsize[0])
             self.s_height.set_value(dsize[1])
