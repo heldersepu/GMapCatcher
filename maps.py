@@ -18,16 +18,19 @@ from src.mapUpdate import CheckForUpdates
 from src.mapServices import MapServ
 from src.customMsgBox import error_msg
 from src.mapDownloader import MapDownloader
-from src.customWidgets import myToolTip, gtk_menu, FileChooser
+from src.customWidgets import myToolTip, gtk_menu, FileChooser, lbl, _frame, _myEntry
 from src.xmlUtils import kml_to_markers
 from src.widDrawingArea import DrawingArea
 
 class MainWindow(gtk.Window):
 
     default_text = "Enter location here!"
+    gps = None
     update = None
     myPointer = None
     reCenter_gps = False
+    showMarkers = True
+    key_down = None
 
     ## Get the zoom level from the scale
     def get_zoom(self):
@@ -179,10 +182,10 @@ class MainWindow(gtk.Window):
             print ""
 
         asltw = ASALTWindow(
-	                        self.layer, self.conf.init_path,
-	                        self.conf.map_service,
-	                        self.conf.cloudMade_styleID
-	                    )
+                            self.layer, self.conf.init_path,
+                            self.conf.map_service,
+                            self.conf.cloudMade_styleID
+                        )
         asltw.show()
 
 
@@ -292,7 +295,7 @@ class MainWindow(gtk.Window):
             cmb_gps.connect('changed',self.gps_changed)
             bbox.add(cmb_gps)
 
-        
+
 
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
         gtk.stock_add([(gtk.STOCK_APPLY, "_Validate", 0, 0, "")])
@@ -310,21 +313,61 @@ class MainWindow(gtk.Window):
         cmb_layer = gtk.combo_box_new_text()
         for w in LAYER_NAMES:
             cmb_layer.append_text(w)
-        cmb_layer.set_active(0)
+        cmb_layer.set_active(LAYER_MAP)
         cmb_layer.connect('changed',self.layer_changed)
+        self.cmb_layer = cmb_layer
         bbox.add(cmb_layer)
 
         hbox.pack_start(bbox)
         return hbox
 
     def __create_top_paned(self):
-        frame = gtk.Frame("Query")
         vbox = gtk.VBox(False, 5)
         vbox.set_border_width(5)
         vbox.pack_start(self.__create_upper_box())
         vbox.pack_start(self.__create_check_buttons())
-        frame.add(vbox)
-        return frame
+        return _frame(" Query ", vbox, 0)
+
+    def __create_bottom_paned(self):
+        vboxCoord = gtk.VBox(False, 5)
+        vboxCoord.set_border_width(5)
+
+        entry1 = gtk.Entry()
+        entry2 = gtk.Entry()
+        entry3 = gtk.Entry()
+        entry4 = gtk.Entry()
+
+        hbox = gtk.HBox(False, 5)
+        hbox.pack_start(lbl(" lat: "), False, True)
+        hbox.pack_start(entry1)
+        hbox.pack_start(lbl(" lon: "), False, True)
+        hbox.pack_start(entry2)
+        vboxCoord.pack_start(_frame(" Upper ", hbox))
+
+        hbox = gtk.HBox(False, 5)
+        hbox.pack_start(lbl(" lat: "), False, True)
+        hbox.pack_start(entry3)
+        hbox.pack_start(lbl(" lon: "), False, True)
+        hbox.pack_start(entry4)
+        vboxCoord.pack_start(_frame(" Lower ", hbox))
+
+        vboxSize = gtk.VBox(False, 5)
+        hbox = gtk.HBox(False, 5)
+        vboxSize.pack_start(lbl(" Width: "), False, True)
+        vboxSize.pack_start(_myEntry("1024"))
+        vboxSize.pack_start(lbl(" Height: "), False, True)
+        vboxSize.pack_start(_myEntry("1024"))
+
+        button = gtk.Button(stock='gtk-ok')
+        button.connect('clicked', self.do_export)
+        bbox = gtk.HButtonBox()
+        bbox.add(button)
+
+        hbox = gtk.HBox(False, 5)
+        hbox.pack_start(vboxCoord)
+        hbox.pack_start(_frame(" Image Size ", vboxSize))
+        hbox.pack_start(bbox)
+        return _frame(" Export map to PNG image ", hbox)
 
     def __create_left_paned(self):
         scale = gtk.VScale()
@@ -383,7 +426,7 @@ class MainWindow(gtk.Window):
         elif strName == DA_MENU[BATCH_DOWN]:
             self.download_clicked(w, self.myPointer)
         elif strName == DA_MENU[EXPORT_MAP]:
-            self.do_export(self.myPointer)
+            self.show_export(self.myPointer)
         elif strName == DA_MENU[ADD_MARKER]:
             self.add_marker(self.myPointer)
 
@@ -395,16 +438,22 @@ class MainWindow(gtk.Window):
         )
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         self.marker.append_marker(coord)
-        self.marker.refresh()
-        self.drawing_area.repaint()
+        self.refresh()
+
+    ## Show the bottom panel with the export
+    def show_export(self, pointer=None):
+        self.maximize()
+        self.left_panel.hide()
+        self.top_panel.hide()
+        self.bottom_panel.show()
 
     ## Export tiles to one big map
-    def do_export(self, pointer=None):
+    def do_export(self, button, pointer=None):
         if (pointer is None):
             tile = self.drawing_area.center[0]
         else:
             tile, offset = mapUtils.pointer_to_tile(
-                self.drawing_area.get_allocation(),
+                 self.drawing_area.get_allocation(),
                 pointer, self.drawing_area.center, self.get_zoom()
             )
         self.ctx_map.do_export(
@@ -414,25 +463,34 @@ class MainWindow(gtk.Window):
             size=(1024, 1024)
         )
 
+        self.bottom_panel.hide()
+        self.left_panel.show()
+        self.top_panel.show()
+
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
-        # Right-Click event shows the popUp menu
-        if (event.type == gtk.gdk.BUTTON_PRESS) and (event.button != 1):
-            self.myPointer = (event.x, event.y)
-            w.popup(None, None, None, event.button, event.time)
-        # Double-Click event Zoom In
+        # Single click event
+        if (event.type == gtk.gdk.BUTTON_PRESS):
+            # Right-Click event shows the popUp menu
+            if (event.button != 1):
+                self.myPointer = (event.x, event.y)
+                w.popup(None, None, None, event.button, event.time)
+            # Ctrl + Click adds a marker
+            elif (self.key_down == 65507) or self.cb_dropmarker.get_active():
+                self.add_marker((event.x, event.y))
+        # Double-Click event Zoom In or Out
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
-            self.do_zoom(self.get_zoom() - 1, True,
-                        (event.x, event.y))
-        elif (event.type == gtk.gdk.BUTTON_PRESS) and (event.button == 1) and (self.cb_dropmarker.get_active()):
-            self.myPointer = (event.x, event.y)
-            self.add_marker(self.myPointer)
+            # Alt + 2Click Zoom Out
+            if (self.key_down == 65513):
+                self.do_zoom(self.get_zoom() + 1, True, (event.x, event.y))
+            # 2Click Zoom In
+            else:
+                self.do_zoom(self.get_zoom() - 1, True, (event.x, event.y))
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
         self.drawing_area.da_move(event.x, event.y, self.get_zoom())
-	
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
@@ -447,7 +505,7 @@ class MainWindow(gtk.Window):
             mapServ=self.conf.map_service,
             styleID=self.conf.cloudMade_styleID
         )
-        self.draw_overlay(drawing_area, rect)
+        self.draw_overlay()
 
     def scroll_cb(self, widget, event):
         xyPointer = self.drawing_area.get_pointer()
@@ -458,52 +516,6 @@ class MainWindow(gtk.Window):
 
     def scale_change_value(self, range, scroll, value):
         self.do_zoom(value)
-
-    def draw_overlay(self, drawing_area, rect):
-        def draw_image(imgPos, img, width, height):
-            mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
-            xy = mapUtils.tile_coord_to_screen(
-                (mct[0][0], mct[0][1], zl), rect, self.drawing_area.center)
-            if xy:
-                for x,y in xy:
-                    drawing_area.window.draw_pixbuf(gc, img, 0, 0,
-                        x + mct[1][0] - width/2,
-                        y + mct[1][1] - height/2,
-                        width, height
-                    )
-
-        gc = drawing_area.style.black_gc
-        zl = self.get_zoom()
-
-        # Draw cross in the center
-        if self.conf.show_cross:
-            drawing_area.window.draw_pixbuf(gc, self.crossPixbuf, 0, 0,
-                rect.width/2 - 6, rect.height/2 - 6, 12, 12)
-
-        # Draw the selected location
-        pixDim = self.marker.get_pixDim(zl)
-        location = self.entry.get_text()
-        locations = self.ctx_map.get_locations()
-        if (location in locations.keys()):
-            coord = self.ctx_map.get_locations()[location]
-            img = self.marker.get_marker_pixbuf(zl, 'marker1.png')
-            draw_image(coord, img, pixDim, pixDim)
-        else:
-            coord = (None, None, None)
-
-        # Draw the markers
-        img = self.marker.get_marker_pixbuf(zl)
-        for str in self.marker.positions.keys():
-            mpos = self.marker.positions[str]
-            if zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0]):
-                draw_image(mpos, img, pixDim, pixDim)
-
-        # Draw GPS position
-        if mapGPS.available:
-            location = self.gps.get_location()
-            if location is not None and (zl <= self.conf.max_gps_zoom):
-                img = self.gps.pixbuf
-                draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
 
     def tile_received(self, tile_coord, layer):
         if self.layer == layer and self.get_zoom() == tile_coord[2]:
@@ -519,7 +531,19 @@ class MainWindow(gtk.Window):
                                           TILES_WIDTH, TILES_HEIGHT)
 
                 if not self.cb_offline.get_active():
-                    self.draw_overlay(da, rect)
+                    self.draw_overlay()
+
+    def draw_overlay(self):
+        if self.bottom_panel.flags() & gtk.VISIBLE:
+            self.drawing_area.draw_overlay(
+                self.get_zoom(), self.conf, self.crossPixbuf,
+            )
+        else:
+            self.drawing_area.draw_overlay(
+                self.get_zoom(), self.conf, self.crossPixbuf,
+                self.marker, self.ctx_map.get_locations(),
+                self.entry.get_text(), self.showMarkers, self.gps
+            )
 
     ## Handles the pressing of F11 & F12
     def full_screen(self, keyval):
@@ -541,11 +565,13 @@ class MainWindow(gtk.Window):
                 self.top_panel.hide()
                 self.set_border_width(0)
             else:
+                self.bottom_panel.hide()
                 self.left_panel.show()
                 self.top_panel.show()
                 self.set_border_width(10)
         # ESC = 65307
         elif keyval == 65307:
+            self.bottom_panel.hide()
             self.left_panel.show()
             self.top_panel.show()
             self.set_border_width(10)
@@ -563,11 +589,11 @@ class MainWindow(gtk.Window):
         # Page Up = 65365  Page Down = 65366
         # Home    = 65360  End       = 65367
         elif keyval == 65365:
-           self.drawing_area.da_jump(2, zoom, True)
+            self.drawing_area.da_jump(2, zoom, True)
         elif keyval == 65366:
             self.drawing_area.da_jump(4, zoom, True)
         elif keyval == 65360:
-           self.drawing_area.da_jump(1, zoom, True)
+            self.drawing_area.da_jump(1, zoom, True)
         elif keyval == 65367:
             self.drawing_area.da_jump(3, zoom, True)
 
@@ -577,32 +603,61 @@ class MainWindow(gtk.Window):
             self.do_zoom(zoom+1, True)
         elif keyval in [61,65451]:
             self.do_zoom(zoom-1, True)
-            
-        # Space = 32   Refresh the GPS
-        elif event.keyval == 32:
-            self.reCenter_gps = True    
-            
+
+        # Space = 32   ReCenter the GPS
+        elif keyval == 32:
+            self.reCenter_gps = True
+
+        # M = 77,109  S = 83,115  T = 84,116
+        elif keyval in [77, 109]:
+            self.cmb_layer.set_active(LAYER_MAP)
+        elif keyval in [83, 115]:
+            self.cmb_layer.set_active(LAYER_SATELLITE)
+        elif keyval in [84, 116]:
+            self.cmb_layer.set_active(LAYER_TERRAIN)
+
+
+    ## Handles the Key release
+    def key_release_event(self, w, event):
+        self.key_down = None
+
     ## Handles the Key pressing
     def key_press_event(self, w, event):
+        self.key_down = event.keyval
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
+        # F1 = 65471  Help
+        elif event.keyval == 65470:
+            webbrowser_open(WEB_ADDRESS)
         # F9 = 65478
         elif event.keyval == 65478:
             self.validate_path(w)
         # F2 = 65471
         elif event.keyval == 65471:
-            self.do_export()
+            self.show_export()
         # F4 = 65473
         elif event.keyval == 65473:
             fileName = FileChooser('.', 'Select KML File to import')
             if fileName:
                 kml_to_markers(fileName, self.marker)
+        # F5 = 65474
+        elif event.keyval == 65474:
+            self.refresh()
+        # F8 = 65477
+        elif event.keyval == 65477:
+            self.showMarkers = not self.showMarkers
+            self.drawing_area.repaint()
 
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
             self.navigation(event.keyval, self.get_zoom())
-            
+
+    ## All the refresh operations
+    def refresh(self):
+        self.enable_gps()
+        self.marker.refresh()
+        self.drawing_area.repaint()
 
     ## Final actions before main_quit
     def on_delete(self, *args):
@@ -616,19 +671,23 @@ class MainWindow(gtk.Window):
             self.update.finish()
         return False
 
+    def enable_gps(self):
+        if mapGPS.available:
+            self.gps = mapGPS.GPS(
+                self.gps_callback,
+                self.conf.gps_update_rate,
+                self.conf.gps_mode
+            )
+
     def __init__(self, parent=None):
         self.conf = MapConf()
         self.crossPixbuf = mapPixbuf.cross()
-
-        if mapGPS.available:
-            self.gps = mapGPS.GPS(self.gps_callback,
-                                  self.conf.gps_update_rate,
-                                  self.conf.gps_mode)
-
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path)
         self.downloader = MapDownloader(self.ctx_map)
-        self.layer = 0
+        self.layer = LAYER_MAP
+        self.enable_gps()
+
         gtk.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
@@ -636,18 +695,26 @@ class MainWindow(gtk.Window):
             self.connect("destroy", lambda *w: gtk.main_quit())
 
         self.connect('key-press-event', self.key_press_event)
+        self.connect('key-release-event', self.key_release_event)
         self.connect('delete-event', self.on_delete)
-        vpaned = gtk.VPaned()
-        hpaned = gtk.HPaned()
+
         self.top_panel = self.__create_top_paned()
         self.left_panel = self.__create_left_paned()
+        self.bottom_panel = self.__create_bottom_paned()
 
+        vpaned = gtk.VPaned()
         vpaned.pack1(self.top_panel, False, False)
+        hpaned = gtk.HPaned()
         hpaned.pack1(self.left_panel, False, False)
-        hpaned.pack2(self.__create_right_paned(), True, True)
-        vpaned.add2(hpaned)
 
+        inner_vp = gtk.VPaned()
+        inner_vp.pack1(self.__create_right_paned(), True, True)
+        inner_vp.pack2(self.bottom_panel, False, False)
+
+        hpaned.pack2(inner_vp, True, True)
+        vpaned.add2(hpaned)
         self.add(vpaned)
+
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 400)
@@ -657,6 +724,7 @@ class MainWindow(gtk.Window):
         self.drawing_area.center = self.conf.init_center
         self.show_all()
 
+        self.bottom_panel.hide()
         self.drawing_area.da_set_cursor()
         self.entry.grab_focus()
 
