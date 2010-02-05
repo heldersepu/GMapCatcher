@@ -1,7 +1,7 @@
 from mapUtils import altitude_to_zoom
 
 def kml_to_markers(strFileName, marker):
-    from xml.dom.minidom import parse
+    from xml.dom.minidom import parseString
 
     def getText(nodelist):
         rc = ""
@@ -11,7 +11,9 @@ def kml_to_markers(strFileName, marker):
         return rc
 
     try:
-        dom = parse(strFileName)
+        with open(strFileName) as f:
+            fileString = unicode(f.read(), errors='ignore')            
+        dom = parseString(fileString)
         PlacemarkElements = dom.getElementsByTagName("Placemark")
     except:
         return False

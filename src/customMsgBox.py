@@ -21,6 +21,7 @@ def error_msg(parent, strMessage, buttons=gtk.BUTTONS_OK):
 class updateMsgBox(gtk.Window):
     def hyperlink(self, strUrl):
         def followLink(*w):
+            self.hide()
             import webbrowser
             webbrowser.open(strUrl)
             gtk.main_quit()
