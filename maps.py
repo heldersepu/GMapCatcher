@@ -597,7 +597,12 @@ class MainWindow(gtk.Window):
         elif event.keyval == 65473:
             fileName = FileChooser('.', 'Select KML File to import')
             if fileName:
-                kml_to_markers(fileName, self.marker)
+                kmlResponse = kml_to_markers(fileName, self.marker)
+                if kmlResponse:
+                    error_msg(self, "There was an error importing: \n" + \
+                        "\n" + str(type(kmlResponse)) + \
+                        "\n" + str(kmlResponse)
+                    )
         # F5 = 65474
         elif event.keyval == 65474:
             self.refresh()
