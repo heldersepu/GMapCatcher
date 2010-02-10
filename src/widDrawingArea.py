@@ -138,3 +138,7 @@ class DrawingArea(gtk.DrawingArea):
             if location is not None and (zl <= conf.max_gps_zoom):
                 img = gps.pixbuf
                 draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
+
+        # Draw a 2 permanent rectangles
+        self.window.draw_rectangle(self.style.white_gc, True, 100, 100, 80, 80)
+        self.window.draw_rectangle(self.style.black_gc, False, 80, 80, 80, 80)
