@@ -2,7 +2,6 @@
 # A group of map utilities
 
 import math
-import mapMark
 from mapConst import *
 from time import gmtime, strftime
 
