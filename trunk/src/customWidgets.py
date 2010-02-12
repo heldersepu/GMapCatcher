@@ -6,6 +6,9 @@ import mapPixbuf
 from mapConst import *
 from inputValidation import allow_only_numbers
 
+import warnings
+warnings.filterwarnings("ignore")
+
 
 ## A simple right justify label
 def lbl(text):
@@ -50,7 +53,7 @@ def FolderChooser():
     dialog.destroy()
     return strFileName
 
-## Prompt user to select a Folder
+## Prompt user to select a File
 def FileChooser(strPath, strTitle="Select File"):
     strFileName = False
     dialog = gtk.FileChooserDialog(strTitle, None,
