@@ -48,9 +48,15 @@ By using the scroll bar the resolution/scale of the map can be changed. The tool
   * *Check box to indicate force update facility*
 
   * *Download configuration button*
-  Pressing the button opens a dialog for entering area and zoom level to download a map section. The dialog stays alive during the download.
+  Pressing this button opens a dialog window for entering area and zoom level to download a map section (the map type which is set in the drop down menu for 'map type selection' is used). The dialog stays alive during the download.
+  The centre of the area is defined by entering latitude and longitude. The size of the area by entering width and height. The maximum and minimum zoom level define the scale of the downloaded map tiles.
 
-  * *Drop down menu for map type (Map, Terrain, Satellite) selection*
+  Buttons in bottom line:
+    * left button: Start download
+    * middle button: Open menu to restart/continue a previous download
+    * right button: Cancel current download.
+
+  * *Drop down menu for map type selection (Map, Terrain, Satellite)*
   One of the three map types (Map, Terrain, Satellite) can be selected; a combination of satellite and text is currently not supported.
 
 = Keyboard shortcuts =
