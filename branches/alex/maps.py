@@ -7,6 +7,7 @@ import src.mapGPS as mapGPS
 import src.mapUtils as mapUtils
 import src.mapTools as mapTools
 import src.mapPixbuf as mapPixbuf
+import src.ASALTradio as ASALTradio
 
 from src.mapConst import *
 from src.gtkThread import *
@@ -173,13 +174,56 @@ class MainWindow(gtk.Window):
 
     ## Validation of the markers
     #  looking for intersections with no-go areas
+    def is_intersection(self,coord1,coord2,coord3,coord4):
+        #print "in intersection\n"
+        slope1 = (coord2[1]-coord1[1])/(coord2[0]-coord1[0])
+        slope2 = (coord4[1]-coord3[1])/(coord4[0]-coord3[0])
+        yinter1 = coord1[1]- slope1*coord1[0]
+        yinter2 = coord3[1] - slope2*coord3[0]
+
+        xval = (yinter2 - yinter1) / (slope1 - slope2)
+        yval = slope1*xval + yinter1
+
+        if (coord1[0] <= xval <= coord2[0]):
+            print "INTERSECTION!"
+            print coord1
+            print coord2
+
+        #print slope1
+        #print slope2
+
+
+
+
     def validate_path(self, w):
         print "VALIDATING!!"
+        bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
+        astlr = ASALTradio.ASALTradio()
+        prevName=""
+
+        #gc.foreground("blue")
+
         for strName in self.marker.positions.keys():
+
+
+            if(prevName!=""):
+                foo = 0
+                #MainWindow.draw_marker_line(self, strName, prevName)
+                #self.drawing_area.repaint()
+                MainWindow.is_intersection(self,self.marker.positions[strName],self.marker.positions[prevName],bad_area[0],bad_area[1])
+                MainWindow.is_intersection(self,self.marker.positions[strName],self.marker.positions[prevName],bad_area[1],bad_area[2])
+                MainWindow.is_intersection(self,self.marker.positions[strName],self.marker.positions[prevName],bad_area[2],bad_area[3])
+                MainWindow.is_intersection(self,self.marker.positions[strName],self.marker.positions[prevName],bad_area[3],bad_area[0])
+
+            #for coor in bad_area:
+            #    print coor[0]
             AKpos = self.marker.positions[strName]
             print "Name =", strName
             print "Coord =", AKpos
             print ""
+            prevName = strName
+        #astlr.send(AKpos)
+
 
         asltw = ASALTWindow(
                             self.layer, self.conf.init_path,
@@ -187,6 +231,8 @@ class MainWindow(gtk.Window):
                             self.conf.cloudMade_styleID
                         )
         asltw.show()
+        #asltw.txt_to_console(self, "foobar")
+
 
 
 
@@ -313,7 +359,7 @@ class MainWindow(gtk.Window):
         cmb_layer = gtk.combo_box_new_text()
         for w in LAYER_NAMES:
             cmb_layer.append_text(w)
-        cmb_layer.set_active(LAYER_MAP)
+        cmb_layer.set_active(LAYER_SATELLITE)
         cmb_layer.connect('changed',self.layer_changed)
         self.cmb_layer = cmb_layer
         bbox.add(cmb_layer)
@@ -432,6 +478,12 @@ class MainWindow(gtk.Window):
 
     ## Add a marker
     def add_marker(self, pointer=None):
+        drawable = self.drawing_area.window
+        gc = self.drawing_area.style.base_gc[0]
+        gc.line_width = 3
+        #gc.foreground("blue")
+
+
         tile = mapUtils.pointer_to_tile(
             self.drawing_area.get_allocation(),
             pointer, self.drawing_area.center, self.get_zoom()
@@ -453,7 +505,7 @@ class MainWindow(gtk.Window):
             tile = self.drawing_area.center[0]
         else:
             tile, offset = mapUtils.pointer_to_tile(
-                 self.drawing_area.get_allocation(),
+                self.drawing_area.get_allocation(),
                 pointer, self.drawing_area.center, self.get_zoom()
             )
         self.ctx_map.do_export(
@@ -472,7 +524,7 @@ class MainWindow(gtk.Window):
     def da_click_events(self, w, event):
         # Single click event
         if (event.type == gtk.gdk.BUTTON_PRESS):
-            # Right-Click event shows the popUp menu
+        # Right-Click event shows the popUp menu
             if (event.button != 1):
                 self.myPointer = (event.x, event.y)
                 w.popup(None, None, None, event.button, event.time)
@@ -491,6 +543,7 @@ class MainWindow(gtk.Window):
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
         self.drawing_area.da_move(event.x, event.y, self.get_zoom())
+
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
@@ -589,11 +642,11 @@ class MainWindow(gtk.Window):
         # Page Up = 65365  Page Down = 65366
         # Home    = 65360  End       = 65367
         elif keyval == 65365:
-            self.drawing_area.da_jump(2, zoom, True)
+           self.drawing_area.da_jump(2, zoom, True)
         elif keyval == 65366:
             self.drawing_area.da_jump(4, zoom, True)
         elif keyval == 65360:
-            self.drawing_area.da_jump(1, zoom, True)
+           self.drawing_area.da_jump(1, zoom, True)
         elif keyval == 65367:
             self.drawing_area.da_jump(3, zoom, True)
 
@@ -685,7 +738,9 @@ class MainWindow(gtk.Window):
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path)
         self.downloader = MapDownloader(self.ctx_map)
-        self.layer = LAYER_MAP
+
+        #Set layer to satellite
+        self.layer = LAYER_SATELLITE
         self.enable_gps()
 
         gtk.Window.__init__(self)
