@@ -48,10 +48,13 @@ By using the scroll bar the resolution/scale of the map can be changed. The tool
   * *Check box to indicate force update facility*
 
   * *Download configuration button*
-  Pressing this button opens a dialog window for entering area and zoom level to download a map section (the map type which is set in the drop down menu for 'map type selection' is used). The dialog stays alive during the download.
-  The centre of the area is defined by entering latitude and longitude. The size of the area by entering width and height. The maximum and minimum zoom level define the scale of the downloaded map tiles.
+  Pressing this button opens the following window for entering an area and a zoom level to download a map section. The dialog stays alive during the download.
 
-  Buttons in bottom line:
+    http://gmapcatcher.googlecode.com/svn/wiki/GMap-Download.jpg
+
+  The centre of the downloaded area is defined by entering latitude and longitude. The size of the area by entering width and height. The maximum and minimum zoom level define the scale of the downloaded map tiles. The map type which is set in the drop down menu for 'map type selection' is used for the download.
+
+  Action of buttons in bottom line of window:
     * left button: Start download
     * middle button: Open menu to restart/continue a previous download
     * right button: Cancel current download.
