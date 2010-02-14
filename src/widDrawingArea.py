@@ -127,10 +127,14 @@ class DrawingArea(gtk.DrawingArea):
         if showMarkers:
             pixDim = marker.get_pixDim(zl)
             img = marker.get_marker_pixbuf(zl)
+            prevmark = ""
             for str in marker.positions.keys():
                 mpos = marker.positions[str]
-                if zl <= mpos[2] and (mpos[0],mpos[1]) != (coord[0],coord[1]):
+                if zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0]):
                     draw_image(mpos, img, pixDim, pixDim)
+                if (prevmark != ""):
+                    self.draw_marker_line(zl, rect, marker, str, prevmark)
+                prevmark = str
 
         # Draw GPS position
         if gps is not None:
@@ -142,3 +146,30 @@ class DrawingArea(gtk.DrawingArea):
         # Draw a 2 permanent rectangles
         self.window.draw_rectangle(self.style.white_gc, True, 100, 100, 80, 80)
         self.window.draw_rectangle(self.style.black_gc, False, 80, 80, 80, 80)
+
+    def draw_marker_line(self, zl, rect, marker, marker1, marker2):
+        drawable = self.window
+        #gc = self.drawing_area.style.base_gc[0]
+        gc = drawable.new_gc()
+        gc.line_width = 3
+        gc.set_rgb_fg_color(gtk.gdk.Color(65535, 0, 0))
+        pixDim = marker.get_pixDim(zl)
+        mpos1 = marker.positions[marker1]
+        mpos2 = marker.positions[marker2]
+        mct1 = mapUtils.coord_to_tile((mpos1[0], mpos1[1], zl))
+        mct2 = mapUtils.coord_to_tile((mpos2[0], mpos2[1], zl))
+        xy1 = mapUtils.tile_coord_to_screen(
+            (mct1[0][0], mct1[0][1], zl), rect, self.center
+        )
+        xy2 = mapUtils.tile_coord_to_screen(
+                    (mct2[0][0], mct2[0][1], zl), rect, self.center
+        )
+        if xy1 and xy2:
+            drawable.draw_line(
+                gc, 
+                xy1[0][0] + mct1[1][0] - 26, 
+                xy1[0][1] + mct1[1][1] - 57, 
+                xy2[0][0] + mct2[1][0] - 26 , 
+                xy2[0][1] + mct2[1][1] - 57 
+            )
+        #drawable.draw_line(gc, 0, 0, x, y)
