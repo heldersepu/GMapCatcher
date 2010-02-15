@@ -11,7 +11,8 @@ def read_file(strInfo, filePath):
     print filePath
     if os.path.exists(filePath):
         p = re.compile(strInfo + '="([^"]+)".*lat="([^"]+)".*lng="([^"]+)".*')
-        q = re.compile('.*zoom="([^"]+)".*id="([^"]+)".*wait="([^"]+)".*')
+        q = re.compile('.*zoom="([^"]+)".*wait="([^"]+)".*')
+        r = re.compile('.*wait="([^"]+)".*');
         file = open(filePath, "r")
         for line in file:
             if (line[0] != '#'):
@@ -21,9 +22,13 @@ def read_file(strInfo, filePath):
                     z = q.search(line)
                     if z:
                         zoom = int(z.group(1))
+                    wait = 0
+                    w = r.search(line)
+                    if w:
+                    	wait = int(z.group(2))
                     fileData[m.group(1)] = (float(m.group(2)),
                                             float(m.group(3)),
-                                            zoom)
+                                            zoom,wait)
         file.close()
         return fileData
     else:
