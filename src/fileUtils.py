@@ -8,9 +8,10 @@ from time import time
 ## Return all the locations from a given file (filePath)
 def read_file(strInfo, filePath):
     fileData = {}
+    print filePath
     if os.path.exists(filePath):
         p = re.compile(strInfo + '="([^"]+)".*lat="([^"]+)".*lng="([^"]+)".*')
-        q = re.compile('.*zoom="([^"]+)".*')
+        q = re.compile('.*zoom="([^"]+)".*id="([^"]+)".*wait="([^"]+)".*')
         file = open(filePath, "r")
         for line in file:
             if (line[0] != '#'):
@@ -64,8 +65,8 @@ def append_file(strInfo, filePath, strData, strName):
         print '  ' + filePath
         return
 
-    file.write(strInfo + '="%s"\tlat="%s"\tlng="%s"\tzoom="%i"\n' %
-              (strName, strData[0], strData[1], strData[2]+2))
+    file.write(strInfo + '="%s"\tlat="%s"\tlng="%s"\tzoom="%i"\tid="%i"\twait="%i"\n' %
+              (strName, strData[0][0], strData[0][1], strData[0][2]+2, strData[1], strData[2]))
     file.close()
 
 ## Writes a new gtkrc file with the given theme
