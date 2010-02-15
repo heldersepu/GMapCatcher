@@ -16,7 +16,7 @@ class TreeView():
         if locations:
             for strLoc in locations.keys():
                 listStore.append([strLoc , locations[strLoc][0],
-                                  locations[strLoc][1], locations[strLoc][2]])
+                                  locations[strLoc][1], locations[strLoc][2],locations[strLoc][3]])
         return listStore
 
     ## Writes a given list to the file
@@ -33,6 +33,8 @@ class TreeView():
                 model[row][col] = new_text
             elif col == 3:
                 model[row][col] = int(new_text)
+            elif col == 4:
+                model[row][col] = int(new_text)    
             else:
                 model[row][col] = float(new_text)
         except Exception:
@@ -53,7 +55,7 @@ class TreeView():
                 strName = strName + "1"
             elif row[0][0] > strName[0]:
                 break
-        iter = listStore.append([strName, 0, 0, MAP_MAX_ZOOM_LEVEL - 2])
+        iter = listStore.append([strName, 0, 0, MAP_MAX_ZOOM_LEVEL - 2,0])
         listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
         self.change_selection(myTree, listStore.get_path(iter))
 
@@ -116,13 +118,13 @@ class TreeView():
     ## Put all the TreeView Widgets together
     def show(self, strInfo, filePath, parent):
         # create a listStore with one string column to use as the model
-        listStore = gtk.ListStore(str, str, str, int)
+        listStore = gtk.ListStore(str, str, str, int, int)
 
         # create the TreeView using listStore
         myTree = gtk.TreeView(self.__read_file(strInfo, filePath, listStore))
         myTree.connect("key-press-event", self.key_press_tree, listStore)
 
-        strCols = ['Location', 'Latitude', 'Longitude', 'Zoom']
+        strCols = ['Location', 'Latitude', 'Longitude', 'Zoom','Wait']
         for intPos in range(len(strCols)):
             # Create a CellRenderers to render the data
             cell = gtk.CellRendererText()
