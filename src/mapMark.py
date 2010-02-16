@@ -23,7 +23,8 @@ class MyMarkers:
     def append_marker(self, markerdata, strName=None):
         coord = markerdata[0]
         if strName is None:
-            strName = str(coord[0]) + '_' + str(coord[1])
+            #strName = str(coord[0]) + '_' + str(coord[1])
+            strName = markerdata[1]
         fileUtils.append_file('marker', self.markerPath, markerdata, strName)
 
 
