@@ -34,7 +34,7 @@ def read_file(strInfo, filePath):
                     #print m.group(1)	
                     fileData[id] = (float(m.group(2)),
                                             float(m.group(3)),
-                                            zoom,wait, m.group(1))
+                                            zoom,wait, id)
         file.close()
         #print fileData
         return fileData
@@ -65,10 +65,9 @@ def write_file(strInfo, filePath, fileData):
 
     for l in fileData.keys():
         print "write file data"
-        print strInfo
         print fileData[l]
         file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\tid="%i"\twait="%i"\n' %
-                  (l, fileData[l][0], fileData[l][1], fileData[l][2], int(l), fileData[l][3]))
+                  (fileData[l][4], fileData[l][0], fileData[l][1], fileData[l][2], int(l), fileData[l][3]))
     file.close()
 
 ## Append the location (strData) to given file (filePath)
