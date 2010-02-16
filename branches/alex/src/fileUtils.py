@@ -8,14 +8,15 @@ from time import time
 ## Return all the locations from a given file (filePath)
 def read_file(strInfo, filePath):
     fileData = {}
-    print filePath
     if os.path.exists(filePath):
         p = re.compile(strInfo + '="([^"]+)".*lat="([^"]+)".*lng="([^"]+)".*')
         q = re.compile('.*zoom="([^"]+)".*wait="([^"]+)".*')
-        r = re.compile('.*wait="([^"]+)".*');
+        r = re.compile('.*wait="([^"]+)".*')
+        i = re.compile('.*id="([^"]+)".*')
         file = open(filePath, "r")
         for line in file:
             if (line[0] != '#'):
+                print line
                 m = p.search(line)
                 if m:
                     zoom = 10
@@ -23,13 +24,19 @@ def read_file(strInfo, filePath):
                     if z:
                         zoom = int(z.group(1))
                     wait = 0
+                    id = 0
                     w = r.search(line)
                     if w:
                     	wait = int(z.group(2))
-                    fileData[m.group(1)] = (float(m.group(2)),
+                    idval = i.search(line)
+                    if idval:
+                    	id = int(idval.group(1))
+                    #print m.group(1)	
+                    fileData[id] = (float(m.group(2)),
                                             float(m.group(3)),
-                                            zoom,wait)
+                                            zoom,wait, m.group(1))
         file.close()
+        #print fileData
         return fileData
     else:
         write_file(strInfo, filePath, fileData)
@@ -56,9 +63,12 @@ def write_file(strInfo, filePath, fileData):
         ('#   '+ strInfo +'="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
          ("Paris, France", 48.856667, 2.350987, 5)) + "#\n" )
 
-    for l in sorted(fileData.keys()):
-        file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
-                  (l, fileData[l][0], fileData[l][1], fileData[l][2]))
+    for l in fileData.keys():
+        print "write file data"
+        print strInfo
+        print fileData[l]
+        file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\tid="%i"\twait="%i"\n' %
+                  (l, fileData[l][0], fileData[l][1], fileData[l][2], int(l), fileData[l][3]))
     file.close()
 
 ## Append the location (strData) to given file (filePath)
