@@ -1,3 +1,7 @@
+February 15 2010    H.S    <HelderSepu@gmail.com>
+    * 0.6.3.0 - At revision: 741
+    * Fix bug loading KML files (Issue 124)
+
 January 30 2010    H.S    <HelderSepu@gmail.com>
     * 0.6.2.0 - At revision: 717
     * Add (Key + Click) functionality (Issue 123)
