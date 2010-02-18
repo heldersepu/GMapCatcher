@@ -36,7 +36,7 @@ class ASALTWindow(gtk.Window):
             sw = gtk.ScrolledWindow()
             sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
             self.textview = TextViewConsole()
-            self.textview.append_text("AKFYAH!\n")
+            self.textview.append_text("Vehicle status updates go here!\n")
 
             sw.add(self.textview)
             vbox.pack_start(sw)

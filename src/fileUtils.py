@@ -16,7 +16,6 @@ def read_file(strInfo, filePath):
         file = open(filePath, "r")
         for line in file:
             if (line[0] != '#'):
-                print line
                 m = p.search(line)
                 if m:
                     zoom = 10
@@ -32,11 +31,10 @@ def read_file(strInfo, filePath):
                     if idval:
                     	id = int(idval.group(1))
                     #print m.group(1)	
-                    fileData[id] = (float(m.group(2)),
+                    fileData[int(id)] = (float(m.group(2)),
                                             float(m.group(3)),
                                             zoom,wait, id)
         file.close()
-        #print fileData
         return fileData
     else:
         write_file(strInfo, filePath, fileData)
@@ -50,7 +48,6 @@ def write_file(strInfo, filePath, fileData):
         print 'Error! Can NOT write file:'
         print '  ' + filePath
         return
-
     file.write("# This is the "+ strInfo +"s file used by GMapCatcher.\n"+\
         "#\n"+\
         "# This file contains a list of Locations/Position.\n"+\
@@ -64,9 +61,7 @@ def write_file(strInfo, filePath, fileData):
          ("Paris, France", 48.856667, 2.350987, 5)) + "#\n" )
 
     for l in fileData.keys():
-        print "write file data"
-        print fileData[l]
-        file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\tid="%i"\twait="%i"\n' %
+        file.write(strInfo + '="%s"\tlat="%.10f"\tlng="%.10f"\tzoom="%i"\tid="%i"\twait="%i"\n' %
                   (fileData[l][4], fileData[l][0], fileData[l][1], fileData[l][2], int(l), fileData[l][3]))
     file.close()
 
