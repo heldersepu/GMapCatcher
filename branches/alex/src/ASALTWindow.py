@@ -13,16 +13,32 @@ class TextViewConsole(gtk.TextView):
     def __init__(self):
         super(TextViewConsole, self).__init__()
         self.set_editable(False)
-
     def append_text(self, strText):
         textbuffer = self.get_buffer()
         textbuffer.insert_at_cursor(strText)
+        visible = self.get_visible_rect()
+	max_y_pos = visible.y + visible.height
+	last_line_pos = sum(self.get_line_yrange(textbuffer.get_end_iter()))
+	
+	if last_line_pos > max_y_pos:
+	        print "Line not visible"
+	        self.scroll_to_iter(textbuffer.get_end_iter(), .0)
+	else:
+                print "Line visible" 
+        
+        
+        
+        #if(self.get_cursor_visible == False):
+        #    print "cursor not visible"
+        #    self.scroll_to_iter(textbuffer.get_end_iter(), .0)
+        
+        #self.scroll_to_iter(textbuffer.get_end_iter(), .0) 
 
 
 class ASALTWindow(gtk.Window):
-
+    loop = 0
     def __init__(self, layer, init_path, mapServ, styleID):
-
+        
         def _console():
             vbox = gtk.VBox(False, 5)
             hbox = gtk.HBox(False, 10)
@@ -48,6 +64,11 @@ class ASALTWindow(gtk.Window):
             hbbox.set_border_width(10)
             hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
 
+	    self.cb_dropmarker = gtk.CheckButton("_Loop Path")
+	    self.cb_dropmarker.set_active(False)
+	    self.cb_dropmarker.connect('clicked',self.set_loop)
+            hbbox.pack_start(self.cb_dropmarker)
+
             gtk.stock_add([(gtk.STOCK_APPLY, "_Transmit Path", 0, 0, "")])
             self.b_download = gtk.Button(stock=gtk.STOCK_APPLY)
             self.b_download.connect('clicked', self.transmit)
@@ -60,6 +81,7 @@ class ASALTWindow(gtk.Window):
             hbbox.pack_start(self.b_cancel)
             return hbbox
 
+        
         fldDown = join(init_path, 'asalt')
         self.mapService = mapServ
         self.styleID = styleID
@@ -96,6 +118,16 @@ class ASALTWindow(gtk.Window):
     def do_open(self):
         self.textview.append_text("opening!\n")
         print "opening!"
+
+    def set_loop(self,w):
+        if(self.loop ==1):
+           self.loop = 0
+           self.textview.append_text("path will NOT loop\n")
+        else:
+           self.loop = 1
+           self.textview.append_text("path will now loop forever\n")
+        print "loop =",self.loop
+
 
     def cancel(self,w):
         self.textview.append_text("cancel!\n")
