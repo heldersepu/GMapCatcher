@@ -1,11 +1,4 @@
 #labels Featured
-*NOTE:*
-
-This is stub. It will grow step by step to become a complete user guide of GMapCatcher.
-
-*_Please send all errors, enhancements and spelling mistakes (British English is used) as a comment to issue 118._*
-
-Any comment may help to make it better.
 
 <font size="5">*User guide for GMapCatcher 0.7*</font>
 
