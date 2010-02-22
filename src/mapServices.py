@@ -33,13 +33,16 @@ class MapServ:
 
     def write_locations(self):
         fileUtils.write_file('location', self.locationpath, self.locations)
-
-    def __init__(self, configpath=None):
+    
+    def initLocations(self, configpath):
         configpath = os.path.expanduser(configpath or DEFAULT_PATH)
         self.mt_counter=0
         self.configpath = fileUtils.check_dir(configpath)
         self.locationpath = os.path.join(self.configpath, 'locations')
         self.locations = {}
+    
+    def __init__(self, configpath=None):
+        self.initLocations(configpath)
 
         #implementation of the method is set in maps.py:__init__()
         self.tile_repository = tilesRepoFS.TilesRepositoryFS(self)
