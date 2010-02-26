@@ -104,9 +104,18 @@ class MySettings():
                 conf.init_zoom = self.s_zoom.get_value_as_int()
                 conf.init_width = self.s_width.get_value_as_int()
                 conf.init_height = self.s_height.get_value_as_int()
-                strTemp = (self.entry_custom_path.get_text().lower()).strip()
-                if strTemp != "" and strTemp != "none":
-                    if strTemp != (conf.init_path.lower()).strip():
+                
+                if( os.pathsep == ';' ):
+                    # we have windows OS, filesystem is case insensitive
+                    newPath = (self.entry_custom_path.get_text().lower()).strip()
+                    oldPath = conf.init_path.lower().strip()
+                else:
+                    newPath = (self.entry_custom_path.get_text()).strip()
+                    oldPath = conf.init_path.strip()
+                    
+                if newPath != "" and newPath != "none":
+                    #if strTemp != (conf.init_path.lower()).strip():
+                    if newPath != oldPath:
                         conf.init_path = self.entry_custom_path.get_text()
                         parent.ctx_map.initLocations(conf.init_path)
                         parent.drawing_area.repaint()
