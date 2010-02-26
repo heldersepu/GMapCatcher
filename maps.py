@@ -19,19 +19,17 @@ from src.mapUpdate import CheckForUpdates
 from src.mapServices import MapServ
 from src.customMsgBox import error_msg
 from src.mapDownloader import MapDownloader
-from src.customWidgets import myToolTip, gtk_menu, FileChooser, lbl, _frame, _myEntry
+from src.customWidgets import myToolTip, gtk_menu, FileChooser
 from src.xmlUtils import kml_to_markers
 from src.widDrawingArea import DrawingArea
 
 class MainWindow(gtk.Window):
 
     default_text = "Enter location here!"
-    gps = None
     update = None
     myPointer = None
     reCenter_gps = False
-    showMarkers = True
-    key_down = None
+    markercount = 0
 
     ## Get the zoom level from the scale
     def get_zoom(self):
@@ -176,65 +174,124 @@ class MainWindow(gtk.Window):
     #  looking for intersections with no-go areas
     def is_intersection(self,coord1,coord2,coord3,coord4):
         #print "in intersection\n"
-        slope1 = (coord2[1]-coord1[1])/(coord2[0]-coord1[0])
-        slope2 = (coord4[1]-coord3[1])/(coord4[0]-coord3[0])
-        yinter1 = coord1[1]- slope1*coord1[0]
-        yinter2 = coord3[1] - slope2*coord3[0]
-
+        x1 = coord1[0]
+        y1 = coord1[1]
+        x2 = coord2[0]
+        y2 = coord2[1]
+        x3 = coord3[0]
+        y3 = coord3[1]
+        x4 = coord4[0]
+        y4 = coord4[1]
+        
+        #slope1 = (coord2[1]-coord1[1])/(coord2[0]-coord1[0])
+        #slope2 = (coord4[1]-coord3[1])/(coord4[0]-coord3[0])
+        #yinter1 = coord1[1]- slope1*coord1[0]
+        #yinter1b = coord2[1]- slope1*coord2[0]
+        #yinter2 = coord3[1] - slope2*coord3[0]
+        #yinter2b = coord4[1] - slope2*coord4[0]
+       
+        #xval = (yinter2 - yinter1) / (slope1 - slope2)
+        #yval = slope2*xval + yinter2
+        
+        slope1 = (y2-y1)/(x2-x1)
+        slope2 = (y4-y3)/(x4-x3)
+        yinter1 = y1- slope1*x1
+        yinter1b = y2- slope1*x2
+        yinter2 = y3 - slope2*x3
+        yinter2b = y4 - slope2*x4
+       
         xval = (yinter2 - yinter1) / (slope1 - slope2)
-        yval = slope1*xval + yinter1
-
-        if (coord1[0] <= xval <= coord2[0]):
-            print "INTERSECTION!"
-            print coord1
-            print coord2
-
+        yval = slope2*xval + yinter2
+                
+        
+        if (y3 <= yval <= y4):
+        	print "INTERSECTION at ",yval,",",xval
+        	print coord1
+        	print coord2
+                
+    		return 1
+        else:
+                return 0
         #print slope1
         #print slope2
-
-
-
-
+    
+    
+    
+    
+  
     def validate_path(self, w):
-        print "VALIDATING!!"
+    	print "VALIDATING!!"
         bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
-        astlr = ASALTradio.ASALTradio()
+        bad_area2 = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
+		     (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
+		     (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
+		     (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
+		     (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
+	             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
+        #astlr = ASALTradio.ASALTradio()
         prevName=""
-
+        
         #gc.foreground("blue")
-
+        
         for strName in self.marker.positions.keys():
-
-
+               
+            
             if(prevName!=""):
-                foo = 0
-                #MainWindow.draw_marker_line(self, strName, prevName)
-                #self.drawing_area.repaint()
-                MainWindow.is_intersection(self,self.marker.positions[strName],self.marker.positions[prevName],bad_area[0],bad_area[1])
-                MainWindow.is_intersection(self,self.marker.positions[strName],self.marker.positions[prevName],bad_area[1],bad_area[2])
-                MainWindow.is_intersection(self,self.marker.positions[strName],self.marker.positions[prevName],bad_area[2],bad_area[3])
-                MainWindow.is_intersection(self,self.marker.positions[strName],self.marker.positions[prevName],bad_area[3],bad_area[0])
-
+            	foo = 0
+            	#MainWindow.draw_marker_line(self, strName, prevName)
+        	#self.drawing_area.repaint()
+        	
+            	if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[0],bad_area[1])):
+            	      if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
+			      a,b,c,d,e = self.marker.positions[strName]
+			      d = -1
+			      self.marker.positions[strName] = a,b,c,d,e
+			      a,b,c,d,e = self.marker.positions[prevName]
+		              d = -1
+			      self.marker.positions[prevName] = a,b,c,d,e
+            	if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[1],bad_area[2])):
+            	      if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
+			      a,b,c,d,e = self.marker.positions[strName]
+			      d = -1
+			      self.marker.positions[strName] = a,b,c,d,e
+		              a,b,c,d,e = self.marker.positions[prevName]
+			      d = -1
+			      self.marker.positions[prevName] = a,b,c,d,e
+            	if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[2],bad_area[3])):
+            	      if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
+			      a,b,c,d,e = self.marker.positions[strName]
+			      d = -1
+			      self.marker.positions[strName] = a,b,c,d,e
+			      a,b,c,d,e = self.marker.positions[prevName]
+			      d = -1
+			      self.marker.positions[prevName] = a,b,c,d,e
+            	if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[3],bad_area[0])):
+            	      if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
+			      a,b,c,d,e = self.marker.positions[strName]
+			      d = -1
+			      self.marker.positions[strName] = a,b,c,d,e
+			      a,b,c,d,e = self.marker.positions[prevName]
+			      d = -1
+			      self.marker.positions[prevName] = a,b,c,d,e
+            	
             #for coor in bad_area:
-            #    print coor[0]
-            AKpos = self.marker.positions[strName]
-            print "Name =", strName
-            print "Coord =", AKpos
-            print ""
+            #	print coor[0]            
+            #AKpos = self.marker.positions[strName]
             prevName = strName
-        #astlr.send(AKpos)
-
-
+	    #astlr.send(AKpos)	
+	
+	self.marker.write_markers()
+	self.drawing_area.repaint()
         asltw = ASALTWindow(
-                            self.layer, self.conf.init_path,
-                            self.conf.map_service,
-                            self.conf.cloudMade_styleID
-                        )
-        asltw.show()
+	                        self.layer, self.conf.init_path,
+	                        self.conf.map_service,
+	                        self.conf.cloudMade_styleID
+	                    )
+        #asltw.show()
         #asltw.txt_to_console(self, "foobar")
 
-
-
+    
+    
 
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self, coord, mode):
@@ -341,7 +398,7 @@ class MainWindow(gtk.Window):
             cmb_gps.connect('changed',self.gps_changed)
             bbox.add(cmb_gps)
 
-
+        
 
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
         gtk.stock_add([(gtk.STOCK_APPLY, "_Validate", 0, 0, "")])
@@ -359,61 +416,21 @@ class MainWindow(gtk.Window):
         cmb_layer = gtk.combo_box_new_text()
         for w in LAYER_NAMES:
             cmb_layer.append_text(w)
-        cmb_layer.set_active(LAYER_SATELLITE)
+        cmb_layer.set_active(0)
         cmb_layer.connect('changed',self.layer_changed)
-        self.cmb_layer = cmb_layer
         bbox.add(cmb_layer)
 
         hbox.pack_start(bbox)
         return hbox
 
     def __create_top_paned(self):
+        frame = gtk.Frame("Query")
         vbox = gtk.VBox(False, 5)
         vbox.set_border_width(5)
         vbox.pack_start(self.__create_upper_box())
         vbox.pack_start(self.__create_check_buttons())
-        return _frame(" Query ", vbox, 0)
-
-    def __create_bottom_paned(self):
-        vboxCoord = gtk.VBox(False, 5)
-        vboxCoord.set_border_width(5)
-
-        entry1 = gtk.Entry()
-        entry2 = gtk.Entry()
-        entry3 = gtk.Entry()
-        entry4 = gtk.Entry()
-
-        hbox = gtk.HBox(False, 5)
-        hbox.pack_start(lbl(" lat: "), False, True)
-        hbox.pack_start(entry1)
-        hbox.pack_start(lbl(" lon: "), False, True)
-        hbox.pack_start(entry2)
-        vboxCoord.pack_start(_frame(" Upper ", hbox))
-
-        hbox = gtk.HBox(False, 5)
-        hbox.pack_start(lbl(" lat: "), False, True)
-        hbox.pack_start(entry3)
-        hbox.pack_start(lbl(" lon: "), False, True)
-        hbox.pack_start(entry4)
-        vboxCoord.pack_start(_frame(" Lower ", hbox))
-
-        vboxSize = gtk.VBox(False, 5)
-        hbox = gtk.HBox(False, 5)
-        vboxSize.pack_start(lbl(" Width: "), False, True)
-        vboxSize.pack_start(_myEntry("1024"))
-        vboxSize.pack_start(lbl(" Height: "), False, True)
-        vboxSize.pack_start(_myEntry("1024"))
-
-        button = gtk.Button(stock='gtk-ok')
-        button.connect('clicked', self.do_export)
-        bbox = gtk.HButtonBox()
-        bbox.add(button)
-
-        hbox = gtk.HBox(False, 5)
-        hbox.pack_start(vboxCoord)
-        hbox.pack_start(_frame(" Image Size ", vboxSize))
-        hbox.pack_start(bbox)
-        return _frame(" Export map to PNG image ", hbox)
+        frame.add(vbox)
+        return frame
 
     def __create_left_paned(self):
         scale = gtk.VScale()
@@ -472,35 +489,27 @@ class MainWindow(gtk.Window):
         elif strName == DA_MENU[BATCH_DOWN]:
             self.download_clicked(w, self.myPointer)
         elif strName == DA_MENU[EXPORT_MAP]:
-            self.show_export(self.myPointer)
+            self.do_export(self.myPointer)
         elif strName == DA_MENU[ADD_MARKER]:
             self.add_marker(self.myPointer)
 
     ## Add a marker
     def add_marker(self, pointer=None):
-        drawable = self.drawing_area.window
-        gc = self.drawing_area.style.base_gc[0]
-        gc.line_width = 3
-        #gc.foreground("blue")
-
-
         tile = mapUtils.pointer_to_tile(
             self.drawing_area.get_allocation(),
             pointer, self.drawing_area.center, self.get_zoom()
         )
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
-        self.marker.append_marker(coord)
-        self.refresh()
-
-    ## Show the bottom panel with the export
-    def show_export(self, pointer=None):
-        self.maximize()
-        self.left_panel.hide()
-        self.top_panel.hide()
-        self.bottom_panel.show()
+	markerdata = [coord, len(self.marker.positions)+1, 0]
+	#coord.insert(0,idnum)
+	#Append default wait time of zero
+	#coord.append(0)
+        self.marker.append_marker(markerdata)        
+        self.marker.refresh()
+        self.drawing_area.repaint()
 
     ## Export tiles to one big map
-    def do_export(self, button, pointer=None):
+    def do_export(self, pointer=None):
         if (pointer is None):
             tile = self.drawing_area.center[0]
         else:
@@ -515,35 +524,25 @@ class MainWindow(gtk.Window):
             size=(1024, 1024)
         )
 
-        self.bottom_panel.hide()
-        self.left_panel.show()
-        self.top_panel.show()
-
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
-        # Single click event
-        if (event.type == gtk.gdk.BUTTON_PRESS):
         # Right-Click event shows the popUp menu
-            if (event.button != 1):
-                self.myPointer = (event.x, event.y)
-                w.popup(None, None, None, event.button, event.time)
-            # Ctrl + Click adds a marker
-            elif (self.key_down == 65507) or self.cb_dropmarker.get_active():
-                self.add_marker((event.x, event.y))
-        # Double-Click event Zoom In or Out
+        if (event.type == gtk.gdk.BUTTON_PRESS) and (event.button != 1):
+            self.myPointer = (event.x, event.y)
+            w.popup(None, None, None, event.button, event.time)
+        # Double-Click event Zoom In
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
-            # Alt + 2Click Zoom Out
-            if (self.key_down == 65513):
-                self.do_zoom(self.get_zoom() + 1, True, (event.x, event.y))
-            # 2Click Zoom In
-            else:
-                self.do_zoom(self.get_zoom() - 1, True, (event.x, event.y))
+            self.do_zoom(self.get_zoom() - 1, True,
+                        (event.x, event.y))
+        elif (event.type == gtk.gdk.BUTTON_PRESS) and (event.button == 1) and (self.cb_dropmarker.get_active()):
+            self.myPointer = (event.x, event.y)
+            self.add_marker(self.myPointer)
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
         self.drawing_area.da_move(event.x, event.y, self.get_zoom())
-
+	
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
@@ -558,7 +557,7 @@ class MainWindow(gtk.Window):
             mapServ=self.conf.map_service,
             styleID=self.conf.cloudMade_styleID
         )
-        self.draw_overlay()
+        self.draw_overlay(drawing_area, rect)
 
     def scroll_cb(self, widget, event):
         xyPointer = self.drawing_area.get_pointer()
@@ -569,6 +568,84 @@ class MainWindow(gtk.Window):
 
     def scale_change_value(self, range, scroll, value):
         self.do_zoom(value)
+
+    def draw_overlay(self, drawing_area, rect):
+        def draw_image(imgPos, img, width, height):
+            mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
+            xy = mapUtils.tile_coord_to_screen(
+                (mct[0][0], mct[0][1], zl), rect, self.drawing_area.center)
+            if xy:
+                for x,y in xy:
+                    drawing_area.window.draw_pixbuf(gc, img, 0, 0,
+                        x + mct[1][0] - width/2,
+                        y + mct[1][1] - height/2,
+                        width, height
+                    )
+
+        gc = drawing_area.style.black_gc
+        zl = self.get_zoom()
+
+        # Draw cross in the center
+        if self.conf.show_cross:
+            drawing_area.window.draw_pixbuf(gc, self.crossPixbuf, 0, 0,
+                rect.width/2 - 6, rect.height/2 - 6, 12, 12)
+
+        # Draw the selected location
+        pixDim = self.marker.get_pixDim(zl)
+        location = self.entry.get_text()
+        locations = self.ctx_map.get_locations()
+        if (location in locations.keys()):
+            coord = self.ctx_map.get_locations()[location]
+            img = self.marker.get_marker_pixbuf(zl, 'marker1.png')
+            draw_image(coord, img, pixDim, pixDim)
+        else:
+            coord = (None, None, None)
+
+	# Draw no go area
+	bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
+	bad_area2 = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
+	             (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
+	             (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
+	             (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
+	             (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
+	             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
+	self.drawing_area.draw_marker_line(bad_area[0], bad_area[1], zl, pixDim,"green")
+	self.drawing_area.draw_marker_line(bad_area[1], bad_area[2], zl, pixDim,"green")
+	self.drawing_area.draw_marker_line(bad_area[2], bad_area[3], zl, pixDim,"green")
+	self.drawing_area.draw_marker_line(bad_area[3], bad_area[0], zl, pixDim,"green")
+	for i in range(len(bad_area2)):
+	   if(i == len(bad_area2)-1):
+	   	#print "i=",i
+	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[0], zl, pixDim,"green")
+	   else:
+	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[i+1], zl, pixDim,"green")
+
+
+        # Draw the markers
+        img = self.marker.get_marker_pixbuf(zl)
+        prevmark = ""
+        for str in self.marker.positions.keys():
+            mpos = self.marker.positions[str]
+            if(self.marker.positions[str][3] == -1):
+                img = self.marker.get_marker_pixbuf2(zl)
+            if zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0]):
+                draw_image(mpos, img, pixDim, pixDim)
+            if (prevmark != "" and zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0])):
+            	self.drawing_area.draw_marker_line(self.marker.positions[str], self.marker.positions[prevmark], zl, pixDim,"red")
+            	if(self.marker.positions[prevmark][3] == -1):
+            	    img = self.marker.get_marker_pixbuf2(zl)
+            	else:
+            	    img = self.marker.get_marker_pixbuf(zl)
+            	draw_image(self.marker.positions[prevmark], img, pixDim, pixDim)
+            prevmark = str
+            img = self.marker.get_marker_pixbuf(zl)
+
+        # Draw GPS position
+        if mapGPS.available:
+            location = self.gps.get_location()
+            if location is not None and (zl <= self.conf.max_gps_zoom):
+                img = self.gps.pixbuf
+                draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
 
     def tile_received(self, tile_coord, layer):
         if self.layer == layer and self.get_zoom() == tile_coord[2]:
@@ -584,19 +661,7 @@ class MainWindow(gtk.Window):
                                           TILES_WIDTH, TILES_HEIGHT)
 
                 if not self.cb_offline.get_active():
-                    self.draw_overlay()
-
-    def draw_overlay(self):
-        if self.bottom_panel.flags() & gtk.VISIBLE:
-            self.drawing_area.draw_overlay(
-                self.get_zoom(), self.conf, self.crossPixbuf,
-            )
-        else:
-            self.drawing_area.draw_overlay(
-                self.get_zoom(), self.conf, self.crossPixbuf,
-                self.marker, self.ctx_map.get_locations(),
-                self.entry.get_text(), self.showMarkers, self.gps
-            )
+                    self.draw_overlay(da, rect)
 
     ## Handles the pressing of F11 & F12
     def full_screen(self, keyval):
@@ -618,13 +683,11 @@ class MainWindow(gtk.Window):
                 self.top_panel.hide()
                 self.set_border_width(0)
             else:
-                self.bottom_panel.hide()
                 self.left_panel.show()
                 self.top_panel.show()
                 self.set_border_width(10)
         # ESC = 65307
         elif keyval == 65307:
-            self.bottom_panel.hide()
             self.left_panel.show()
             self.top_panel.show()
             self.set_border_width(10)
@@ -656,61 +719,32 @@ class MainWindow(gtk.Window):
             self.do_zoom(zoom+1, True)
         elif keyval in [61,65451]:
             self.do_zoom(zoom-1, True)
-
-        # Space = 32   ReCenter the GPS
-        elif keyval == 32:
-            self.reCenter_gps = True
-
-        # M = 77,109  S = 83,115  T = 84,116
-        elif keyval in [77, 109]:
-            self.cmb_layer.set_active(LAYER_MAP)
-        elif keyval in [83, 115]:
-            self.cmb_layer.set_active(LAYER_SATELLITE)
-        elif keyval in [84, 116]:
-            self.cmb_layer.set_active(LAYER_TERRAIN)
-
-
-    ## Handles the Key release
-    def key_release_event(self, w, event):
-        self.key_down = None
-
+            
+        # Space = 32   Refresh the GPS
+        elif event.keyval == 32:
+            self.reCenter_gps = True    
+            
     ## Handles the Key pressing
     def key_press_event(self, w, event):
-        self.key_down = event.keyval
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
-        # F1 = 65471  Help
-        elif event.keyval == 65470:
-            webbrowser_open(WEB_ADDRESS)
         # F9 = 65478
         elif event.keyval == 65478:
             self.validate_path(w)
         # F2 = 65471
         elif event.keyval == 65471:
-            self.show_export()
+            self.do_export()
         # F4 = 65473
         elif event.keyval == 65473:
             fileName = FileChooser('.', 'Select KML File to import')
             if fileName:
                 kml_to_markers(fileName, self.marker)
-        # F5 = 65474
-        elif event.keyval == 65474:
-            self.refresh()
-        # F8 = 65477
-        elif event.keyval == 65477:
-            self.showMarkers = not self.showMarkers
-            self.drawing_area.repaint()
 
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
             self.navigation(event.keyval, self.get_zoom())
-
-    ## All the refresh operations
-    def refresh(self):
-        self.enable_gps()
-        self.marker.refresh()
-        self.drawing_area.repaint()
+            
 
     ## Final actions before main_quit
     def on_delete(self, *args):
@@ -724,25 +758,20 @@ class MainWindow(gtk.Window):
             self.update.finish()
         return False
 
-    def enable_gps(self):
-        if mapGPS.available:
-            self.gps = mapGPS.GPS(
-                self.gps_callback,
-                self.conf.gps_update_rate,
-                self.conf.gps_mode
-            )
-
     def __init__(self, parent=None):
         self.conf = MapConf()
         self.crossPixbuf = mapPixbuf.cross()
+
+        if mapGPS.available:
+            self.gps = mapGPS.GPS(self.gps_callback,
+                                  self.conf.gps_update_rate,
+                                  self.conf.gps_mode)
+
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path)
         self.downloader = MapDownloader(self.ctx_map)
-
         #Set layer to satellite
-        self.layer = LAYER_SATELLITE
-        self.enable_gps()
-
+        self.layer = 1
         gtk.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
@@ -750,26 +779,18 @@ class MainWindow(gtk.Window):
             self.connect("destroy", lambda *w: gtk.main_quit())
 
         self.connect('key-press-event', self.key_press_event)
-        self.connect('key-release-event', self.key_release_event)
         self.connect('delete-event', self.on_delete)
-
+        vpaned = gtk.VPaned()
+        hpaned = gtk.HPaned()
         self.top_panel = self.__create_top_paned()
         self.left_panel = self.__create_left_paned()
-        self.bottom_panel = self.__create_bottom_paned()
 
-        vpaned = gtk.VPaned()
         vpaned.pack1(self.top_panel, False, False)
-        hpaned = gtk.HPaned()
         hpaned.pack1(self.left_panel, False, False)
-
-        inner_vp = gtk.VPaned()
-        inner_vp.pack1(self.__create_right_paned(), True, True)
-        inner_vp.pack2(self.bottom_panel, False, False)
-
-        hpaned.pack2(inner_vp, True, True)
+        hpaned.pack2(self.__create_right_paned(), True, True)
         vpaned.add2(hpaned)
-        self.add(vpaned)
 
+        self.add(vpaned)
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 400)
@@ -779,7 +800,6 @@ class MainWindow(gtk.Window):
         self.drawing_area.center = self.conf.init_center
         self.show_all()
 
-        self.bottom_panel.hide()
         self.drawing_area.da_set_cursor()
         self.entry.grab_focus()
 
