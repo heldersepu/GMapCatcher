@@ -10,9 +10,8 @@ import time
 class ASALTradio():
 
     def send(self, data, type):
-       start_char = struct.pack(c,\xAA)
-       switch(type){
-           case '1':
+       start_char = struct.pack(c,"\x55")
+       if(type == '1'):
               print "send coordinate type"
               size = data[1]
               self.ser.write(start_char)
@@ -20,17 +19,16 @@ class ASALTradio():
        	      self.ser.write(struct.pack(c,data[0]))
        	      self.ser.write(struct.pack(c,size))
        	      for coord in data[2:size+2]:
-       	          self.ser.write(struct.pack(d,coord[0]))
-       	          self.ser.write(struct.pack(d,coord[1]))
+       	          self.ser.write(struct.pack(f,coord[0]))
+       	          self.ser.write(struct.pack(f,coord[1]))
        	          self.ser.write(struct.pack(I,coord[2]))
        	          time.sleep(0.1)
-       	          
-       	   case '2':	      
+       elif(type =='2'):	              
        	      self.ser.write(start_char)
        	      self.ser.write(struct.pack(c,'2'))
-       	   default:
+       else:
        	      print "ASALTRadio send: invalid type"
-       }
+       
     
     
     
@@ -44,7 +42,7 @@ class ASALTradio():
 	
 
     def receive(self):
-       
+       print "receive"
 
     def query(self):
         send(NULL, '2')
