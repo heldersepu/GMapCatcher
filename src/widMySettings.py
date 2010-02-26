@@ -79,7 +79,7 @@ class MySettings():
             vbox.pack_start(hbox)
             return _frame(" Custom Maps Directory ", vbox)
 
-        def _action_buttons(conf):
+        def _action_buttons(conf, parent):
             def btn_revert_clicked(button):
                 self.s_center00.set_value(conf.init_center[0][0])
                 self.s_center01.set_value(conf.init_center[0][1])
@@ -104,12 +104,26 @@ class MySettings():
                 conf.init_zoom = self.s_zoom.get_value_as_int()
                 conf.init_width = self.s_width.get_value_as_int()
                 conf.init_height = self.s_height.get_value_as_int()
-                strTemp = (self.entry_custom_path.get_text().lower()).strip()
-                if strTemp != "" and strTemp != "none":
-                    conf.init_path = self.entry_custom_path.get_text()
+
+                if( os.pathsep == ';' ):
+                    # we have windows OS, filesystem is case insensitive
+                    newPath = (self.entry_custom_path.get_text().lower()).strip()
+                    oldPath = conf.init_path.lower().strip()
+                else:
+                    newPath = (self.entry_custom_path.get_text()).strip()
+                    oldPath = conf.init_path.strip()
+                    
+                if newPath != "" and newPath != "none":
+                    #if strTemp != (conf.init_path.lower()).strip():
+                    if newPath != oldPath:
+                        conf.init_path = self.entry_custom_path.get_text()
+                        parent.ctx_map.initLocations(conf.init_path)
+                        parent.drawing_area.repaint()
                 else:
                     conf.init_path = None
                 conf.save()
+
+
 
             bbox = gtk.HButtonBox()
             bbox.set_layout(gtk.BUTTONBOX_END)
@@ -159,5 +173,5 @@ class MySettings():
         hbox.pack_start(custom_path(conf))
         vbox.pack_start(hbox, False)
         hpaned.pack1(vbox, True, True)
-        hpaned.pack2(_action_buttons(conf), False, False)
+        hpaned.pack2(_action_buttons(conf, parent), False, False)
         return hpaned
