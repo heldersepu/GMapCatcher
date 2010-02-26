@@ -29,7 +29,6 @@ class TilesRepositoryFS:
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
         self.lock = Lock()
-        self.configpath = self.mapServ_inst.configpath
 
         self.missingPixbuf = mapPixbuf.missing()
 
@@ -90,7 +89,7 @@ class TilesRepositoryFS:
     #  at most 1024 files in one dir
     def coord_to_path(self, tile_coord, layer):
         self.lock.acquire()
-        path = os.path.join(self.configpath, LAYER_DIRS[layer])
+        path = os.path.join(self.mapServ_inst.configpath, LAYER_DIRS[layer])
         path = fileUtils.check_dir(path)
         path = fileUtils.check_dir(path, '%d' % tile_coord[2])
         path = fileUtils.check_dir(path, "%d" % (tile_coord[0] / 1024))
