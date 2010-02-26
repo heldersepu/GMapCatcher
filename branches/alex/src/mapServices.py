@@ -34,13 +34,17 @@ class MapServ:
     def write_locations(self):
         fileUtils.write_file('location', self.locationpath, self.locations)
 
-    def __init__(self, configpath=None):
+    def initLocations(self, configpath):
         configpath = os.path.expanduser(configpath or DEFAULT_PATH)
         self.mt_counter=0
         self.configpath = fileUtils.check_dir(configpath)
         self.locationpath = os.path.join(self.configpath, 'locations')
         self.locations = {}
 
+    
+    def __init__(self, configpath=None):
+        self.initLocations(configpath)
+        
         #implementation of the method is set in maps.py:__init__()
         self.tile_repository = tilesRepoFS.TilesRepositoryFS(self)
 
@@ -133,7 +137,7 @@ class MapServ:
 
     def completion_model(self, strAppend=''):
         store = gtk.ListStore(TYPE_STRING)
-        for str in sorted(self.locations.keys()):
+        for key in sorted(self.locations.keys()):
             iter = store.append()
-            store.set(iter, 0, str + strAppend)
+            store.set(iter, 0, str(key) + strAppend)
         return store
