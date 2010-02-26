@@ -55,9 +55,13 @@ class DownloaderThread(Thread):
             self.inq.task_done()
 
     def process_task(self, task):
-        filename = self.ctx_map.get_file(
-            task.coord, task.layer, True,
-            task.force_update, task.mapServ, task.styleID
+        # poznamka: filename tady neni potreba, nejaky sideeffect?
+        #filename = self.ctx_map.get_file(
+        #    task.coord, task.layer, True,
+        #   task.force_update, task.mapServ, task.styleID
+        #)
+        self.ctx_map.get_tile( task.coord, task.layer, True,
+                               task.force_update, task.mapServ, task.styleID
         )
         if task.callback:
             #print "process_task callback", task
@@ -120,11 +124,10 @@ class MapDownloader:
         coord = (mapUtils.mod(coord[0], world_tiles),
                  mapUtils.mod(coord[1], world_tiles), coord[2])
         # try to get a tile offline
-        fn = self.ctx_map.get_file(coord, layer, False, False)
-        if fn!=None or (not online):
+        if self.ctx_map.is_tile_in_local_repos(coord, layer) or (not online):
             deleted = False
             if (force_update and online):
-                deleted = fileUtils.delete_old(fn)
+                deleted = self.ctx_map.remove_old_tile(coord, layer)
             if not deleted:
                 callback(True, coord, layer)
                 return

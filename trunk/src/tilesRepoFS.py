@@ -22,8 +22,10 @@ import fileUtils
 from threading import Lock
 from mapConst import *
 
+from tilesRepo import TilesRepository
 
-class TilesRepositoryFS:
+
+class TilesRepositoryFS(TilesRepository):
 
     def __init__(self, MapServ_inst):
         self.tile_cache = lrucache.LRUCache(1000)
@@ -34,6 +36,16 @@ class TilesRepositoryFS:
 
     def finish(self):
         pass
+
+
+    # check if we have locally downloaded tile
+    def is_tile_in_local_repos(self, coord, layer):
+        path = self.coord_to_path(coord, layer)
+        return  os.path.isfile(path)
+
+    
+    def remove_old_tile(self, coord, layer, intSeconds=86400):
+        return fileUtils.delete_old( self.coord_to_path(coord, layer), intSeconds )
 
     ## Returns the PixBuf of the tile
     # Uses a cache to optimise HDD read access
@@ -71,6 +83,7 @@ class TilesRepositoryFS:
             data = self.mapServ_inst.get_tile_from_coord(
                         coord, layer, mapServ, styleID
                     )
+            self.coord_to_path_checkdirs(coord, layer)
             file = open( filename, 'wb' )
             file.write( data )
             file.close()
@@ -82,12 +95,32 @@ class TilesRepositoryFS:
         return False
 
     ## Return the absolute path to a tile
+    #  only check path
     #  tile_coord = (tile_X, tile_Y, zoom_level)
     #  smaple of the Naming convention:
     #  \.googlemaps\tiles\15\0\1\0\1.png
     #  We only have 2 levels for one axis
     #  at most 1024 files in one dir
+    # private
     def coord_to_path(self, tile_coord, layer):
+        path = os.path.join(self.mapServ_inst.configpath, 
+                            LAYER_DIRS[layer],
+                            str(tile_coord[2]),
+                            str(tile_coord[0] / 1024),
+                            str(tile_coord[0] % 1024),
+                            str(tile_coord[1] / 1024),
+                            str(tile_coord[1] % 1024) + ".png"
+                            )
+        return path
+
+    # create path if doesn't exists
+    #  tile_coord = (tile_X, tile_Y, zoom_level)
+    #  smaple of the Naming convention:
+    #  \.googlemaps\tiles\15\0\1\0\1.png
+    #  We only have 2 levels for one axis
+    #  at most 1024 files in one dir
+    # private
+    def coord_to_path_checkdirs(self, tile_coord, layer):
         self.lock.acquire()
         path = os.path.join(self.mapServ_inst.configpath, LAYER_DIRS[layer])
         path = fileUtils.check_dir(path)
@@ -98,10 +131,11 @@ class TilesRepositoryFS:
         self.lock.release()
         return os.path.join(path, "%d.png" % (tile_coord[1] % 1024))
 
-    ## Get the image file for the given location
+
+    ## Get the tile for the given location
     # Validates the given tile coordinates and,
-    # returns the local filename if successfully retrieved
-    def get_file(self, tcoord, layer, online, force_update, mapServ, styleID):
+    # returns tile coords if successfully retrieved
+    def get_tile(self, tcoord, layer, online, force_update, mapServ, styleID):
         if (MAP_MIN_ZOOM_LEVEL <= tcoord[2] <= MAP_MAX_ZOOM_LEVEL):
             world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - tcoord[2])
             if (tcoord[0] > world_tiles) or (tcoord[1] > world_tiles):
@@ -111,7 +145,7 @@ class TilesRepositoryFS:
             # print "tCoord to path: %s" % filename
             if self.get_png_file(tcoord, layer, filename, online,
                                     force_update, mapServ, styleID):
-                return filename
+                return (tcoord, layer)
         return None
 
 
