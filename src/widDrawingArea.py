@@ -59,13 +59,13 @@ class DrawingArea(gtk.DrawingArea):
             self.draging_start = (x, y)
             self.repaint()
 
-    def draw_marker_line(self, mpos1, mpos2, zl, pixDim):
+    def draw_marker_line(self, mpos1, mpos2, zl, pixDim,color):
            drawable = self.window
            #gc = self.drawing_area.style.base_gc[0]
            gc = drawable.new_gc()
            gc.line_width = 3
            rect = self.get_allocation()
-           gc.set_rgb_fg_color(gtk.gdk.Color(65535, 0, 0))
+           gc.set_rgb_fg_color(gtk.gdk.color_parse(color))
            #mpos1 = self.marker.positions[marker1]
            #mpos2 = self.marker.positions[marker2]
            mct1 = mapUtils.coord_to_tile((mpos1[0], mpos1[1], zl))
@@ -76,9 +76,10 @@ class DrawingArea(gtk.DrawingArea):
     	   xy2 = mapUtils.tile_coord_to_screen(
     	    	 (mct2[0][0], mct2[0][1], zl), rect, self.center
     	   )
-    	   drawable.draw_line(
-    	         gc, xy1[0][0] + mct1[1][0], xy1[0][1] + mct1[1][1], xy2[0][0] + mct2[1][0] , xy2[0][1] + mct2[1][1] 
-    	   )
+    	   if(xy2 and xy1):
+    	   	drawable.draw_line(
+    	   	      gc, xy1[0][0] + mct1[1][0], xy1[0][1] + mct1[1][1], xy2[0][0] + mct2[1][0] , xy2[0][1] + mct2[1][1] 
+    	   	)
 		    #drawable.draw_line(gc, 0, 0, x, y)  
 
 
