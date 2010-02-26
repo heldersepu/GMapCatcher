@@ -112,11 +112,18 @@ class MapServ:
             except:
                 raise
 
-    def get_file(self, coord, layer, online, force_update,
+    def get_tile(self, coord, layer, online, force_update,
                                 mapServ='Google', styleID =1):
-        return self.tile_repository.get_file(
+        return self.tile_repository.get_tile(
                     coord, layer, online, force_update, mapServ, styleID
                 )
+
+    def remove_old_tile(self, coord, layer):
+        return self.tile_repository.remove_old_tile(coord, layer)
+
+    def is_tile_in_local_repos(self, coord, layer):
+        return self.tile_repository.is_tile_in_local_repos(coord, layer)
+
 
     ## Call the do_export in the tile_repository
     # Export tiles to one big map
@@ -133,6 +140,7 @@ class MapServ:
     def load_pixbuf(self, coord, layer, force_update):
         return self.tile_repository.load_pixbuf(coord, layer, force_update)
 
+    
 
     def completion_model(self, strAppend=''):
         store = gtk.ListStore(TYPE_STRING)

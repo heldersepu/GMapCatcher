@@ -135,3 +135,4 @@ def delete_old(filename, intSeconds=86400):
                 return True
             except:
                 pass
+    return False
