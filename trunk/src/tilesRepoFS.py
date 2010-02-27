@@ -162,12 +162,12 @@ class TilesRepositoryFS(TilesRepository):
         for i in range(tcoord[0], tcoord[0] + xFact):
             y = 0
             for j in range(tcoord[1], tcoord[1] + yFact):
-                filename = self.get_file(
-                    (i,j,tcoord[2]), layer, online, False, mapServ, styleID
-                )
-                if filename:
-                    im = Image.open(filename)
-                    result.paste(im, (x* TILES_WIDTH, y* TILES_HEIGHT))
+                if self.get_tile( (i,j,tcoord[2]), layer, online, False, mapServ, styleID ):
+                    pb = self.load_pixbuf( (i,j,tcoord[2]), layer, False)
+                    width,height = pb.get_width(),pb.get_height()
+                    Image.fromstring("RGB",(width,height),pb.get_pixels() )
+
+                    result.paste(Image.fromstring("RGB",(width,height),pb.get_pixels() ), (x* TILES_WIDTH, y* TILES_HEIGHT))
                 y += 1
             x += 1
         result.save("map.png")
