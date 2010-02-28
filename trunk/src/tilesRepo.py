@@ -33,9 +33,12 @@ class TilesRepository:
     def do_export(self, tcoord, layer, online, mapServ, styleID, size):
         raise NotImplementedException()
     
-    def remove_old_tile(self, coord, layer):
+    def remove_old_tile(self, coord, layer, filename=None, interval=86400):
         raise NotImplementedException()
 
-    def is_tile_in_local_repos(self, coord, layer, intSeconds=86400):
+    def is_tile_in_local_repos(self, coord, layer):
+        raise NotImplementedException()
+    
+    def set_repository_path(self, newpath):
         raise NotImplementedException()
 

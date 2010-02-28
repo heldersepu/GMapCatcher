@@ -32,6 +32,7 @@ class MapConf():
         config.add_section(SECTION_INIT)
         if self.init_path:
             config.set(SECTION_INIT, 'path', self.init_path)
+        config.set(SECTION_INIT, 'repository_type', self.repository_type)
         config.set(SECTION_INIT, 'width', self.init_width)
         config.set(SECTION_INIT, 'height', self.init_height)
         config.set(SECTION_INIT, 'zoom', self.init_zoom)
@@ -76,6 +77,9 @@ class MapConf():
             strPath = fileUtils.check_dir(strPath)
             if os.path.isdir(strPath):
                 self.init_path = strPath
+                
+        ## Repository type - filebased / sqlite3
+        self.repository_type =  read_config('repository_type', 0, int)
 
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float)

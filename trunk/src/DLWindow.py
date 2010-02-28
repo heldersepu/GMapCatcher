@@ -19,7 +19,7 @@ from os.path import join, isdir
 
 class DLWindow(gtk.Window):
 
-    def __init__(self, coord, kmx, kmy, layer, init_path, mapServ, styleID):
+    def __init__(self, coord, kmx, kmy, layer, init_path, repostype, mapServ, styleID):
 
         def _zoom(zoom0, zoom1):
             out_hbox = gtk.HBox(False, 50)
@@ -78,7 +78,7 @@ class DLWindow(gtk.Window):
             hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
 
             self.b_download = gtk.Button(stock=gtk.STOCK_HARDDISK)
-            self.b_download.connect('clicked', self.run, init_path, strFolder)
+            self.b_download.connect('clicked', self.run, init_path, repostype, strFolder)
             hbbox.pack_start(self.b_download)
 
             hbox = gtk.HBox()
@@ -133,7 +133,7 @@ class DLWindow(gtk.Window):
         self.show_all()
 
     ## Start the download
-    def run(self, w, init_path, strFolder):
+    def run(self, w, init_path, repostype, strFolder):
         args = MapArgs()
         if self.processing: return
         try:
@@ -159,7 +159,7 @@ class DLWindow(gtk.Window):
         dlat = mapUtils.km_to_lat(args.height)
 
         # Creating our own gmap
-        self.gmap = mapServices.MapServ(init_path)
+        self.gmap = mapServices.MapServ(init_path, repostype)
         self.complete = []
         self.downloader = MapDownloader(self.gmap)
         if args.min_zl > args.max_zl:

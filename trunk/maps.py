@@ -159,7 +159,7 @@ class MainWindow(gtk.Window):
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         km_px = mapUtils.km_per_pixel(coord)
         dlw = DLWindow(coord, km_px*rect.width, km_px*rect.height,
-                        self.layer, self.conf.init_path,
+                        self.layer, self.conf.init_path, self.conf.repository_type,
                         self.conf.map_service,
                         self.conf.cloudMade_styleID
                     )
@@ -645,7 +645,7 @@ class MainWindow(gtk.Window):
         self.conf = MapConf()
         self.crossPixbuf = mapPixbuf.cross()
         self.marker = MyMarkers(self.conf.init_path)
-        self.ctx_map = MapServ(self.conf.init_path)
+        self.ctx_map = MapServ(self.conf.init_path, self.conf.repository_type)
         self.downloader = MapDownloader(self.ctx_map)
         self.layer = LAYER_MAP
         self.enable_gps()

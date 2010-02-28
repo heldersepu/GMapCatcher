@@ -43,6 +43,13 @@ LAYER_TERRAIN = 2
 LAYER_NAMES = ["Map", "Satellite", "Terrain"]
 LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles"]
 
+ROPES_TYPE_FILES = 0
+ROPES_TYPE_SQLITE3 = 1
+REPOS_TYPE = ["Files", "SQLite3"]
+DEFAULT_REPOS_TYPE = 0
+SQLITE3_REPOSITORY_FILE = "tilerepository.db"
+
+
 GPS_IMG_SIZE = (48, 48)
 
 GPS_DISABLED = 0
