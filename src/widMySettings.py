@@ -46,6 +46,13 @@ class MySettings():
             return _frame(" Center ", hbox)
 
         def custom_path(conf):
+            def repository_type_combo(repos_type_id):
+                self.cmb_repos_type = gtk.combo_box_new_text()
+                for strMode in REPOS_TYPE:
+                    self.cmb_repos_type.append_text(strMode)
+                self.cmb_repos_type.set_active(repos_type_id)
+                return self.cmb_repos_type
+
             def get_folder(button):
                 folderName = FolderChooser()
                 if folderName:
@@ -75,6 +82,8 @@ class MySettings():
             self.entry_custom_path = myEntry
             button = gtk.Button(" ... ")
             button.connect('clicked', get_folder)
+            cmbbox = repository_type_combo(conf.repository_type)
+            hbox.pack_start(cmbbox, False)
             hbox.pack_start(button, False)
             vbox.pack_start(hbox)
             return _frame(" Custom Maps Directory ", vbox)
@@ -113,14 +122,16 @@ class MySettings():
                     newPath = (self.entry_custom_path.get_text()).strip()
                     oldPath = conf.init_path.strip()
                     
-                if newPath != "" and newPath != "none":
+                if (newPath != "" and newPath.lower() != "none") or (self.cmb_repos_type.get_active() != conf.repository_type):
                     #if strTemp != (conf.init_path.lower()).strip():
-                    if newPath != oldPath:
+                    if (newPath != oldPath) or (self.cmb_repos_type.get_active() != conf.repository_type):
                         conf.init_path = self.entry_custom_path.get_text()
-                        parent.ctx_map.initLocations(conf.init_path)
+                        conf.repository_type = self.cmb_repos_type.get_active()
+                        parent.ctx_map.initLocations(conf.init_path, conf.repository_type)
                         parent.drawing_area.repaint()
                 else:
                     conf.init_path = None
+                    conf.repository_type = self.cmb_repos_type.get_active()
                 conf.save()
 
             bbox = gtk.HButtonBox()

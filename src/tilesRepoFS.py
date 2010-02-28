@@ -28,15 +28,19 @@ from tilesRepo import TilesRepository
 class TilesRepositoryFS(TilesRepository):
 
     def __init__(self, MapServ_inst):
+        self.configpath = None 
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
         self.lock = Lock()
-
+        self.set_repository_path(self.mapServ_inst.configpath)
         self.missingPixbuf = mapPixbuf.missing()
 
     def finish(self):
         pass
 
+    ## Sets new repository path to be used for storing tiles
+    def set_repository_path(self, newpath):
+        self.configpath = newpath
 
     # check if we have locally downloaded tile
     def is_tile_in_local_repos(self, coord, layer):
@@ -44,8 +48,18 @@ class TilesRepositoryFS(TilesRepository):
         return  os.path.isfile(path)
 
     
-    def remove_old_tile(self, coord, layer, intSeconds=86400):
-        return fileUtils.delete_old( self.coord_to_path(coord, layer), intSeconds )
+    def remove_old_tile(self, coord, layer, filename=None, intSeconds=86400):
+        if filename is None:
+            filename = self.coord_to_path(coord, layer)
+
+        retval = fileUtils.delete_old( self.coord_to_path(coord, layer), intSeconds )
+        if retval:
+            try:
+                del self.tile_cache[ filename ]
+            except KeyError:
+                pass
+        return retval
+        
 
     ## Returns the PixBuf of the tile
     # Uses a cache to optimise HDD read access
@@ -103,7 +117,7 @@ class TilesRepositoryFS(TilesRepository):
     #  at most 1024 files in one dir
     # private
     def coord_to_path(self, tile_coord, layer):
-        path = os.path.join(self.mapServ_inst.configpath, 
+        path = os.path.join(self.configpath, 
                             LAYER_DIRS[layer],
                             str(tile_coord[2]),
                             str(tile_coord[0] / 1024),
@@ -122,7 +136,7 @@ class TilesRepositoryFS(TilesRepository):
     # private
     def coord_to_path_checkdirs(self, tile_coord, layer):
         self.lock.acquire()
-        path = os.path.join(self.mapServ_inst.configpath, LAYER_DIRS[layer])
+        path = os.path.join(self.configpath, LAYER_DIRS[layer])
         path = fileUtils.check_dir(path)
         path = fileUtils.check_dir(path, '%d' % tile_coord[2])
         path = fileUtils.check_dir(path, "%d" % (tile_coord[0] / 1024))

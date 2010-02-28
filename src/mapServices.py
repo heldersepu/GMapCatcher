@@ -5,7 +5,7 @@ import os
 import gtk
 import sys
 import fileUtils
-import tilesRepoFS
+import tilesRepoFactory
 import openanything
 
 import mapServers.googleMaps as googleMaps
@@ -34,18 +34,23 @@ class MapServ:
     def write_locations(self):
         fileUtils.write_file('location', self.locationpath, self.locations)
     
-    def initLocations(self, configpath):
+    def initLocations(self, configpath, tilerepostype):
         configpath = os.path.expanduser(configpath or DEFAULT_PATH)
         self.mt_counter=0
         self.configpath = fileUtils.check_dir(configpath)
         self.locationpath = os.path.join(self.configpath, 'locations')
         self.locations = {}
+        
+        if tilerepostype is None:
+            tilerepostype = DEFAULT_REPOS_TYPE
+        print "Debug: confpath: " + configpath + ", repostype: " + str(tilerepostype)
+        self.tile_repository = tilesRepoFactory.get_tile_repository(self, configpath, tilerepostype)
     
-    def __init__(self, configpath=None):
-        self.initLocations(configpath)
+    
+    def __init__(self, configpath=None, tilerepostype=None):
+        self.tile_repository = None
+        self.initLocations(configpath, tilerepostype)
 
-        #implementation of the method is set in maps.py:__init__()
-        self.tile_repository = tilesRepoFS.TilesRepositoryFS(self)
 
         if (os.path.exists(self.locationpath)):
             self.read_locations()
