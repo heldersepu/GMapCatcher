@@ -15,6 +15,7 @@ import mapServices
 from mapConst import *
 from gtkThread import *
 from os.path import join, isdir
+from threading import Timer
 
 
 class DLWindow(gtk.Window):
@@ -134,6 +135,20 @@ class DLWindow(gtk.Window):
 
     ## Start the download
     def run(self, w, init_path, repostype, strFolder):
+        def downThread():
+            self.all_placed = False
+            self.processing = True
+            for zoom in xrange(args.max_zl, args.min_zl-1, -1):
+                self.downloader.query_region_around_location(
+                    args.lat, args.lng, dlat, dlon,
+                    zoom, layer,
+                    gui_callback(self.tile_received),
+                    mapServ=self.mapService,
+                    styleID=self.styleID
+                )
+            if self.downloader.qsize()==0:
+                self.download_complete()
+            self.all_placed = True
         self.pbar.set_text(" ")
         args = MapArgs()
         if self.processing: return
@@ -168,20 +183,9 @@ class DLWindow(gtk.Window):
 
         # Save the map info
         self.save_info(check_dir(strFolder), str(args))
-
-        self.all_placed = False
-        self.processing = True
-        for zoom in xrange(args.max_zl, args.min_zl-1, -1):
-            self.downloader.query_region_around_location(
-                args.lat, args.lng, dlat, dlon,
-                zoom, layer,
-                gui_callback(self.tile_received),
-                mapServ=self.mapService,
-                styleID=self.styleID
-            )
-        if self.downloader.qsize()==0:
-            self.download_complete()
-        self.all_placed = True
+        dThread = Timer(0, downThread)
+        dThread.start()
+        
 
     # Open a previously saved file and auto-populate the fields
     def do_open(self, w, strPath):
@@ -231,7 +235,7 @@ class DLWindow(gtk.Window):
         self.all_done("Canceled")
 
     def all_done(self, strMessage):
-        if self.downloader: 
+        if self.downloader:
             self.downloader.stop_all()
         self.downloader = None
         self.processing = False
@@ -241,7 +245,7 @@ class DLWindow(gtk.Window):
         self.update_pbar(strMessage, 0, 1)
 
     def on_delete(self,*params):
-        if self.downloader: 
+        if self.downloader:
             self.downloader.stop_all()
         return False
 

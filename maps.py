@@ -317,7 +317,7 @@ class MainWindow(gtk.Window):
         vboxSize.pack_start(_myEntry("1024"))
         vboxSize.pack_start(lbl(" Height: "), False, True)
         vboxSize.pack_start(_myEntry("1024"))
-        
+
         button = gtk.Button(stock='gtk-ok')
         button.connect('clicked', self.do_export)
         bbox = gtk.HButtonBox()
