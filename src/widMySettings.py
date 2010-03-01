@@ -78,12 +78,12 @@ class MySettings():
                 myEntry.set_text(conf.init_path)
             else:
                 myEntry.set_text("None")
+            cmbbox = repository_type_combo(conf.repository_type)
+            hbox.pack_start(cmbbox, False)
             hbox.pack_start(myEntry)
             self.entry_custom_path = myEntry
             button = gtk.Button(" ... ")
             button.connect('clicked', get_folder)
-            cmbbox = repository_type_combo(conf.repository_type)
-            hbox.pack_start(cmbbox, False)
             hbox.pack_start(button, False)
             vbox.pack_start(hbox)
             return _frame(" Custom Maps Directory ", vbox)
