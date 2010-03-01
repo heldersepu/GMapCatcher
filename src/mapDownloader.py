@@ -110,7 +110,7 @@ class MapDownloader:
             self.taskq.put(None) # put sentinels for threads
         for t in self.threads:
             print ".",
-            t.join(5)
+            t.join(0.1)
         self.threads=[]
 
     def qsize(self):

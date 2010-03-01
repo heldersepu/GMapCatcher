@@ -134,6 +134,7 @@ class DLWindow(gtk.Window):
 
     ## Start the download
     def run(self, w, init_path, repostype, strFolder):
+        self.pbar.set_text(" ")
         args = MapArgs()
         if self.processing: return
         try:
@@ -207,38 +208,40 @@ class DLWindow(gtk.Window):
         file.close()
 
     def tile_received(self, coord, layer):
-        #print "tile_received(", coord, layer, self.processing, self.downloader!=None,")"
         self.complete.append((coord, layer))
         ncomplete = len(self.complete)
         nqueued = self.downloader.qsize() if self.downloader else 0
         if nqueued==0 and self.all_placed:
             self.download_complete()
             return
-        self.update_pbar("x=%d y=%d zoom=%d" % coord, ncomplete, ncomplete+nqueued)
+        self.update_pbar(
+            "x=%d y=%d zoom=%d" % coord, ncomplete, ncomplete+nqueued
+        )
 
     def update_pbar(self, text, pos, maxpos):
         self.pbar.set_text(text)
-        self.pbar.set_fraction(float(pos)/maxpos)
+        if pos != maxpos:
+            self.pbar.set_fraction(float(pos)/maxpos)
 
     def download_complete(self):
-        if self.downloader: self.downloader.stop_all()
-        self.downloader = None
-        self.processing = False
-        self.b_cancel.set_sensitive(False)
-        self.b_download.set_sensitive(True)
-        self.b_open.set_sensitive(True)
-        self.update_pbar("Complete",0,1);
+        if self.pbar.get_text() != "Canceled":
+            self.all_done("Complete")
 
     def cancel(self,w):
-        if self.downloader: self.downloader.stop_all()
+        self.all_done("Canceled")
+
+    def all_done(self, strMessage):
+        if self.downloader: 
+            self.downloader.stop_all()
         self.downloader = None
         self.processing = False
         self.b_cancel.set_sensitive(False)
         self.b_download.set_sensitive(True)
         self.b_open.set_sensitive(True)
-        self.update_pbar("Canceled",0,1);
+        self.update_pbar(strMessage, 0, 1)
 
     def on_delete(self,*params):
-        if self.downloader: self.downloader.stop_all()
+        if self.downloader: 
+            self.downloader.stop_all()
         return False
 
