@@ -3,12 +3,14 @@
 
 #from src.mapConst import MAP_MAX_ZOOM_LEVEL
 
+from src.mapConst import MAP_SERVICES
+
 ## Returns a template URL for the virtualEarth
 def layer_url_template(layer):
-    layers_name = ["r", "a", "h"]
-    return 'http://' + layers_name[layer] + \
+    layers_name = {"vemap":"r", "vesat": "a", "veter":"h"}
+    return 'http://' + layers_name[ MAP_SERVICES[layer]["TextID"] ] + \
            '%i.ortho.tiles.virtualearth.net/tiles/' + \
-           layers_name[layer] + '%s.png?g=%i'
+           layers_name[MAP_SERVICES[layer]["TextID"]] + '%s.png?g=%i'
 
 ## Returns the URL to the virtualEarth tile
 def get_url(counter, coord, layer):

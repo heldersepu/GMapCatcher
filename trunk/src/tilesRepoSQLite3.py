@@ -312,7 +312,7 @@ class TilesRepositorySQLite3(TilesRepository):
             pixbuf = self.tile_cache[filename]
         else:
             # 
-            dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0],coord[1]) )
+            dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["ID"], coord[2], (coord[0],coord[1]) )
             if dbrow is None:
                 pixbuf = self.missingPixbuf
             else:
@@ -392,7 +392,7 @@ class TilesRepositorySQLite3(TilesRepository):
 
     # PUBLIC
     def is_tile_in_local_repos(self, coord, layer):
-        dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0],coord[1]) )
+        dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["ID"], coord[2], (coord[0],coord[1]) )
         if dbrow is None:
             return False
         else:
@@ -425,7 +425,7 @@ class TilesRepositorySQLite3(TilesRepository):
             if self.tile_cache.has_key(filename):
                 return True
             
-        dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0],coord[1]) )
+        dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["ID"], coord[2], (coord[0],coord[1]) )
         if dbrow is not None:
             try: 
                 self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[5])
@@ -440,12 +440,12 @@ class TilesRepositorySQLite3(TilesRepository):
         # donwload data
         try:
             oa_data = self.mapServ_inst.get_tile_from_coord( coord, layer, mapServ, styleID )
-            logging.debug("Storing tile into DB: %i, %i, xy: %i, %i" % (layer, coord[2], coord[0], coord[1]) )
+            logging.debug("Storing tile into DB: %i, %i, xy: %i, %i" % (MAP_SERVICES[layer]["ID"], coord[2], coord[0], coord[1]) )
             try: 
                 self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[SQL_IDX_IMG])
             except:
                 pass
-            self.sqlite3func.store_tile( layer, coord[2], (coord[0], coord[1]), int( time.time() ), oa_data )
+            self.sqlite3func.store_tile( MAP_SERVICES[layer]["ID"], coord[2], (coord[0], coord[1]), int( time.time() ), oa_data )
             return True
 
         except KeyboardInterrupt:
@@ -464,7 +464,7 @@ class TilesRepositorySQLite3(TilesRepository):
     # private
     def coord_to_path(self, tile_coord, layer):
         path = os.path.join(self.mapServ_inst.configpath, 
-                            LAYER_DIRS[layer],
+                            MAP_SERVICES[layer]["layerDir"],
                             str('%d' % tile_coord[2]),
                             str(tile_coord[0] / 1024),
                             str(tile_coord[0] % 1024),

@@ -21,6 +21,9 @@ from mapConst import *
 from threading import Timer
 from gobject import TYPE_STRING
 
+class MapServException(Exception):
+    pass
+
 ## All the interaction with the map services.
 #  Other map services can be added see def get_url_from_coord
 class MapServ:
@@ -80,30 +83,50 @@ class MapServ:
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
 
-        if mapServ == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
-            return openStreetMaps.get_url(self.mt_counter, coord)
+        try:
+            if (MAP_SERVICES[layer]["TextID"] == "gmap"):
+                return googleMaps.get_url(self.mt_counter, coord, layer)
+            
+            elif (MAP_SERVICES[layer]["TextID"] == "gsat"):
+                return googleMaps.get_url(self.mt_counter, coord, layer)
+    
+            elif (MAP_SERVICES[layer]["TextID"] == "gter"):
+                return googleMaps.get_url(self.mt_counter, coord, layer)
+            
+            elif (MAP_SERVICES[layer]["TextID"] == "osmmap"):
+                return openStreetMaps.get_url(self.mt_counter, coord)
+    
+            elif (MAP_SERVICES[layer]["TextID"] == "cmmap"):
+                return cloudMade.get_url(self.mt_counter, coord, styleID)
+    
+            elif (MAP_SERVICES[layer]["TextID"] == "yter"):
+                return yahoo.get_url(self.mt_counter, coord, layer)
+    
+            elif (MAP_SERVICES[layer]["TextID"] == "ifwmap"):
+                return informationFreeway.get_url(self.mt_counter, coord)
+    
+            elif (MAP_SERVICES[layer]["TextID"] == "ocmmap"):
+                return openCycleMap.get_url(self.mt_counter, coord)
+    
+            elif (MAP_SERVICES[layer]["TextID"] == "gmmmap"):
+                return googleMapMaker.get_url(self.mt_counter, coord)
+    
+            elif (MAP_SERVICES[layer]["TextID"] == "veter"):
+                return virtualEarth.get_url(self.mt_counter, coord, layer)
 
-        elif mapServ == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
-            return cloudMade.get_url(self.mt_counter, coord, styleID)
+            elif (MAP_SERVICES[layer]["TextID"] == "ymap"):
+                return yahoo.get_url(self.mt_counter, coord, layer)
 
-        elif mapServ == MAP_SERVERS[YAHOO] and (layer != LAYER_TERRAIN):
-            return yahoo.get_url(self.mt_counter, coord, layer)
+            elif (MAP_SERVICES[layer]["TextID"] == "vemap"):
+                return virtualEarth.get_url(self.mt_counter, coord, layer)
 
-        elif mapServ == MAP_SERVERS[INFO_FREEWAY] and (layer == LAYER_MAP):
-            return informationFreeway.get_url(self.mt_counter, coord)
+            elif (MAP_SERVICES[layer]["TextID"] == "vesat"):
+                return virtualEarth.get_url(self.mt_counter, coord, layer)
+    
+        except KeyError:
+            raise MapServException("Invalid layer ID: " + str(layer) )
 
-        elif mapServ == MAP_SERVERS[OPENCYCLEMAP] and (layer == LAYER_MAP):
-            return openCycleMap.get_url(self.mt_counter, coord)
-
-        elif mapServ == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
-            return googleMapMaker.get_url(self.mt_counter, coord)
-
-        elif mapServ == MAP_SERVERS[VIRTUAL_EARTH] and (layer != LAYER_TERRAIN):
-            return virtualEarth.get_url(self.mt_counter, coord, layer)
-
-        else:
-            return googleMaps.get_url(self.mt_counter, coord, layer)
-
+    
     def get_tile_from_coord(self, coord, layer, mapServ, styleID):
         href = self.get_url_from_coord(coord, layer, mapServ, styleID)
         if href:
