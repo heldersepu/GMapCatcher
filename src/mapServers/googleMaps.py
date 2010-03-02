@@ -4,25 +4,25 @@
 import re
 import urllib
 import src.openanything as openanything
-from src.mapConst import MAP_MAX_ZOOM_LEVEL, MAP_MIN_ZOOM_LEVEL
+from src.mapConst import MAP_MAX_ZOOM_LEVEL, MAP_MIN_ZOOM_LEVEL, MAP_SERVICES
 
 known_layers = {}
 
 ## Returns a template URL for the GoogleMaps
 def layer_url_template(layer):
     if layer not in known_layers:
-        map_server_query = ["", "h", "p"]
-        layers_name = ["m", "s", "t"]
+        map_server_query = {"gmap":"", "gsat":"h", "gter":"p"}
+        layers_name = {"gmap":"m", "gsat":"s", "gter":"t"}
 
         oa = openanything.fetch(
-            'http://maps.google.com/maps?t=' + map_server_query[layer])
+            'http://maps.google.com/maps?t=' + map_server_query[ MAP_SERVICES[layer]["TextID"]  ])
 
         if oa['status'] != 200:
             print "Trying to fetch http://maps.google.com/maps but failed"
             return None
         html = oa['data']
 
-        known_layers[layer] = parse_start_page(layers_name[layer], html)
+        known_layers[layer] = parse_start_page(layers_name[ MAP_SERVICES[layer]["TextID"] ], html)
     return known_layers[layer]
 
 ## Returns the URL to the GoogleMaps tile

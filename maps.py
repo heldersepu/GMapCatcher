@@ -271,9 +271,10 @@ class MainWindow(gtk.Window):
         bbox.add(button)
 
         cmb_layer = gtk.combo_box_new_text()
-        for w in LAYER_NAMES:
+        for kw, kv in MAP_SERVICES.iteritems():
+            w = kv["serviceName"] + ": " + kv["layerName"]
             cmb_layer.append_text(w)
-        cmb_layer.set_active(LAYER_MAP)
+        cmb_layer.set_active(FIRST_LAYER_ID)
         cmb_layer.connect('changed',self.layer_changed)
         self.cmb_layer = cmb_layer
         bbox.add(cmb_layer)
@@ -647,7 +648,7 @@ class MainWindow(gtk.Window):
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path, self.conf.repository_type)
         self.downloader = MapDownloader(self.ctx_map)
-        self.layer = LAYER_MAP
+        self.layer = FIRST_LAYER_ID #LAYER_MAP
         self.enable_gps()
 
         gtk.Window.__init__(self)

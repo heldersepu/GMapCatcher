@@ -110,6 +110,7 @@ class TilesRepositoryFS(TilesRepository):
         except KeyboardInterrupt:
             raise
         except:
+            print "Debug: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]) + str(sys.exc_info()[2])
             print '\tdownload failed -', sys.exc_info()[0]
         return False
 
@@ -123,7 +124,7 @@ class TilesRepositoryFS(TilesRepository):
     # private
     def coord_to_path(self, tile_coord, layer):
         path = os.path.join(self.configpath, 
-                            LAYER_DIRS[layer],
+                            MAP_SERVICES[layer]["layerDir"],
                             str(tile_coord[2]),
                             str(tile_coord[0] / 1024),
                             str(tile_coord[0] % 1024),
@@ -141,7 +142,7 @@ class TilesRepositoryFS(TilesRepository):
     # private
     def coord_to_path_checkdirs(self, tile_coord, layer):
         self.lock.acquire()
-        path = os.path.join(self.configpath, LAYER_DIRS[layer])
+        path = os.path.join(self.configpath, MAP_SERVICES[layer]["layerDir"],)
         path = fileUtils.check_dir(path)
         path = fileUtils.check_dir(path, '%d' % tile_coord[2])
         path = fileUtils.check_dir(path, "%d" % (tile_coord[0] / 1024))
