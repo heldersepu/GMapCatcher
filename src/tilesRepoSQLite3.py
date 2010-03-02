@@ -1,4 +1,4 @@
-## This modul provides filebased tile repository functions
+## This modul provides sqlite3 tile repository functions
 #
 # Usage:
 #
@@ -6,8 +6,13 @@
 #  'get_tile_from_coord' is provided in the MapServ
 #
 # - this module is not used directly. It is used via MapServ() methods:
-#     - get_file()
-#     - load_pixbuf()
+#    def finish(self):
+#    def load_pixbuf(self, coord, layer, force_update):
+#    def get_tile(self, tcoord, layer, online, force_update, mapServ, styleID):
+#    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
+#    def remove_old_tile(self, coord, layer, filename=None, interval=86400):
+#    def is_tile_in_local_repos(self, coord, layer):
+#    def set_repository_path(self, newpath):
 # - module is finalized from MapServ.finish() method
 
 
@@ -363,7 +368,8 @@ class TilesRepositorySQLite3(TilesRepository):
     def remove_old_tile(self, coord, layer, filename=None, intSeconds=86400):
         dbrow = self.sqlite3func.get_tile_row(type, coord[2], (coord[0],coord[1]) )
         
-        if dbrow[SQL_IDX_TSTAMP >= int( time.time() ) - intSeconds]:
+        # TODO: should be OK, but test properly
+        if dbrow[SQL_IDX_TSTAMP] >= (int( time.time() ) - intSeconds):
             try:
                 if filename is None:
                     filename = self.coord_to_path(coord, layer)
