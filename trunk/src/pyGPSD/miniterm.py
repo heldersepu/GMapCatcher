@@ -14,7 +14,7 @@ DEFAULT_BAUD = 4800
 
 class Miniterm:
     def __init__(self, port, baudrate, parity, rtscts, xonxoff):
-        self.serial = serial.serial_for_url(port, baudrate, parity=parity, 
+        self.serial = serial.serial_for_url(port, baudrate, parity=parity,
                                 rtscts=rtscts, xonxoff=xonxoff, timeout=1)
 
     def start(self):
@@ -34,7 +34,7 @@ class Miniterm:
         """loop and copy serial->console"""
         while self.alive:
             data = self.serial.read(1)
-            sys.stdout.write(data)            
+            sys.stdout.write(data)
             sys.stdout.flush()
 
 

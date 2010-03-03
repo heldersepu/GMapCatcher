@@ -77,7 +77,7 @@ class MapConf():
             strPath = fileUtils.check_dir(strPath)
             if os.path.isdir(strPath):
                 self.init_path = strPath
-                
+
         ## Repository type - filebased / sqlite3
         self.repository_type =  read_config('repository_type', 0, int)
 

@@ -33,7 +33,7 @@ from tilesRepo import TilesRepository
 class TilesRepositoryFS(TilesRepository):
 
     def __init__(self, MapServ_inst):
-        self.configpath = None 
+        self.configpath = None
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
         self.lock = Lock()
@@ -52,7 +52,7 @@ class TilesRepositoryFS(TilesRepository):
         path = self.coord_to_path(coord, layer)
         return  os.path.isfile(path)
 
-    
+
     def remove_old_tile(self, coord, layer, filename=None, intSeconds=86400):
         if filename is None:
             filename = self.coord_to_path(coord, layer)
@@ -64,7 +64,7 @@ class TilesRepositoryFS(TilesRepository):
             except KeyError:
                 pass
         return retval
-        
+
 
     ## Returns the PixBuf of the tile
     # Uses a cache to optimise HDD read access
@@ -123,7 +123,7 @@ class TilesRepositoryFS(TilesRepository):
     #  at most 1024 files in one dir
     # private
     def coord_to_path(self, tile_coord, layer):
-        path = os.path.join(self.configpath, 
+        path = os.path.join(self.configpath,
                             MAP_SERVICES[layer]["layerDir"],
                             str(tile_coord[2]),
                             str(tile_coord[0] / 1024),

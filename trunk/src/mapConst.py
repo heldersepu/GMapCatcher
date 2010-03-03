@@ -19,8 +19,8 @@ MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade", "Yahoo",
                "Virtual Earth"]
 
 #element of the array "ID" is constant and is associated with the layer. Never change it.
-# order in the comboBox is given by the order of the lines.  
-#If wants to change the order - move lines, but don't change "ID". 
+# order in the comboBox is given by the order of the lines.
+#If wants to change the order - move lines, but don't change "ID".
 #If layers are added / removed - change the decision making in mapServices.get_url_from_coord()
 FIRST_LAYER_ID = 0
 MAP_SERVICES_PLAIN = [
@@ -50,7 +50,7 @@ if (MAP_SERVICES is None):
         idx = idx + 1
 MAP_SERVICES_PTR = None
 if (MAP_SERVICES_PTR is None):
-    # prepare array reverse pointers - mapping [TextID] => index in combobox 
+    # prepare array reverse pointers - mapping [TextID] => index in combobox
     MAP_SERVICES_PTR = {}
     for k,v in MAP_SERVICES.iteritems():
         MAP_SERVICES_PTR[v["TextID"]] = k;

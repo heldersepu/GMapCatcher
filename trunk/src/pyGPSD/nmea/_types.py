@@ -171,7 +171,7 @@ class velocity(float):
     def kilometers_per_hour(self):
         """ value in kilometers per hour """
         return self * 1.852
-    kmph = kilometers_per_hour 
+    kmph = kilometers_per_hour
 
     def meters_per_second(self):
         """ value in meters per second """
