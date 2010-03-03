@@ -185,7 +185,7 @@ class DLWindow(gtk.Window):
         self.save_info(check_dir(strFolder), str(args))
         dThread = Timer(0, downThread)
         dThread.start()
-        
+
 
     # Open a previously saved file and auto-populate the fields
     def do_open(self, w, strPath):

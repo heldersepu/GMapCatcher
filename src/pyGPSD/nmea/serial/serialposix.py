@@ -258,7 +258,7 @@ TIOCCBRK  = hasattr(TERMIOS, 'TIOCCBRK') and TERMIOS.TIOCCBRK or 0x5428
 
 
 class PosixSerial(SerialBase):
-    """Serial port class POSIX implementation. Serial port configuration is 
+    """Serial port class POSIX implementation. Serial port configuration is
     done with termios and fcntl. Runs on Linux and many other Un*x like
     systems."""
 
@@ -451,7 +451,7 @@ class PosixSerial(SerialBase):
                     #  handled below
                 buf = os.read(self.fd, size - len(read))
                 read.extend(buf)
-                if ((self._timeout is not None and self._timeout >= 0) or 
+                if ((self._timeout is not None and self._timeout >= 0) or
                     (self._interCharTimeout is not None and self._interCharTimeout > 0)) and not buf:
                     break   # early abort on timeout
         return bytes(read)

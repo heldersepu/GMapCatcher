@@ -12,7 +12,7 @@ def kml_to_markers(strFileName, marker):
 
     try:
         with open(strFileName) as f:
-            fileString = unicode(f.read(), errors='ignore')            
+            fileString = unicode(f.read(), errors='ignore')
         dom = parseString(fileString)
         PlacemarkElements = dom.getElementsByTagName("Placemark")
     except Exception as excInst:

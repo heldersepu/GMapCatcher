@@ -25,17 +25,17 @@ def get_tile_repository(mapservice, configpath, tilerepostype):
 
     if _repository_path == configpath and _repository_type == tilerepostype and _repository_inst is not None:
         return _repository_inst
-    
-        
-    
+
+
+
     if _repository_inst is not None:
-        
+
         if _repository_type == tilerepostype:
             _repository_path = configpath
             print "Setting new repository path: " + configpath + " for type: " + str(tilerepostype)
             _repository_inst.set_repository_path(configpath)
             return _repository_inst
-        
+
         _repository_inst.finish()
         _repository_inst = None
 
@@ -43,9 +43,9 @@ def get_tile_repository(mapservice, configpath, tilerepostype):
     _repository_type = tilerepostype
     create_repos_inst(mapservice)
     _repository_path = configpath
-    
+
     return _repository_inst
-    
+
 # private static
 def create_repos_inst(mapservice):
     global _repository_inst
@@ -54,11 +54,11 @@ def create_repos_inst(mapservice):
 
     if _repository_type == mapConst.ROPES_TYPE_FILES:
         _repository_inst = tilesRepoFS.TilesRepositoryFS(mapservice)
-    
+
     elif _repository_type == mapConst.ROPES_TYPE_SQLITE3:
         _repository_inst = tilesRepoSQLite3.TilesRepositorySQLite3(mapservice)
-        
-    else: 
+
+    else:
         _repository_inst = tilesRepoFS.TilesRepositoryFS(mapservice)
-        
-            
+
+

@@ -60,7 +60,7 @@ def workLoop(s, f, options):
                             pass
                         else:
                             data = adata[1]
-                
+
                 try:
                     conn.send(data)
                 except socket.error:

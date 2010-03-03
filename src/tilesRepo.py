@@ -26,19 +26,19 @@ class TilesRepository:
 
     def load_pixbuf(self, coord, layer, force_update):
         raise NotImplementedException()
-    
+
     def get_tile(self, tcoord, layer, online, force_update, mapServ, styleID):
         raise NotImplementedException()
-    
+
     def do_export(self, tcoord, layer, online, mapServ, styleID, size):
         raise NotImplementedException()
-    
+
     def remove_old_tile(self, coord, layer, filename=None, interval=86400):
         raise NotImplementedException()
 
     def is_tile_in_local_repos(self, coord, layer):
         raise NotImplementedException()
-    
+
     def set_repository_path(self, newpath):
         raise NotImplementedException()
 

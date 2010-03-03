@@ -5,7 +5,7 @@
 # (C) 2001-2009 Chris Liechti <cliechti@gmx.net>
 # this is distributed under a free software license, see license.txt
 
-# compatibility folder Python < 2.6 
+# compatibility folder Python < 2.6
 try:
     bytes
     bytearray

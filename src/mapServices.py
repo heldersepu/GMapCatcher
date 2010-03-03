@@ -36,20 +36,20 @@ class MapServ:
 
     def write_locations(self):
         fileUtils.write_file('location', self.locationpath, self.locations)
-    
+
     def initLocations(self, configpath, tilerepostype):
         configpath = os.path.expanduser(configpath or DEFAULT_PATH)
         self.mt_counter=0
         self.configpath = fileUtils.check_dir(configpath)
         self.locationpath = os.path.join(self.configpath, 'locations')
         self.locations = {}
-        
+
         if tilerepostype is None:
             tilerepostype = DEFAULT_REPOS_TYPE
         print "Debug: confpath: " + configpath + ", repostype: " + str(tilerepostype)
         self.tile_repository = tilesRepoFactory.get_tile_repository(self, configpath, tilerepostype)
-    
-    
+
+
     def __init__(self, configpath=None, tilerepostype=None):
         self.tile_repository = None
         self.initLocations(configpath, tilerepostype)
@@ -86,31 +86,31 @@ class MapServ:
         try:
             if (MAP_SERVICES[layer]["TextID"] == "gmap"):
                 return googleMaps.get_url(self.mt_counter, coord, layer)
-            
+
             elif (MAP_SERVICES[layer]["TextID"] == "gsat"):
                 return googleMaps.get_url(self.mt_counter, coord, layer)
-    
+
             elif (MAP_SERVICES[layer]["TextID"] == "gter"):
                 return googleMaps.get_url(self.mt_counter, coord, layer)
-            
+
             elif (MAP_SERVICES[layer]["TextID"] == "osmmap"):
                 return openStreetMaps.get_url(self.mt_counter, coord)
-    
+
             elif (MAP_SERVICES[layer]["TextID"] == "cmmap"):
                 return cloudMade.get_url(self.mt_counter, coord, styleID)
-    
+
             elif (MAP_SERVICES[layer]["TextID"] == "yter"):
                 return yahoo.get_url(self.mt_counter, coord, layer)
-    
+
             elif (MAP_SERVICES[layer]["TextID"] == "ifwmap"):
                 return informationFreeway.get_url(self.mt_counter, coord)
-    
+
             elif (MAP_SERVICES[layer]["TextID"] == "ocmmap"):
                 return openCycleMap.get_url(self.mt_counter, coord)
-    
+
             elif (MAP_SERVICES[layer]["TextID"] == "gmmmap"):
                 return googleMapMaker.get_url(self.mt_counter, coord)
-    
+
             elif (MAP_SERVICES[layer]["TextID"] == "veter"):
                 return virtualEarth.get_url(self.mt_counter, coord, layer)
 
@@ -122,11 +122,11 @@ class MapServ:
 
             elif (MAP_SERVICES[layer]["TextID"] == "vesat"):
                 return virtualEarth.get_url(self.mt_counter, coord, layer)
-    
+
         except KeyError:
             raise MapServException("Invalid layer ID: " + str(layer) )
 
-    
+
     def get_tile_from_coord(self, coord, layer, mapServ, styleID):
         href = self.get_url_from_coord(coord, layer, mapServ, styleID)
         if href:
@@ -168,7 +168,7 @@ class MapServ:
     def load_pixbuf(self, coord, layer, force_update):
         return self.tile_repository.load_pixbuf(coord, layer, force_update)
 
-    
+
 
     def completion_model(self, strAppend=''):
         store = gtk.ListStore(TYPE_STRING)

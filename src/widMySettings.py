@@ -113,7 +113,7 @@ class MySettings():
                 conf.init_zoom = self.s_zoom.get_value_as_int()
                 conf.init_width = self.s_width.get_value_as_int()
                 conf.init_height = self.s_height.get_value_as_int()
-                
+
                 if( os.pathsep == ';' ):
                     # we have windows OS, filesystem is case insensitive
                     newPath = (self.entry_custom_path.get_text().lower()).strip()
@@ -121,7 +121,7 @@ class MySettings():
                 else:
                     newPath = (self.entry_custom_path.get_text()).strip()
                     oldPath = conf.init_path.strip()
-                    
+
                 if (newPath != "" and newPath.lower() != "none") or (self.cmb_repos_type.get_active() != conf.repository_type):
                     #if strTemp != (conf.init_path.lower()).strip():
                     if (newPath != oldPath) or (self.cmb_repos_type.get_active() != conf.repository_type):
