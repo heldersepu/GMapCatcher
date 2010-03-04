@@ -5,6 +5,7 @@ import re
 import urllib
 import src.openanything as openanything
 from src.mapConst import MAP_MAX_ZOOM_LEVEL, MAP_MIN_ZOOM_LEVEL, MAP_SERVICES
+from src.mapConf import MapConfFactory
 
 known_layers = {}
 
@@ -53,8 +54,8 @@ def parse_start_page(layer, html):
     #  although the uniform URL pattern still works, the result
     # from it is different from google map's web. the later contains
     # more labels and routes. see Issue 94, comment 2
-
-    match_str = '&hl=en&x=%i&y=%i&z=%i'
+    conf = MapConfFactory.get_conf()
+    match_str = '&hl='+conf.language+'&x=%i&y=%i&z=%i'
 
     # we first check the existence of the uniform URL pattern,
     # if not, we fall back to the old method.

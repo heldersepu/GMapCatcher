@@ -7,6 +7,8 @@ import gtk
 from mapConst import *
 from customWidgets import _SpinBtn, _frame, lbl, FolderChooser
 
+
+LANGUAGES = ["en", "zh"]
 ## This widget lets the user change common settings
 class MySettings():
     ## Put all the settings Widgets together
@@ -50,7 +52,6 @@ class MySettings():
                 self.cmb_repos_type = gtk.combo_box_new_text()
                 for strMode in REPOS_TYPE:
                     self.cmb_repos_type.append_text(strMode)
-                self.cmb_repos_type.set_active(repos_type_id)
                 return self.cmb_repos_type
 
             def get_folder(button):
@@ -88,6 +89,21 @@ class MySettings():
             vbox.pack_start(hbox)
             return _frame(" Custom Maps Directory ", vbox)
 
+        def _language(old_lang="en"):
+            vbox = gtk.VBox(False, 5)
+            combo = gtk.combo_box_new_text()
+            nr = -1
+            df = 0
+            for lang in LANGUAGES:
+                nr = nr + 1
+                combo.append_text(lang)
+                if (lang == old_lang):
+                    df = nr
+            combo.set_active(df)
+            vbox.pack_start(combo)
+	    self.s_language = combo
+            return _frame(" Language ", vbox)
+
         def _action_buttons(conf, parent):
             def btn_revert_clicked(button):
                 self.s_center00.set_value(conf.init_center[0][0])
@@ -113,6 +129,7 @@ class MySettings():
                 conf.init_zoom = self.s_zoom.get_value_as_int()
                 conf.init_width = self.s_width.get_value_as_int()
                 conf.init_height = self.s_height.get_value_as_int()
+		conf.language = self.s_language.get_active_text()
 
                 if( os.pathsep == ';' ):
                     # we have windows OS, filesystem is case insensitive
@@ -166,6 +183,7 @@ class MySettings():
         conf = parent.conf
         hbox.pack_start(_size(conf.init_width, conf.init_height))
         hbox.pack_start(_zoom(conf.init_zoom), False)
+        hbox.pack_start(_language(conf.language))
         vbox.pack_start(hbox, False)
 
         hbox = gtk.HBox(False, 10)
