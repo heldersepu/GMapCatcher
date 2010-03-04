@@ -9,7 +9,6 @@ from mapUtils import str_to_tuple
 
 ## Class used to read and save the configuration values
 class MapConf():
-
     ## Returns the Path to the configuration file
     def get_configpath(self):
         # the config file most be in the DEFAULT_PATH
@@ -45,6 +44,7 @@ class MapConf():
         config.set(SECTION_INIT, 'check_for_updates', self.check_for_updates)
         config.set(SECTION_INIT, 'gps_mode', self.gps_mode)
         config.set(SECTION_INIT, 'cloudmade_styleid', self.cloudMade_styleID)
+	config.set(SECTION_INIT, 'language', self.language)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -98,9 +98,20 @@ class MapConf():
         self.gps_mode = read_config('gps_mode', GPS_DISABLED, int)
         ## Initial style ID for the CloudMade maps
         self.cloudMade_styleID = read_config('cloudmade_styleid', 1, int)
+	## language setting, default is 'en'
+        self.language = read_config('language', 'en', str)
 
     ## Write the configuration to the default file
     def save(self):
         configpath = self.get_configpath()
         self.write(configpath)
+
+internal_map_conf = None
+class MapConfFactory():
+    @staticmethod
+    def get_conf():
+        global internal_map_conf
+        if internal_map_conf is None:
+            internal_map_conf = MapConf()
+        return internal_map_conf
 

@@ -27,7 +27,6 @@ class MapServException(Exception):
 ## All the interaction with the map services.
 #  Other map services can be added see def get_url_from_coord
 class MapServ:
-
     # coord = (lat, lng, zoom_level)
     exThread = None
 
