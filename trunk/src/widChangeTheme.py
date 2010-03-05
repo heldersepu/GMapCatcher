@@ -66,6 +66,7 @@ class ChangeTheme():
 
     ## ComboBox to change the map service
     def service_combo(self, map_service):
+        vbox = gtk.VBox(False, 5)
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(lbl("Select your favorite map service: "))
         self.cmb_service = gtk.combo_box_new_text()
@@ -76,7 +77,15 @@ class ChangeTheme():
                 intActive = intPos
         self.cmb_service.set_active(intActive)
         hbox.pack_start(self.cmb_service)
-        return _frame(" Map service ", hbox)
+        vbox.pack_start(hbox)
+        
+        # Check box for option to create a dir per Map service
+        hbox = gtk.HBox()
+        self.cb_oneDirPerMap = gtk.CheckButton( \
+            "Use different directory per Map Service")
+        hbox.pack_start(self.cb_oneDirPerMap)
+        vbox.pack_start(hbox)
+        return _frame(" Map service ", vbox)
 
     ## Put all the ChangeTheme Widgets together
     def show(self, conf):
