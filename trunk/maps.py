@@ -271,7 +271,7 @@ class MainWindow(gtk.Window):
 
         cmb_layer = gtk.combo_box_new_text()
         for kw, kv in MAP_SERVICES.iteritems():
-            w = kv["serviceName"] + ": " + kv["layerName"]
+            w = kv["serviceName"] + " " + kv["layerName"]
             cmb_layer.append_text(w)
         cmb_layer.set_active(FIRST_LAYER_ID)
         cmb_layer.connect('changed',self.layer_changed)

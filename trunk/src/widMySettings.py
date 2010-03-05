@@ -52,6 +52,7 @@ class MySettings():
                 self.cmb_repos_type = gtk.combo_box_new_text()
                 for strMode in REPOS_TYPE:
                     self.cmb_repos_type.append_text(strMode)
+                self.cmb_repos_type.set_active(repos_type_id)
                 return self.cmb_repos_type
 
             def get_folder(button):
