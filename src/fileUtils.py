@@ -145,3 +145,40 @@ def delete_old(filename, intSeconds=86400):
                 return True
             except:
                 pass
+
+
+
+def read_asalt(filePath):
+    print "read from asalt file"
+	
+	
+
+def write_asalt(filePath,updates):
+    try:
+        file = open(filePath, "w")
+    except Exception:
+        print 'Error! Can NOT write file:'
+        print '  ' + filePath
+        return
+    file.write("#This is the ASALT data file used by GmapCatcher\n"+\
+               "#the data shown here has been returned by the vehicle\n"+\
+               "#during its last journey\n"
+              )
+    if(updates is not None):
+	    for data in updates:
+	       file.write('lat="%s"\tlng="%s"\tpitch="%s"\troll="%s"\theading="%s"\tstatus="%s"\n' %
+		      (str(data[0]),str(data[1]), str(data[2]), str(data[3]), str(data[4]),str(data[5])))
+    file.close()
+
+def append_asalt(filePath,data):
+    print "append to asalt file"
+    print data
+    try:
+        file = open(filePath, "a")
+    except Exception:
+        print 'Error! Can NOT write file:'
+        print '  ' + filePath
+        return
+    file.write('lat="%s"\tlng="%s"\tpitch="%s"\troll="%s"\theading="%s"\tstatus="%s"\n' %
+              (str(data[0]),str(data[1]), str(data[2]), str(data[3]), str(data[4]),str(data[5])))
+    file.close()
