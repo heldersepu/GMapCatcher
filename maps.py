@@ -15,6 +15,7 @@ from src.mapConf import MapConf
 from src.mapMark import MyMarkers
 from src.DLWindow import DLWindow
 from src.ASALTWindow import ASALTWindow
+from src.ASALTradio import ASALTradio
 from src.mapUpdate import CheckForUpdates
 from src.mapServices import MapServ
 from src.customMsgBox import error_msg
@@ -193,21 +194,33 @@ class MainWindow(gtk.Window):
         #xval = (yinter2 - yinter1) / (slope1 - slope2)
         #yval = slope2*xval + yinter2
         
-        slope1 = (y2-y1)/(x2-x1)
-        slope2 = (y4-y3)/(x4-x3)
+        
+        if(x2-x1 != 0 or x4-x3 != 0):
+		slope1 = (y2-y1)/(x2-x1)
+		slope2 = (y4-y3)/(x4-x3)
+	else:
+		slope1 = 0
+		slope2 = 0
         yinter1 = y1- slope1*x1
         yinter1b = y2- slope1*x2
         yinter2 = y3 - slope2*x3
         yinter2b = y4 - slope2*x4
        
         xval = (yinter2 - yinter1) / (slope1 - slope2)
-        yval = slope2*xval + yinter2
-                
-        
-        if (y3 <= yval <= y4):
+        yval = slope2*xval + yinter2    
+
+	#print "xval ",xval," yval ",yval
+	#print coord1
+	#print coord2
+        if (((coord1[0] <= xval) and (xval <= coord2[0])) or ((coord2[0] <= xval) and (xval <= coord1[0]))):
+        	print type(yval)
+        	print type(coord3[1])
+        	print type(coord4[1])
         	print "INTERSECTION at ",yval,",",xval
         	print coord1
         	print coord2
+        	print (coord3[1] <= yval)
+        	print (yval <= coord4[1])
                 
     		return 1
         else:
@@ -220,8 +233,9 @@ class MainWindow(gtk.Window):
     
   
     def validate_path(self, w):
+    	valid = True
     	print "VALIDATING!!"
-        bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
+        #bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
         bad_area2 = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
 		     (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
 		     (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
@@ -234,45 +248,33 @@ class MainWindow(gtk.Window):
         #gc.foreground("blue")
         
         for strName in self.marker.positions.keys():
-               
-            
             if(prevName!=""):
             	foo = 0
             	#MainWindow.draw_marker_line(self, strName, prevName)
         	#self.drawing_area.repaint()
-        	
-            	if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[0],bad_area[1])):
-            	      if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
-			      a,b,c,d,e = self.marker.positions[strName]
-			      d = -1
-			      self.marker.positions[strName] = a,b,c,d,e
-			      a,b,c,d,e = self.marker.positions[prevName]
-		              d = -1
-			      self.marker.positions[prevName] = a,b,c,d,e
-            	if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[1],bad_area[2])):
-            	      if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
-			      a,b,c,d,e = self.marker.positions[strName]
-			      d = -1
-			      self.marker.positions[strName] = a,b,c,d,e
-		              a,b,c,d,e = self.marker.positions[prevName]
-			      d = -1
-			      self.marker.positions[prevName] = a,b,c,d,e
-            	if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[2],bad_area[3])):
-            	      if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
-			      a,b,c,d,e = self.marker.positions[strName]
-			      d = -1
-			      self.marker.positions[strName] = a,b,c,d,e
-			      a,b,c,d,e = self.marker.positions[prevName]
-			      d = -1
-			      self.marker.positions[prevName] = a,b,c,d,e
-            	if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[3],bad_area[0])):
-            	      if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
-			      a,b,c,d,e = self.marker.positions[strName]
-			      d = -1
-			      self.marker.positions[strName] = a,b,c,d,e
-			      a,b,c,d,e = self.marker.positions[prevName]
-			      d = -1
-			      self.marker.positions[prevName] = a,b,c,d,e
+        	for i in range(len(bad_area2)):
+	   		if(i == len(bad_area2)-1):
+				if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area2[i],bad_area2[0])):
+					if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
+					      a,b,c,d,e = self.marker.positions[strName]
+					      d = -1
+					      self.marker.positions[strName] = a,b,c,d,e
+					      a,b,c,d,e = self.marker.positions[prevName]
+					      d = -1
+					      self.marker.positions[prevName] = a,b,c,d,e
+					      valid = False
+         		else:
+				if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area2[i],bad_area2[i+1])):
+					if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
+					      a,b,c,d,e = self.marker.positions[strName]
+					      d = -1
+					      self.marker.positions[strName] = a,b,c,d,e
+					      a,b,c,d,e = self.marker.positions[prevName]
+					      d = -1
+					      self.marker.positions[prevName] = a,b,c,d,e
+					      valid = False			      
+			      
+	
             	
             #for coor in bad_area:
             #	print coor[0]            
@@ -282,15 +284,15 @@ class MainWindow(gtk.Window):
 	
 	self.marker.write_markers()
 	self.drawing_area.repaint()
-        asltw = ASALTWindow(
-	                        self.layer, self.conf.init_path,
-	                        self.conf.map_service,
-	                        self.conf.cloudMade_styleID
+        self.asltw = ASALTWindow(
+	                        self.conf.init_path,
+	                        self.marker,
+	                        valid
 	                    )
         #asltw.show()
         #asltw.txt_to_console(self, "foobar")
 
-    
+
     
 
     ## Called when new coordinates are obtained from the GPS
@@ -602,23 +604,23 @@ class MainWindow(gtk.Window):
             coord = (None, None, None)
 
 	# Draw no go area
-	bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
+	#bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
 	bad_area2 = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
 	             (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
 	             (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
 	             (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
 	             (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
 	             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
-	self.drawing_area.draw_marker_line(bad_area[0], bad_area[1], zl, pixDim,"green")
-	self.drawing_area.draw_marker_line(bad_area[1], bad_area[2], zl, pixDim,"green")
-	self.drawing_area.draw_marker_line(bad_area[2], bad_area[3], zl, pixDim,"green")
-	self.drawing_area.draw_marker_line(bad_area[3], bad_area[0], zl, pixDim,"green")
+	#self.drawing_area.draw_marker_line(bad_area[0], bad_area[1], zl, pixDim,"green")
+	#self.drawing_area.draw_marker_line(bad_area[1], bad_area[2], zl, pixDim,"green")
+	#self.drawing_area.draw_marker_line(bad_area[2], bad_area[3], zl, pixDim,"green")
+	#self.drawing_area.draw_marker_line(bad_area[3], bad_area[0], zl, pixDim,"green")
 	for i in range(len(bad_area2)):
 	   if(i == len(bad_area2)-1):
 	   	#print "i=",i
-	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[0], zl, pixDim,"green")
+	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[0], zl, pixDim,"red")
 	   else:
-	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[i+1], zl, pixDim,"green")
+	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[i+1], zl, pixDim,"red")
 
 
         # Draw the markers
@@ -631,7 +633,7 @@ class MainWindow(gtk.Window):
             if zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0]):
                 draw_image(mpos, img, pixDim, pixDim)
             if (prevmark != "" and zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0])):
-            	self.drawing_area.draw_marker_line(self.marker.positions[str], self.marker.positions[prevmark], zl, pixDim,"red")
+            	self.drawing_area.draw_marker_line(self.marker.positions[str], self.marker.positions[prevmark], zl, pixDim,"green")
             	if(self.marker.positions[prevmark][3] == -1):
             	    img = self.marker.get_marker_pixbuf2(zl)
             	else:
@@ -640,6 +642,21 @@ class MainWindow(gtk.Window):
             prevmark = str
             img = self.marker.get_marker_pixbuf(zl)
 
+	prevmark = ""
+	# Draw vehicle position markers
+	if(self.asltw is not None):
+	    updates = self.asltw.get_updates()
+	    if(updates != []):
+	       for loc in updates:
+	          img = self.marker.get_marker_pixbuf3(zl)
+		  if (loc[0] != coord[0] and loc[1] != coord[0]):
+		     draw_image(loc, img, pixDim, pixDim)
+		     if (prevmark != "" and (loc[0] != coord[0] and loc[1] != coord[0])):
+		        self.drawing_area.draw_marker_line(loc, prevmark, zl, pixDim,"purple")
+		        draw_image(prevmark, img, pixDim, pixDim)
+                  prevmark = loc
+	
+	
         # Draw GPS position
         if mapGPS.available:
             location = self.gps.get_location()
@@ -761,7 +778,7 @@ class MainWindow(gtk.Window):
     def __init__(self, parent=None):
         self.conf = MapConf()
         self.crossPixbuf = mapPixbuf.cross()
-
+	self.asltw = None
         if mapGPS.available:
             self.gps = mapGPS.GPS(self.gps_callback,
                                   self.conf.gps_update_rate,
