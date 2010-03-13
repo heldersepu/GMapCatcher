@@ -11,9 +11,9 @@ def kml_to_markers(strFileName, marker):
         return rc
 
     try:
-        with open(strFileName) as f:
-            fileString = unicode(f.read(), errors='ignore')            
-        dom = parseString(fileString)
+        #with open(strFileName) as f:
+        #    fileString = unicode(f.read(), errors='ignore')            
+        #dom = parseString(fileString)
         PlacemarkElements = dom.getElementsByTagName("Placemark")
     except:
         return False
