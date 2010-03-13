@@ -16,6 +16,7 @@ class ASALTradio():
     	self.ser.port = 0 
     	self.ser.timeout = 10
 	self.ser.open()
+	self.ser.flushInput()
     
     def send(self, data, type):
        start_char = struct.pack(c,"\x55")
@@ -72,13 +73,13 @@ class ASALTradio():
 
     def parse_status(self, radio):
     	sf = struct.Struct('f')
-     	si = struct.Struct('I')
+     	si = struct.Struct('H')
         lat_in = radio.read(4)
 	long_in = radio.read(4)
 	heading_in = radio.read(4)
 	pitch_in = radio.read(4)
 	roll_in = radio.read(4)
-	status_in = radio.read(4)
+	status_in = radio.read(2)
 	lat = sf.unpack(lat_in)
 	long = sf.unpack(long_in)
 	heading = sf.unpack(heading_in)
@@ -97,44 +98,29 @@ class ASALTradio():
        
        radio = self.ser
        print "receive"
-       #available2 = True
-       #for i in range(50000):
-           #wait = radio.inWaiting()
-           #if(wait):
-     	   #	print radio.inWaiting()
        try:
           currtime = time.time();
           while True:
+          	print "waiting "
           	#wait for characters to appear in buffer
+          	print radio.inWaiting()
           	if(radio.inWaiting() > 0):
           		break
           	#timeout after 20 seconds
-          	if(time.time() >= currtime + 20):
-          		return "Timeout, please query again"
+          	if(time.time() >= currtime + 10):
+          		return "Timeout, please query again"	
           return self.parse_status(radio)
-          #if(radio.inWaiting() != 0):
-	  #     result = self.parse_status(radio)
-	  #     if(35 < result[0] < 40):
-	  #        return result
-	  #     else:
-	  #     	  return "Error, bad data, please query again"
-	  #else:
-	  #     time.sleep(2)
-	  #     result = self.parse_status(radio)
-	  #     if(35 < result[0] < 40):
-	  #     	   return result
-	  #     else:
-	  #         return "Error, bad data, please query again"
-	       #return "Timeout Error"
        except OSError:
        #except EOFError:
-       	       radio.flushInput()
-       	       return "ERROR, please query again"
+       	  radio.flushInput()
+       	  return "ERROR, please query again"
        
     def query(self):
         sc = struct.Struct('c')
         print "sending query\n"
         radio = self.ser
+        radio.flushInput()
+        print radio.inWaiting()
         radio.write(sc.pack('A'))
 	radio.write(sc.pack('A'))
 	print "sent\n"
