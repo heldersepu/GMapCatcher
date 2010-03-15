@@ -70,6 +70,10 @@ class ASALTradio():
            radio.write(c1)
            radio.write(c2)
            radio.write(c3)
+    
+    def checkBit(value, offset):
+        mask = 1 << offset
+        return(int_type & mask)
 
     def parse_status(self, radio):
     	sf = struct.Struct('f')
@@ -120,11 +124,18 @@ class ASALTradio():
         print "sending query\n"
         radio = self.ser
         radio.flushInput()
-        print radio.inWaiting()
         radio.write(sc.pack('A'))
 	radio.write(sc.pack('A'))
+	radio.write(sc.pack('S'))
 	print "sent\n"
 
+    def send_stop(self):
+        sc = struct.Struct('c')
+        radio = self.ser
+        radio.flushInput()
+        radio.write(sc.pack('A'))
+	radio.write(sc.pack('A'))
+	radio.write(sc.pack('H'))
 
     def get_location(self):
     	return self.location

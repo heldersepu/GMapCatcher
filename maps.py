@@ -403,7 +403,7 @@ class MainWindow(gtk.Window):
         
 
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
-        gtk.stock_add([(gtk.STOCK_APPLY, "_Validate", 0, 0, "")])
+        gtk.stock_add([(gtk.STOCK_APPLY, "_Validate Path", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_APPLY)
         button.connect('clicked', self.validate_path)
         bbox.add(button)
@@ -418,7 +418,7 @@ class MainWindow(gtk.Window):
         cmb_layer = gtk.combo_box_new_text()
         for w in LAYER_NAMES:
             cmb_layer.append_text(w)
-        cmb_layer.set_active(0)
+        cmb_layer.set_active(1)
         cmb_layer.connect('changed',self.layer_changed)
         bbox.add(cmb_layer)
 
@@ -611,16 +611,13 @@ class MainWindow(gtk.Window):
 	             (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
 	             (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
 	             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
-	#self.drawing_area.draw_marker_line(bad_area[0], bad_area[1], zl, pixDim,"green")
-	#self.drawing_area.draw_marker_line(bad_area[1], bad_area[2], zl, pixDim,"green")
-	#self.drawing_area.draw_marker_line(bad_area[2], bad_area[3], zl, pixDim,"green")
-	#self.drawing_area.draw_marker_line(bad_area[3], bad_area[0], zl, pixDim,"green")
+	
 	for i in range(len(bad_area2)):
 	   if(i == len(bad_area2)-1):
 	   	#print "i=",i
-	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[0], zl, pixDim,"red")
+	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[0], zl, pixDim,"red",3)
 	   else:
-	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[i+1], zl, pixDim,"red")
+	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[i+1], zl, pixDim,"red",3)
 
 
         # Draw the markers
@@ -633,7 +630,7 @@ class MainWindow(gtk.Window):
             if zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0]):
                 draw_image(mpos, img, pixDim, pixDim)
             if (prevmark != "" and zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0])):
-            	self.drawing_area.draw_marker_line(self.marker.positions[str], self.marker.positions[prevmark], zl, pixDim,"green")
+            	self.drawing_area.draw_marker_line(self.marker.positions[str], self.marker.positions[prevmark], zl, pixDim,"green",2)
             	if(self.marker.positions[prevmark][3] == -1):
             	    img = self.marker.get_marker_pixbuf2(zl)
             	else:
@@ -645,14 +642,16 @@ class MainWindow(gtk.Window):
 	prevmark = ""
 	# Draw vehicle position markers
 	if(self.asltw is not None):
-	    updates = self.asltw.get_updates()
+	    #updates = self.asltw.get_updates()
+	    updates = [(36.9901449906,-122.052108049),(36.9898193474,-122.052065134),(36.9896479557,-122.051861286),(36.9893223103,-122.051743269),(36.9891337782,-122.051528692),(36.9890480816,-122.05136776),
+                       (36.9886795851,-122.051163912),(36.9882425289,-122.050917149),(36.9879940057,-122.05062747),(36.9877626212,-122.050563097),(36.9877454816,-122.050209045),(36.98781404,-122.049865723),(36.9879597265,-122.049618959)]
 	    if(updates != []):
 	       for loc in updates:
 	          img = self.marker.get_marker_pixbuf3(zl)
 		  if (loc[0] != coord[0] and loc[1] != coord[0]):
 		     draw_image(loc, img, pixDim, pixDim)
 		     if (prevmark != "" and (loc[0] != coord[0] and loc[1] != coord[0])):
-		        self.drawing_area.draw_marker_line(loc, prevmark, zl, pixDim,"purple")
+		        self.drawing_area.draw_marker_line(loc, prevmark, zl, pixDim,"purple",2)
 		        draw_image(prevmark, img, pixDim, pixDim)
                   prevmark = loc
 	

@@ -59,11 +59,11 @@ class DrawingArea(gtk.DrawingArea):
             self.draging_start = (x, y)
             self.repaint()
 
-    def draw_marker_line(self, mpos1, mpos2, zl, pixDim,color):
+    def draw_marker_line(self, mpos1, mpos2, zl, pixDim, color, width):
            drawable = self.window
            #gc = self.drawing_area.style.base_gc[0]
            gc = drawable.new_gc()
-           gc.line_width = 3
+           gc.line_width = width
            rect = self.get_allocation()
            gc.set_rgb_fg_color(gtk.gdk.color_parse(color))
            #mpos1 = self.marker.positions[marker1]

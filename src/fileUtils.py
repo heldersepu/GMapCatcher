@@ -182,3 +182,30 @@ def append_asalt(filePath,data):
     file.write('lat="%s"\tlng="%s"\tpitch="%s"\troll="%s"\theading="%s"\tstatus="%s"\n' %
               (str(data[0]),str(data[1]), str(data[2]), str(data[3]), str(data[4]),str(data[5])))
     file.close()
+    
+def read_bad(filePath):
+    print "read from asalt file"
+    if os.path.exists(filePath):
+        p = re.compile("[^,]+,[^,]+,[^,]+.*")	
+	file = open(filePath, "r")
+	  for line in file:
+            if (line[0] != '#'):
+
+def write_bad(filePath,areas):
+    try:
+        file = open(filePath, "w")
+    except Exception:
+        print 'Error! Can NOT write file:'
+        print '  ' + filePath
+        return
+    file.write("#This is the data file used by GmapCatcher for the ASALT vehicle\n"+\
+               "#the data shown here depicts the \"no-go\" areas\n"+\
+               "#the format goes: bad area id, lat, long\n"
+              )
+    if(areas is not None):
+	    for data in updates:
+	       file.write('%s,%s,%s' %
+		      (str(data[0]),str(data[1]), str(data[2])))
+    file.close()
+
+   

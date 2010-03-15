@@ -53,7 +53,7 @@ class TextViewConsole(gtk.TextView):
 class ASALTWindow(gtk.Window):
     loop = 0
     auto_update = 0
-    astlr = ASALTradio.ASALTradio()
+    asltr = ASALTradio.ASALTradio()
     def __init__(self, init_path, markers, valid):
         
         def _console():
@@ -75,18 +75,26 @@ class ASALTWindow(gtk.Window):
         def _buttons():
             hbbox = gtk.HButtonBox()
             hbbox.set_border_width(10)
+            #hbbox.set_size_request(200,100)
             hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
-
+	    vbox = gtk.VBox(False)
 	    self.cb_loop = gtk.CheckButton("_Loop Path")
 	    self.cb_loop.set_active(False)
 	    self.cb_loop.connect('clicked',self.set_loop)
-            hbbox.pack_start(self.cb_loop)
+            vbox.pack_start(self.cb_loop)
             
             self.cb_auto_update = gtk.CheckButton("_Auto Update")
 	    self.cb_auto_update.set_active(False)
 	    self.cb_auto_update.connect('clicked',self.set_update)
-            hbbox.pack_start(self.cb_auto_update)
-
+            vbox.pack_start(self.cb_auto_update)
+	    hbbox.pack_start(vbox)
+            
+            gtk.stock_add([(gtk.STOCK_STOP, "_Halt Vehicle", 0, 0, "")])
+	    self.b_status = gtk.Button(stock=gtk.STOCK_STOP)
+	    self.b_status.connect('clicked', self.stop_vehicle_check)
+            hbbox.pack_start(self.b_status)
+            
+            
             gtk.stock_add([(gtk.STOCK_DIALOG_QUESTION, "_Get Status", 0, 0, "")])
 	    self.b_status = gtk.Button(stock=gtk.STOCK_DIALOG_QUESTION)
 	    self.b_status.connect('clicked', self.get_statusW)
@@ -96,11 +104,11 @@ class ASALTWindow(gtk.Window):
             gtk.stock_add([(gtk.STOCK_APPLY, "_Transmit Path", 0, 0, "")])
             self.b_transmit = gtk.Button(stock=gtk.STOCK_APPLY)
             self.b_transmit.connect('clicked', self.transmit, markers)
+            
             hbbox.pack_start(self.b_transmit)
-
             
             return hbbox
-
+	vpane = gtk.VPaned()
 	self.updates = []
         localPath = os.path.expanduser(init_path or DEFAULT_PATH)
         self.markerPath = os.path.join(localPath, 'asalt')
@@ -115,9 +123,10 @@ class ASALTWindow(gtk.Window):
         hbox.pack_start(_console())
         vbox.pack_start(hbox)
 
-        vbox.pack_start(_buttons(),expand=True,fill=False, padding=0)
-
-        self.add(vbox)
+	vpane.pack1(vbox)
+        vpane.pack2(_buttons())
+        
+        self.add(vpane)
 
         self.set_title("ASALT Vehicle Control")
         self.set_border_width(10)
@@ -131,18 +140,16 @@ class ASALTWindow(gtk.Window):
 
 
     def transmit(self,w,markers):
-        self.textview.append_text("transmitting!\n")
-        print "transmitting!"
-        self.astlr.send_float(markers,self.loop)
+        self.textview.append_text("Transmitting markers to vehicle\n")
+        self.asltr.send_float(markers,self.loop)
 
     def get_statusW(self,w):
 	self.get_status()
 
     def get_status(self):
-    	self.astlr.query()
-    	status = "xx"
+    	self.asltr.query()
     	time.sleep(1)
-    	status = self.astlr.receive_status()
+    	status = self.asltr.receive_status()
     	print type(status)
     	if(isinstance(status,str)):
     	   self.textview.append_text(status)
@@ -164,6 +171,28 @@ class ASALTWindow(gtk.Window):
 	   #print self.updates
         self.textview.append_text("\n===============================\n")
 
+    def stop_vehicle(self,dialog,resp,c):
+    	dialog.destroy()
+	print resp
+	if(resp == -9):
+    		print "oops nm\n"
+    	if(resp == -8):
+    	        self.textview.append_text("\nHalting Vehicle!\n")
+    	        self.asltr.send_stop()
+    		
+    		
+    def stop_vehicle_check(self,w):
+        dialog = gtk.MessageDialog(
+	    parent         = None,
+	    flags          = gtk.DIALOG_DESTROY_WITH_PARENT,
+	    type           = gtk.MESSAGE_INFO,
+	    buttons        = gtk.BUTTONS_YES_NO,
+	    message_format = "Are you sure you want to stop the vehicle???")
+	dialog.set_title('Halt Vehicle')
+        #dialog.connect('close', self.stop_vehicle,0)
+        dialog.connect('response', self.stop_vehicle,1)
+	dialog.run()        
+        print "STOP!!!!!\n"
 
     def set_loop(self,w):
         if(self.loop ==1):

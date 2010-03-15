@@ -25,7 +25,7 @@ TILES_HEIGHT = 256
 NR_MTS = 4
 SEPARATOR = "\t"
 TOOLS_MENU = ["Settings", "Edit locations", "Edit markers",
-              "Change Theme", "GPS Options"]
+              "Change Theme", "GPS Options","ASALT"]
 
 ZOOM_IN = 0
 ZOOM_OUT = 1
