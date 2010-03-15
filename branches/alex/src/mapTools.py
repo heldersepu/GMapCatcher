@@ -50,7 +50,7 @@ class MapTools():
         win = gtk.Window(gtk.WINDOW_TOPLEVEL)
         win.set_border_width(10)
         win.set_transient_for(parent)
-        win.set_size_request(600, 400)
+        win.set_size_request(720, 400)
         win.set_destroy_with_parent(True)
         win.set_title(" GMapCatcher Tools ")
 

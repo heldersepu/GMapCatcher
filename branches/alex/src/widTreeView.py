@@ -89,7 +89,7 @@ class TreeView():
         bbox = gtk.HButtonBox()
         bbox.set_layout(gtk.BUTTONBOX_END)
         bbox.set_border_width(10)
-        bbox.set_spacing(60)
+        bbox.set_spacing(10)
 
         button = gtk.Button(stock=gtk.STOCK_ADD)
         button.connect('clicked', self.btn_add_clicked, listStore, myTree)
@@ -105,9 +105,16 @@ class TreeView():
                         strInfo, filePath, listStore, myTree)
         bbox.add(button)
 
+	gtk.stock_add([(gtk.STOCK_SAVE, "_Save as no-go", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_SAVE)
         button.connect('clicked', self.btn_save_clicked,
                         strInfo, filePath, listStore, parent)
+        bbox.add(button)
+        
+        gtk.stock_add([(gtk.STOCK_SAVE, "_Save Changes", 0, 0, "")])
+        button = gtk.Button(stock=gtk.STOCK_SAVE)
+	button.connect('clicked', self.btn_save_clicked,
+	                 strInfo, filePath, listStore, parent)
         bbox.add(button)
         return bbox
 
