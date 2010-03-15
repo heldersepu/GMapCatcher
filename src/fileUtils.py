@@ -188,9 +188,11 @@ def read_bad(filePath):
     if os.path.exists(filePath):
         p = re.compile("[^,]+,[^,]+,[^,]+.*")	
 	file = open(filePath, "r")
-	  for line in file:
-            if (line[0] != '#'):
-
+	for line in file:
+          if (line[0] != '#'):
+	     if(p.search(line)):
+	     	print "yay!"
+			
 def write_bad(filePath,areas):
     try:
         file = open(filePath, "w")
