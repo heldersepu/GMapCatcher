@@ -42,7 +42,7 @@ class ASALTsettings():
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(lbl("Set Serial Port: "))
         self.e_serial_port = gtk.Entry()
-        self.e_serial_port.set_text(serial_port)
+        self.e_serial_port.set_text(str(serial_port))
         hbox.pack_start(self.e_serial_port)
         return _frame(" Serial Port ", hbox)
     
