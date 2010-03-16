@@ -285,7 +285,7 @@ class MainWindow(gtk.Window):
 	self.marker.write_markers()
 	self.drawing_area.repaint()
         self.asltw = ASALTWindow(
-	                        self.conf.init_path,
+	                        self.conf,
 	                        self.marker,
 	                        valid
 	                    )
