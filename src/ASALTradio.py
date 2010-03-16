@@ -4,16 +4,25 @@
 import pyGPSD.nmea.serial as serial
 import time
 import struct
-
+import mapConf
 
 
 class ASALTradio():    
-    def __init__(self):
-       	global available2
+    def __init__(self,conf):
+       	self.port = 0
         self.location = None
+    	self.conf = conf
     	self.ser = serial.Serial()
     	self.ser.baudrate = 19200
-    	self.ser.port = 0 
+    	
+	if(self.conf.serial_port[0:3] == 'COM'):
+	   self.port = int(self.conf.serial_port[3]) - 1
+	elif (self.conf.serial_port[0] == '/'):
+	   self.port = self.conf.serial_port
+	else:
+	   print "bad serial port value, please close ASALT window and change in ASALT settings"
+	print self.port
+    	self.ser.port = self.port
     	self.ser.timeout = 10
 	self.ser.open()
 	self.ser.flushInput()
@@ -105,13 +114,11 @@ class ASALTradio():
        try:
           currtime = time.time();
           while True:
-          	print "waiting "
           	#wait for characters to appear in buffer
-          	print radio.inWaiting()
           	if(radio.inWaiting() > 0):
           		break
-          	#timeout after 20 seconds
-          	if(time.time() >= currtime + 10):
+          	#timeout after seconds configured in settings
+          	if(time.time() >= currtime + self.conf.query_timeout):
           		return "Timeout, please query again"	
           return self.parse_status(radio)
        except OSError:
@@ -141,6 +148,8 @@ class ASALTradio():
     	return self.location
 
 
+    def close(self):
+    	self.ser.close()
 
     
     

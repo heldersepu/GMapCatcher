@@ -44,6 +44,10 @@ class MapConf():
         config.set(SECTION_INIT, 'check_for_updates', self.check_for_updates)
         config.set(SECTION_INIT, 'gps_mode', self.gps_mode)
         config.set(SECTION_INIT, 'cloudmade_styleid', self.cloudMade_styleID)
+        config.set(SECTION_INIT, 'serial_port', self.serial_port)
+        config.set(SECTION_INIT, 'baud_rate', self.baud_rate)
+        config.set(SECTION_INIT, 'query_timeout', self.query_timeout)
+        config.set(SECTION_INIT, 'update_interval', self.update_interval)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -94,6 +98,14 @@ class MapConf():
         self.gps_mode = read_config('gps_mode', GPS_DISABLED, int)
         ## Initial style ID for the CloudMade maps
         self.cloudMade_styleID = read_config('cloudmade_styleid', 1, int)
+        #Serial port
+        self.serial_port = read_config('serial_port',0,str)
+	#Baud
+	self.baud_rate = read_config('baud_rate',19200,int)
+	#query_timeout 
+	self.query_timeout = read_config('query_timeout',5,int)
+	#Auto Update interval
+	self.update_interval = read_config('update_interval',30,int)
 
     ## Write the configuration to the default file
     def save(self):

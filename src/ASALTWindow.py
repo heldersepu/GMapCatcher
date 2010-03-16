@@ -16,7 +16,7 @@ from os.path import join, isdir
 
 #Auto status updater thread
 class AutoUpdater(Thread):
-    def __init__(self,interval,update_function):
+    def __init__(self,interval,update_function,):
         Thread.__init__(self)
         self.interval = interval
         self.finished = Event()
@@ -53,8 +53,8 @@ class TextViewConsole(gtk.TextView):
 class ASALTWindow(gtk.Window):
     loop = 0
     auto_update = 0
-    asltr = ASALTradio.ASALTradio()
-    def __init__(self, init_path, markers, valid):
+    
+    def __init__(self, config, markers, valid):
         
         def _console():
             vbox = gtk.VBox(False, 5)
@@ -63,6 +63,7 @@ class ASALTWindow(gtk.Window):
             sw = gtk.ScrolledWindow()
             sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
             self.textview = TextViewConsole()
+            self.textview.set_size_request(600, 300)
             self.textview.append_text("Vehicle status updates go here!\n")
             if valid is False:
                self.textview.append_text("Your selected path appears invalid, please double\n")
@@ -109,10 +110,11 @@ class ASALTWindow(gtk.Window):
             
             return hbbox
 	vpane = gtk.VPaned()
+	self.conf = config
+	self.asltr = ASALTradio.ASALTradio(self.conf)
 	self.updates = []
-        localPath = os.path.expanduser(init_path or DEFAULT_PATH)
-        self.markerPath = os.path.join(localPath, 'asalt')
-        fldDown = join(init_path, 'asalt')
+        localPath = os.path.expanduser(self.conf.init_path or DEFAULT_PATH)
+        self.markerPath = os.path.join(localPath, 'asalt')  
 	#self.statuses = fileUtils.read_asalt(self.markerPath)
 	fileUtils.write_asalt(self.markerPath,self.updates)
         gtk.Window.__init__(self)
@@ -211,7 +213,10 @@ class ASALTWindow(gtk.Window):
 	else:
 	   self.auto_update = 1
 	   self.textview.append_text("Automatic Updates ON\n")
-           self.auto_updater = AutoUpdater(2,self.get_status)
+	   self.textview.append_text("updating status every ")
+	   self.textview.append_text(str(self.conf.update_interval))
+	   self.textview.append_text(" seconds\n")
+           self.auto_updater = AutoUpdater(self.conf.update_interval,self.get_status)
            self.auto_updater.start()	   
 	   
     def get_updates(self):
@@ -220,4 +225,5 @@ class ASALTWindow(gtk.Window):
 
     def on_delete(self,*params):
     	fileUtils.write_asalt(self.markerPath,self.updates)
+    	self.asltr.close()
         return False

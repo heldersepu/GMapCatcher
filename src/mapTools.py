@@ -8,6 +8,7 @@ import widTreeView
 import widMySettings
 import widChangeTheme
 import widMyGPS
+import widASALTsettings
 from mapConst import *
 
 
@@ -23,6 +24,7 @@ class MapTools():
         mySett = widMySettings.MySettings()
         myTheme = widChangeTheme.ChangeTheme()
         myGPS = widMyGPS.MyGPS()
+        myASALT = widASALTsettings.ASALTsettings()
 
         # Append pages to the notebook
         for str in TOOLS_MENU:
@@ -39,6 +41,8 @@ class MapTools():
                 frame.add(myTheme.show(parent.conf))
             elif str == TOOLS_MENU[4]:
                 frame.add(myGPS.show(parent.conf))
+            elif str == TOOLS_MENU[5]:
+                frame.add(myASALT.show(parent.conf))    
             else:
                 frame.add(gtk.Label(str + ' coming soon!! '))
             label = gtk.Label(str)
