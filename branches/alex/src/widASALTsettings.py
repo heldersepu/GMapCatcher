@@ -12,7 +12,7 @@ class ASALTsettings():
     ## All the buttons at the bottom
     def __action_buttons(self, conf):
         def btn_revert_clicked(button, conf):
-            self.e_serial_port.set_text(conf.serial_port)
+            self.e_serial_port.set_text(str(conf.serial_port))
             self.radio_timeout.set_value(conf.query_timeout)
             self.query_interval.set_active(conf.update_interval)
 
