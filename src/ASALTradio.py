@@ -80,9 +80,33 @@ class ASALTradio():
            radio.write(c2)
            radio.write(c3)
     
-    def checkBit(value, offset):
+    def checkBit(self,value, offset):
         mask = 1 << offset
-        return(int_type & mask)
+        return(value & mask)
+
+    def parse_status_int(self,status):
+	str = []
+	if(self.checkBit(status,0)):
+		str.append(" Collision!")
+	if(self.checkBit(status,8)):
+		str.append(" | IMU Error")
+	if(self.checkBit(status,9)):
+		str.append(" | Compass Error")
+	if(self.checkBit(status,10)):
+		str.append(" | Invalid GPS")
+	if(self.checkBit(status,11)):
+		str.append(" | Help")
+	if(self.checkBit(status,12)):
+		str.append(" | At Waypoint")
+	if(self.checkBit(status,13)):
+		str.append(" | Halt")
+	if(self.checkBit(status,14)):
+		str.append(" | Loop")
+	if(self.checkBit(status,15)):
+		print "15 high"	
+		str.append(" | Course")
+	print str
+	return str
 
     def parse_status(self, radio):
     	sf = struct.Struct('f')
@@ -97,6 +121,7 @@ class ASALTradio():
 	long = sf.unpack(long_in)
 	heading = sf.unpack(heading_in)
 	status = si.unpack(status_in)
+	status_str = parse_status_int(status)
 	pitch = sf.unpack(pitch_in)
 	roll = sf.unpack(roll_in)
 	#print lat," ",long," ",heading," ",status
@@ -119,6 +144,13 @@ class ASALTradio():
           		break
           	#timeout after seconds configured in settings
           	if(time.time() >= currtime + self.conf.query_timeout):
+          	        foo = self.parse_status_int(1)
+          	        foo = self.parse_status_int(256)
+          	        foo = self.parse_status_int(512)
+          	        foo = self.parse_status_int(1024)
+          	        foo = self.parse_status_int(2048)
+          	        foo = self.parse_status_int(4096)
+          	        foo = self.parse_status_int(50432)
           		return "Timeout, please query again"	
           return self.parse_status(radio)
        except OSError:

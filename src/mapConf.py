@@ -48,6 +48,7 @@ class MapConf():
         config.set(SECTION_INIT, 'baud_rate', self.baud_rate)
         config.set(SECTION_INIT, 'query_timeout', self.query_timeout)
         config.set(SECTION_INIT, 'update_interval', self.update_interval)
+	config.set(SECTION_INIT, 'last_nogo_index', self.nogo_index)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -106,6 +107,8 @@ class MapConf():
 	self.query_timeout = read_config('query_timeout',5,int)
 	#Auto Update interval
 	self.update_interval = read_config('update_interval',30,int)
+	#Index value for last nogo_area
+	self.update_interval = read_config('last_nogo_index',1,int)
 
     ## Write the configuration to the default file
     def save(self):
