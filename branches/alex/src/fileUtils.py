@@ -185,14 +185,28 @@ def append_asalt(filePath,data):
     
 def read_bad(filePath):
     print "read from asalt file"
+    nogo_dict = {}
     if os.path.exists(filePath):
-        p = re.compile("[^,]+,[^,]+,[^,]+.*")	
+        p = re.compile("([^,]+),([^,]+),([^\n]+).*")	
 	file = open(filePath, "r")
+	key = 0
+	area = []
 	for line in file:
           if (line[0] != '#'):
-	     if(p.search(line)):
-	     	print "yay!"
-			
+             z = p.search(line)
+	     if(z):
+	     	if( z.group(1) == key ):
+	     	   area.append((float(z.group(2)),float(z.group(3))))
+	     	   #print area
+	     	else:
+	     	   if(key != 0):
+	     	      nogo_dict[key] = area
+	     	   area = []
+	     	   key = z.group(1)
+	           area.append((float(z.group(2)),float(z.group(3))))
+        nogo_dict[key] = area           
+        return nogo_dict
+	     	
 def write_bad(filePath,areas):
     try:
         file = open(filePath, "w")
@@ -204,10 +218,36 @@ def write_bad(filePath,areas):
                "#the data shown here depicts the \"no-go\" areas\n"+\
                "#the format goes: bad area id, lat, long\n"
               )
+    #print areas 
     if(areas is not None):
-	    for data in updates:
-	       file.write('%s,%s,%s' %
-		      (str(data[0]),str(data[1]), str(data[2])))
+	    for l in areas: 
+	       file.write('%s,%s,%s\n' %
+		      ('1',str(l[0]), str(l[1])))
+    file.close()			
+
+def append_bad(filePath,areas):
+    file = open(filePath, "r")
+    p = re.compile("([^,]+),([^,]+),([^\n]+).*")
+    lines = file.readlines()
+    i = p.search(lines[-1])
+    id = int(i.group(1))+1
+    file.close()
+    try:
+        file = open(filePath, "a")
+    except Exception:
+        print 'Error! Can NOT write file:'
+        print '  ' + filePath
+        return
+    #file.write("#This is the data file used by GmapCatcher for the ASALT vehicle\n"+\
+    #           "#the data shown here depicts the \"no-go\" areas\n"+\
+    #           "#the format goes: bad area id, lat, long\n"
+    #          )
+    #print areas 
+    
+    if(areas is not None):
+	    for l in areas.keys(): 
+	       file.write('%s,%s,%s\n' %
+		      (str(id),str(areas[l][0]), str(areas[l][1])))
     file.close()
 
    

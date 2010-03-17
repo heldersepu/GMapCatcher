@@ -4,6 +4,7 @@
 
 import gtk
 import fileUtils
+import re
 from mapConst import *
 
 ## This widget allows the user to modify the locations and markers
@@ -27,6 +28,15 @@ class TreeView():
             index += 1
             locations[index] = (float(row[1]), float(row[2]), int(row[3]), int(row[4]), index)
         fileUtils.write_file(strInfo, strFilePath, locations)
+    
+    def __write_file_nogo(self, strInfo, strFilePath, listStore):
+        locations = {}
+        index = 0;
+        for row in listStore:
+            index += 1
+            locations[index] = (float(row[1]), float(row[2]))
+        fileUtils.append_bad(strFilePath, locations)
+
 
     ## Handle the 'edited' event of the cells
     def __cell_edited(self, cell, row, new_text, model, col):
@@ -83,6 +93,16 @@ class TreeView():
         self.__write_file(strInfo, filePath, listStore)
         parent.marker.refresh()
         parent.drawing_area.repaint()
+    
+    def btn_save_nogo(self, button, strInfo, filePath, listStore, parent):
+        p = re.compile('markers')
+        #print filePath
+        filePath = p.sub('nogo',filePath);
+        self.__write_file_nogo(strInfo, filePath, listStore)
+        parent.marker.refresh()
+        parent.drawing_area.repaint()
+    
+    
 
     ## All the buttons below the list
     def __action_buttons(self, strInfo, filePath, listStore, myTree, parent):
@@ -105,9 +125,9 @@ class TreeView():
                         strInfo, filePath, listStore, myTree)
         bbox.add(button)
 
-	gtk.stock_add([(gtk.STOCK_SAVE, "_Save as no-go", 0, 0, "")])
+	gtk.stock_add([(gtk.STOCK_SAVE, "_Save as no-go\nClick ONCE!", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_SAVE)
-        button.connect('clicked', self.btn_save_clicked,
+        button.connect('clicked', self.btn_save_nogo,
                         strInfo, filePath, listStore, parent)
         bbox.add(button)
         

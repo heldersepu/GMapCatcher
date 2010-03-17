@@ -3,11 +3,13 @@
 ## @package maps
 # This is the Main Window
 
+import os
 import src.mapGPS as mapGPS
 import src.mapUtils as mapUtils
 import src.mapTools as mapTools
 import src.mapPixbuf as mapPixbuf
 import src.ASALTradio as ASALTradio
+import src.fileUtils as fileUtils
 
 from src.mapConst import *
 from src.gtkThread import *
@@ -234,60 +236,57 @@ class MainWindow(gtk.Window):
   
     def validate_path(self, w):
     	valid = True
-    	print "VALIDATING!!"
         #bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
-        bad_area2 = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
-		     (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
-		     (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
-		     (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
-		     (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
-	             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
+        #bad_area2 = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
+	#	     (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
+	#	     (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
+	#	     (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
+	#	     (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
+	#             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
         #astlr = ASALTradio.ASALTradio()
-        prevName=""
         
-        #gc.foreground("blue")
-        
-        for strName in self.marker.positions.keys():
-            if(prevName!=""):
-            	foo = 0
-            	#MainWindow.draw_marker_line(self, strName, prevName)
-        	#self.drawing_area.repaint()
-        	for i in range(len(bad_area2)):
-	   		if(i == len(bad_area2)-1):
-				if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area2[i],bad_area2[0])):
-					if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
-					      a,b,c,d,e = self.marker.positions[strName]
-					      d = -1
-					      self.marker.positions[strName] = a,b,c,d,e
-					      a,b,c,d,e = self.marker.positions[prevName]
-					      d = -1
-					      self.marker.positions[prevName] = a,b,c,d,e
-					      valid = False
+        for bad_area_id in self.nogo_areas.keys():
+           prevName=""
+           bad_area = self.nogo_areas[bad_area_id]
+           print bad_area_id
+           for strName in self.marker.positions.keys():
+               #print "in markers, prev=",prevName
+               if(prevName!=""):
+            	   foo = 0
+            	   #MainWindow.draw_marker_line(self, strName, prevName)
+        	   #self.drawing_area.repaint()
+        	   for i in range(len(bad_area)):
+        	        #print bad_area[i]
+	   		if(i == len(bad_area)-1):
+			   if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[i],bad_area[0])):
+		              if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
+				    a,b,c,d,e = self.marker.positions[strName]
+				    d = -1
+				    self.marker.positions[strName] = a,b,c,d,e
+				    a,b,c,d,e = self.marker.positions[prevName]
+				    d = -1
+				    self.marker.positions[prevName] = a,b,c,d,e
+				    valid = False
          		else:
-				if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area2[i],bad_area2[i+1])):
-					if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
-					      a,b,c,d,e = self.marker.positions[strName]
-					      d = -1
-					      self.marker.positions[strName] = a,b,c,d,e
-					      a,b,c,d,e = self.marker.positions[prevName]
-					      d = -1
-					      self.marker.positions[prevName] = a,b,c,d,e
-					      valid = False			      
-			      
+			   if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[i],bad_area[i+1])):
+			      if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
+				    a,b,c,d,e = self.marker.positions[strName]
+				    d = -1
+				    self.marker.positions[strName] = a,b,c,d,e
+				    a,b,c,d,e = self.marker.positions[prevName]
+				    d = -1
+				    self.marker.positions[prevName] = a,b,c,d,e
+				    valid = False			  
+               prevName = strName
 	
-            	
-            #for coor in bad_area:
-            #	print coor[0]            
-            #AKpos = self.marker.positions[strName]
-            prevName = strName
-	    #astlr.send(AKpos)	
 	
 	self.marker.write_markers()
 	self.drawing_area.repaint()
         self.asltw = ASALTWindow(
 	                        self.conf,
 	                        self.marker,
-	                        valid
+	                        valid,
+	                        self.drawing_area
 	                    )
         #asltw.show()
         #asltw.txt_to_console(self, "foobar")
@@ -605,19 +604,21 @@ class MainWindow(gtk.Window):
 
 	# Draw no go area
 	#bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
-	bad_area2 = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
-	             (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
-	             (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
-	             (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
-	             (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
-	             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
-	
-	for i in range(len(bad_area2)):
-	   if(i == len(bad_area2)-1):
-	   	#print "i=",i
-	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[0], zl, pixDim,"red",3)
-	   else:
-	   	self.drawing_area.draw_marker_line(bad_area2[i], bad_area2[i+1], zl, pixDim,"red",3)
+	#bad_area2 = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
+	#             (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
+	#             (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
+	#             (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
+	#             (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
+	#             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
+        for bad_area_id in self.nogo_areas.keys():
+           prevName=""
+           bad_area = self.nogo_areas[bad_area_id]	
+	   for i in range(len(bad_area)):
+	      if(i == len(bad_area)-1):
+	      	#print "i=",i
+	        self.drawing_area.draw_marker_line(bad_area[i], bad_area[0], zl, pixDim,"red",3)
+	      else:
+	   	self.drawing_area.draw_marker_line(bad_area[i], bad_area[i+1], zl, pixDim,"red",3)
 
 
         # Draw the markers
@@ -772,10 +773,27 @@ class MainWindow(gtk.Window):
             self.update.finish()
         return False
 
+    def setup_nogo(self):
+        #This is the area surrounding the available field area
+        default_nogo = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
+	                (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
+	                (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
+	                (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
+	                (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
+	                (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
+        self.localPath = os.path.expanduser(self.conf.init_path or DEFAULT_PATH)
+        self.nogoPath = os.path.join(self.localPath, 'nogo')
+        if (os.path.exists(self.nogoPath)):
+	    return fileUtils.read_bad(self.nogoPath)
+	    
+	else:
+            fileUtils.write_bad(self.nogoPath,default_nogo)    
+
     def __init__(self, parent=None):
         self.conf = MapConf()
         self.crossPixbuf = mapPixbuf.cross()
 	self.asltw = None
+	self.nogo_areas = {}
         if mapGPS.available:
             self.gps = mapGPS.GPS(self.gps_callback,
                                   self.conf.gps_update_rate,
@@ -784,6 +802,7 @@ class MainWindow(gtk.Window):
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path)
         self.downloader = MapDownloader(self.ctx_map)
+        
         #Set layer to satellite
         self.layer = 1
         gtk.Window.__init__(self)
@@ -803,7 +822,8 @@ class MainWindow(gtk.Window):
         hpaned.pack1(self.left_panel, False, False)
         hpaned.pack2(self.__create_right_paned(), True, True)
         vpaned.add2(hpaned)
-
+        self.nogo_areas = self.setup_nogo()
+        
         self.add(vpaned)
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)

@@ -8,6 +8,7 @@ import gtk
 import time
 import fileUtils
 import src.ASALTradio as ASALTradio
+import widDrawingArea
 from threading import Event, Thread
 
 from customWidgets import _SpinBtn, _myEntry, _frame, lbl, FileChooser
@@ -54,7 +55,7 @@ class ASALTWindow(gtk.Window):
     loop = 0
     auto_update = 0
     
-    def __init__(self, config, markers, valid):
+    def __init__(self, config, markers, valid,drawing_area):
         
         def _console():
             vbox = gtk.VBox(False, 5)
@@ -111,12 +112,14 @@ class ASALTWindow(gtk.Window):
             return hbbox
 	vpane = gtk.VPaned()
 	self.conf = config
+	self.da = drawing_area
 	self.asltr = ASALTradio.ASALTradio(self.conf)
 	self.updates = []
         localPath = os.path.expanduser(self.conf.init_path or DEFAULT_PATH)
-        self.markerPath = os.path.join(localPath, 'asalt')  
+        self.asaltPath = os.path.join(localPath, 'asalt') 
+        self.nogoPath = os.path.join(localPath, 'nogo') 
 	#self.statuses = fileUtils.read_asalt(self.markerPath)
-	fileUtils.write_asalt(self.markerPath,self.updates)
+	fileUtils.write_asalt(self.asaltPath,self.updates)
         gtk.Window.__init__(self)
 	self.set_default_size(750,366)
 
@@ -151,27 +154,29 @@ class ASALTWindow(gtk.Window):
     def get_status(self):
     	self.asltr.query()
     	time.sleep(1)
-    	status = self.asltr.receive_status()
-    	print type(status)
-    	if(isinstance(status,str)):
-    	   self.textview.append_text(status)
+    	#status = self.asltr.receive_status()
+    	statuses = [(36.98934567,-122.051176098,4.5234,9.2342,154.34,25698),(36.9895279812,-122.051196098,4.5234,9.2342,154.34,25698),(36.9895379812,-122.051196298,4.5234,9.2342,154.34,25698)]
+    	if(isinstance(statuses,str)):
+    	   self.textview.append_text(statuses)
     	else:   
-	   self.textview.append_text("Lat=")
-	   self.textview.append_text(str(status[0]))
-	   self.textview.append_text("\nLong=")
-	   self.textview.append_text(str(status[1]))
-	   self.textview.append_text("\nPitch=")
-	   self.textview.append_text(str(status[2]))
-	   self.textview.append_text("\nRoll=")
-	   self.textview.append_text(str(status[3]))
-	   self.textview.append_text("\nHeading=")
-	   self.textview.append_text(str(status[4]))
-	   self.textview.append_text("\nStatus=")
-	   self.textview.append_text(str(status[5]))
-	   fileUtils.append_asalt(self.markerPath, status)
-	   self.updates.append(status);
-	   #print self.updates
-        self.textview.append_text("\n===============================\n")
+	   for status in statuses:  
+	      self.textview.append_text("Lat=")
+	      self.textview.append_text(str(status[0]))
+	      self.textview.append_text("\nLong=")
+              self.textview.append_text(str(status[1]))
+	      self.textview.append_text("\nPitch=")
+	      self.textview.append_text(str(status[2]))
+              self.textview.append_text("\nRoll=")
+	      self.textview.append_text(str(status[3]))
+              self.textview.append_text("\nHeading=")
+	      self.textview.append_text(str(status[4]))
+              self.textview.append_text("\nStatus=")
+              self.textview.append_text(str(status[5]))
+	      fileUtils.append_asalt(self.asaltPath, status)
+              self.updates.append(status);
+	      #print self.updates
+              self.textview.append_text("\n===============================\n")
+        self.da.repaint()
 
     def stop_vehicle(self,dialog,resp,c):
     	dialog.destroy()
@@ -222,8 +227,10 @@ class ASALTWindow(gtk.Window):
     def get_updates(self):
         return self.updates
 
+    def get_nogo(self):
+    	fileUtils.read_nogo(self.nogoPath)
 
     def on_delete(self,*params):
-    	fileUtils.write_asalt(self.markerPath,self.updates)
+    	fileUtils.write_asalt(self.asaltPath,self.updates)
     	self.asltr.close()
         return False
