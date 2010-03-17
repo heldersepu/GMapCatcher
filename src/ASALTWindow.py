@@ -171,7 +171,8 @@ class ASALTWindow(gtk.Window):
               self.textview.append_text("\nHeading=")
 	      self.textview.append_text(str(status[4]))
               self.textview.append_text("\nStatus=")
-              self.textview.append_text(str(status[5]))
+              for status_str in status[5]:
+              	self.textview.append_text(status_str)
 	      fileUtils.append_asalt(self.asaltPath, status)
               self.updates.append(status);
 	      #print self.updates

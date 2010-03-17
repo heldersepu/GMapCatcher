@@ -105,7 +105,7 @@ class ASALTradio():
 	if(self.checkBit(status,15)):
 		print "15 high"	
 		str.append(" | Course")
-	print str
+	#print str
 	return str
 
     def parse_status(self, radio):
@@ -125,7 +125,7 @@ class ASALTradio():
 	pitch = sf.unpack(pitch_in)
 	roll = sf.unpack(roll_in)
 	#print lat," ",long," ",heading," ",status
-	status_update = lat[0],long[0],pitch[0],roll[0],heading[0],status[0]
+	status_update = lat[0],long[0],pitch[0],roll[0],heading[0],status_str
 	self.location = lat[0],long[0]
 	print self.location
 	radio.flushInput()
