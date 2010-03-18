@@ -103,7 +103,6 @@ class ASALTradio():
 	if(self.checkBit(status,14)):
 		str.append(" | Loop")
 	if(self.checkBit(status,15)):
-		print "15 high"	
 		str.append(" | Course")
 	#print str
 	return str
@@ -129,6 +128,7 @@ class ASALTradio():
 	self.location = lat[0],long[0]
 	print self.location
 	radio.flushInput()
+	
 	return status_update    	
 
 
@@ -151,7 +151,8 @@ class ASALTradio():
           	        foo = self.parse_status_int(2048)
           	        foo = self.parse_status_int(4096)
           	        foo = self.parse_status_int(50432)
-          		return "Timeout, please query again"	
+          		#return (36.98934567,-122.051176098,4.5234,9.2342,154.34,self.parse_status_int(25698))
+          		return "Timeout, please query again\n"	
           return self.parse_status(radio)
        except OSError:
        #except EOFError:

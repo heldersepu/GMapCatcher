@@ -211,18 +211,13 @@ class MainWindow(gtk.Window):
         xval = (yinter2 - yinter1) / (slope1 - slope2)
         yval = slope2*xval + yinter2    
 
-	#print "xval ",xval," yval ",yval
-	#print coord1
-	#print coord2
-        if (((coord1[0] <= xval) and (xval <= coord2[0])) or ((coord2[0] <= xval) and (xval <= coord1[0]))):
-        	print type(yval)
-        	print type(coord3[1])
-        	print type(coord4[1])
-        	print "INTERSECTION at ",yval,",",xval
-        	print coord1
-        	print coord2
-        	print (coord3[1] <= yval)
-        	print (yval <= coord4[1])
+        if (((coord1[0] <= xval <= coord2[0])) or ((coord2[0] <= xval <= coord1[0]))
+             and ((coord3[0] <= xval <= coord4[0]) or (coord4[0] <= xval <= coord3[0]))):
+        	print "INTERSECTION at ",xval,",",yval
+        	#print coord1
+        	#print coord2
+        	print (coord1[1] <= yval <= coord2[1] or coord2[1] <= yval <= coord1[1])
+        	#print (yval <= coord4[1])
                 
     		return 1
         else:
