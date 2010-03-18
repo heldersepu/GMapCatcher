@@ -185,7 +185,8 @@ class MainWindow(gtk.Window):
         y3 = coord3[1]
         x4 = coord4[0]
         y4 = coord4[1]
-        
+        #slope1 = 10001
+        #slope2 = 10000
         #slope1 = (coord2[1]-coord1[1])/(coord2[0]-coord1[0])
         #slope2 = (coord4[1]-coord3[1])/(coord4[0]-coord3[0])
         #yinter1 = coord1[1]- slope1*coord1[0]
@@ -195,14 +196,22 @@ class MainWindow(gtk.Window):
        
         #xval = (yinter2 - yinter1) / (slope1 - slope2)
         #yval = slope2*xval + yinter2
-        
-        
-        if(x2-x1 != 0 or x4-x3 != 0):
+	if((x2-x1 == 0)): 
+		x2 += 0.000001
+	if(x4-x3 == 0):
+		x4 += 0.000001
+	if(y2-y1 != 0):
+		y2 += 0.000001
+	if(y4-y3 != 0):
+		y4 += 0.000001
+		
+        if((x2-x1 != 0) or (x4-x3 != 0) or (y2-y1 != 0) or (y4-y3 != 0)):
 		slope1 = (y2-y1)/(x2-x1)
 		slope2 = (y4-y3)/(x4-x3)
+		#print "slope"
 	else:
-		slope1 = 0
-		slope2 = 0
+		slope1 = 10001
+		slope2 = 10000
         yinter1 = y1- slope1*x1
         yinter1b = y2- slope1*x2
         yinter2 = y3 - slope2*x3
