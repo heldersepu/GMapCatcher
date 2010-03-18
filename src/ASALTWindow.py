@@ -17,24 +17,41 @@ from os.path import join, isdir
 
 #Auto status updater thread
 class AutoUpdater(Thread):
-    def __init__(self,interval,update_function,):
+    def __init__(self,interval,update_function,asltr):
         Thread.__init__(self)
         self.interval = interval
         self.finished = Event()
         self.update = update_function
-        self.event = Event()    
+        self.event = Event()
+        self.asltr = asltr
     
     def run(self):
         while not self.finished.isSet():
             self.event.wait(self.interval)
             if not self.finished.isSet() and not self.event.isSet():
                 #self.console.append_text("update!\n")
-                self.update();
+                self.asltr.query()
+		time.sleep(1)
+    	        status = self.asltr.receive_status()
+                self.update(status);
 
     def cancel(self):
         self.finished.set()
         self.event.set()
 
+
+class AutoUpdateWindow(gtk.Window):
+    def __init__(self,interval,update_function):
+       gtk.Window.__init__(self)
+       self.connect('delete-event', self.on_delete)
+       self.show()
+       
+    def go(self):
+    	parent.get_status()
+    	
+    def on_delete(self,*params):
+       parent.cb_auto_update.set_active(False) 
+       print "delete dat\n"
 
 #Text View console where vehicle information will be printed to screen
 class TextViewConsole(gtk.TextView):
@@ -154,30 +171,62 @@ class ASALTWindow(gtk.Window):
     def get_status(self):
     	self.asltr.query()
     	time.sleep(1)
-    	#status = self.asltr.receive_status()
-    	statuses = [(36.98934567,-122.051176098,4.5234,9.2342,154.34,25698),(36.9895279812,-122.051196098,4.5234,9.2342,154.34,25698),(36.9895379812,-122.051196298,4.5234,9.2342,154.34,25698)]
-    	if(isinstance(statuses,str)):
-    	   self.textview.append_text(statuses)
+    	status = self.asltr.receive_status()
+    	#statuses = [(36.98934567,-122.051176098,4.5234,9.2342,154.34,25698),(36.9895279812,-122.051196098,4.5234,9.2342,154.34,25698),(36.9895379812,-122.051196298,4.5234,9.2342,154.34,25698)]
+    	#status = (36.98934567,-122.051176098,4.5234,9.2342,154.34,self.asltr.parse_status_int(25698))
+    	#status = statuses[0]
+    	if(isinstance(status,str)):
+    	   self.textview.append_text(status)
     	else:   
-	   for status in statuses:  
-	      self.textview.append_text("Lat=")
-	      self.textview.append_text(str(status[0]))
-	      self.textview.append_text("\nLong=")
-              self.textview.append_text(str(status[1]))
-	      self.textview.append_text("\nPitch=")
-	      self.textview.append_text(str(status[2]))
-              self.textview.append_text("\nRoll=")
-	      self.textview.append_text(str(status[3]))
-              self.textview.append_text("\nHeading=")
-	      self.textview.append_text(str(status[4]))
-              self.textview.append_text("\nStatus=")
-              for status_str in status[5]:
-              	self.textview.append_text(status_str)
-	      fileUtils.append_asalt(self.asaltPath, status)
-              self.updates.append(status);
-	      #print self.updates
-              self.textview.append_text("\n===============================\n")
+	   #for status in statuses:  
+	   self.textview.append_text("Lat=")
+	   self.textview.append_text(str(status[0]))
+	   self.textview.append_text("\nLong=")
+           self.textview.append_text(str(status[1]))
+	   self.textview.append_text("\nPitch=")
+	   self.textview.append_text(str(status[2]))
+           self.textview.append_text("\nRoll=")
+	   self.textview.append_text(str(status[3]))
+           self.textview.append_text("\nHeading=")
+	   self.textview.append_text(str(status[4]))
+           self.textview.append_text("\nStatus=")
+           for status_str in status[5]:
+           	self.textview.append_text(status_str)
+           #don't append bad GPS coordinates to status list 
+           print status[0]," ",status[1]
+           if(35.0 <= status[0] <= 40.0 and -124 <= status[1] <= 120 ):	
+	   	print "appending"
+	   	fileUtils.append_asalt(self.asaltPath, status)
+           	self.updates.append(status);
+           else:
+           	print "not appending"
+	   #print self.updates
+           self.textview.append_text("\n===============================\n")
         self.da.repaint()
+
+    def put_auto_status(self,status):
+        if(isinstance(status,str)):
+    	   self.textview.append_text(status)
+    	else:   
+	   #for status in statuses:  
+	   self.textview.append_text("Lat=")
+	   self.textview.append_text(str(status[0]))
+	   self.textview.append_text("\nLong=")
+           self.textview.append_text(str(status[1]))
+	   self.textview.append_text("\nPitch=")
+	   self.textview.append_text(str(status[2]))
+           self.textview.append_text("\nRoll=")
+	   self.textview.append_text(str(status[3]))
+           self.textview.append_text("\nHeading=")
+	   self.textview.append_text(str(status[4]))
+           self.textview.append_text("\nStatus=")
+           for status_str in status[5]:
+           	self.textview.append_text(status_str)
+	   fileUtils.append_asalt(self.asaltPath, status)
+           self.updates.append(status);
+	   #print self.updates
+           self.textview.append_text("\n===============================\n")
+        self.da.repaint()    	
 
     def stop_vehicle(self,dialog,resp,c):
     	dialog.destroy()
@@ -222,7 +271,7 @@ class ASALTWindow(gtk.Window):
 	   self.textview.append_text("updating status every ")
 	   self.textview.append_text(str(self.conf.update_interval))
 	   self.textview.append_text(" seconds\n")
-           self.auto_updater = AutoUpdater(self.conf.update_interval,self.get_status)
+           self.auto_updater = AutoUpdater(self.conf.update_interval,self.put_auto_status,self.asltr)
            self.auto_updater.start()	   
 	   
     def get_updates(self):
