@@ -230,24 +230,25 @@ def append_bad(filePath,areas):
     p = re.compile("([^,]+),([^,]+),([^\n]+).*")
     lines = file.readlines()
     i = p.search(lines[-1])
-    id = int(i.group(1))+1
-    file.close()
-    try:
-        file = open(filePath, "a")
-    except Exception:
-        print 'Error! Can NOT write file:'
-        print '  ' + filePath
-        return
-    #file.write("#This is the data file used by GmapCatcher for the ASALT vehicle\n"+\
-    #           "#the data shown here depicts the \"no-go\" areas\n"+\
-    #           "#the format goes: bad area id, lat, long\n"
-    #          )
-    #print areas 
-    
-    if(areas is not None):
-	    for l in areas.keys(): 
-	       file.write('%s,%s,%s\n' %
-		      (str(id),str(areas[l][0]), str(areas[l][1])))
+    if(i):
+    	    id = int(i.group(1))+1
+	    file.close()
+	    try:
+		file = open(filePath, "a")
+	    except Exception:
+		print 'Error! Can NOT write file:'
+		print '  ' + filePath
+		return
+	    #file.write("#This is the data file used by GmapCatcher for the ASALT vehicle\n"+\
+	    #           "#the data shown here depicts the \"no-go\" areas\n"+\
+	    #           "#the format goes: bad area id, lat, long\n"
+	    #          )
+	    #print areas 
+
+	    if(areas is not None):
+		    for l in areas.keys(): 
+		       file.write('%s,%s,%s\n' %
+			      (str(id),str(areas[l][0]), str(areas[l][1])))
     file.close()
 
    

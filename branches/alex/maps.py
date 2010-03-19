@@ -791,7 +791,8 @@ class MainWindow(gtk.Window):
 	    return fileUtils.read_bad(self.nogoPath)
 	    
 	else:
-            fileUtils.write_bad(self.nogoPath,default_nogo)    
+            fileUtils.write_bad(self.nogoPath,default_nogo)
+            return fileUtils.read_bad(self.nogoPath)
 
     def __init__(self, parent=None):
         self.conf = MapConf()
@@ -836,6 +837,7 @@ class MainWindow(gtk.Window):
         self.set_completion()
         self.default_entry()
         self.drawing_area.center = self.conf.init_center
+        #print self.drawing_area.center
         self.show_all()
 
         self.drawing_area.da_set_cursor()
