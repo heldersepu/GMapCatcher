@@ -56,6 +56,23 @@ By using the scroll bar the resolution/scale of the map can be changed. The tool
   * *Drop down menu for map type selection (Map, Terrain, Satellite)*
   One of the three map types (Map, Terrain, Satellite) can be selected; a combination of satellite and text is currently not supported.
 
+== Right mouse click ==
+
+While displaying a map a right mouse click opens the following menu:
+
+http://gmapcatcher.googlecode.com/svn/wiki/GMap-RightMouse.jpg
+
+The first four items change the map section display and explain themselves: 
+    * Zoom In: Decrease zoom
+    * Zoom Out: Increase zoom
+    * Center map here: Position of cursor becomes centre of map.
+    * Reset: Display map with highest zoom level.
+
+Actions of the other three items:
+    * Batch Download: See description 'Download configuration button'
+    * Export Map: Open dialog to save current display of map to file 'map.png' in home folder
+    * Add Marker: Add a marker at position of cursor (description of marker must be done afterwards by using the main configuration menu)
+
 = Keyboard shortcuts =
 
 == General ==
