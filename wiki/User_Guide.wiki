@@ -39,7 +39,7 @@ By using the scroll bar the resolution/scale of the map can be changed. The tool
 
   * *Check box to indicate force update facility*
 
-  * *Download configuration button*
+== Download configuration button ==
   Pressing this button opens the following window for entering an area and a zoom level to download a map section. The dialog stays alive during the download.
 
     http://gmapcatcher.googlecode.com/svn/wiki/GMap-Download.jpg
