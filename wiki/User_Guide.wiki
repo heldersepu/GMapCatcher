@@ -1,5 +1,4 @@
 #labels Featured
-
 <font size="5">*User guide for GMapCatcher 0.7*</font>
 
 <font size="5">*Table of contents*</font> 
@@ -51,6 +50,8 @@ By using the scroll bar the resolution/scale of the map can be changed. The tool
     * left button: Start download
     * middle button: Open menu to restart/continue a previous download
     * right button: Cancel current download.
+
+  How to update and/or modify a downloaded area? If you have e.g. downloaded the complete US with zoom level 4, now you want to update the NY area with zoom level 2, then you open the Download Window, simply enter the coordinates for NY and set the zoom level to 2, the range width and height to 50km and start the download. Now the NY area is updated the rest remains the same and the complete US is still available for offline viewing with zoom level 4 while NY is available with zoom level 2.
 
   * *Drop down menu for map type selection (Map, Terrain, Satellite)*
   One of the three map types (Map, Terrain, Satellite) can be selected; a combination of satellite and text is currently not supported.
