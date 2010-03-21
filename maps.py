@@ -267,7 +267,7 @@ class MainWindow(gtk.Window):
         gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_HARDDISK)
         button.connect('clicked', self.download_clicked)
-	hbox.add(button)
+        hbox.add(button)
 
         cmb_layer = gtk.combo_box_new_text()
         for kw, kv in MAP_SERVICES.iteritems():
@@ -276,7 +276,7 @@ class MainWindow(gtk.Window):
         cmb_layer.set_active(FIRST_LAYER_ID)
         cmb_layer.connect('changed',self.layer_changed)
         self.cmb_layer = cmb_layer
-	hbox.add(cmb_layer)
+        hbox.add(cmb_layer)
 
         return hbox
 
