@@ -574,12 +574,13 @@ class MainWindow(gtk.Window):
             self.reCenter_gps = True
 
         # M = 77,109  S = 83,115  T = 84,116
-        elif keyval in [77, 109]:
-            self.cmb_layer.set_active(LAYER_MAP)
-        elif keyval in [83, 115]:
-            self.cmb_layer.set_active(LAYER_SATELLITE)
-        elif keyval in [84, 116]:
-            self.cmb_layer.set_active(LAYER_TERRAIN)
+        if not self.conf.oneDirPerMap:
+            elif keyval in [77, 109]:
+                self.cmb_layer.set_active(LAYER_MAP)
+            elif keyval in [83, 115]:
+                self.cmb_layer.set_active(LAYER_SATELLITE)
+            elif keyval in [84, 116]:
+                self.cmb_layer.set_active(LAYER_TERRAIN)
 
 
     ## Handles the Key release
