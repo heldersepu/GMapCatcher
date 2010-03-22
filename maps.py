@@ -574,8 +574,8 @@ class MainWindow(gtk.Window):
             self.reCenter_gps = True
 
         # M = 77,109  S = 83,115  T = 84,116
-        if not self.conf.oneDirPerMap:
-            elif keyval in [77, 109]:
+        elif not self.conf.oneDirPerMap:
+            if keyval in [77, 109]:
                 self.cmb_layer.set_active(LAYER_MAP)
             elif keyval in [83, 115]:
                 self.cmb_layer.set_active(LAYER_SATELLITE)
