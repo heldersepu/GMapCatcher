@@ -8,7 +8,6 @@ from mapConst import *
 from customWidgets import _SpinBtn, _frame, lbl, FolderChooser
 
 
-LANGUAGES = ["en", "zh"]
 ## This widget lets the user change common settings
 class MySettings():
     ## Put all the settings Widgets together

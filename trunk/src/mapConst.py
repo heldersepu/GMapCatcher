@@ -24,45 +24,27 @@ MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade", "Yahoo",
 #If layers are added / removed - change the decision making in mapServices.get_url_from_coord()
 # name of the lauer service is created as: serviceName + layerName
 FIRST_LAYER_ID = 0
-MAP_SERVICES_PLAIN = [
-                      {"ID": 0, "TextID": "gmap", "serviceName":"Google", "layerDir": "tiles", "layerName": "Map" },
-                      {"ID": 1, "TextID": "gsat", "serviceName":"Google", "layerDir": "sat_tiles", "layerName": "Satellite" },
-                      {"ID": 2, "TextID": "gter", "serviceName":"Google", "layerDir": "ter_tiles", "layerName": "Terrain" },
-                      {"ID": 3, "TextID": "ymap", "serviceName":"Yahoo", "layerDir": "yahoomap", "layerName": "Map" },
-                      {"ID": 4, "TextID": "yter", "serviceName":"Yahoo", "layerDir": "yahooter", "layerName": "Terrain" },
-                      {"ID": 5, "TextID": "vemap", "serviceName":"Virtual Earth", "layerDir": "vemap", "layerName": "Map" },
-                      {"ID": 6, "TextID": "vesat", "serviceName":"Virtual Earth", "layerDir": "vesat", "layerName": "Satellite" },
-                      {"ID": 7, "TextID": "veter", "serviceName":"Virtual Earth", "layerDir": "veter", "layerName": "Terrain" },
-                      {"ID": 8, "TextID": "osmmap", "serviceName":"OpenStreetMap", "layerDir": "osmtiles", "layerName": "" },
-                      {"ID": 9, "TextID": "cmmap", "serviceName":"CloudMade", "layerDir": "cloudmatetiles", "layerName": "" },
-                      {"ID": 10, "TextID": "ifwmap", "serviceName":"InformationFreeway", "layerDir": "ifwtiles", "layerName": "" },
-                      {"ID": 11, "TextID": "ocmmap", "serviceName":"OpenCycleMap", "layerDir": "ocmtiles", "layerName": "" },
-                      {"ID": 12, "TextID": "gmmmap", "serviceName":"Google Map Maker", "layerDir": "gmmtiles", "layerName": "" }
-                      ]
+MAP_SERVICES = [
+                {"ID": 0, "TextID": "gmap", "serviceName":"Google", "layerDir": "tiles", "layerName": "Map" },
+                {"ID": 1, "TextID": "gsat", "serviceName":"Google", "layerDir": "sat_tiles", "layerName": "Satellite" },
+                {"ID": 2, "TextID": "gter", "serviceName":"Google", "layerDir": "ter_tiles", "layerName": "Terrain" },
+                {"ID": 3, "TextID": "ymap", "serviceName":"Yahoo", "layerDir": "yahoomap", "layerName": "Map" },
+                {"ID": 4, "TextID": "yter", "serviceName":"Yahoo", "layerDir": "yahooter", "layerName": "Terrain" },
+                {"ID": 5, "TextID": "vemap", "serviceName":"Virtual Earth", "layerDir": "vemap", "layerName": "Map" },
+                {"ID": 6, "TextID": "vesat", "serviceName":"Virtual Earth", "layerDir": "vesat", "layerName": "Satellite" },
+                {"ID": 7, "TextID": "veter", "serviceName":"Virtual Earth", "layerDir": "veter", "layerName": "Terrain" },
+                {"ID": 8, "TextID": "osmmap", "serviceName":"OpenStreetMap", "layerDir": "osmtiles", "layerName": "" },
+                {"ID": 9, "TextID": "cmmap", "serviceName":"CloudMade", "layerDir": "cloudmatetiles", "layerName": "" },
+                {"ID": 10, "TextID": "ifwmap", "serviceName":"InformationFreeway", "layerDir": "ifwtiles", "layerName": "" },
+                {"ID": 11, "TextID": "ocmmap", "serviceName":"OpenCycleMap", "layerDir": "ocmtiles", "layerName": "" },
+                {"ID": 12, "TextID": "gmmmap", "serviceName":"Google Map Maker", "layerDir": "gmmtiles", "layerName": "" }
+               ]
 
-# generate indexed arrays used as constants
-# because arrays are used as constants, that's why Im putting this loops in mapConst
-MAP_SERVICES = {}
-idx = 0
-for v in MAP_SERVICES_PLAIN:
-    MAP_SERVICES[idx] = v;
-    idx = idx + 1
-
-# prepare array reverse pointers - mapping [TextID] => index in combobox
-MAP_SERVICES_PTR = {}
-for k,v in MAP_SERVICES.iteritems():
-    MAP_SERVICES_PTR[v["TextID"]] = k;
-
-del(MAP_SERVICES_PLAIN)
-
-
-#LAYER_MAP = 0
-#LAYER_SATELLITE = 1
-#LAYER_TERRAIN = 2
-#LAYER_NAMES = ["Map", "Satellite", "Terrain"]
-#LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles"]
-
-
+LAYER_MAP = 0
+LAYER_SATELLITE = 1
+LAYER_TERRAIN = 2
+LAYER_NAMES = ["Map", "Satellite", "Terrain"]
+LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles"]
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
@@ -103,3 +85,5 @@ R_EARTH = 6371.
 USER_PATH = "~"
 TILES_PATH = ".googlemaps"
 DEFAULT_PATH = USER_PATH + "/" + TILES_PATH
+
+LANGUAGES = ["en", "zh"]

@@ -10,7 +10,7 @@ import src.mapPixbuf as mapPixbuf
 
 from src.mapConst import *
 from src.gtkThread import *
-from src.mapConf import MapConfFactory
+from src.mapConf import MapConf
 from src.mapMark import MyMarkers
 from src.DLWindow import DLWindow
 from src.mapUpdate import CheckForUpdates
@@ -255,29 +255,34 @@ class MainWindow(gtk.Window):
         self.cb_forceupdate.set_active(False)
         hbox.pack_start(self.cb_forceupdate)
 
+        bbox = gtk.HButtonBox()
         if mapGPS.available:
             cmb_gps = gtk.combo_box_new_text()
             for w in GPS_NAMES:
                 cmb_gps.append_text(w)
             cmb_gps.set_active(self.conf.gps_mode)
             cmb_gps.connect('changed',self.gps_changed)
-            hbox.add(cmb_gps)
-
+            bbox.pack_start(cmb_gps)
 
         gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_HARDDISK)
         button.connect('clicked', self.download_clicked)
-        hbox.add(button)
+        bbox.pack_start(button)
 
         cmb_layer = gtk.combo_box_new_text()
-        for kw, kv in MAP_SERVICES.iteritems():
-            w = kv["serviceName"] + " " + kv["layerName"]
-            cmb_layer.append_text(w)
-        cmb_layer.set_active(FIRST_LAYER_ID)
+        if self.conf.oneDirPerMap:
+            for kv in MAP_SERVICES:
+                w = kv["serviceName"] + " " + kv["layerName"]
+                cmb_layer.append_text(w)
+        else:
+            for w in LAYER_NAMES:
+                cmb_layer.append_text(w)
+        cmb_layer.set_active(LAYER_MAP)
         cmb_layer.connect('changed',self.layer_changed)
         self.cmb_layer = cmb_layer
-        hbox.add(cmb_layer)
-
+        bbox.pack_start(cmb_layer)
+        bbox.set_layout(gtk.BUTTONBOX_SPREAD)
+        hbox.add(bbox)
         return hbox
 
     def __create_top_paned(self):
@@ -462,7 +467,8 @@ class MainWindow(gtk.Window):
             gui_callback(self.tile_received),
             online=online, force_update=force_update,
             mapServ=self.conf.map_service,
-            styleID=self.conf.cloudMade_styleID
+            styleID=self.conf.cloudMade_styleID,
+            language=self.conf.language
         )
         self.draw_overlay()
 
@@ -641,12 +647,12 @@ class MainWindow(gtk.Window):
             )
 
     def __init__(self, parent=None):
-        self.conf = MapConfFactory.get_conf()
+        self.conf = MapConf()
         self.crossPixbuf = mapPixbuf.cross()
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path, self.conf.repository_type)
         self.downloader = MapDownloader(self.ctx_map)
-        self.layer = FIRST_LAYER_ID #LAYER_MAP
+        self.layer = LAYER_MAP
         self.enable_gps()
 
         gtk.Window.__init__(self)

@@ -27,7 +27,8 @@ def download(lat, lng, lat_range, lng_range, max_zl, min_zl, layer):
             lat_range*2, lng_range*2, zl,
             layer, do_nothing,
             mapServ=conf.map_service,
-            styleID=conf.cloudMade_styleID
+            styleID=conf.cloudMade_styleID,
+            language=conf.language
         )
         downloader.wait_all()
 
