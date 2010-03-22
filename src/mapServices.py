@@ -45,9 +45,7 @@ class MapServ:
 
         if tilerepostype is None:
             tilerepostype = DEFAULT_REPOS_TYPE
-        print "Debug: confpath: " + configpath + ", repostype: " + str(tilerepostype)
         self.tile_repository = tilesRepoFactory.get_tile_repository(self, configpath, tilerepostype)
-
 
     def __init__(self, configpath=None, tilerepostype=None):
         self.tile_repository = None
@@ -68,9 +66,7 @@ class MapServ:
         return self.locations
 
     def search_location(self, location):
-        print location
         location, coord = googleMaps.search_location(location)
-        print location
         if (location[:6] != "error="):
             self.locations[location] = coord
             self.write_locations()
@@ -83,14 +79,8 @@ class MapServ:
         self.mt_counter = self.mt_counter % NR_MTS
 
         try:
-            if (MAP_SERVICES[layer]["TextID"] == "gmap"):
-                return googleMaps.get_url(self.mt_counter, coord, layer)
-
-            elif (MAP_SERVICES[layer]["TextID"] == "gsat"):
-                return googleMaps.get_url(self.mt_counter, coord, layer)
-
-            elif (MAP_SERVICES[layer]["TextID"] == "gter"):
-                return googleMaps.get_url(self.mt_counter, coord, layer)
+            if (MAP_SERVICES[layer]["TextID"] in ["gmap", "gsat", "gter"]):
+                return googleMaps.get_url(self.mt_counter, coord, layer, )
 
             elif (MAP_SERVICES[layer]["TextID"] == "osmmap"):
                 return openStreetMaps.get_url(self.mt_counter, coord)
@@ -98,9 +88,9 @@ class MapServ:
             elif (MAP_SERVICES[layer]["TextID"] == "cmmap"):
                 return cloudMade.get_url(self.mt_counter, coord, styleID)
 
-            elif (MAP_SERVICES[layer]["TextID"] == "yter"):
+            elif (MAP_SERVICES[layer]["TextID"] in ["yter", "ymap"]):
                 return yahoo.get_url(self.mt_counter, coord, layer)
-
+                
             elif (MAP_SERVICES[layer]["TextID"] == "ifwmap"):
                 return informationFreeway.get_url(self.mt_counter, coord)
 
@@ -110,16 +100,7 @@ class MapServ:
             elif (MAP_SERVICES[layer]["TextID"] == "gmmmap"):
                 return googleMapMaker.get_url(self.mt_counter, coord)
 
-            elif (MAP_SERVICES[layer]["TextID"] == "veter"):
-                return virtualEarth.get_url(self.mt_counter, coord, layer)
-
-            elif (MAP_SERVICES[layer]["TextID"] == "ymap"):
-                return yahoo.get_url(self.mt_counter, coord, layer)
-
-            elif (MAP_SERVICES[layer]["TextID"] == "vemap"):
-                return virtualEarth.get_url(self.mt_counter, coord, layer)
-
-            elif (MAP_SERVICES[layer]["TextID"] == "vesat"):
+            elif (MAP_SERVICES[layer]["TextID"] in ["veter", "vemap", "vesat"]):
                 return virtualEarth.get_url(self.mt_counter, coord, layer)
 
         except KeyError:
