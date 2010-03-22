@@ -121,9 +121,10 @@ class MapServ:
                 raise
 
     def get_tile(self, coord, layer, online, force_update,
-                                mapServ='Google', styleID =1):
+                    mapServ='Google', styleID=1, language=LANGUAGES[0]):
         return self.tile_repository.get_tile(
-                    coord, layer, online, force_update, mapServ, styleID
+                    coord, layer, online, force_update, 
+                    mapServ, styleID, language
                 )
 
     def remove_old_tile(self, coord, layer):
