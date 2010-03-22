@@ -17,13 +17,15 @@ class DownloadTask:
     def __init__(self, coord, layer, callback=None,
                     force_update=False,
                     mapServ=MAP_SERVERS[GOOGLE],
-                    styleID=1):
+                    styleID=1,
+                    language=LANGUAGES[0]):
         self.coord = coord
         self.layer = layer
         self.callback = callback
         self.force_update = force_update
         self.mapServ = mapServ
         self.styleID = styleID
+        self.language = language
 
     def __str__(self):
         return "DownloadTask(%s,%s,%s,%s)" % \
@@ -60,8 +62,9 @@ class DownloaderThread(Thread):
         #    task.coord, task.layer, True,
         #   task.force_update, task.mapServ, task.styleID
         #)
-        self.ctx_map.get_tile( task.coord, task.layer, True,
-                               task.force_update, task.mapServ, task.styleID
+        self.ctx_map.get_tile(
+            task.coord, task.layer, True,
+            task.force_update, task.mapServ, task.styleID, task.language
         )
         if task.callback:
             #print "process_task callback", task
@@ -89,11 +92,11 @@ class DownloaderThread(Thread):
 class MapDownloader:
 
     def __init__(self, ctx_map, numthreads=4):
-        self.ctx_map=ctx_map
-        self.threads=[]
-        self.taskq=Queue(0)
+        self.ctx_map = ctx_map
+        self.threads = []
+        self.taskq = Queue(0)
         for i in xrange(numthreads):
-            t=DownloaderThread(self.ctx_map,self.taskq)
+            t = DownloaderThread(self.ctx_map, self.taskq)
             self.threads.append(t)
             t.start()
 
@@ -118,7 +121,8 @@ class MapDownloader:
 
     def query_tile(self, coord, layer, callback,
                     online=True, force_update=False,
-                    mapServ=MAP_SERVERS[GOOGLE], styleID=1):
+                    mapServ=MAP_SERVERS[GOOGLE], styleID=1,
+                    language=LANGUAGES[0]):
         #print "query_tile(",coord,layer,callback,online,force_update,")"
         world_tiles = mapUtils.tiles_on_level(coord[2])
         coord = (mapUtils.mod(coord[0], world_tiles),
@@ -134,7 +138,7 @@ class MapDownloader:
 
         self.taskq.put(
             DownloadTask(
-                coord, layer, callback, force_update, mapServ, styleID
+                coord, layer, callback, force_update, mapServ, styleID, language
             )
         )
 

@@ -5,12 +5,11 @@ import re
 import urllib
 import src.openanything as openanything
 from src.mapConst import MAP_MAX_ZOOM_LEVEL, MAP_MIN_ZOOM_LEVEL, MAP_SERVICES
-from src.mapConf import MapConfFactory
 
 known_layers = {}
 
 ## Returns a template URL for the GoogleMaps
-def layer_url_template(layer):
+def layer_url_template(layer, language):
     if layer not in known_layers:
         map_server_query = {"gmap":"", "gsat":"h", "gter":"p"}
         layers_name = {"gmap":"m", "gsat":"s", "gter":"t"}
@@ -23,12 +22,12 @@ def layer_url_template(layer):
             return None
         html = oa['data']
 
-        known_layers[layer] = parse_start_page(layers_name[ MAP_SERVICES[layer]["TextID"] ], html)
+        known_layers[layer] = parse_start_page(layers_name[ MAP_SERVICES[layer]["TextID"] ], html, language)
     return known_layers[layer]
 
 ## Returns the URL to the GoogleMaps tile
-def get_url(counter, coord, layer):
-    template = layer_url_template(layer)
+def get_url(counter, coord, layer, language):
+    template = layer_url_template(layer, language)
     if template:
         return template % (counter, coord[0], coord[1], 17 - coord[2])
 
@@ -38,7 +37,7 @@ def get_url(counter, coord, layer):
 #  method to do the parser work.
 #  the return value is a url pattern like this:
 #  http://mt%d.google.com/vt/lyrs=t@110&hl=en&x=%i&y=%i&z=%i
-def parse_start_page(layer, html):
+def parse_start_page(layer, html, language):
     # first, we check the uniform url pattern.
     # after Oct. 10, 2009, google use a uniform url:
     #
@@ -54,8 +53,7 @@ def parse_start_page(layer, html):
     #  although the uniform URL pattern still works, the result
     # from it is different from google map's web. the later contains
     # more labels and routes. see Issue 94, comment 2
-    conf = MapConfFactory.get_conf()
-    match_str = '&hl='+conf.language+'&x=%i&y=%i&z=%i'
+    match_str = '&hl=' + language + '&x=%i&y=%i&z=%i'
 
     # we first check the existence of the uniform URL pattern,
     # if not, we fall back to the old method.

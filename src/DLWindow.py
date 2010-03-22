@@ -144,7 +144,8 @@ class DLWindow(gtk.Window):
                     zoom, layer,
                     gui_callback(self.tile_received),
                     mapServ=self.mapService,
-                    styleID=self.styleID
+                    styleID=self.styleID,
+                    language=conf.language
                 )
             if self.downloader.qsize()==0:
                 self.download_complete()

@@ -88,7 +88,7 @@ class TilesRepositoryFS(TilesRepository):
     ## Get the png file for the given location
     # Returns true if the file is successfully retrieved
     def get_png_file(self, coord, layer, filename,
-                        online, force_update, mapServ, styleID):
+                        online, force_update, mapServ, styleID, language):
         # remove tile only when online
         if (force_update and online):
             fileUtils.delete_old(filename)
@@ -100,7 +100,7 @@ class TilesRepositoryFS(TilesRepository):
 
         try:
             data = self.mapServ_inst.get_tile_from_coord(
-                        coord, layer, mapServ, styleID
+                        coord, layer, mapServ, styleID, language
                     )
             self.coord_to_path_checkdirs(coord, layer)
             file = open( filename, 'wb' )
@@ -155,7 +155,7 @@ class TilesRepositoryFS(TilesRepository):
     ## Get the tile for the given location
     # Validates the given tile coordinates and,
     # returns tile coords if successfully retrieved
-    def get_tile(self, tcoord, layer, online, force_update, mapServ, styleID):
+    def get_tile(self, tcoord, layer, online, force_update, mapServ, styleID, language):
         if (MAP_MIN_ZOOM_LEVEL <= tcoord[2] <= MAP_MAX_ZOOM_LEVEL):
             world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - tcoord[2])
             if (tcoord[0] > world_tiles) or (tcoord[1] > world_tiles):
@@ -164,7 +164,7 @@ class TilesRepositoryFS(TilesRepository):
             filename = self.coord_to_path(tcoord, layer)
             # print "tCoord to path: %s" % filename
             if self.get_png_file(tcoord, layer, filename, online,
-                                    force_update, mapServ, styleID):
+                                    force_update, mapServ, styleID, language):
                 return (tcoord, layer)
         return None
 
