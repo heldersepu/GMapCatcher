@@ -37,6 +37,7 @@ class ChangeTheme():
 
         def btn_save_clicked(button, conf):
             conf.show_cross = int(self.cb_show_cross.get_active())
+            conf.oneDirPerMap = int(self.cb_oneDirPerMap.get_active())
             conf.map_service = MAP_SERVERS[self.cmb_service.get_active()]
             conf.save()
             if self.cmb_themes.get_model():
@@ -65,7 +66,7 @@ class ChangeTheme():
         return _frame(" Mark center of the map ", self.cb_show_cross)
 
     ## ComboBox to change the map service
-    def service_combo(self, map_service):
+    def service_combo(self, map_service, oneDirPerMap):
         vbox = gtk.VBox(False, 5)
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(lbl("Select your favorite map service: "))
@@ -83,6 +84,7 @@ class ChangeTheme():
         hbox = gtk.HBox()
         self.cb_oneDirPerMap = gtk.CheckButton( \
             "Use a different folder per Map Service")
+        self.cb_oneDirPerMap.set_active(oneDirPerMap)
         hbox.pack_start(self.cb_oneDirPerMap)
         vbox.pack_start(hbox)
         return _frame(" Map service ", vbox)
@@ -92,7 +94,7 @@ class ChangeTheme():
         def inner_box():
             vbox = gtk.VBox(False, 10)
             vbox.pack_start(self.cross_check_box(conf.show_cross))
-            vbox.pack_start(self.service_combo(conf.map_service))
+            vbox.pack_start(self.service_combo(conf.map_service, conf.oneDirPerMap))
             hbox = gtk.HBox(False, 10)
             hbox.set_border_width(20)
             hbox.pack_start(vbox)
