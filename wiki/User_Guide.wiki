@@ -39,11 +39,15 @@ By using the scroll bar the resolution/scale of the map can be changed. The tool
 
   * *Check box to indicate force update facility*
 
+  * *Download configuration button*
+ 
+  Pressing this button opens a window to download a map section. See description 'Download configuration' below.
+
   * *Drop down menu for map type selection (Map, Terrain, Satellite)*
   One of the three map types (Map, Terrain, Satellite) can be selected; a combination of satellite and text is currently not supported.
 
-== Download configuration button ==
-  Pressing this button opens the following window for entering an area and a zoom level to download a map section. The dialog stays alive during the download.
+== Download configuration ==
+  Within the following dialog an area and a zoom level to download a map section can be entered. The dialog stays alive during the download.
 
     http://gmapcatcher.googlecode.com/svn/wiki/GMap-Download.jpg
 
@@ -69,7 +73,7 @@ The first four items change the map section display and explain themselves:
     * Reset: Display map with highest zoom level.
 
 Actions of the other three items:
-    * Batch Download: See description 'Download configuration button'
+    * Batch Download: See description 'Download configuration'
     * Export Map: Open dialog to save current display of map to file 'map.png' in home folder
     * Add Marker: Add a marker at position of cursor (description of marker must be done afterwards by using the main configuration menu)
 
