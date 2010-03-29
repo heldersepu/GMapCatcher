@@ -159,9 +159,7 @@ class MainWindow(gtk.Window):
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         km_px = mapUtils.km_per_pixel(coord)
         dlw = DLWindow(coord, km_px*rect.width, km_px*rect.height,
-                        self.layer, self.conf.init_path, self.conf.repository_type,
-                        self.conf.map_service,
-                        self.conf.cloudMade_styleID
+                        self.layer, self.conf
                     )
         dlw.show()
 
