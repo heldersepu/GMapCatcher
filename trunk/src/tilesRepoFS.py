@@ -1,4 +1,5 @@
-## This modul provides filebased tile repository functions
+## @package src.tilesRepoFS
+# This modul provides filebased tile repository functions
 #
 # Usage:
 #
@@ -47,7 +48,7 @@ class TilesRepositoryFS(TilesRepository):
     def set_repository_path(self, newpath):
         self.configpath = newpath
 
-    # check if we have locally downloaded tile
+    ## check if we have locally downloaded tile
     def is_tile_in_local_repos(self, coord, layer):
         path = self.coord_to_path(coord, layer)
         return  os.path.isfile(path)
@@ -67,7 +68,7 @@ class TilesRepositoryFS(TilesRepository):
 
 
     ## Returns the PixBuf of the tile
-    # Uses a cache to optimise HDD read access
+    #  Uses a cache to optimise HDD read access
     def load_pixbuf(self, coord, layer, force_update):
         filename = self.coord_to_path(coord, layer)
         if not force_update and (filename in self.tile_cache):
@@ -86,7 +87,7 @@ class TilesRepositoryFS(TilesRepository):
         return pixbuf
 
     ## Get the png file for the given location
-    # Returns true if the file is successfully retrieved
+    #  Returns true if the file is successfully retrieved
     def get_png_file(self, coord, layer, filename,
                         online, force_update, mapServ, styleID, language):
         # remove tile only when online
@@ -123,17 +124,17 @@ class TilesRepositoryFS(TilesRepository):
     #  at most 1024 files in one dir
     # private
     def coord_to_path(self, tile_coord, layer):
-        path = os.path.join(self.configpath,
+        return os.path.join(
+                            self.configpath,
                             MAP_SERVICES[layer]["layerDir"],
                             str(tile_coord[2]),
                             str(tile_coord[0] / 1024),
                             str(tile_coord[0] % 1024),
                             str(tile_coord[1] / 1024),
                             str(tile_coord[1] % 1024) + ".png"
-                            )
-        return path
+                           )
 
-    # create path if doesn't exists
+    ## create path if doesn't exists
     #  tile_coord = (tile_X, tile_Y, zoom_level)
     #  smaple of the Naming convention:
     #  \.googlemaps\tiles\15\0\1\0\1.png
@@ -153,8 +154,8 @@ class TilesRepositoryFS(TilesRepository):
 
 
     ## Get the tile for the given location
-    # Validates the given tile coordinates and,
-    # returns tile coords if successfully retrieved
+    #  Validates the given tile coordinates and,
+    #  returns tile coords if successfully retrieved
     def get_tile(self, tcoord, layer, online, force_update, mapServ, styleID, language):
         if (MAP_MIN_ZOOM_LEVEL <= tcoord[2] <= MAP_MAX_ZOOM_LEVEL):
             world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - tcoord[2])

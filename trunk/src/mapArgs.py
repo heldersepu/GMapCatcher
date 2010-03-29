@@ -12,7 +12,7 @@ class MapArgs():
     lat = None
     lng = None
     location = None
-    layer = MAP_SERVICES[LAYER_MAP]
+    layer = LAYER_MAP
     width = 0
     height = 0
 
@@ -72,9 +72,9 @@ class MapArgs():
                     elif arg.startswith('--threads='):
                         self.nr_threads = int(arg[10:])
                     elif arg.startswith('--satellite'):
-                        self.layer = MAP_SERVICES[LAYER_SATELLITE]
+                        self.layer = LAYER_SATELLITE
                     elif arg.startswith('--terrain'):
-                        self.layer = MAP_SERVICES[LAYER_TERRAIN]
+                        self.layer = LAYER_TERRAIN
                     elif arg.startswith('--full-range'):
                         self.location = "Whole World"
                         self.lng = 0
