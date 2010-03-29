@@ -1,4 +1,5 @@
-## This modul provides sqlite3 tile repository functions
+## @package src.tilesRepoSQLite3
+# This modul provides sqlite3 tile repository functions
 #
 # Usage:
 #
