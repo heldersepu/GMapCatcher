@@ -20,7 +20,7 @@ from threading import Timer
 
 class DLWindow(gtk.Window):
 
-    def __init__(self, coord, kmx, kmy, layer, init_path, repostype, mapServ, styleID):
+    def __init__(self, coord, kmx, kmy, layer, conf):
 
         def _zoom(zoom0, zoom1):
             out_hbox = gtk.HBox(False, 50)
@@ -79,7 +79,7 @@ class DLWindow(gtk.Window):
             hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
 
             self.b_download = gtk.Button(stock=gtk.STOCK_HARDDISK)
-            self.b_download.connect('clicked', self.run, init_path, repostype, strFolder)
+            self.b_download.connect('clicked', self.run, conf.init_path, conf.repository_type, strFolder)
             hbbox.pack_start(self.b_download)
 
             hbox = gtk.HBox()
@@ -97,10 +97,9 @@ class DLWindow(gtk.Window):
             hbbox.pack_start(self.b_cancel)
             return hbbox
 
-        fldDown = join(init_path, 'download')
+        fldDown = join(conf.init_path, 'download')
         print "DLWindow(", coord, kmx, kmy, layer, ')'
-        self.mapService = mapServ
-        self.styleID = styleID
+        self.conf = conf
         kmx = mapUtils.nice_round(kmx)
         kmy = mapUtils.nice_round(kmy)
         self.layer = layer
@@ -143,9 +142,9 @@ class DLWindow(gtk.Window):
                     args.lat, args.lng, dlat, dlon,
                     zoom, layer,
                     gui_callback(self.tile_received),
-                    mapServ=self.mapService,
-                    styleID=self.styleID,
-                    language=conf.language
+                    mapServ=self.conf.map_service,
+                    styleID=self.conf.cloudMade_styleID,
+                    language=self.conf.language
                 )
             if self.downloader.qsize()==0:
                 self.download_complete()
