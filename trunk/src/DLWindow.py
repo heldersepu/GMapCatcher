@@ -185,22 +185,21 @@ class DLWindow(gtk.Window):
         self.save_info(check_dir(strFolder), str(args))
         dThread = Timer(0, downThread)
 
-
-	if "disallowBulkDownloading" in MAP_SERVICES[self.layer].keys():
-		dialog = gtk.MessageDialog(self,
-				gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-				gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
-				("This map services (%s) doesn't allow bulk downloading. "
-				"If you insist on doing so, you break its term of use. \n"
-				"Continue or cancel?") % (MAP_SERVICES[self.layer]["serviceName"])))
-		response = dialog.run()
-		dialog.destroy()
-		if response != gtk.RESPONSE_OK:
-			self.all_done("Canceled")
-		else:
-		        dThread.start()
-	else:
-		dThread.start()
+        if "disallowBulkDownloading" in MAP_SERVICES[self.layer].keys():
+            dialog = gtk.MessageDialog(self,
+                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                    gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
+                    ("This map services (%s) doesn't allow bulk downloading. "
+                    "If you insist on doing so, you break its term of use. \n"
+                    "Continue or cancel?") % (MAP_SERVICES[self.layer]["serviceName"])))
+            response = dialog.run()
+            dialog.destroy()
+            if response != gtk.RESPONSE_OK:
+                self.all_done("Canceled")
+            else:
+                dThread.start()
+        else:
+            dThread.start()
 
 
     # Open a previously saved file and auto-populate the fields
