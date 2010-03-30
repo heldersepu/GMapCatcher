@@ -191,7 +191,7 @@ class DLWindow(gtk.Window):
 				gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
 				gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
 				("This map services (%s) doesn't allow bulk downloading. "
-				"If you insist to do so, you break its term of use. \n"
+				"If you insist on doing so, you break its term of use. \n"
 				"Continue or cancel?") % (MAP_SERVICES[self.layer]["serviceName"])))
 		response = dialog.run()
 		dialog.destroy()
