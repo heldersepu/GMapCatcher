@@ -33,14 +33,14 @@ MAP_SERVICES = [
     {"ID": 5, "TextID": "vemap", "serviceName":"Virtual Earth", "layerDir": "vemap", "layerName": "Map" },
     {"ID": 6, "TextID": "vesat", "serviceName":"Virtual Earth", "layerDir": "vesat", "layerName": "Satellite" },
     {"ID": 7, "TextID": "veter", "serviceName":"Virtual Earth", "layerDir": "veter", "layerName": "Terrain" },
-    {"ID": 8, "TextID": "osmmap", "serviceName":"OpenStreetMap", "layerDir": "osmtiles", "layerName": "",
-	    "disallowBulkDownloading":True },
+    {"ID": 8, "TextID": "osmmap", "serviceName":"OpenStreetMap", "layerDir": "osmtiles", "layerName": ""},
     {"ID": 9, "TextID": "cmmap", "serviceName":"CloudMade", "layerDir": "cloudmatetiles", "layerName": "" },
     {"ID": 10, "TextID": "ifwmap", "serviceName":"InformationFreeway", "layerDir": "ifwtiles", "layerName": "" },
-    {"ID": 11, "TextID": "ocmmap", "serviceName":"OpenCycleMap", "layerDir": "ocmtiles", "layerName": "",
-	    "disallowBulkDownloading":True},
+    {"ID": 11, "TextID": "ocmmap", "serviceName":"OpenCycleMap", "layerDir": "ocmtiles", "layerName": ""},
     {"ID": 12, "TextID": "gmmmap", "serviceName":"Google Map Maker", "layerDir": "gmmtiles", "layerName": "" }
                ]
+
+NO_BULK_DOWN = ["OpenStreetMap", "OpenCycleMap"]
 
 LAYER_MAP = 0
 LAYER_SATELLITE = 1

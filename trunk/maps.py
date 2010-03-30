@@ -145,6 +145,8 @@ class MainWindow(gtk.Window):
     ## Handles the change in the combo box Layer(Map, Sat.. )
     def layer_changed(self, w):
         self.layer = w.get_active()
+        if self.conf.oneDirPerMap:
+            self.conf.map_service = MAP_SERVICES[layer]["serviceName"]
         self.drawing_area.repaint()
 
     def download_clicked(self, w, pointer=None):

@@ -185,13 +185,13 @@ class DLWindow(gtk.Window):
         self.save_info(check_dir(strFolder), str(args))
         dThread = Timer(0, downThread)
 
-        if "disallowBulkDownloading" in MAP_SERVICES[self.layer].keys():
+        if self.conf.map_service in NO_BULK_DOWN:
             dialog = gtk.MessageDialog(self,
                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                     gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
                     ("This map services (%s) doesn't allow bulk downloading. "
-                    "If you insist on doing so, you break its term of use. \n"
-                    "Continue or cancel?") % (MAP_SERVICES[self.layer]["serviceName"])))
+                    "If you insist on doing so, you break its term of use. \n\n"
+                    "Continue or cancel?") % (self.conf.map_service)))
             response = dialog.run()
             dialog.destroy()
             if response != gtk.RESPONSE_OK:
