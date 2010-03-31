@@ -13,10 +13,12 @@ __license__ = 'Python'
 
 import urllib2, urlparse, gzip, httplib, mimetypes
 from StringIO import StringIO
+from mapConst import *
 #from django.template.defaultfilters import urlencode
 
 
-USER_AGENT = 'OpenAnything/%s +http://diveintopython.org/http_web_services/' % __version__
+#USER_AGENT = 'OpenAnything/%s +http://diveintopython.org/http_web_services/' % __version__
+USER_AGENT = '%s/%s +%s' % (NAME, VERSION, WEB_ADDRESS)
 
 class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
     def http_error_301(self, req, fp, code, msg, headers):
