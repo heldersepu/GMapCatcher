@@ -11,7 +11,7 @@ from src.mapArgs import MapArgs
 from src.mapServices import MapServ
 from src.mapDownloader import MapDownloader
 
-conf = mapConf.MapConf()
+mConf = mapConf.MapConf()
 ctx_map = MapServ(conf.init_path, conf.repository_type)
 downloader = None
 
@@ -26,9 +26,7 @@ def download(lat, lng, lat_range, lng_range, max_zl, min_zl, layer):
             lat, lng,
             lat_range*2, lng_range*2, zl,
             layer, do_nothing,
-            mapServ=conf.map_service,
-            styleID=conf.cloudMade_styleID,
-            language=conf.language
+            conf=mConf
         )
         downloader.wait_all()
 

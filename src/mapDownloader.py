@@ -15,21 +15,15 @@ from math import floor,ceil
 
 class DownloadTask:
     def __init__(self, coord, layer, callback=None,
-                    force_update=False,
-                    mapServ=MAP_SERVERS[GOOGLE],
-                    styleID=1,
-                    language=LANGUAGES[0]):
+                    force_update=False, conf=None):
         self.coord = coord
         self.layer = layer
         self.callback = callback
         self.force_update = force_update
-        self.mapServ = mapServ
-        self.styleID = styleID
-        self.language = language
+        self.conf = conf
 
     def __str__(self):
-        return "DownloadTask(%s,%s,%s,%s)" % \
-                (self.coord, self.layer, self.mapServ, self.styleID)
+        return "DownloadTask(%s,%s)" % (self.coord, self.layer)
 
 ## Downloads tiles from the web.
 #
@@ -64,7 +58,7 @@ class DownloaderThread(Thread):
         #)
         self.ctx_map.get_tile(
             task.coord, task.layer, True,
-            task.force_update, task.mapServ, task.styleID, task.language
+            task.force_update, task.conf
         )
         if task.callback:
             #print "process_task callback", task
@@ -121,8 +115,7 @@ class MapDownloader:
 
     def query_tile(self, coord, layer, callback,
                     online=True, force_update=False,
-                    mapServ=MAP_SERVERS[GOOGLE], styleID=1,
-                    language=LANGUAGES[0]):
+                    conf=None):
         #print "query_tile(",coord,layer,callback,online,force_update,")"
         world_tiles = mapUtils.tiles_on_level(coord[2])
         coord = (mapUtils.mod(coord[0], world_tiles),
@@ -138,7 +131,7 @@ class MapDownloader:
 
         self.taskq.put(
             DownloadTask(
-                coord, layer, callback, force_update, mapServ, styleID, language
+                coord, layer, callback, force_update, conf
             )
         )
 

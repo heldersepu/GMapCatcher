@@ -9,7 +9,7 @@
 # - this module is not used directly. It is used via MapServ() methods:
 #    def finish(self):
 #    def load_pixbuf(self, coord, layer, force_update):
-#    def get_tile(self, tcoord, layer, online, force_update, mapServ, styleID):
+#    def get_tile(self, tcoord, layer, online, conf):
 #    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
 #    def remove_old_tile(self, coord, layer, filename=None, interval=86400):
 #    def is_tile_in_local_repos(self, coord, layer):
@@ -89,7 +89,7 @@ class TilesRepositoryFS(TilesRepository):
     ## Get the png file for the given location
     #  Returns true if the file is successfully retrieved
     def get_png_file(self, coord, layer, filename,
-                        online, force_update, mapServ, styleID, language):
+                        online, force_update, conf):
         # remove tile only when online
         if (force_update and online):
             fileUtils.delete_old(filename)
@@ -101,7 +101,7 @@ class TilesRepositoryFS(TilesRepository):
 
         try:
             data = self.mapServ_inst.get_tile_from_coord(
-                        coord, layer, mapServ, styleID, language
+                        coord, layer, conf
                     )
             self.coord_to_path_checkdirs(coord, layer)
             file = open( filename, 'wb' )
@@ -156,7 +156,7 @@ class TilesRepositoryFS(TilesRepository):
     ## Get the tile for the given location
     #  Validates the given tile coordinates and,
     #  returns tile coords if successfully retrieved
-    def get_tile(self, tcoord, layer, online, force_update, mapServ, styleID, language):
+    def get_tile(self, tcoord, layer, online, force_update, conf):
         if (MAP_MIN_ZOOM_LEVEL <= tcoord[2] <= MAP_MAX_ZOOM_LEVEL):
             world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - tcoord[2])
             if (tcoord[0] > world_tiles) or (tcoord[1] > world_tiles):
@@ -165,14 +165,14 @@ class TilesRepositoryFS(TilesRepository):
             filename = self.coord_to_path(tcoord, layer)
             # print "tCoord to path: %s" % filename
             if self.get_png_file(tcoord, layer, filename, online,
-                                    force_update, mapServ, styleID, language):
+                                    force_update, conf):
                 return (tcoord, layer)
         return None
 
 
     ## Export tiles to one big map
     #  tcoord are the tile coordinates of the upper left tile
-    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
+    def do_export(self, tcoord, layer, online, conf, size):
         from PIL import Image
         # Convert given size to a tile size factor
         xFact = int(size[0]/TILES_WIDTH)
@@ -183,7 +183,7 @@ class TilesRepositoryFS(TilesRepository):
         for i in range(tcoord[0], tcoord[0] + xFact):
             y = 0
             for j in range(tcoord[1], tcoord[1] + yFact):
-                if self.get_tile( (i,j,tcoord[2]), layer, online, False, mapServ, styleID ):
+                if self.get_tile( (i,j,tcoord[2]), layer, online, False, conf):
                     pb = self.load_pixbuf( (i,j,tcoord[2]), layer, False)
                     width,height = pb.get_width(),pb.get_height()
                     Image.fromstring("RGB",(width,height),pb.get_pixels() )
