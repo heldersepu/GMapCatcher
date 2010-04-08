@@ -79,29 +79,40 @@ class MapServ:
         self.mt_counter = self.mt_counter % NR_MTS
         print     
         try:
-            if (MAP_SERVICES[layer]["TextID"] in ["gmap", "gsat", "gter"]):
-                return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
-
+            if not conf.oneDirPerMap:
+                if conf.map_service == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
+                    return openStreetMaps.get_url(self.mt_counter, coord)
+                elif conf.map_service == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
+                    return cloudMade.get_url(self.mt_counter, coord, styleID)
+                elif conf.map_service == MAP_SERVERS[YAHOO] and (layer != LAYER_TERRAIN):
+                    return yahoo.get_url(self.mt_counter, coord, layer)
+                elif conf.map_service == MAP_SERVERS[INFO_FREEWAY] and (layer == LAYER_MAP):
+                    return informationFreeway.get_url(self.mt_counter, coord)
+                elif conf.map_service == MAP_SERVERS[OPENCYCLEMAP] and (layer == LAYER_MAP):
+                    return openCycleMap.get_url(self.mt_counter, coord)
+                elif conf.map_service == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
+                    return googleMapMaker.get_url(self.mt_counter, coord)
+                elif conf.map_service == MAP_SERVERS[VIRTUAL_EARTH] and (layer != LAYER_TERRAIN):
+                    return virtualEarth.get_url(self.mt_counter, coord, layer)
+                else:
+                    return googleMaps.get_url(self.mt_counter, coord, layer)            
+            
+            if (MAP_SERVICES[layer]["TextID"] in ["veter", "vemap", "vesat"]):
+                return virtualEarth.get_url(self.mt_counter, coord, layer)
             elif (MAP_SERVICES[layer]["TextID"] == "osmmap"):
                 return openStreetMaps.get_url(self.mt_counter, coord)
-
             elif (MAP_SERVICES[layer]["TextID"] == "cmmap"):
                 return cloudMade.get_url(self.mt_counter, coord, cloudMade_styleID)
-
             elif (MAP_SERVICES[layer]["TextID"] in ["yter", "ymap"]):
                 return yahoo.get_url(self.mt_counter, coord, layer)
-
             elif (MAP_SERVICES[layer]["TextID"] == "ifwmap"):
                 return informationFreeway.get_url(self.mt_counter, coord)
-
             elif (MAP_SERVICES[layer]["TextID"] == "ocmmap"):
                 return openCycleMap.get_url(self.mt_counter, coord)
-
             elif (MAP_SERVICES[layer]["TextID"] == "gmmmap"):
                 return googleMapMaker.get_url(self.mt_counter, coord)
-
-            elif (MAP_SERVICES[layer]["TextID"] in ["veter", "vemap", "vesat"]):
-                return virtualEarth.get_url(self.mt_counter, coord, layer)
+            else:    
+                return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
 
         except KeyError:
             raise MapServException("Invalid layer ID: " + str(layer) )
