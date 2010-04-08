@@ -466,9 +466,7 @@ class MainWindow(gtk.Window):
             self.drawing_area.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
             online=online, force_update=force_update,
-            mapServ=self.conf.map_service,
-            styleID=self.conf.cloudMade_styleID,
-            language=self.conf.language
+            conf=self.conf,            
         )
         self.draw_overlay()
 

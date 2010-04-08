@@ -27,7 +27,7 @@ class TilesRepository:
     def load_pixbuf(self, coord, layer, force_update):
         raise NotImplementedException()
 
-    def get_tile(self, tcoord, layer, online, force_update, mapServ, styleID):
+    def get_tile(self, tcoord, layer, online, force_update, conf):
         raise NotImplementedException()
 
     def do_export(self, tcoord, layer, online, mapServ, styleID, size):

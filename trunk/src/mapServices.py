@@ -74,19 +74,19 @@ class MapServ:
 
     ## Get the URL for the given coordinates
     # In this function we point to the proper map service
-    def get_url_from_coord(self, coord, layer, mapServ, styleID, language):
+    def get_url_from_coord(self, coord, layer, conf):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
-
+        print     
         try:
             if (MAP_SERVICES[layer]["TextID"] in ["gmap", "gsat", "gter"]):
-                return googleMaps.get_url(self.mt_counter, coord, layer, language)
+                return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
 
             elif (MAP_SERVICES[layer]["TextID"] == "osmmap"):
                 return openStreetMaps.get_url(self.mt_counter, coord)
 
             elif (MAP_SERVICES[layer]["TextID"] == "cmmap"):
-                return cloudMade.get_url(self.mt_counter, coord, styleID)
+                return cloudMade.get_url(self.mt_counter, coord, cloudMade_styleID)
 
             elif (MAP_SERVICES[layer]["TextID"] in ["yter", "ymap"]):
                 return yahoo.get_url(self.mt_counter, coord, layer)
@@ -107,8 +107,8 @@ class MapServ:
             raise MapServException("Invalid layer ID: " + str(layer) )
 
 
-    def get_tile_from_coord(self, coord, layer, mapServ, styleID, language):
-        href = self.get_url_from_coord(coord, layer, mapServ, styleID, language)
+    def get_tile_from_coord(self, coord, layer, conf):
+        href = self.get_url_from_coord(coord, layer, conf)
         if href:
             try:
                 print 'downloading:', href
@@ -120,11 +120,9 @@ class MapServ:
             except:
                 raise
 
-    def get_tile(self, coord, layer, online, force_update,
-                    mapServ='Google', styleID=1, language=LANGUAGES[0]):
+    def get_tile(self, coord, layer, online, force_update, conf):
         return self.tile_repository.get_tile(
-                    coord, layer, online, force_update, 
-                    mapServ, styleID, language
+                    coord, layer, online, force_update, conf
                 )
 
     def remove_old_tile(self, coord, layer):

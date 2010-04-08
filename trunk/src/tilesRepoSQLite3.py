@@ -9,7 +9,7 @@
 # - this module is not used directly. It is used via MapServ() methods:
 #    def finish(self):
 #    def load_pixbuf(self, coord, layer, force_update):
-#    def get_tile(self, tcoord, layer, online, force_update, mapServ, styleID):
+#    def get_tile(self, tcoord, layer, online, force_update, conf):
 #    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
 #    def remove_old_tile(self, coord, layer, filename=None, interval=86400):
 #    def is_tile_in_local_repos(self, coord, layer):
@@ -329,14 +329,14 @@ class TilesRepositorySQLite3(TilesRepository):
     # Validates the given tile coordinates and,
     # returns tile coords if successfully retrieved
     # PUBLIC
-    def get_tile(self, tcoord, layer, online, force_update, mapServ, styleID, language):
+    def get_tile(self, tcoord, layer, online, force_update, conf):
         if (MAP_MIN_ZOOM_LEVEL <= tcoord[2] <= MAP_MAX_ZOOM_LEVEL):
             world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - tcoord[2])
             if (tcoord[0] > world_tiles) or (tcoord[1] > world_tiles):
                 return None
             # print "tCoord to path: %s" % filename
             if self.get_png_file(tcoord, layer, online,
-                                    force_update, mapServ, styleID, language):
+                                    force_update, conf):
                 return (tcoord, layer)
         return None
 
@@ -355,7 +355,7 @@ class TilesRepositorySQLite3(TilesRepository):
         for i in range(tcoord[0], tcoord[0] + xFact):
             y = 0
             for j in range(tcoord[1], tcoord[1] + yFact):
-                if self.get_tile( (i,j,tcoord[2]), layer, online, False, mapServ, styleID ):
+                if self.get_tile( (i,j,tcoord[2]), layer, online, False, conf):
                     pb = self.load_pixbuf( (i,j,tcoord[2]), layer, False)
                     width,height = pb.get_width(),pb.get_height()
                     Image.fromstring("RGB",(width,height),pb.get_pixels() )
@@ -417,7 +417,7 @@ class TilesRepositorySQLite3(TilesRepository):
     ## Get the png file for the given location
     # Returns true if the file is successfully retrieved
     # private
-    def get_png_file(self, coord, layer, online, force_update, mapServ, styleID, language):
+    def get_png_file(self, coord, layer, online, force_update, conf):
         # remove tile only when online
         filename = self.coord_to_path(coord, layer)
         if (force_update and online):
@@ -440,7 +440,7 @@ class TilesRepositorySQLite3(TilesRepository):
 
         # donwload data
         try:
-            oa_data = self.mapServ_inst.get_tile_from_coord(coord, layer, mapServ, styleID, language)
+            oa_data = self.mapServ_inst.get_tile_from_coord(coord, layer, conf)
             logging.debug("Storing tile into DB: %i, %i, xy: %i, %i" % (MAP_SERVICES[layer]["ID"], coord[2], coord[0], coord[1]) )
             try:
                 self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[SQL_IDX_IMG])

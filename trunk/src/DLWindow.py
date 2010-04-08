@@ -142,10 +142,8 @@ class DLWindow(gtk.Window):
                     args.lat, args.lng, dlat, dlon,
                     zoom, layer,
                     gui_callback(self.tile_received),
-                    mapServ=self.conf.map_service,
-                    styleID=self.conf.cloudMade_styleID,
-                    language=self.conf.language
-                )
+                    conf=self.conf
+                    )
             if self.downloader.qsize()==0:
                 self.download_complete()
             self.all_placed = True
