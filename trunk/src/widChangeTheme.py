@@ -83,7 +83,7 @@ class ChangeTheme():
         # Check box for option to create a dir per Map service
         hbox = gtk.HBox()
         self.cb_oneDirPerMap = gtk.CheckButton( \
-            "Use a different folder per Map Service")
+            "Use a different folder per Map Service (Relaunch required)")
         self.cb_oneDirPerMap.set_active(oneDirPerMap)
         hbox.pack_start(self.cb_oneDirPerMap)
         vbox.pack_start(hbox)

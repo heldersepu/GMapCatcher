@@ -98,13 +98,13 @@ class MapServ:
                     return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
 
             if (MAP_SERVICES[layer]["TextID"] in ["veter", "vemap", "vesat"]):
-                return virtualEarth.get_url(self.mt_counter, coord, layer)
+                return virtualEarth.get_url(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
             elif (MAP_SERVICES[layer]["TextID"] == "osmmap"):
                 return openStreetMaps.get_url(self.mt_counter, coord)
             elif (MAP_SERVICES[layer]["TextID"] == "cmmap"):
                 return cloudMade.get_url(self.mt_counter, coord, cloudMade_styleID)
             elif (MAP_SERVICES[layer]["TextID"] in ["yter", "ymap"]):
-                return yahoo.get_url(self.mt_counter, coord, layer)
+                return yahoo.get_url(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
             elif (MAP_SERVICES[layer]["TextID"] == "ifwmap"):
                 return informationFreeway.get_url(self.mt_counter, coord)
             elif (MAP_SERVICES[layer]["TextID"] == "ocmmap"):
