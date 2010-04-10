@@ -423,8 +423,7 @@ class MainWindow(gtk.Window):
         self.ctx_map.do_export(
             (tile[0], tile[1], self.get_zoom()),
             self.layer, not self.cb_offline.get_active(),
-            self.conf.map_service, self.conf.cloudMade_styleID,
-            size=(1024, 1024)
+            self.conf, size=(1024, 1024)
         )
 
         self.bottom_panel.hide()
@@ -466,7 +465,7 @@ class MainWindow(gtk.Window):
             self.drawing_area.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
             online=online, force_update=force_update,
-            conf=self.conf,            
+            conf=self.conf,
         )
         self.draw_overlay()
 

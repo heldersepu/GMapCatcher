@@ -344,7 +344,7 @@ class TilesRepositorySQLite3(TilesRepository):
     ## Export tiles to one big map
     #  tcoord are the tile coordinates of the upper left tile
     # PUBLIC
-    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
+    def do_export(self, tcoord, layer, online, conf, size):
         from PIL import Image
         # Convert given size to a tile size factor
         xFact = int(size[0]/TILES_WIDTH)
