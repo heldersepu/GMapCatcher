@@ -93,7 +93,7 @@ class MapServ:
                 elif conf.map_service == MAP_SERVERS[OPENCYCLEMAP] and (layer == LAYER_MAP):
                     return openCycleMap.get_url(self.mt_counter, coord)
                 elif conf.map_service == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
-                    return googleMapMaker.get_url(self.mt_counter, coord)                
+                    return googleMapMaker.get_url(self.mt_counter, coord)
                 else:
                     return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
 
@@ -145,10 +145,10 @@ class MapServ:
 
     ## Call the do_export in the tile_repository
     # Export tiles to one big map
-    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
+    def do_export(self, tcoord, layer, online, conf, size):
         def exportThread():
             self.tile_repository.do_export(
-                tcoord, layer, online, mapServ, styleID, size
+                tcoord, layer, online, conf, size
             )
             print "Export completed!"
         self.exThread = Timer(0, exportThread)
