@@ -25,19 +25,19 @@ MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade", "Yahoo",
 # name of the lauer service is created as: serviceName + layerName
 FIRST_LAYER_ID = 0
 MAP_SERVICES = [
-    {"ID": 0, "TextID": "gmap", "serviceName":"Google", "layerDir": "tiles", "layerName": "Map" },
-    {"ID": 1, "TextID": "gsat", "serviceName":"Google", "layerDir": "sat_tiles", "layerName": "Satellite" },
-    {"ID": 2, "TextID": "gter", "serviceName":"Google", "layerDir": "ter_tiles", "layerName": "Terrain" },
-    {"ID": 3, "TextID": "ymap", "serviceName":"Yahoo", "layerDir": "yahoomap", "layerName": "Map" },
-    {"ID": 4, "TextID": "yter", "serviceName":"Yahoo", "layerDir": "yahooter", "layerName": "Terrain" },
-    {"ID": 5, "TextID": "vemap", "serviceName":"Virtual Earth", "layerDir": "vemap", "layerName": "Map" },
-    {"ID": 6, "TextID": "vesat", "serviceName":"Virtual Earth", "layerDir": "vesat", "layerName": "Satellite" },
-    {"ID": 7, "TextID": "veter", "serviceName":"Virtual Earth", "layerDir": "veter", "layerName": "Terrain" },
-    {"ID": 8, "TextID": "osmmap", "serviceName":"OpenStreetMap", "layerDir": "osmtiles", "layerName": ""},
-    {"ID": 9, "TextID": "cmmap", "serviceName":"CloudMade", "layerDir": "cloudmatetiles", "layerName": "" },
-    {"ID": 10, "TextID": "ifwmap", "serviceName":"InformationFreeway", "layerDir": "ifwtiles", "layerName": "" },
-    {"ID": 11, "TextID": "ocmmap", "serviceName":"OpenCycleMap", "layerDir": "ocmtiles", "layerName": ""},
-    {"ID": 12, "TextID": "gmmmap", "serviceName":"Google Map Maker", "layerDir": "gmmtiles", "layerName": "" }
+    {"ID": 0, "TextID": "gmap",   "serviceName":"Google",             "layerDir": "tiles", "layerName": "Map" },
+    {"ID": 1, "TextID": "gsat",   "serviceName":"Google",             "layerDir": "sat_tiles", "layerName": "Satellite" },
+    {"ID": 2, "TextID": "gter",   "serviceName":"Google",             "layerDir": "ter_tiles", "layerName": "Terrain" },
+    {"ID": 0, "TextID": "ymap",   "serviceName":"Yahoo",              "layerDir": "yahoomap", "layerName": "Map" },
+    {"ID": 1, "TextID": "yter",   "serviceName":"Yahoo",              "layerDir": "yahooter", "layerName": "Satellite" },
+    {"ID": 0, "TextID": "vemap",  "serviceName":"Virtual Earth",      "layerDir": "vemap", "layerName": "Map" },
+    {"ID": 1, "TextID": "vesat",  "serviceName":"Virtual Earth",      "layerDir": "vesat", "layerName": "Satellite" },
+    {"ID": 2, "TextID": "veter",  "serviceName":"Virtual Earth",      "layerDir": "veter", "layerName": "Terrain" },
+    {"ID": 0, "TextID": "osmmap", "serviceName":"OpenStreetMap",      "layerDir": "osmtiles", "layerName": ""},
+    {"ID": 0, "TextID": "cmmap",  "serviceName":"CloudMade",          "layerDir": "cloudmatetiles", "layerName": "" },
+    {"ID": 0, "TextID": "ifwmap", "serviceName":"InformationFreeway", "layerDir": "ifwtiles", "layerName": "" },
+    {"ID": 0, "TextID": "ocmmap", "serviceName":"OpenCycleMap",       "layerDir": "ocmtiles", "layerName": ""},
+    {"ID": 0, "TextID": "gmmmap", "serviceName":"Google Map Maker",   "layerDir": "gmmtiles", "layerName": "" }
                ]
 
 NO_BULK_DOWN = ["OpenStreetMap", "OpenCycleMap"]
