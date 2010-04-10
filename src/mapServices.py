@@ -77,10 +77,12 @@ class MapServ:
     def get_url_from_coord(self, coord, layer, conf):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
-        print     
+        print
         try:
             if not conf.oneDirPerMap:
-                if conf.map_service == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
+                if conf.map_service == MAP_SERVERS[VIRTUAL_EARTH] and (layer != LAYER_TERRAIN):
+                    return virtualEarth.get_url(self.mt_counter, coord, layer)
+                elif conf.map_service == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
                     return openStreetMaps.get_url(self.mt_counter, coord)
                 elif conf.map_service == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
                     return cloudMade.get_url(self.mt_counter, coord, styleID)
@@ -91,12 +93,10 @@ class MapServ:
                 elif conf.map_service == MAP_SERVERS[OPENCYCLEMAP] and (layer == LAYER_MAP):
                     return openCycleMap.get_url(self.mt_counter, coord)
                 elif conf.map_service == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
-                    return googleMapMaker.get_url(self.mt_counter, coord)
-                elif conf.map_service == MAP_SERVERS[VIRTUAL_EARTH] and (layer != LAYER_TERRAIN):
-                    return virtualEarth.get_url(self.mt_counter, coord, layer)
+                    return googleMapMaker.get_url(self.mt_counter, coord)                
                 else:
-                    return googleMaps.get_url(self.mt_counter, coord, layer)            
-            
+                    return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
+
             if (MAP_SERVICES[layer]["TextID"] in ["veter", "vemap", "vesat"]):
                 return virtualEarth.get_url(self.mt_counter, coord, layer)
             elif (MAP_SERVICES[layer]["TextID"] == "osmmap"):
@@ -111,7 +111,7 @@ class MapServ:
                 return openCycleMap.get_url(self.mt_counter, coord)
             elif (MAP_SERVICES[layer]["TextID"] == "gmmmap"):
                 return googleMapMaker.get_url(self.mt_counter, coord)
-            else:    
+            else:
                 return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
 
         except KeyError:
