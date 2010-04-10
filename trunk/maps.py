@@ -146,7 +146,7 @@ class MainWindow(gtk.Window):
     def layer_changed(self, w):
         self.layer = w.get_active()
         if self.conf.oneDirPerMap:
-            self.conf.map_service = MAP_SERVICES[layer]["serviceName"]
+            self.conf.map_service = MAP_SERVICES[self.layer]["serviceName"]
         self.drawing_area.repaint()
 
     def download_clicked(self, w, pointer=None):
