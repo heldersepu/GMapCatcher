@@ -1,4 +1,12 @@
-March 4 2010	N.W    <pi3orama@gmail.com>
+April 17 2010    H.S    <HelderSepu@gmail.com>
+    * 0.7.0.0 - At revision: 816
+    * Add option to separate file paths for different map sources. (Issue 120)
+    * Fix bug downloading big sections. (Issue 135)
+    * Catch the map of China without english name. (Issue 136)
+    * Add message for Mass download from OpenCycleMap. (Issue 145)
+    * Fix bug searching locations within China. (Issue 150)
+
+March 4 2010    N.W    <pi3orama@gmail.com>
     * Rearrange the 'Download' button and map server combobox
     * Add a language setting for google map
 
