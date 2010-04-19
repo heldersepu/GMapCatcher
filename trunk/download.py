@@ -12,7 +12,7 @@ from src.mapServices import MapServ
 from src.mapDownloader import MapDownloader
 
 mConf = mapConf.MapConf()
-ctx_map = MapServ(conf.init_path, conf.repository_type)
+ctx_map = MapServ(mConf.init_path, mConf.repository_type)
 downloader = None
 
 def do_nothing(*args, **kwargs):
