@@ -4,12 +4,15 @@
 # This is the Main Window
 
 import os
+import gtk
+import pygtk
 import src.mapGPS as mapGPS
 import src.mapUtils as mapUtils
 import src.mapTools as mapTools
 import src.mapPixbuf as mapPixbuf
 import src.ASALTradio as ASALTradio
 import src.fileUtils as fileUtils
+import src.widMySettings as widMySettings
 
 from src.mapConst import *
 from src.gtkThread import *
@@ -27,6 +30,8 @@ from src.xmlUtils import kml_to_markers
 from src.widDrawingArea import DrawingArea
 
 class MainWindow(gtk.Window):
+
+#  def show(self, parent):
 
     default_text = "Enter location here!"
     update = None
@@ -574,6 +579,8 @@ class MainWindow(gtk.Window):
     def scale_change_value(self, range, scroll, value):
         self.do_zoom(value)
 
+    ##called everytime you move the map, draws over the map
+   
     def draw_overlay(self, drawing_area, rect):
         def draw_image(imgPos, img, width, height):
             mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
@@ -777,26 +784,64 @@ class MainWindow(gtk.Window):
             self.update.finish()
         return False
 
-    def setup_nogo(self):
-        #This is the area surrounding the available field area
-        default_nogo = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
-	                (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
-	                (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
-	                (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
-	                (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
-	                (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
-        self.localPath = os.path.expanduser(self.conf.init_path or DEFAULT_PATH)
-        self.nogoPath = os.path.join(self.localPath, 'nogo')
-        if (os.path.exists(self.nogoPath)):
-	    return fileUtils.read_bad(self.nogoPath)
+#    def setup_nogo(self):
+#        #This is the area surrounding the available field area
+#        default_nogo = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
+#	                (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
+#	                (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
+#	                (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
+#	                (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
+#	                (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
+ #       self.localPath = os.path.expanduser(self.conf.init_path or DEFAULT_PATH)
+  #      self.nogoPath = os.path.join(self.localPath, 'nogo')
+   #     if (os.path.exists(self.nogoPath)):
+	#    return fileUtils.read_bad(self.nogoPath)
 	    
-	else:
-            fileUtils.write_bad(self.nogoPath,default_nogo)
-            return fileUtils.read_bad(self.nogoPath)
+#	else:
+#            fileUtils.write_bad(self.nogoPath,default_nogo)
+#            return fileUtils.read_bad(self.nogoPath)
 
     def __init__(self, parent=None):
+
+#        window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+#        window.set_border_width(10)
+ #       gtk.Notebook.__init__(self)
+#        self.set_property('homogeneous', True)
+
         self.conf = MapConf()
         self.crossPixbuf = mapPixbuf.cross()
+		
+#        window.set_size_request(720, 400)
+#        window.set_destroy_with_parent(True)
+		
+#        myNotebook = self.__create_notebook(parent)
+#        window.add(myNotebook)
+#        window.show_all()
+#        myNotebook.set_current_page(0)
+		#        table = gtk.Table(3,6,False)
+		#        window.add(table)
+
+#    def __create_notebook(self, parent):
+#        notebook = gtk.Notebook()
+#        notebook.set_tab_pos(gtk.POS_TOP)
+#        notebook.show()
+#        self.show_tabs = True
+#        self.show_border = True
+		
+#        for str in MAINTOOLS_MENU:
+#			print (str)
+#			frame = gtk.Frame()
+#			frame.set_border_width(10)
+#			frame.set_size_request(100,75)
+#			if str in [MAINTOOLS_MENU[0]]:
+#				frame.show()
+#			elif str == MAINTOOLS_MENU[1]:
+#				frame.add(gtk.Label(str+ 'coming soon!! '))
+#			label = gtk.Label(str)
+#			notebook.append_page(frame, label)
+ #       return notebook
+		
+
 	self.asltw = None
 	self.nogo_areas = {}
         if mapGPS.available:
@@ -827,7 +872,7 @@ class MainWindow(gtk.Window):
         hpaned.pack1(self.left_panel, False, False)
         hpaned.pack2(self.__create_right_paned(), True, True)
         vpaned.add2(hpaned)
-        self.nogo_areas = self.setup_nogo()
+#        self.nogo_areas = self.setup_nogo()
         
         self.add(vpaned)
         self.set_title(" GMapCatcher ")
@@ -843,9 +888,9 @@ class MainWindow(gtk.Window):
         self.drawing_area.da_set_cursor()
         self.entry.grab_focus()
 
-def main():
-    MainWindow()
-    gtk.main()
+#def main():
+#    MainWindow()
+#    gtk.main()
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()
