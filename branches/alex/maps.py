@@ -198,10 +198,10 @@ class MainWindow(gtk.Window):
         #yinter1b = coord2[1]- slope1*coord2[0]
         #yinter2 = coord3[1] - slope2*coord3[0]
         #yinter2b = coord4[1] - slope2*coord4[0]
-       
+
         #xval = (yinter2 - yinter1) / (slope1 - slope2)
         #yval = slope2*xval + yinter2
-	if((x2-x1 == 0)): 
+	if((x2-x1 == 0)):
 		x2 += 0.000001
 	if(x4-x3 == 0):
 		x4 += 0.000001
@@ -209,7 +209,7 @@ class MainWindow(gtk.Window):
 		y2 += 0.000001
 	if(y4-y3 != 0):
 		y4 += 0.000001
-		
+
         if((x2-x1 != 0) or (x4-x3 != 0) or (y2-y1 != 0) or (y4-y3 != 0)):
 		slope1 = (y2-y1)/(x2-x1)
 		slope2 = (y4-y3)/(x4-x3)
@@ -221,9 +221,9 @@ class MainWindow(gtk.Window):
         yinter1b = y2- slope1*x2
         yinter2 = y3 - slope2*x3
         yinter2b = y4 - slope2*x4
-       
+
         xval = (yinter2 - yinter1) / (slope1 - slope2)
-        yval = slope2*xval + yinter2    
+        yval = slope2*xval + yinter2
 
         if (((coord1[0] <= xval <= coord2[0])) or ((coord2[0] <= xval <= coord1[0]))
              and ((coord3[0] <= xval <= coord4[0]) or (coord4[0] <= xval <= coord3[0]))):
@@ -232,17 +232,17 @@ class MainWindow(gtk.Window):
         	#print coord2
         	print (coord1[1] <= yval <= coord2[1] or coord2[1] <= yval <= coord1[1])
         	#print (yval <= coord4[1])
-                
+
     		return 1
         else:
                 return 0
         #print slope1
         #print slope2
-    
-    
-    
-    
-  
+
+
+
+
+
     def validate_path(self, w):
     	valid = True
         #bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
@@ -253,7 +253,7 @@ class MainWindow(gtk.Window):
 	#	     (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
 	#             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
         #astlr = ASALTradio.ASALTradio()
-        
+
         for bad_area_id in self.nogo_areas.keys():
            prevName=""
            bad_area = self.nogo_areas[bad_area_id]
@@ -268,7 +268,7 @@ class MainWindow(gtk.Window):
         	        #print bad_area[i]
 	   		if(i == len(bad_area)-1):
 			   if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[i],bad_area[0])):
-		              if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
+		              if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1):
 				    a,b,c,d,e = self.marker.positions[strName]
 				    d = -1
 				    self.marker.positions[strName] = a,b,c,d,e
@@ -278,17 +278,17 @@ class MainWindow(gtk.Window):
 				    valid = False
          		else:
 			   if(MainWindow.is_intersection(self,self.marker.positions[prevName],self.marker.positions[strName],bad_area[i],bad_area[i+1])):
-			      if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1): 
+			      if(self.marker.positions[strName][4] != -1 and self.marker.positions[prevName][4] != -1):
 				    a,b,c,d,e = self.marker.positions[strName]
 				    d = -1
 				    self.marker.positions[strName] = a,b,c,d,e
 				    a,b,c,d,e = self.marker.positions[prevName]
 				    d = -1
 				    self.marker.positions[prevName] = a,b,c,d,e
-				    valid = False			  
+				    valid = False
                prevName = strName
-	
-	
+
+
 	self.marker.write_markers()
 	self.drawing_area.repaint()
         self.asltw = ASALTWindow(
@@ -301,7 +301,7 @@ class MainWindow(gtk.Window):
         #asltw.txt_to_console(self, "foobar")
 
 
-    
+
 
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self, coord, mode):
@@ -408,7 +408,7 @@ class MainWindow(gtk.Window):
             cmb_gps.connect('changed',self.gps_changed)
             bbox.add(cmb_gps)
 
-        
+
 
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
         gtk.stock_add([(gtk.STOCK_APPLY, "_Validate Path", 0, 0, "")])
@@ -514,7 +514,7 @@ class MainWindow(gtk.Window):
 	#coord.insert(0,idnum)
 	#Append default wait time of zero
 	#coord.append(0)
-        self.marker.append_marker(markerdata)        
+        self.marker.append_marker(markerdata)
         self.marker.refresh()
         self.drawing_area.repaint()
 
@@ -552,7 +552,7 @@ class MainWindow(gtk.Window):
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
         self.drawing_area.da_move(event.x, event.y, self.get_zoom())
-	
+
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
@@ -580,7 +580,7 @@ class MainWindow(gtk.Window):
         self.do_zoom(value)
 
     ##called everytime you move the map, draws over the map
-   
+
     def draw_overlay(self, drawing_area, rect):
         def draw_image(imgPos, img, width, height):
             mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
@@ -623,7 +623,7 @@ class MainWindow(gtk.Window):
 	#             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
         for bad_area_id in self.nogo_areas.keys():
            prevName=""
-           bad_area = self.nogo_areas[bad_area_id]	
+           bad_area = self.nogo_areas[bad_area_id]
 	   for i in range(len(bad_area)):
 	      if(i == len(bad_area)-1):
 	      	#print "i=",i
@@ -664,8 +664,8 @@ class MainWindow(gtk.Window):
 		        self.drawing_area.draw_marker_line(loc, prevmark, zl, pixDim,"purple",2)
 		        draw_image(prevmark, img, pixDim, pixDim)
                   prevmark = loc
-	
-	
+
+
         # Draw GPS position
         if mapGPS.available:
             location = self.gps.get_location()
@@ -745,11 +745,11 @@ class MainWindow(gtk.Window):
             self.do_zoom(zoom+1, True)
         elif keyval in [61,65451]:
             self.do_zoom(zoom-1, True)
-            
+
         # Space = 32   Refresh the GPS
         elif event.keyval == 32:
-            self.reCenter_gps = True    
-            
+            self.reCenter_gps = True
+
     ## Handles the Key pressing
     def key_press_event(self, w, event):
         # F11 = 65480, F12 = 65481, ESC = 65307
@@ -770,7 +770,7 @@ class MainWindow(gtk.Window):
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
             self.navigation(event.keyval, self.get_zoom())
-            
+
 
     ## Final actions before main_quit
     def on_delete(self, *args):
@@ -796,7 +796,7 @@ class MainWindow(gtk.Window):
   #      self.nogoPath = os.path.join(self.localPath, 'nogo')
    #     if (os.path.exists(self.nogoPath)):
 	#    return fileUtils.read_bad(self.nogoPath)
-	    
+
 #	else:
 #            fileUtils.write_bad(self.nogoPath,default_nogo)
 #            return fileUtils.read_bad(self.nogoPath)
@@ -810,10 +810,10 @@ class MainWindow(gtk.Window):
 
         self.conf = MapConf()
         self.crossPixbuf = mapPixbuf.cross()
-		
+
 #        window.set_size_request(720, 400)
 #        window.set_destroy_with_parent(True)
-		
+
 #        myNotebook = self.__create_notebook(parent)
 #        window.add(myNotebook)
 #        window.show_all()
@@ -827,7 +827,7 @@ class MainWindow(gtk.Window):
 #        notebook.show()
 #        self.show_tabs = True
 #        self.show_border = True
-		
+
 #        for str in MAINTOOLS_MENU:
 #			print (str)
 #			frame = gtk.Frame()
@@ -840,7 +840,7 @@ class MainWindow(gtk.Window):
 #			label = gtk.Label(str)
 #			notebook.append_page(frame, label)
  #       return notebook
-		
+
 
 	self.asltw = None
 	self.nogo_areas = {}
@@ -852,7 +852,7 @@ class MainWindow(gtk.Window):
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path)
         self.downloader = MapDownloader(self.ctx_map)
-        
+
         #Set layer to satellite
         self.layer = 1
         gtk.Window.__init__(self)
@@ -873,8 +873,21 @@ class MainWindow(gtk.Window):
         hpaned.pack2(self.__create_right_paned(), True, True)
         vpaned.add2(hpaned)
 #        self.nogo_areas = self.setup_nogo()
-        
-        self.add(vpaned)
+
+        notebook = gtk.Notebook()
+        notebook.set_tab_pos(gtk.POS_TOP)
+        for str in MAINTOOLS_MENU:
+            frame = gtk.Frame()
+            frame.set_border_width(10)
+            frame.set_size_request(100, 75)
+            if str == MAINTOOLS_MENU[0]:
+                frame.add(vpaned)
+            else:
+                frame.add(gtk.Label(str + ' coming soon!! '))
+            label = gtk.Label(str)
+            notebook.append_page(frame, label)
+            
+        self.add(notebook)
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 400)
@@ -888,9 +901,9 @@ class MainWindow(gtk.Window):
         self.drawing_area.da_set_cursor()
         self.entry.grab_focus()
 
-#def main():
-#    MainWindow()
-#    gtk.main()
+def main():
+    MainWindow()
+    gtk.main()
 
-#if __name__ == "__main__":
-#    main()
+if __name__ == "__main__":
+    main()
