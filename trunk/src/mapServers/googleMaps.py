@@ -57,17 +57,27 @@ def parse_start_page(layer, html, language):
 
     # we first check the existence of the uniform URL pattern,
     # if not, we fall back to the old method.
-    if layer != 't':
-        upattern = 'http://mt[0-9].google.com/vt/lyrs\\\\x3dm@([0-9]+)'
+    if layer == 't':
+        upattern = 'http://mt[0-9].google.com/vt/lyrs\\\\x3d(t@[0-9]+,r@[0-9]+)'
         p = re.compile(upattern)
         m = p.search(html)
 
         ## if exist, we use upattern to form the retval
         if m:
             head_str = 'http://mt%d.google.com/vt/lyrs='
-            layer_str = layer + '@' + m.group(1)
+            layer_str = m.group(1)
             return head_str + layer_str + match_str
 
+    upattern = 'http://mt[0-9].google.com/vt/lyrs\\\\x3dm@([0-9]+)'
+    p = re.compile(upattern)
+    m = p.search(html)
+
+    ## if exist, we use upattern to form the retval
+    if m:
+        head_str = 'http://mt%d.google.com/vt/lyrs='
+        layer_str = layer + '@' + m.group(1)
+        return head_str + layer_str + match_str
+            
     # List of patterns add more as needed
     paList = ['http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v=([a-z0-9.]+)&',
               'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]lyrs=([a-z@0-9.]+)&',
