@@ -18,7 +18,6 @@ downloader = None
 def do_nothing(*args, **kwargs):
     pass
 
-
 def download(lat, lng, lat_range, lng_range, max_zl, min_zl, layer):
     for zl in range(max_zl, min_zl - 1, -1):
         print "Downloading zl %d" % zl
@@ -69,6 +68,6 @@ if __name__ == "__main__":
         download(args.lat, args.lng, args.lat_range, args.lng_range,
                  args.max_zl, args.min_zl, args.layer)
     finally:
-        print "Waiting..."
+        print "Stopping..."
         downloader.stop_all()
 
