@@ -59,6 +59,12 @@ def FileChooser(strPath, strTitle="Select File"):
                                     gtk.STOCK_OK, gtk.RESPONSE_OK))
     dialog.set_default_response(gtk.RESPONSE_OK)
     dialog.set_current_folder(strPath)
+	
+    filter = gtk.FileFilter()
+    filter.set_name("csv files")
+    filter.add_pattern("*.csv")
+    dialog.add_filter(filter)
+
     if dialog.run() == gtk.RESPONSE_OK:
         strFileName = dialog.get_filename()
     dialog.destroy()

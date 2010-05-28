@@ -32,6 +32,7 @@ class MapConf():
         config.add_section(SECTION_INIT)
         if self.init_path:
             config.set(SECTION_INIT, 'path', self.init_path)
+            config.set(SECTION_INIT, 'upload_file', self.init_path)
         config.set(SECTION_INIT, 'width', self.init_width)
         config.set(SECTION_INIT, 'height', self.init_height)
         config.set(SECTION_INIT, 'zoom', self.init_zoom)
@@ -48,6 +49,9 @@ class MapConf():
         config.set(SECTION_INIT, 'baud_rate', self.baud_rate)
         config.set(SECTION_INIT, 'query_timeout', self.query_timeout)
         config.set(SECTION_INIT, 'update_interval', self.update_interval)
+        config.set(SECTION_INIT, 'print_something', self.print_something)
+
+        #config.set(SECTION_INIT, 'upload_file', self.upload_file)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -106,6 +110,19 @@ class MapConf():
 	self.query_timeout = read_config('query_timeout',5,int)
 	#Auto Update interval
 	self.update_interval = read_config('update_interval',30,int)
+	#upload_file
+	self.upload_file = read_config('upload_file', 20, str)
+	self.print_something = read_config('print_something', 20, str)
+
+#	self.upload_file = read_config('upload_file', 20, str)
+
+        #self.init_path = os.path.join(os.path.expanduser(USER_PATH), TILES_PATH)
+        #strPath = read_config('upload_file', self.init_path, str)
+        #if not strPath.strip().lower() in ['none', '']:
+        #    strPath = fileUtils.check_dir(strPath)
+        #    if os.path.isdir(strPath):
+        #        self.init_path = strPath
+
 
 
     ## Write the configuration to the default file
