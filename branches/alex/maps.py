@@ -31,7 +31,6 @@ from src.widDrawingArea import DrawingArea
 
 class MainWindow(gtk.Window):
 
-#  def show(self, parent):
 
     default_text = "Enter location here!"
     update = None
