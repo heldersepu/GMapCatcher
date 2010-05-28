@@ -130,7 +130,7 @@ class ASALTWindow(gtk.Window):
 	vpane = gtk.VPaned()
 	self.conf = config
 	self.da = drawing_area
-	self.asltr = ASALTradio.ASALTradio(self.conf)
+	#self.asltr = ASALTradio.ASALTradio(self.conf)
 	self.updates = []
         localPath = os.path.expanduser(self.conf.init_path or DEFAULT_PATH)
         self.asaltPath = os.path.join(localPath, 'asalt') 

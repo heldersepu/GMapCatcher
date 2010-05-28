@@ -3,9 +3,12 @@
 # Displayed inside a tab in MapTools.
 
 import gtk
+import os
 import fileUtils
 import re
 from mapConst import *
+import mapConf
+import csv
 
 ## This widget allows the user to modify the locations and markers
 class TreeView():
@@ -13,6 +16,26 @@ class TreeView():
     ## Appends items to a list from the given file
     def __read_file(self, strInfo, strFilePath, listStore):
         locations = fileUtils.read_file(strInfo, strFilePath)
+		
+        ifile = open(strFilePath, "rb")
+        reader = csv.reader(ifile)
+						
+        # rownum = 0
+		
+        # for row  in reader:
+    # # Save header row.
+            # if rownum == 0:
+                # print (row)
+                # listStore.append([rownum , row[0],row[1], 1,1])
+            # else:
+                # print (row)
+                # listStore.append([rownum , row[0],row[1], 1,1])
+            # print rownum
+            # rownum += 1
+            # print rownum
+        ifile.close()
+
+        print strFilePath
         # add rows with text
         if locations:
             for strLoc in locations.keys():
@@ -96,13 +119,12 @@ class TreeView():
     
     def btn_save_nogo(self, button, strInfo, filePath, listStore, parent):
         p = re.compile('markers')
-        #print filePath
+        print "NOGO PATH"
+        print filePath
         filePath = p.sub('nogo',filePath);
         self.__write_file_nogo(strInfo, filePath, listStore)
         parent.marker.refresh()
         parent.drawing_area.repaint()
-    
-    
 
     ## All the buttons below the list
     def __action_buttons(self, strInfo, filePath, listStore, myTree, parent):
@@ -136,8 +158,7 @@ class TreeView():
 	button.connect('clicked', self.btn_save_clicked,
 	                 strInfo, filePath, listStore, parent)
         bbox.add(button)
-        return bbox
-
+        return bbox		
     ## Handle the delete key
     def key_press_tree(self, w, event, listStore):
         if event.keyval == 65535:
@@ -146,8 +167,53 @@ class TreeView():
 
     ## Put all the TreeView Widgets together
     def show(self, strInfo, filePath, parent):
+        self.conf = mapConf.MapConf()
+        upload_file = self.conf.upload_file
+        fileData = {}
+
+		
+        print "UPLOADING FILE"
+		
+        self.localP = os.path.expanduser(self.conf.init_path or DEFAULT_PATH)
+        #self.localP = filePath
+
+        if upload_file == 20:
+            print "this is the upload file"
+            print upload_file
+        else:
+            ifile = open(upload_file, "rb")
+            reader = csv.reader(ifile)
+            self.temp_file = open(os.path.join(self.localP, 'markers'), 'w')
+            self.temp_file.write("# This is the "+ strInfo +"s file used by GMapCatcher.\n"+\
+                "#\n"+\
+                "# This file contains a list of Locations/Position.\n"+\
+                "# Each entry should be kept on an individual line.\n"+\
+                "# The latitude, longitud and zoom should be TAB separated.\n"+\
+                "#\n"+\
+                "# Additionally, comments (such as these) may be inserted on\n"+\
+                "# lines sarting with a '#' symbol.\n"+\
+                "#\n" + "# For example:\n" + "#\n" +
+                ('#   '+ strInfo +'="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
+                 ("Paris, France", 48.856667, 2.350987, 5)) + "#\n" )
+
+            print "GOING INTO FILE DATA"
+            rownum = 0
+            for l in reader:
+                self.temp_file.write(strInfo + '="%s"\tlat="%.10s"\tlng="%.10s"\tzoom="%i"\tid="%i"\twait="%i"\n' %
+                          (str(rownum+1), l[0], l[1], 10, rownum+1, 0))
+                print(strInfo + '="%s"\tlat="%.10s"\tlng="%.10s"\tzoom="%i"\tid="%i"\twait="%i"\n' %
+                          (str(rownum+1), l[0], l[1], 10, rownum+1, 0))
+                print l
+                rownum +=1
+            self.temp_file.close()
+            ifile.close()
+
+
         # create a listStore with one string column to use as the model
         listStore = gtk.ListStore(int, str, str, int, int)
+		
+        print "IN THE TREEVIEW"
+
 
         # create the TreeView using listStore
         myTree = gtk.TreeView(self.__read_file(strInfo, filePath, listStore))
@@ -183,7 +249,6 @@ class TreeView():
         hpaned.pack1(scrolledwindow, True, True)
 
         buttons = self.__action_buttons(strInfo, filePath,
-                                        listStore, myTree, parent)
+                                         listStore, myTree, parent)
         hpaned.pack2(buttons, False, False)
         return hpaned
-

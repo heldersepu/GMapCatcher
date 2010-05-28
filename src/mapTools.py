@@ -9,12 +9,15 @@ import widMySettings
 import widChangeTheme
 import widMyGPS
 import widASALTsettings
+import widUploadsettings
 from mapConst import *
+import mapConf
 
 
 class MapTools():
 
     def __create_notebook(self, parent):
+        self.conf = mapConf.MapConf()
         filePath = parent.ctx_map.configpath
         notebook = gtk.Notebook()
         notebook.set_tab_pos(gtk.POS_TOP)
@@ -25,6 +28,7 @@ class MapTools():
         myTheme = widChangeTheme.ChangeTheme()
         myGPS = widMyGPS.MyGPS()
         myASALT = widASALTsettings.ASALTsettings()
+        myUpload = widUploadsettings.Uploadsettings()
 
         # Append pages to the notebook
         for str in TOOLS_MENU:
@@ -42,7 +46,9 @@ class MapTools():
             elif str == TOOLS_MENU[4]:
                 frame.add(myGPS.show(parent.conf))
             elif str == TOOLS_MENU[5]:
-                frame.add(myASALT.show(parent.conf))    
+                frame.add(myASALT.show(parent.conf))
+            elif str == TOOLS_MENU[6]:
+            	frame.add(myUpload.show(parent.conf))
             else:
                 frame.add(gtk.Label(str + ' coming soon!! '))
             label = gtk.Label(str)

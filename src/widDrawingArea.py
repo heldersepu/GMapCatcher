@@ -59,6 +59,8 @@ class DrawingArea(gtk.DrawingArea):
             self.draging_start = (x, y)
             self.repaint()
 
+## draw lines between two points
+
     def draw_marker_line(self, mpos1, mpos2, zl, pixDim, color, width):
            drawable = self.window
            #gc = self.drawing_area.style.base_gc[0]
