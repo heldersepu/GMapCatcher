@@ -13,6 +13,9 @@ import src.mapPixbuf as mapPixbuf
 import src.ASALTradio as ASALTradio
 import src.fileUtils as fileUtils
 import src.widMySettings as widMySettings
+import src.widASALTsettings as widASALTsettings
+import mapover
+import threeD
 
 from src.mapConst import *
 from src.gtkThread import *
@@ -31,6 +34,7 @@ from src.widDrawingArea import DrawingArea
 
 class MainWindow(gtk.Window):
 
+#  def show(self, parent):
 
     default_text = "Enter location here!"
     update = None
@@ -45,6 +49,8 @@ class MainWindow(gtk.Window):
     ## Automatically display after selecting
     def on_completion_match(self, completion, model, iter):
         self.entry.set_text(model[iter][0])
+        print ("this is the GPS COORDINATE")
+        print (model[iter][0])
         self.confirm_clicked(self)
 
     ## Clean out the entry box if text = default
@@ -802,43 +808,8 @@ class MainWindow(gtk.Window):
 
     def __init__(self, parent=None):
 
-#        window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-#        window.set_border_width(10)
- #       gtk.Notebook.__init__(self)
-#        self.set_property('homogeneous', True)
-
         self.conf = MapConf()
         self.crossPixbuf = mapPixbuf.cross()
-
-#        window.set_size_request(720, 400)
-#        window.set_destroy_with_parent(True)
-
-#        myNotebook = self.__create_notebook(parent)
-#        window.add(myNotebook)
-#        window.show_all()
-#        myNotebook.set_current_page(0)
-		#        table = gtk.Table(3,6,False)
-		#        window.add(table)
-
-#    def __create_notebook(self, parent):
-#        notebook = gtk.Notebook()
-#        notebook.set_tab_pos(gtk.POS_TOP)
-#        notebook.show()
-#        self.show_tabs = True
-#        self.show_border = True
-
-#        for str in MAINTOOLS_MENU:
-#			print (str)
-#			frame = gtk.Frame()
-#			frame.set_border_width(10)
-#			frame.set_size_request(100,75)
-#			if str in [MAINTOOLS_MENU[0]]:
-#				frame.show()
-#			elif str == MAINTOOLS_MENU[1]:
-#				frame.add(gtk.Label(str+ 'coming soon!! '))
-#			label = gtk.Label(str)
-#			notebook.append_page(frame, label)
- #       return notebook
 
 
 	self.asltw = None
@@ -851,6 +822,8 @@ class MainWindow(gtk.Window):
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path)
         self.downloader = MapDownloader(self.ctx_map)
+
+        mySett = widMySettings.MySettings()
 
         #Set layer to satellite
         self.layer = 1
@@ -871,8 +844,11 @@ class MainWindow(gtk.Window):
         hpaned.pack1(self.left_panel, False, False)
         hpaned.pack2(self.__create_right_paned(), True, True)
         vpaned.add2(hpaned)
+#spaned.add2(ipaned)
 #        self.nogo_areas = self.setup_nogo()
-
+        myMap = mapover.MapOver()
+        myASALT = widASALTsettings.ASALTsettings()
+        myThree = threeD.threeD()
         notebook = gtk.Notebook()
         notebook.set_tab_pos(gtk.POS_TOP)
         for str in MAINTOOLS_MENU:
@@ -881,6 +857,13 @@ class MainWindow(gtk.Window):
             frame.set_size_request(100, 75)
             if str == MAINTOOLS_MENU[0]:
                 frame.add(vpaned)
+            elif str == MAINTOOLS_MENU[1]:
+                if self.conf.upload_file == 20:
+                    frame.add(gtk.Label(' Please Upload a File to use this Function'))
+                else:
+			        frame.add(myMap.show())
+            elif str == MAINTOOLS_MENU[2]:
+                frame.add(myThree.show())
             else:
                 frame.add(gtk.Label(str + ' coming soon!! '))
             label = gtk.Label(str)
