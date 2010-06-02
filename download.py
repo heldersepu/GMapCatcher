@@ -52,9 +52,9 @@ if __name__ == "__main__":
         args.lng = coord[1]
 
     if args.width > 0:
-        args.lng_range = mapUtils.km_to_lat(args.width, args.lat)
+        args.lng_range = km_to_lon(args.width, args.lat)
     if args.height > 0:
-        args.lat_range = mapUtils.km_to_lon(args.height)
+        args.lat_range = km_to_lat(args.height)
 
     if (args.location is None):
         args.location = "somewhere"
