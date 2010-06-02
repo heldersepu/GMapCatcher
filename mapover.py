@@ -13,6 +13,7 @@ import src.ASALTradio as ASALTradio
 import src.fileUtils as fileUtils
 import src.widMySettings as widMySettings
 import src.widASALTsettings as widASALTsettings
+import src.widTreeView2 as treeViewSettings
 
 from src.gtkThread import *
 from src.mapConf import MapConf
@@ -28,6 +29,7 @@ from src.customWidgets import lbl, _frame, myToolTip, gtk_menu, FileChooser, _fr
 from src.mapConst import *
 from src.widDrawingArea import DrawingArea
 from src.xmlUtils import kml_to_markers
+from os.path import join, dirname, abspath, exists
 
 
 
@@ -312,7 +314,7 @@ class MapOver():
         scale.set_size_request(30, -1)
         scale.set_increments(1,1)
         scale.set_digits(0)
-        scale.set_value(self.conf.init_zoom)
+        scale.set_value(15)
         scale.connect("change-value", self.scale_change_value)
         scale.show()
         self.scale = scale
@@ -333,6 +335,56 @@ class MapOver():
         da.connect_object("event", self.da_click_events, menu)
 
         return self.drawing_area
+
+    def right_paned(self):
+
+        #frame = gtk.Frame("")
+        # for parent in range(4):
+            # piter = self.treestore.append(None, ['parent %i' % parent])
+            # for child in range(3):
+                # self.treestore.append(piter, ['child %i of parent %i' %
+                                              # (child, parent)])
+
+        self.mytree = gtk.TreeView(self.liststore)
+        #self.myTree.connect("key-press-event", self.key_press_tree, listStore)
+
+        strCols = ['Marker', 'Latitude', 'Longitude', 'Depth','Temperature']
+        for intPos in range(len(strCols)):
+            # Create a CellRenderers to render the data
+            cell = gtk.CellRendererText()
+            # Create the TreeViewColumns to display the data
+            tvcolumn = gtk.TreeViewColumn(strCols[intPos])
+            self.mytree.append_column(tvcolumn)
+            tvcolumn.pack_start(cell, True)
+            tvcolumn.set_attributes(cell, text=intPos)
+            tvcolumn.set_sort_column_id(intPos)
+            tvcolumn.set_resizable(True)
+            if intPos == 0:
+                tvcolumn.set_expand(True)
+            else:
+                tvcolumn.set_min_width(75)
+
+         # make myTree searchable by location
+        self.mytree.set_search_column(0)
+        self.liststore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+
+		# self.mytree = gtk.TreeView(self.liststore)
+        # self.tvcolumn = gtk.TreeViewColumn('Data Information')
+        # self.mytree.append_column(self.tvcolumn)
+        # self.cell = gtk.CellRendererText()
+        # self.tvcolumn.add_attribute(self.cell, 'text', 0)
+        # self.mytree.set_search_column(0)
+        # self.tvcolumn.set_sort_column_id(0)
+        # self.mytree.set_reorderable(True)
+		
+        bpaned = gtk.VPaned()
+        #bpaned.set_border_length(200)
+        scrolledwindow = gtk.ScrolledWindow()
+        scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scrolledwindow.add(self.mytree)
+        bpaned.pack1(scrolledwindow, True, True) 
+        #frame.add(bpaned)		
+        return bpaned
 
         ## Zoom to the given pointer
     def do_zoom(self, zoom, doForce=False, dPointer=False):
@@ -474,6 +526,11 @@ class MapOver():
             coord = self.ctx_map.get_locations()[location]
             img = self.marker.get_marker_pixbuf(zl, 'marker1.png')
             draw_image(coord, img, pixDim, pixDim)
+			
+			# Zooms in to first coordinate
+            self.drawing_area.center = mapUtils.coord_to_tile(coord)
+            self.set_scale.set_value(coord[2])
+            self.do_zoom(coord[2], True)
         else:
             coord = (None, None, None)
 
@@ -490,22 +547,49 @@ class MapOver():
 
         # Draw the markers
         img = self.marker.get_marker_pixbuf(zl)
+        _prefix = abspath(join(dirname(__file__), "../../images"))
+#        img2 = gtk.Image()
         prevmark = ""
         for str in self.marker.positions.keys():
             mpos = self.marker.positions[str]
+            print "MPOS"
+            print mpos[0],mpos[1], mpos[2]
             if(self.marker.positions[str][3] == -1):
                 img = self.marker.get_marker_pixbuf2(zl)
+#                img2.set_from_file(join(_prefix, 'cross.png'))
             if zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0]):
                 draw_image(mpos, img, pixDim, pixDim)
+				# #draws tooltip windows
+                # self.window = window = gtk.Window(gtk.WINDOW_POPUP)
+                # window.set_name('gtk-tooltips')
+                # window.set_resizable(False)
+                # window.set_border_width(4)
+                # window.set_app_paintable(True)
+				
+                # self.tool_label = label = gtk.Label()
+                # label.set_line_wrap(True)
+                # label.set_alignment(0.5, 0.5)
+                # label.set_use_markup(True)
+                # label.show()
+                # window.add(label)
+                # window.move(mpos[0],mpos[1])
+                # window.show()
+
+				
+				#draws the Green Line
             if (prevmark != "" and zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0])):
             	self.drawing_area.draw_marker_line(self.marker.positions[str], self.marker.positions[prevmark], zl, pixDim,"green",2)
             	if(self.marker.positions[prevmark][3] == -1):
             	    img = self.marker.get_marker_pixbuf2(zl)
+#                    img2.set_from_file(join(_prefix, 'cross.png'))
             	else:
             	    img = self.marker.get_marker_pixbuf(zl)
+#                    img2.set_from_file(join(_prefix, 'cross.png'))
             	draw_image(self.marker.positions[prevmark], img, pixDim, pixDim)
             prevmark = str
             img = self.marker.get_marker_pixbuf(zl)
+#            img2.set_from_file(join(_prefix, 'cross.png'))
+#            self.tooltips.set_tip(img2, "HEY")
 
 	prevmark = ""
 	# Draw vehicle position markers
@@ -656,7 +740,20 @@ class MapOver():
             fileUtils.write_bad(self.nogoPath,default_nogo)
             return fileUtils.read_bad(self.nogoPath)
 
+    # def show_tool(self, tooltip, x, y):
 
+        # window = self.window
+		
+        # self.label.set_label(tooltip)
+        # w, h = windwo.size_request()
+        # window.move(*self.location(x,y,w,h))
+        # window.show()
+        # self.__shown = True
+		
+    def hide_tool(self):
+	
+        self.window.hide()
+        self.shown = False
 
     def show(self, parent=None):
 
@@ -666,6 +763,12 @@ class MapOver():
         print self.conf.upload_file
         print "got it"
         self.localP = os.path.expanduser(self.conf.init_path or DEFAULT_PATH)
+
+        self.liststore = gtk.ListStore(int, str, str, str, str)
+
+		
+		# set the tool tips for the markers
+        self.tooltips = gtk.Tooltips()
 
         if self.conf.upload_file == 20:
             print "this is the upload file"
@@ -696,6 +799,7 @@ class MapOver():
                     self.h3[0] = row[4]
                     self.h4[0] = row[5]
                     self.temp_file.write('1' + ',' + self.lat[0] + ',' +self.long[0] + '\n')
+                    self.liststore.append([rownum+1, self.lat[0], self.lat[0], self.h1[0],self.h2[0]]) 
                     print self.temp_file
 
 #                print (lat[0] + " " + long[0] + " " +h1[0] + " " + h2[0] + " " +h3[0] + " " + h4[0])
@@ -709,11 +813,13 @@ class MapOver():
                     self.h3[rownum] = row[4]
                     self.h4[rownum] = row[5]
                     self.temp_file.write('1' + ',' + self.lat[rownum] + ',' +self.long[rownum] + '\n')
+                    self.liststore.append([rownum+1, self.lat[rownum], self.lat[rownum], self.h1[rownum],self.h2[rownum]]) 
                     print self.temp_file
                 #print (lat[rownum] + " " + long[rownum] + " " +h1[rownum] + " " + h2[rownum] + " " +h3[rownum] + " " + h4[rownum])
                     print rownum
                 rownum += 1
                 print rownum
+            self.rows = rownum
             self.temp_file.close()
             ifile.close()
 
@@ -744,8 +850,9 @@ class MapOver():
         self.left_panel = self.__create_left_paned()
 
         vpaned.pack1(self.top_panel, False, False)
-        hpaned.pack1(self.left_panel, False, False)
-        hpaned.pack2(self.__create_right_paned(), True, True)
+        #hpaned.pack1(self.left_panel, False, False)
+        hpaned.pack1(self.__create_right_paned(), True, True)
+        hpaned.pack2(self.right_paned(), True, True)
         vpaned.add2(hpaned)
         self.nogo_areas = self.setup_nogo()
         print "THIS IS SELF.NOGO_AREAS"

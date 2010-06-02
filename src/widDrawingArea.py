@@ -27,6 +27,8 @@ class DrawingArea(gtk.DrawingArea):
 
     ## Handles left (press click) event in the drawing_area
     def da_button_press(self, w, event):
+        #handles markers and left click
+        #if (event.button == 1 and )
         if (event.button == 1):
             self.draging_start = (event.x, event.y)
             self.da_set_cursor(gtk.gdk.FLEUR)
@@ -81,6 +83,26 @@ class DrawingArea(gtk.DrawingArea):
     	   if(xy2 and xy1):
     	   	drawable.draw_line(
     	   	      gc, xy1[0][0] + mct1[1][0], xy1[0][1] + mct1[1][1], xy2[0][0] + mct2[1][0] , xy2[0][1] + mct2[1][1] 
+    	   	)
+		    #drawable.draw_line(gc, 0, 0, x, y)  
+
+    def draw_rec(self, mpos1, mpos2, zl, pixDim, color, width):
+           drawable = self.window
+           #gc = self.drawing_area.style.base_gc[0]
+           gc = drawable.new_gc()
+           gc.line_width = width
+           rect = self.get_allocation()
+           mct1 = mapUtils.coord_to_tile((mpos1[0], mpos1[1], zl))
+           mct2 = mapUtils.coord_to_tile((mpos2[0], mpos2[1], zl))
+    	   xy1 = mapUtils.tile_coord_to_screen(
+    	    	(mct1[0][0], mct1[0][1], zl), rect, self.center
+    	   )
+    	   xy2 = mapUtils.tile_coord_to_screen(
+    	    	 (mct2[0][0], mct2[0][1], zl), rect, self.center
+    	   )
+    	   if(xy2 and xy1):
+    	   	drawable.draw_rectangle(
+    	   	      gc, xy1[0][0] + mct1[1][0], xy2[0][0] + mct2[1][0], 110, 100 
     	   	)
 		    #drawable.draw_line(gc, 0, 0, x, y)  
 
