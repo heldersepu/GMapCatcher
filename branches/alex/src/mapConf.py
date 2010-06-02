@@ -73,7 +73,7 @@ class MapConf():
         ## Initial window height, default is 450  Adjusted for ASALT
         self.init_height = read_config('height', 768, int)
         ## Initial map zoom, default is MAP_MAX_ZOOM_LEVEL-1
-        self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL-1, int)
+        self.init_zoom = read_config('zoom', 9, int)
         ## Initial map center, default is ((1,0), (9,200)) UPDATED FOR ASALT
         self.init_center = read_config('center', ((21098,51022),(105,202)), str_to_tuple)
 
