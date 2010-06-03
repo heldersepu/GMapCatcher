@@ -333,7 +333,7 @@ class MainWindow(gtk.Window):
         hbox.pack_start(bbox)
         return _frame(" Export map to PNG image ", hbox)
 
-    def __create_left_paned(self):
+    def __create_left_paned(self, init_zoom):
         scale = gtk.VScale()
         scale.set_range(MAP_MIN_ZOOM_LEVEL, MAP_MAX_ZOOM_LEVEL)
         # scale.set_inverted(True)
@@ -341,7 +341,7 @@ class MainWindow(gtk.Window):
         scale.set_size_request(30, -1)
         scale.set_increments(1,1)
         scale.set_digits(0)
-        scale.set_value(self.conf.init_zoom)
+        scale.set_value(init_zoom)
         scale.connect("change-value", self.scale_change_value)
         scale.show()
         self.scale = scale
@@ -664,7 +664,7 @@ class MainWindow(gtk.Window):
         self.connect('delete-event', self.on_delete)
 
         self.top_panel = self.__create_top_paned()
-        self.left_panel = self.__create_left_paned()
+        self.left_panel = self.__create_left_paned(self.conf.init_zoom)
         self.bottom_panel = self.__create_bottom_paned()
 
         vpaned = gtk.VPaned()
