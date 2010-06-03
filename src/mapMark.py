@@ -62,6 +62,12 @@ class MyMarkers:
 
 
 
-    def get_marker_pixbuf(self, zl, image='marker.png'):
+    def get_marker_pixbuf(self, zl, rows, image='marker.png'):
+        if (rows > 0):
+            image = ("marker_"+str(rows)+".png")
+        # elif (rows == 2):
+            # image = ("marker_1.png")
+        print image
+        print rows
         pixDim = self.get_pixDim(zl)
         return mapPixbuf.getImage(image, pixDim, pixDim)
