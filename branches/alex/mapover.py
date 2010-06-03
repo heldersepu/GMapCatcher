@@ -524,7 +524,7 @@ class MapOver():
         locations = self.ctx_map.get_locations()
         if (location in locations.keys()):
             coord = self.ctx_map.get_locations()[location]
-            img = self.marker.get_marker_pixbuf(zl, 'marker1.png')
+            img = self.marker.get_marker_pixbuf(zl, marker_row)
             draw_image(coord, img, pixDim, pixDim)
 			
 			# Zooms in to first coordinate
@@ -546,48 +546,32 @@ class MapOver():
 
 
         # Draw the markers
-        img = self.marker.get_marker_pixbuf(zl)
+        img = self.marker.get_marker_pixbuf(zl, 1)
         _prefix = abspath(join(dirname(__file__), "../../images"))
-#        img2 = gtk.Image()
         prevmark = ""
         for str in self.marker.positions.keys():
+            print "str"
+            print str
             mpos = self.marker.positions[str]
             print "MPOS"
-            print mpos[0],mpos[1], mpos[2]
+            print mpos[0],mpos[1], mpos[2], mpos[3], mpos[4]
             if(self.marker.positions[str][3] == -1):
                 img = self.marker.get_marker_pixbuf2(zl)
-#                img2.set_from_file(join(_prefix, 'cross.png'))
             if zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0]):
                 draw_image(mpos, img, pixDim, pixDim)
-				# #draws tooltip windows
-                # self.window = window = gtk.Window(gtk.WINDOW_POPUP)
-                # window.set_name('gtk-tooltips')
-                # window.set_resizable(False)
-                # window.set_border_width(4)
-                # window.set_app_paintable(True)
-				
-                # self.tool_label = label = gtk.Label()
-                # label.set_line_wrap(True)
-                # label.set_alignment(0.5, 0.5)
-                # label.set_use_markup(True)
-                # label.show()
-                # window.add(label)
-                # window.move(mpos[0],mpos[1])
-                # window.show()
-
-				
+			
 				#draws the Green Line
             if (prevmark != "" and zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0])):
             	self.drawing_area.draw_marker_line(self.marker.positions[str], self.marker.positions[prevmark], zl, pixDim,"green",2)
             	if(self.marker.positions[prevmark][3] == -1):
             	    img = self.marker.get_marker_pixbuf2(zl)
-#                    img2.set_from_file(join(_prefix, 'cross.png'))
             	else:
-            	    img = self.marker.get_marker_pixbuf(zl)
-#                    img2.set_from_file(join(_prefix, 'cross.png'))
+            	    img = self.marker.get_marker_pixbuf(zl, 0)
             	draw_image(self.marker.positions[prevmark], img, pixDim, pixDim)
             prevmark = str
-            img = self.marker.get_marker_pixbuf(zl)
+            img = self.marker.get_marker_pixbuf(zl, mpos[4]+1)
+
+			
 #            img2.set_from_file(join(_prefix, 'cross.png'))
 #            self.tooltips.set_tip(img2, "HEY")
 
@@ -776,8 +760,7 @@ class MapOver():
         else:
             ifile = open(self.conf.upload_file, "rb")
             reader = csv.reader(ifile)
-		
-
+        
 				
             rownum = 0
             self.lat = {}
@@ -791,6 +774,7 @@ class MapOver():
     # Save header row.
                 if rownum == 0:
                     self.temp_file = open(os.path.join(self.localP, 'nogo'), 'w')
+                    new_file = open('C:/Documents and Settings/dascenci/Desktop/GMAP/new_file.dat', 'w')
                     print (row)
                     self.lat[0] = row[0]
                     self.long[0] = row[1]
@@ -800,11 +784,15 @@ class MapOver():
                     self.h4[0] = row[5]
                     self.temp_file.write('1' + ',' + self.lat[0] + ',' +self.long[0] + '\n')
                     self.liststore.append([rownum+1, self.lat[0], self.lat[0], self.h1[0],self.h2[0]]) 
+                    new_file.write(self.lat[0] + '\t' + self.long[0] + '\t' + self.h1[0] + '\n')
                     print self.temp_file
 
 #                print (lat[0] + " " + long[0] + " " +h1[0] + " " + h2[0] + " " +h3[0] + " " + h4[0])
                 else:
                     self.temp_file = open(os.path.join(self.localP, 'nogo'), 'a')
+                    new_file = open('C:/Documents and Settings/dascenci/Desktop/GMAP/new_file.dat', 'a')
+                    print ("DAT")
+                    print new_file
                     print (row)
                     self.lat[rownum] = row[0]
                     self.long[rownum] = row[1]
@@ -813,6 +801,7 @@ class MapOver():
                     self.h3[rownum] = row[4]
                     self.h4[rownum] = row[5]
                     self.temp_file.write('1' + ',' + self.lat[rownum] + ',' +self.long[rownum] + '\n')
+                    new_file.write(self.lat[rownum] + '\t' +self.long[rownum] + '\t' + self.h1[rownum] + '\n')
                     self.liststore.append([rownum+1, self.lat[rownum], self.lat[rownum], self.h1[rownum],self.h2[rownum]]) 
                     print self.temp_file
                 #print (lat[rownum] + " " + long[rownum] + " " +h1[rownum] + " " + h2[rownum] + " " +h3[rownum] + " " + h4[rownum])
