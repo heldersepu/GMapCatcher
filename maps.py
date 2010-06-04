@@ -41,6 +41,9 @@ class MainWindow(gtk.Window):
     myPointer = None
     reCenter_gps = False
     markercount = 0
+    myMap = mapover.MapOver()
+    myASALT = widASALTsettings.ASALTsettings()
+    myThree = threeD.threeD()
 
     ## Get the zoom level from the scale
     def get_zoom(self):
@@ -479,8 +482,34 @@ class MainWindow(gtk.Window):
                 return True
     def update_button(self, w):
         print "HEY You're UPDATING!!!!"
-        reload(mapover)
-        reload(threeD)
+        myMap = mapover.MapOver()
+        myASALT = widASALTsettings.ASALTsettings()
+        myThree = threeD.threeD()
+        self.notebook.remove_page(1)
+        self.notebook.remove_page(1)
+        for str in MAINTOOLS_MENU:
+            frame = gtk.Frame()
+            frame.set_border_width(10)
+            frame.set_size_request(100, 75)
+            # if str == MAINTOOLS_MENU[0]:
+                # frame.add(self.vpaned)
+            if str == MAINTOOLS_MENU[1]:
+                if self.conf.upload_file == 20:
+                    frame.add(gtk.Label(' Please Upload a File to use this Function'))
+                else:
+			        frame.add(myMap.show())
+            elif str == MAINTOOLS_MENU[2]:
+                frame.add(myThree.show())
+            else:
+                frame.add(gtk.Label(str + ' coming soon!! '))
+            label = gtk.Label(str)
+            self.notebook.append_page(frame, label)
+            self.show_all()
+        self.notebook.remove_page(1)
+
+
+        # self.add(self.notebook)
+
 
     ## All the actions for the menu items
     def menu_item_response(self, w, strName):
@@ -505,6 +534,7 @@ class MainWindow(gtk.Window):
             self.drawing_area.get_allocation(),
             pointer, self.drawing_area.center, self.get_zoom()
         )
+
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
 	markerdata = [coord, len(self.marker.positions)+1, 0]
 
@@ -539,6 +569,8 @@ class MainWindow(gtk.Window):
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
             self.do_zoom(self.get_zoom() - 1, True,
                         (event.x, event.y))
+            print event.x
+            print event.y
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
@@ -604,14 +636,6 @@ class MainWindow(gtk.Window):
         else:
             coord = (None, None, None)
 
-	# Draw no go area
-	#bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
-	#bad_area2 = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
-	#             (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
-	#             (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
-	#             (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
-	#             (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
-	#             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
         for bad_area_id in self.nogo_areas.keys():
            prevName=""
            bad_area = self.nogo_areas[bad_area_id]
@@ -804,26 +828,27 @@ class MainWindow(gtk.Window):
 
         self.connect('key-press-event', self.key_press_event)
         self.connect('delete-event', self.on_delete)
-        vpaned = gtk.VPaned()
+        self.vpaned = gtk.VPaned()
         hpaned = gtk.HPaned()
         self.top_panel = self.__create_top_paned()
         self.left_panel = self.__create_left_paned()
-
-        vpaned.pack1(self.top_panel, False, False)
-        hpaned.pack1(self.left_panel, False, False)
-        hpaned.pack2(self.__create_right_paned(), True, True)
-        vpaned.add2(hpaned)
         myMap = mapover.MapOver()
         myASALT = widASALTsettings.ASALTsettings()
         myThree = threeD.threeD()
-        notebook = gtk.Notebook()
-        notebook.set_tab_pos(gtk.POS_TOP)
+
+        self.vpaned.pack1(self.top_panel, False, False)
+        hpaned.pack1(self.left_panel, False, False)
+        hpaned.pack2(self.__create_right_paned(), True, True)
+        self.vpaned.add2(hpaned)
+
+        self.notebook = gtk.Notebook()
+        self.notebook.set_tab_pos(gtk.POS_TOP)
         for str in MAINTOOLS_MENU:
             frame = gtk.Frame()
             frame.set_border_width(10)
             frame.set_size_request(100, 75)
             if str == MAINTOOLS_MENU[0]:
-                frame.add(vpaned)
+                frame.add(self.vpaned)
             elif str == MAINTOOLS_MENU[1]:
                 if self.conf.upload_file == 20:
                     frame.add(gtk.Label(' Please Upload a File to use this Function'))
@@ -834,9 +859,9 @@ class MainWindow(gtk.Window):
             else:
                 frame.add(gtk.Label(str + ' coming soon!! '))
             label = gtk.Label(str)
-            notebook.append_page(frame, label)
+            self.notebook.append_page(frame, label)
             
-        self.add(notebook)
+        self.add(self.notebook)
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 400)

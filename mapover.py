@@ -457,6 +457,9 @@ class MapOver():
             w.popup(None, None, None, event.button, event.time)
         # Double-Click event Zoom In
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
+            print event.x
+            print event.y
+            print "COORDINATES"
             self.do_zoom(self.get_zoom() - 1, True,
                         (event.x, event.y))
 
@@ -527,7 +530,7 @@ class MapOver():
 			# Zooms in to first coordinate
             self.drawing_area.center = mapUtils.coord_to_tile(coord)
             self.set_scale.set_value(coord[2])
-            self.do_zoom(coord[2], True)
+            self.do_zoom(7, True, (399, 310))
         else:
             coord = (None, None, None)
 			
@@ -550,11 +553,11 @@ class MapOver():
         _prefix = abspath(join(dirname(__file__), "../../images"))
         prevmark = ""
         for str in self.marker.positions.keys():
-            print "str"
-            print str
+            # print "str"
+            # print str
             mpos = self.marker.positions[str]
-            print "MPOS"
-            print mpos[0],mpos[1], mpos[2], mpos[3], mpos[4]
+            # print "MPOS"
+            # print mpos[0],mpos[1], mpos[2], mpos[3], mpos[4]
             if(self.marker.positions[str][3] == -1):
                 img = self.marker.get_marker_pixbuf2(zl)
             if zl <= mpos[2] and (mpos[0] != coord[0] and mpos[1] != coord[0]):
@@ -570,10 +573,6 @@ class MapOver():
             	draw_image(self.marker.positions[prevmark], img, pixDim, pixDim)
             prevmark = str
             img = self.marker.get_marker_pixbuf(zl, mpos[4]+1)
-
-			
-#            img2.set_from_file(join(_prefix, 'cross.png'))
-#            self.tooltips.set_tip(img2, "HEY")
 
 	prevmark = ""
 	# Draw vehicle position markers
@@ -750,7 +749,6 @@ class MapOver():
 
         self.liststore = gtk.ListStore(int, str, str, str, str)
 
-		
 		# set the tool tips for the markers
         self.tooltips = gtk.Tooltips()
 
@@ -851,7 +849,19 @@ class MapOver():
 	
         #self.set_completion()
         #self.default_entry()
+        locate_me = {}
+		
         self.drawing_area.center = self.conf.init_center
+		
+        locate_me[0] = float(self.lat[0])
+        locate_me[1] = float(self.long[0])
+        locate_me[2] = 12
+        tiles = mapUtils.coord_to_tile(locate_me)
+        con_coord = mapUtils.tile_to_coord(tiles, 12)
+        print con_coord[0], con_coord[1]
+        self.do_zoom(7, True, (37, 271))
+        
+
         #print self.drawing_area.center
 
         #self.entry.grab_focus()
