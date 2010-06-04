@@ -62,7 +62,7 @@ class MyMarkers:
 
 
 
-    def get_marker_pixbuf(self, zl, rows, image='marker.png'):
+    def get_marker_pixbuf(self, zl, rows=0, image='marker.png'):
         if (rows > 0):
             image = ("marker_"+str(rows)+".png")
         # elif (rows == 2):
