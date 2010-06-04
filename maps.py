@@ -250,14 +250,6 @@ class MainWindow(gtk.Window):
 
     def validate_path(self, w):
     	valid = True
-        #bad_area = [(36.9883796449, -122.050241232),(36.9879168776, -122.050251961), (36.988413923800003, -122.049565315), (36.987908307799998, -122.049511671)]
-        #bad_area2 = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
-	#	     (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
-	#	     (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
-	#	     (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
-	#	     (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
-	#             (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
-        #astlr = ASALTradio.ASALTradio()
 
         for bad_area_id in self.nogo_areas.keys():
            prevName=""
@@ -398,11 +390,6 @@ class MainWindow(gtk.Window):
         self.cb_forceupdate.set_active(False)
         hbox.pack_start(self.cb_forceupdate)
 
-        self.cb_dropmarker = gtk.CheckButton("_Drop Markers")
-        self.cb_dropmarker.set_active(False)
-        self.cb_dropmarker.connect('clicked',self.drop_marker_mode)
-        hbox.pack_start(self.cb_dropmarker)
-
 
         bbox = gtk.HButtonBox()
         if mapGPS.available:
@@ -416,9 +403,9 @@ class MainWindow(gtk.Window):
 
 
         bbox.set_layout(gtk.BUTTONBOX_SPREAD)
-        gtk.stock_add([(gtk.STOCK_APPLY, "_Validate Path", 0, 0, "")])
+        gtk.stock_add([(gtk.STOCK_APPLY, "Update Window", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_APPLY)
-        button.connect('clicked', self.validate_path)
+        button.connect('clicked', self.update_button)
         bbox.add(button)
 
 
@@ -490,6 +477,10 @@ class MainWindow(gtk.Window):
             if strName.startswith(TOOLS_MENU[intPos]):
                 mapTools.main(self, intPos)
                 return True
+    def update_button(self, w):
+        print "HEY You're UPDATING!!!!"
+        reload(mapover)
+        reload(threeD)
 
     ## All the actions for the menu items
     def menu_item_response(self, w, strName):
@@ -516,9 +507,7 @@ class MainWindow(gtk.Window):
         )
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
 	markerdata = [coord, len(self.marker.positions)+1, 0]
-	#coord.insert(0,idnum)
-	#Append default wait time of zero
-	#coord.append(0)
+
         self.marker.append_marker(markerdata)
         self.marker.refresh()
         self.drawing_area.repaint()
@@ -550,9 +539,6 @@ class MainWindow(gtk.Window):
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
             self.do_zoom(self.get_zoom() - 1, True,
                         (event.x, event.y))
-        elif (event.type == gtk.gdk.BUTTON_PRESS) and (event.button == 1) and (self.cb_dropmarker.get_active()):
-            self.myPointer = (event.x, event.y)
-            self.add_marker(self.myPointer)
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
@@ -638,7 +624,7 @@ class MainWindow(gtk.Window):
 
 
         # Draw the markers
-        img = self.marker.get_marker_pixbuf(zl)
+        img = self.marker.get_marker_pixbuf(zl, 0)
         prevmark = ""
         for str in self.marker.positions.keys():
             mpos = self.marker.positions[str]
@@ -651,10 +637,10 @@ class MainWindow(gtk.Window):
             	if(self.marker.positions[prevmark][3] == -1):
             	    img = self.marker.get_marker_pixbuf2(zl)
             	else:
-            	    img = self.marker.get_marker_pixbuf(zl)
+            	    img = self.marker.get_marker_pixbuf(zl, 0)
             	draw_image(self.marker.positions[prevmark], img, pixDim, pixDim)
             prevmark = str
-            img = self.marker.get_marker_pixbuf(zl)
+            img = self.marker.get_marker_pixbuf(zl, 0)
 
 	prevmark = ""
 	# Draw vehicle position markers
@@ -762,7 +748,7 @@ class MainWindow(gtk.Window):
             self.full_screen(event.keyval)
         # F9 = 65478
         elif event.keyval == 65478:
-            self.validate_path(w)
+            self.update_button(w)
         # F2 = 65471
         elif event.keyval == 65471:
             self.do_export()
@@ -788,23 +774,6 @@ class MainWindow(gtk.Window):
         if self.update:
             self.update.finish()
         return False
-
-#    def setup_nogo(self):
-#        #This is the area surrounding the available field area
-#        default_nogo = [(36.9898107778,-122.052762508),(36.989305171,-122.052569389),(36.9885681789,-122.05173254),
-#	                (36.9879340172,-122.051099539),(36.9866142582,-122.049994469),(36.9853458969,-122.048985958),
-#	                (36.9847202784,-122.048470974),(36.9862800299,-122.048728466),(36.9868799258,-122.04878211),
-#	                (36.9886710154,-122.049136162),(36.9895708292,-122.049350739),(36.9897679299,-122.049415112),
-#	                (36.9898450561,-122.04988718),(36.9900250169,-122.050112486),(36.9901449906,-122.05136776),
-#	                (36.9902992422,-122.051968575),(36.9903592288,-122.052429914),(36.9898707648,-122.052676678)]
- #       self.localPath = os.path.expanduser(self.conf.init_path or DEFAULT_PATH)
-  #      self.nogoPath = os.path.join(self.localPath, 'nogo')
-   #     if (os.path.exists(self.nogoPath)):
-	#    return fileUtils.read_bad(self.nogoPath)
-
-#	else:
-#            fileUtils.write_bad(self.nogoPath,default_nogo)
-#            return fileUtils.read_bad(self.nogoPath)
 
     def __init__(self, parent=None):
 
@@ -844,8 +813,6 @@ class MainWindow(gtk.Window):
         hpaned.pack1(self.left_panel, False, False)
         hpaned.pack2(self.__create_right_paned(), True, True)
         vpaned.add2(hpaned)
-#spaned.add2(ipaned)
-#        self.nogo_areas = self.setup_nogo()
         myMap = mapover.MapOver()
         myASALT = widASALTsettings.ASALTsettings()
         myThree = threeD.threeD()
@@ -876,6 +843,8 @@ class MainWindow(gtk.Window):
         self.set_default_size(self.conf.init_width, self.conf.init_height)
         self.set_completion()
         self.default_entry()
+        print "CENTER"
+        print self.drawing_area.center
         self.drawing_area.center = self.conf.init_center
         #print self.drawing_area.center
         self.show_all()
