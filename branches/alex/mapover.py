@@ -13,7 +13,7 @@ import src.ASALTradio as ASALTradio
 import src.fileUtils as fileUtils
 import src.widMySettings as widMySettings
 import src.widASALTsettings as widASALTsettings
-import src.widTreeView2 as treeViewSettings
+import src.widTreeView as treeViewSettings
 
 from src.gtkThread import *
 from src.mapConf import MapConf
@@ -265,10 +265,10 @@ class MapOver():
         self.cb_forceupdate.set_active(False)
         hbox.pack_start(self.cb_forceupdate)
 
-        self.cb_dropmarker = gtk.CheckButton("_Drop Markers")
-        self.cb_dropmarker.set_active(False)
-        self.cb_dropmarker.connect('clicked',self.drop_marker_mode)
-        hbox.pack_start(self.cb_dropmarker)
+        # self.cb_dropmarker = gtk.CheckButton("_Drop Markers")
+        # self.cb_dropmarker.set_active(False)
+        # self.cb_dropmarker.connect('clicked',self.drop_marker_mode)
+        # hbox.pack_start(self.cb_dropmarker)
 
 
         bbox = gtk.HButtonBox()
@@ -459,9 +459,6 @@ class MapOver():
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
             self.do_zoom(self.get_zoom() - 1, True,
                         (event.x, event.y))
-        elif (event.type == gtk.gdk.BUTTON_PRESS) and (event.button == 1) and (self.cb_dropmarker.get_active()):
-            self.myPointer = (event.x, event.y)
-            self.add_marker(self.myPointer)
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
@@ -533,6 +530,9 @@ class MapOver():
             self.do_zoom(coord[2], True)
         else:
             coord = (None, None, None)
+			
+            # self.do_zoom(self.get_zoom() - 1, True,
+                        # (event.x, event.y))
 
         for bad_area_id in self.nogo_areas.keys():
             prevName=""
@@ -774,7 +774,7 @@ class MapOver():
     # Save header row.
                 if rownum == 0:
                     self.temp_file = open(os.path.join(self.localP, 'nogo'), 'w')
-                    new_file = open('C:/Documents and Settings/dascenci/Desktop/GMAP/new_file.dat', 'w')
+                    new_file = open('C:/Documents and Settings/dascenci/Desktop/GMAP_REPO_MAIN/new_file.dat', 'w')
                     print (row)
                     self.lat[0] = row[0]
                     self.long[0] = row[1]
@@ -782,7 +782,8 @@ class MapOver():
                     self.h2[0] = row[3]
                     self.h3[0] = row[4]
                     self.h4[0] = row[5]
-                    self.temp_file.write('1' + ',' + self.lat[0] + ',' +self.long[0] + '\n')
+                    self.temp_file.write("")
+                    #self.temp_file.write('1' + ',' + self.lat[0] + ',' +self.long[0] + '\n')
                     self.liststore.append([rownum+1, self.lat[0], self.lat[0], self.h1[0],self.h2[0]]) 
                     new_file.write(self.lat[0] + '\t' + self.long[0] + '\t' + self.h1[0] + '\n')
                     print self.temp_file
@@ -790,7 +791,7 @@ class MapOver():
 #                print (lat[0] + " " + long[0] + " " +h1[0] + " " + h2[0] + " " +h3[0] + " " + h4[0])
                 else:
                     self.temp_file = open(os.path.join(self.localP, 'nogo'), 'a')
-                    new_file = open('C:/Documents and Settings/dascenci/Desktop/GMAP/new_file.dat', 'a')
+                    new_file = open('C:/Documents and Settings/dascenci/Desktop/GMAP_REPO_MAIN/new_file.dat', 'a')
                     print ("DAT")
                     print new_file
                     print (row)
@@ -800,7 +801,8 @@ class MapOver():
                     self.h2[rownum] = row[3]
                     self.h3[rownum] = row[4]
                     self.h4[rownum] = row[5]
-                    self.temp_file.write('1' + ',' + self.lat[rownum] + ',' +self.long[rownum] + '\n')
+                    self.temp_file.write("")
+                    #self.temp_file.write('1' + ',' + self.lat[rownum] + ',' +self.long[rownum] + '\n')
                     new_file.write(self.lat[rownum] + '\t' +self.long[rownum] + '\t' + self.h1[rownum] + '\n')
                     self.liststore.append([rownum+1, self.lat[rownum], self.lat[rownum], self.h1[rownum],self.h2[rownum]]) 
                     print self.temp_file
