@@ -782,7 +782,7 @@ class MapOver():
                     self.h4[0] = row[5]
                     self.temp_file.write("")
                     #self.temp_file.write('1' + ',' + self.lat[0] + ',' +self.long[0] + '\n')
-                    self.liststore.append([rownum+1, self.lat[0], self.lat[0], self.h1[0],self.h2[0]]) 
+                    self.liststore.append([rownum+1, self.lat[0], self.long[0], self.h1[0],self.h2[0]]) 
                     new_file.write(self.lat[0] + '\t' + self.long[0] + '\t' + self.h1[0] + '\n')
                     print self.temp_file
 
@@ -802,7 +802,7 @@ class MapOver():
                     self.temp_file.write("")
                     #self.temp_file.write('1' + ',' + self.lat[rownum] + ',' +self.long[rownum] + '\n')
                     new_file.write(self.lat[rownum] + '\t' +self.long[rownum] + '\t' + self.h1[rownum] + '\n')
-                    self.liststore.append([rownum+1, self.lat[rownum], self.lat[rownum], self.h1[rownum],self.h2[rownum]]) 
+                    self.liststore.append([rownum+1, self.lat[rownum], self.long[rownum], self.h1[rownum],self.h2[rownum]]) 
                     print self.temp_file
                 #print (lat[rownum] + " " + long[rownum] + " " +h1[rownum] + " " + h2[rownum] + " " +h3[rownum] + " " + h4[rownum])
                     print rownum
