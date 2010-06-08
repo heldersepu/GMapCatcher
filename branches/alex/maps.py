@@ -16,6 +16,7 @@ import src.widMySettings as widMySettings
 import src.widASALTsettings as widASALTsettings
 import mapover
 import threeD
+import portsettings
 
 from src.mapConst import *
 from src.gtkThread import *
@@ -487,6 +488,7 @@ class MainWindow(gtk.Window):
         myThree = threeD.threeD()
         self.notebook.remove_page(1)
         self.notebook.remove_page(1)
+        self.notebook.remove_page(1)
         for str in MAINTOOLS_MENU:
             frame = gtk.Frame()
             frame.set_border_width(10)
@@ -835,6 +837,7 @@ class MainWindow(gtk.Window):
         myMap = mapover.MapOver()
         myASALT = widASALTsettings.ASALTsettings()
         myThree = threeD.threeD()
+        myPorts = portsettings.PORTsettings()
 
         self.vpaned.pack1(self.top_panel, False, False)
         hpaned.pack1(self.left_panel, False, False)
@@ -856,6 +859,8 @@ class MainWindow(gtk.Window):
 			        frame.add(myMap.show())
             elif str == MAINTOOLS_MENU[2]:
                 frame.add(myThree.show())
+            elif str == MAINTOOLS_MENU[3]:
+			    frame.add(myPorts.show())
             else:
                 frame.add(gtk.Label(str + ' coming soon!! '))
             label = gtk.Label(str)

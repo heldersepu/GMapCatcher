@@ -33,7 +33,7 @@ TOOLS_MENU = ["Settings", "Edit locations", "Edit markers",
 #TILES_HEIGHT = 256
 #NR_MTS = 4
 #SEPARATOR = "\t"
-MAINTOOLS_MENU = ["Main Map", "Map Overlay", "3D Map"]
+MAINTOOLS_MENU = ["Main Map", "Map Overlay", "3D Map", "Ports"]
 
 
 
