@@ -169,26 +169,3 @@ class TilesRepositoryFS(TilesRepository):
                 return (tcoord, layer)
         return None
 
-
-    ## Export tiles to one big map
-    #  tcoord are the tile coordinates of the upper left tile
-    def do_export(self, tcoord, layer, online, conf, size):
-        from PIL import Image
-        # Convert given size to a tile size factor
-        xFact = int(size[0]/TILES_WIDTH)
-        yFact = int(size[1]/TILES_HEIGHT)
-        # Initialise the image
-        result = Image.new("RGBA", (xFact* TILES_WIDTH, yFact* TILES_HEIGHT))
-        x = 0
-        for i in range(tcoord[0], tcoord[0] + xFact):
-            y = 0
-            for j in range(tcoord[1], tcoord[1] + yFact):
-                if self.get_tile( (i,j,tcoord[2]), layer, online, False, conf):
-                    pb = self.load_pixbuf( (i,j,tcoord[2]), layer, False)
-                    width,height = pb.get_width(),pb.get_height()
-                    Image.fromstring("RGB",(width,height),pb.get_pixels() )
-
-                    result.paste(Image.fromstring("RGB",(width,height),pb.get_pixels() ), (x* TILES_WIDTH, y* TILES_HEIGHT))
-                y += 1
-            x += 1
-        result.save("map.png")
