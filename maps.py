@@ -306,14 +306,14 @@ class MainWindow(gtk.Window):
         hbox.pack_start(entry1)
         hbox.pack_start(lbl(" lon: "), False, True)
         hbox.pack_start(entry2)
-        vboxCoord.pack_start(_frame(" Upper ", hbox))
+        vboxCoord.pack_start(_frame(" Upper Coordinates ", hbox))
 
         hbox = gtk.HBox(False, 5)
         hbox.pack_start(lbl(" lat: "), False, True)
         hbox.pack_start(entry3)
         hbox.pack_start(lbl(" lon: "), False, True)
         hbox.pack_start(entry4)
-        vboxCoord.pack_start(_frame(" Lower ", hbox))
+        vboxCoord.pack_start(_frame(" Lower Coordinates ", hbox))
 
         vboxSize = gtk.VBox(False, 5)
         hbox = gtk.HBox(False, 5)
@@ -329,7 +329,7 @@ class MainWindow(gtk.Window):
 
         hbox = gtk.HBox(False, 5)
         hbox.pack_start(vboxCoord)
-        hbox.pack_start(_frame(" Image Size ", vboxSize))
+        hbox.pack_start(_frame(" Image Dimensions ", vboxSize))
         hbox.pack_start(bbox)
         return _frame(" Export map to PNG image ", hbox)
 
