@@ -1,3 +1,7 @@
+July 06 2010    H.S    <HelderSepu@gmail.com>
+    * 0.7.1.0 - At revision: 839
+    * Change the Google terrain pattern (Issue 175)
+
 April 17 2010    H.S    <HelderSepu@gmail.com>
     * 0.7.0.0 - At revision: 816
     * Add option to separate file paths for different map sources. (Issue 120)
