@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.DLWindow
 # Widget that allows Download of entire locations
 
@@ -130,6 +131,7 @@ class DLWindow(gtk.Window):
         self.gmap=None
         self.downloader=None
         self.connect('delete-event', self.on_delete)
+        self.connect('key-press-event', self.key_press)
         self.show_all()
 
     ## Start the download
@@ -256,6 +258,12 @@ class DLWindow(gtk.Window):
         self.b_download.set_sensitive(True)
         self.b_open.set_sensitive(True)
         self.update_pbar(strMessage, 0, 1)
+        
+    def key_press(self, w, event):
+		if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]:
+			# W = 87,119
+			self.on_delete()
+			self.destroy()
 
     def on_delete(self,*params):
         if self.downloader:
