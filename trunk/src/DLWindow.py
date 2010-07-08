@@ -238,9 +238,13 @@ class DLWindow(gtk.Window):
         )
 
     def update_pbar(self, text, pos, maxpos):
-        self.pbar.set_text(text)
+        percent = ""
         if pos != maxpos:
-            self.pbar.set_fraction(float(pos)/maxpos)
+            percentfloat = float(pos)/maxpos
+            self.pbar.set_fraction(percentfloat)
+            if percentfloat > 0:
+				percent = " [%.1f%%]" % (percentfloat * 100)
+        self.pbar.set_text(text + percent)
 
     def download_complete(self):
         if self.pbar.get_text() != "Canceled":
