@@ -481,17 +481,40 @@ class MainWindow(gtk.Window):
         self.do_zoom(value)
 
     def tile_received(self, tile_coord, layer):
-        if self.layer == layer and self.get_zoom() == tile_coord[2]:
+        hybridsat = (self.layer == LAYER_HYBRID and layer == LAYER_SATELLITE)
+        if (self.layer == layer or hybridsat) and self.get_zoom() == tile_coord[2]:
             da = self.drawing_area
             rect = da.get_allocation()
             xy = mapUtils.tile_coord_to_screen(tile_coord, rect, self.drawing_area.center)
             if xy:
+                # here we keep a list of all foreground tiles that turn up
+                # when there is no corresponding background tile yet
+                if layer == LAYER_HYBRID:
+                    if tile_coord not in self.background:
+                        self.foreground.append(tile_coord)
+                    else:
+                        # keep the lists as bare as possible
+					    self.background.remove(tile_coord)
+                # keep the background tile list up to date - add background
+                # tile to list unless we're all set to add foreground overlay
+                if hybridsat and tile_coord not in self.foreground:
+					self.background.append(tile_coord)
+                
                 gc = da.style.black_gc
                 force_update = self.cb_forceupdate.get_active()
                 img = self.ctx_map.load_pixbuf(tile_coord, layer, force_update)
+                if hybridsat:
+                    img2 = self.ctx_map.load_pixbuf(tile_coord, LAYER_HYBRID,
+                                                    force_update)
                 for x,y in xy:
                     da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                           TILES_WIDTH, TILES_HEIGHT)
+                    # here we [re-]add foreground overlay providing 
+                    # it is already in memory
+                    if hybridsat and tile_coord in self.foreground:
+                        self.foreground.remove(tile_coord)
+                        da.window.draw_pixbuf(gc, img2, 0, 0, x, y, 
+                                              TILES_WIDTH, TILES_HEIGHT)
 
                 if not self.cb_offline.get_active():
                     self.draw_overlay()
@@ -499,7 +522,7 @@ class MainWindow(gtk.Window):
     def draw_overlay(self):
         if self.bottom_panel.flags() & gtk.VISIBLE:
             self.drawing_area.draw_overlay(
-                self.get_zoom(), self.conf, self.crossPixbuf,
+                self.get_zoom(), self.conf, self.crossPixbuf
             )
         else:
             self.drawing_area.draw_overlay(
@@ -595,7 +618,6 @@ class MainWindow(gtk.Window):
 			# Q = 113,81 W = 87,119
 			self.on_delete()
 			self.destroy()
-        
         # F1 = 65471  Help
         elif event.keyval == 65470:
             webbrowser_open(WEB_ADDRESS)
@@ -657,6 +679,8 @@ class MainWindow(gtk.Window):
         self.ctx_map = MapServ(self.conf.init_path, self.conf.repository_type)
         self.downloader = MapDownloader(self.ctx_map)
         self.layer = LAYER_MAP
+        self.background = []
+        self.foreground = []
         self.enable_gps()
 
         gtk.Window.__init__(self)

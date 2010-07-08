@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.mapConst
 # Place to keep all constants
 
@@ -28,6 +29,7 @@ MAP_SERVICES = [
     {"ID": 0, "TextID": "gmap",   "serviceName":"Google",             "layerDir": "tiles", "layerName": "Map" },
     {"ID": 1, "TextID": "gsat",   "serviceName":"Google",             "layerDir": "sat_tiles", "layerName": "Satellite" },
     {"ID": 2, "TextID": "gter",   "serviceName":"Google",             "layerDir": "ter_tiles", "layerName": "Terrain" },
+ 	{"ID": 3, "TextID": "ghyb",   "serviceName":"Google",             "layerDir": "hyb_tiles", "layerName": "Hybrid"},
     {"ID": 0, "TextID": "ymap",   "serviceName":"Yahoo",              "layerDir": "yahoomap", "layerName": "Map" },
     {"ID": 1, "TextID": "yter",   "serviceName":"Yahoo",              "layerDir": "yahooter", "layerName": "Satellite" },
     {"ID": 0, "TextID": "vemap",  "serviceName":"Virtual Earth",      "layerDir": "vemap", "layerName": "Map" },
@@ -45,8 +47,9 @@ NO_BULK_DOWN = ["OpenStreetMap", "OpenCycleMap"]
 LAYER_MAP = 0
 LAYER_SATELLITE = 1
 LAYER_TERRAIN = 2
-LAYER_NAMES = ["Map", "Satellite", "Terrain"]
-LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles"]
+LAYER_HYBRID = 3
+LAYER_NAMES = ["Map", "Satellite", "Terrain", "Hybrid"]
+LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles", "hyb_tiles"]
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2

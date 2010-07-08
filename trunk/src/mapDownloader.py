@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.mapDownloader
 # All downloading is done here
 
@@ -116,6 +117,8 @@ class MapDownloader:
     def query_tile(self, coord, layer, callback,
                     online=True, force_update=False,
                     conf=None):
+        if (layer == LAYER_HYBRID):
+            self.query_tile(coord, LAYER_SATELLITE, callback, online, force_update, conf)
         #print "query_tile(",coord,layer,callback,online,force_update,")"
         world_tiles = mapUtils.tiles_on_level(coord[2])
         coord = (mapUtils.mod(coord[0], world_tiles),
