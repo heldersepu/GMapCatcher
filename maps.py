@@ -494,11 +494,11 @@ class MainWindow(gtk.Window):
                         self.foreground.append(tile_coord)
                     else:
                         # keep the lists as bare as possible
-					    self.background.remove(tile_coord)
+                        self.background.remove(tile_coord)
                 # keep the background tile list up to date - add background
                 # tile to list unless we're all set to add foreground overlay
                 if hybridsat and tile_coord not in self.foreground:
-					self.background.append(tile_coord)
+                    self.background.append(tile_coord)
                 
                 gc = da.style.black_gc
                 force_update = self.cb_forceupdate.get_active()
@@ -615,9 +615,9 @@ class MainWindow(gtk.Window):
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [113, 81, 87, 119]:
-			# Q = 113,81 W = 87,119
-			self.on_delete()
-			self.destroy()
+            # Q = 113,81 W = 87,119
+            self.on_delete()
+            self.destroy()
         # F1 = 65471  Help
         elif event.keyval == 65470:
             webbrowser_open(WEB_ADDRESS)

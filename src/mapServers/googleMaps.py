@@ -129,29 +129,29 @@ def search_location(location):
 
     # List of patterns to look for the latitude & longitude
     paList = [
-	      'var zoom = (?P<zoom>[0-9]+);.*insertTiles.*,(?P<lat>[0-9.-]+),(?P<lng>[0-9.-]+),zoom',
-	      'center:{lat:(?P<lat>[0-9.-]+),lng:(?P<lng>[0-9.-]+)}.*zoom:(?P<zoom>[0-9.-]+)',
-              'markers:.*lat:(?P<lat>[0-9.-]+),lng:(?P<lng>[0-9.-]+).*laddr:',
-              'dtlsUrl:.*x26sll=(?P<lat>[0-9.-]+),(?P<lng>[0-9.-]+).*x26sspn',
-	      ]
+        'var zoom = (?P<zoom>[0-9]+);.*insertTiles.*,(?P<lat>[0-9.-]+),(?P<lng>[0-9.-]+),zoom',
+        'center:{lat:(?P<lat>[0-9.-]+),lng:(?P<lng>[0-9.-]+)}.*zoom:(?P<zoom>[0-9.-]+)',
+        'markers:.*lat:(?P<lat>[0-9.-]+),lng:(?P<lng>[0-9.-]+).*laddr:',
+        'dtlsUrl:.*x26sll=(?P<lat>[0-9.-]+),(?P<lng>[0-9.-]+).*x26sspn',
+    ]
 
     for srtPattern in paList:
         p = re.compile(srtPattern)
         m = p.search(html)
         if m:
-		break
+            break
 
     if m:
         zoom = 10
-	try:
-		zoom = m.group('zoom')
-	except IndexError:
-		p = re.compile('center:.*zoom:([0-9.-]+).*mapType:')
-		m2 = p.search(html)
-		if m2:
-			zoom = set_zoom(MAP_MAX_ZOOM_LEVEL - int(m2.group(1)))
-	location = unicode(location, errors='ignore')
-	return location, (float(m.group('lat')), float(m.group('lng')), int(zoom))
+        try:
+            zoom = m.group('zoom')
+        except IndexError:
+            p = re.compile('center:.*zoom:([0-9.-]+).*mapType:')
+            m2 = p.search(html)
+            if m2:
+                zoom = set_zoom(MAP_MAX_ZOOM_LEVEL - int(m2.group(1)))
+        location = unicode(location, errors='ignore')
+        return location, (float(m.group('lat')), float(m.group('lng')), int(zoom))
     else:
         return 'error=Unable to get latitude and longitude of %s ' % location
 

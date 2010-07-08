@@ -29,7 +29,7 @@ MAP_SERVICES = [
     {"ID": 0, "TextID": "gmap",   "serviceName":"Google",             "layerDir": "tiles", "layerName": "Map" },
     {"ID": 1, "TextID": "gsat",   "serviceName":"Google",             "layerDir": "sat_tiles", "layerName": "Satellite" },
     {"ID": 2, "TextID": "gter",   "serviceName":"Google",             "layerDir": "ter_tiles", "layerName": "Terrain" },
- 	{"ID": 3, "TextID": "ghyb",   "serviceName":"Google",             "layerDir": "hyb_tiles", "layerName": "Hybrid"},
+    {"ID": 3, "TextID": "ghyb",   "serviceName":"Google",             "layerDir": "hyb_tiles", "layerName": "Hybrid"},
     {"ID": 0, "TextID": "ymap",   "serviceName":"Yahoo",              "layerDir": "yahoomap", "layerName": "Map" },
     {"ID": 1, "TextID": "yter",   "serviceName":"Yahoo",              "layerDir": "yahooter", "layerName": "Satellite" },
     {"ID": 0, "TextID": "vemap",  "serviceName":"Virtual Earth",      "layerDir": "vemap", "layerName": "Map" },
