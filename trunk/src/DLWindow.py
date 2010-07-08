@@ -243,7 +243,7 @@ class DLWindow(gtk.Window):
             percentfloat = float(pos)/maxpos
             self.pbar.set_fraction(percentfloat)
             if percentfloat > 0:
-				percent = " [%.1f%%]" % (percentfloat * 100)
+                percent = " [%.1f%%]" % (percentfloat * 100)
         self.pbar.set_text(text + percent)
 
     def download_complete(self):
@@ -264,10 +264,10 @@ class DLWindow(gtk.Window):
         self.update_pbar(strMessage, 0, 1)
         
     def key_press(self, w, event):
-		if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]:
-			# W = 87,119
-			self.on_delete()
-			self.destroy()
+        if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]:
+            # W = 87,119
+            self.on_delete()
+            self.destroy()
 
     def on_delete(self,*params):
         if self.downloader:
