@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.mapServers.googleMaps
 # All the interaction with google.com
 
@@ -11,8 +12,8 @@ known_layers = {}
 ## Returns a template URL for the GoogleMaps
 def layer_url_template(layer, language):
     if layer not in known_layers:
-        map_server_query = {"gmap":"", "gsat":"h", "gter":"p"}
-        layers_name = {"gmap":"m", "gsat":"s", "gter":"t"}
+        map_server_query = {"gmap":"", "ghyb":"h", "gsat":"h", "gter":"p"}
+        layers_name = {"gmap":"m", "ghyb": "h", "gsat":"s", "gter":"t"}
 
         oa = openanything.fetch(
             'http://maps.google.com/maps?t=' + map_server_query[ MAP_SERVICES[layer]["TextID"]  ])
