@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.widMyGPS
 # GPS widget used to modify some GPS settings
 # Displayed inside a tab in MapTools.
@@ -10,17 +11,18 @@ from customWidgets import _myEntry, _SpinBtn, _frame, lbl
 ## This widget lets the user change GPS settings
 class MyGPS():
     ## All the buttons at the bottom
+    def btn_save_clicked(self, button, conf):
+        conf.gps_update_rate = self.e_gps_updt_rate.get_text()
+        conf.max_gps_zoom = self.s_gps_max_zoom.get_value_as_int()
+        conf.gps_mode = self.cmb_gps_mode.get_active()
+        conf.save()
+    
     def __action_buttons(self, conf):
         def btn_revert_clicked(button, conf):
             self.e_gps_updt_rate.set_text(str(conf.gps_update_rate))
             self.s_gps_max_zoom.set_value(conf.max_gps_zoom)
             self.cmb_gps_mode.set_active(conf.gps_mode)
 
-        def btn_save_clicked(button, conf):
-            conf.gps_update_rate = self.e_gps_updt_rate.get_text()
-            conf.max_gps_zoom = self.s_gps_max_zoom.get_value_as_int()
-            conf.gps_mode = self.cmb_gps_mode.get_active()
-            conf.save()
 
         bbox = gtk.HButtonBox()
         bbox.set_layout(gtk.BUTTONBOX_END)
@@ -32,7 +34,7 @@ class MyGPS():
         bbox.add(button)
 
         button = gtk.Button(stock=gtk.STOCK_SAVE)
-        button.connect('clicked', btn_save_clicked, conf)
+        button.connect('clicked', self.btn_save_clicked, conf)
         bbox.add(button)
         return bbox
 
@@ -63,6 +65,11 @@ class MyGPS():
         self.cmb_gps_mode.set_active(gps_mode)
         hbox.pack_start(self.cmb_gps_mode)
         return _frame(" GPS Mode ", hbox)
+        
+    def key_press(self, widget, event, conf):
+        if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
+            # S = 83, 115
+            self.btn_save_clicked(0, conf)
 
     ## Put all the GPS Widgets together
     def show(self, conf):
@@ -90,5 +97,6 @@ class MyGPS():
         hpaned.pack1(vbox, True, True)
         buttons = self.__action_buttons(conf)
         hpaned.pack2(buttons, False, False)
+        hpaned.connect('key-press-event', self.key_press, conf)
         return hpaned
 

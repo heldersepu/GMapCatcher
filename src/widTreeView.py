@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.widTreeView
 # TreeView widget used to display the list of the locations.
 # Displayed inside a tab in MapTools.
@@ -108,10 +109,19 @@ class TreeView():
         return bbox
 
     ## Handle the delete key
-    def key_press_tree(self, w, event, listStore):
+    def key_press_tree(self, w, event, *args):
         if event.keyval == 65535:
-            self.btn_remove_clicked(None, listStore, w)
+            self.btn_remove_clicked(None, args[0], w)
             return True
+        elif len(args) == 4:
+            return self.key_press(w, event, args[0], args[1], args[2], args[3])
+        return False
+            
+    def key_press(self, w, event, *args):
+        if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
+            # S = 83, 115
+            self.btn_save_clicked(0, args[0], args[1], args[2], args[3])
+        return False
 
     ## Put all the TreeView Widgets together
     def show(self, strInfo, filePath, parent):
@@ -153,6 +163,8 @@ class TreeView():
 
         buttons = self.__action_buttons(strInfo, filePath,
                                         listStore, myTree, parent)
+        hpaned.connect('key-press-event', self.key_press, strInfo, filePath,
+                       listStore, parent)
         hpaned.pack2(buttons, False, False)
         return hpaned
 
