@@ -116,7 +116,7 @@ class TreeView():
         elif len(args) == 4:
             return self.key_press(w, event, args[0], args[1], args[2], args[3])
         return False
-            
+
     def key_press(self, w, event, *args):
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
             # S = 83, 115

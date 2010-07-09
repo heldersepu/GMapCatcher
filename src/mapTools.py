@@ -55,17 +55,17 @@ class MapTools():
         win.set_destroy_with_parent(True)
         win.set_title(" GMapCatcher Tools ")
         win.connect('key-press-event', self.key_press_event, win)
-        
+
         myNotebook = self.__create_notebook(parent)
         win.add(myNotebook)
         win.show_all()
         myNotebook.set_current_page(start_page)
-    
+
     def key_press_event(self, widget, event, window):
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]:
             # W = 87,119
             window.destroy()
-            
+
 
 def main(parent, start_page):
     MapTools(parent, start_page)

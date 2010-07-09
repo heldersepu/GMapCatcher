@@ -16,7 +16,7 @@ class MyGPS():
         conf.max_gps_zoom = self.s_gps_max_zoom.get_value_as_int()
         conf.gps_mode = self.cmb_gps_mode.get_active()
         conf.save()
-    
+
     def __action_buttons(self, conf):
         def btn_revert_clicked(button, conf):
             self.e_gps_updt_rate.set_text(str(conf.gps_update_rate))
@@ -65,7 +65,7 @@ class MyGPS():
         self.cmb_gps_mode.set_active(gps_mode)
         hbox.pack_start(self.cmb_gps_mode)
         return _frame(" GPS Mode ", hbox)
-        
+
     def key_press(self, widget, event, conf):
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
             # S = 83, 115
