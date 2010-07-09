@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.tilesRepoFactory
 # Place to set the correct repository
 
@@ -48,10 +49,10 @@ def create_repos_inst(mapservice):
     global _repository_path
     global _repository_type
 
-    if _repository_type == mapConst.ROPES_TYPE_SQLITE3:
+    if _repository_type == mapConst.REPOS_TYPE_SQLITE3:
         _repository_inst = tilesRepoSQLite3.TilesRepositorySQLite3(mapservice)
 
-    else: #   repo_type == mapConst.ROPES_TYPE_FILES
+    else: #   repo_type == mapConst.REPOS_TYPE_FILES
         _repository_inst = tilesRepoFS.TilesRepositoryFS(mapservice)
 
 

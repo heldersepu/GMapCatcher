@@ -46,6 +46,16 @@ class MySettings():
             hbox.pack_start(self.s_center11, False)
             hbox.pack_start(lbl(" )) "), False)
             return _frame(" Center ", hbox)
+            
+        def _status(conf):
+            def statuscombo(active_type_id):
+                self.cmb_status_type = gtk.combo_box_new_text()
+                for strType in STATUS_TYPE:
+                    self.cmb_status_type.append_text(strType)
+                self.cmb_status_type.set_active(active_type_id)
+                return self.cmb_status_type
+            return _frame("location status", statuscombo(conf.status_location))
+                
 
         def custom_path(conf):
             def repository_type_combo(repos_type_id):
@@ -115,6 +125,7 @@ class MySettings():
             conf.init_width = self.s_width.get_value_as_int()
             conf.init_height = self.s_height.get_value_as_int()
             conf.language = self.s_language.get_active_text()
+            conf.status_location = self.cmb_status_type.get_active()
 
             if( os.pathsep == ';' ):
                 # we have windows OS, filesystem is case insensitive
@@ -200,12 +211,15 @@ class MySettings():
         button.connect('clicked', btn_use_current, parent)
         bbox.add(button)
         hbox.pack_start(bbox)
-
+        hbox.pack_start(_status(conf), False)
         vbox.pack_start(hbox, False)
+        
         hbox = gtk.HBox(False, 10)
         hbox.set_border_width(20)
         hbox.pack_start(custom_path(conf))
         vbox.pack_start(hbox, False)
+        
+        
         hpaned.pack1(vbox, True, True)
         hpaned.pack2(_action_buttons(conf, parent), False, False)
         hpaned.connect('key-press-event', key_press)
