@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.widChangeTheme
 # Change Theme widget used to change the GTK theme.
 # Displayed inside a tab in MapTools.
@@ -24,7 +25,16 @@ class ChangeTheme():
         myCombo.set_model(model)
         myCombo.set_active(intTheme)
 
-    ## All the buttons at the bottom
+    def btn_save_clicked(self, button, conf):
+        conf.show_cross = int(self.cb_show_cross.get_active())
+        conf.oneDirPerMap = int(self.cb_oneDirPerMap.get_active())
+        conf.map_service = MAP_SERVERS[self.cmb_service.get_active()]
+        conf.save()
+        if self.cmb_themes.get_model():
+            cmb_text = self.cmb_themes.get_active_text()
+            if cmb_text:
+                fileUtils.write_gtkrc(cmb_text)    ## All the buttons at the bottom
+    
     def __action_buttons(self, conf):
         def btn_revert_clicked(button, conf):
             self.load_combo(self.cmb_themes)
@@ -34,16 +44,6 @@ class ChangeTheme():
                 if MAP_SERVERS[intPos] == conf.map_service:
                     intActive = intPos
             self.cmb_service.set_active(intActive)
-
-        def btn_save_clicked(button, conf):
-            conf.show_cross = int(self.cb_show_cross.get_active())
-            conf.oneDirPerMap = int(self.cb_oneDirPerMap.get_active())
-            conf.map_service = MAP_SERVERS[self.cmb_service.get_active()]
-            conf.save()
-            if self.cmb_themes.get_model():
-                cmb_text = self.cmb_themes.get_active_text()
-                if cmb_text:
-                    fileUtils.write_gtkrc(cmb_text)
 
         bbox = gtk.HButtonBox()
         bbox.set_layout(gtk.BUTTONBOX_END)
@@ -55,7 +55,7 @@ class ChangeTheme():
         bbox.add(button)
 
         button = gtk.Button(stock=gtk.STOCK_SAVE)
-        button.connect('clicked', btn_save_clicked, conf)
+        button.connect('clicked', self.btn_save_clicked, conf)
         bbox.add(button)
         return bbox
 
@@ -88,6 +88,11 @@ class ChangeTheme():
         hbox.pack_start(self.cb_oneDirPerMap)
         vbox.pack_start(hbox)
         return _frame(" Map service ", vbox)
+        
+    def key_press(self, widget, event, conf):
+        if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
+            # S = 83, 115
+            self.btn_save_clicked(0, conf)
 
     ## Put all the ChangeTheme Widgets together
     def show(self, conf):
@@ -114,6 +119,7 @@ class ChangeTheme():
         hpaned = gtk.VPaned()
         hpaned.pack1(vbox, True, True)
         buttons = self.__action_buttons(conf)
+        hpaned.connect('key-press-event', self.key_press, conf)
         hpaned.pack2(buttons, False, False)
         return hpaned
 

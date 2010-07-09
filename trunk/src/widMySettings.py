@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.widMySettings
 # Settings widget that displays common settings.
 # Displayed inside a tab in MapTools.
@@ -101,9 +102,40 @@ class MySettings():
                     df = nr
             combo.set_active(df)
             vbox.pack_start(combo)
-	    self.s_language = combo
+            self.s_language = combo
             return _frame(" Language ", vbox)
 
+        def btn_save_clicked(button):
+            conf.init_center = ((self.s_center00.get_value_as_int()),
+                                (self.s_center01.get_value_as_int())), \
+                                ((self.s_center10.get_value_as_int()),
+                                (self.s_center11.get_value_as_int()))
+
+            conf.init_zoom = self.s_zoom.get_value_as_int()
+            conf.init_width = self.s_width.get_value_as_int()
+            conf.init_height = self.s_height.get_value_as_int()
+            conf.language = self.s_language.get_active_text()
+
+            if( os.pathsep == ';' ):
+                # we have windows OS, filesystem is case insensitive
+                newPath = (self.entry_custom_path.get_text().lower()).strip()
+                oldPath = conf.init_path.lower().strip()
+            else:
+                newPath = (self.entry_custom_path.get_text()).strip()
+                oldPath = conf.init_path.strip()
+
+            if (newPath != "" and newPath.lower() != "none") or (self.cmb_repos_type.get_active() != conf.repository_type):
+                #if strTemp != (conf.init_path.lower()).strip():
+                if (newPath != oldPath) or (self.cmb_repos_type.get_active() != conf.repository_type):
+                    conf.init_path = self.entry_custom_path.get_text()
+                    conf.repository_type = self.cmb_repos_type.get_active()
+                    parent.ctx_map.initLocations(conf.init_path, conf.repository_type)
+                    parent.drawing_area.repaint()
+            else:
+                conf.init_path = None
+                conf.repository_type = self.cmb_repos_type.get_active()
+            conf.save()
+        
         def _action_buttons(conf, parent):
             def btn_revert_clicked(button):
                 self.s_center00.set_value(conf.init_center[0][0])
@@ -120,36 +152,6 @@ class MySettings():
                 else:
                     self.entry_custom_path.set_text("None")
 
-            def btn_save_clicked(button):
-                conf.init_center = ((self.s_center00.get_value_as_int()),
-                                    (self.s_center01.get_value_as_int())), \
-                                   ((self.s_center10.get_value_as_int()),
-                                    (self.s_center11.get_value_as_int()))
-
-                conf.init_zoom = self.s_zoom.get_value_as_int()
-                conf.init_width = self.s_width.get_value_as_int()
-                conf.init_height = self.s_height.get_value_as_int()
-		conf.language = self.s_language.get_active_text()
-
-                if( os.pathsep == ';' ):
-                    # we have windows OS, filesystem is case insensitive
-                    newPath = (self.entry_custom_path.get_text().lower()).strip()
-                    oldPath = conf.init_path.lower().strip()
-                else:
-                    newPath = (self.entry_custom_path.get_text()).strip()
-                    oldPath = conf.init_path.strip()
-
-                if (newPath != "" and newPath.lower() != "none") or (self.cmb_repos_type.get_active() != conf.repository_type):
-                    #if strTemp != (conf.init_path.lower()).strip():
-                    if (newPath != oldPath) or (self.cmb_repos_type.get_active() != conf.repository_type):
-                        conf.init_path = self.entry_custom_path.get_text()
-                        conf.repository_type = self.cmb_repos_type.get_active()
-                        parent.ctx_map.initLocations(conf.init_path, conf.repository_type)
-                        parent.drawing_area.repaint()
-                else:
-                    conf.init_path = None
-                    conf.repository_type = self.cmb_repos_type.get_active()
-                conf.save()
 
             bbox = gtk.HButtonBox()
             bbox.set_layout(gtk.BUTTONBOX_END)
@@ -174,6 +176,11 @@ class MySettings():
             dsize = parent.window.get_size()
             self.s_width.set_value(dsize[0])
             self.s_height.set_value(dsize[1])
+            
+        def key_press(widget, event):
+            if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
+                # S = 83, 115
+                btn_save_clicked(0)
 
         hpaned = gtk.VPaned()
         vbox = gtk.VBox()
@@ -201,4 +208,5 @@ class MySettings():
         vbox.pack_start(hbox, False)
         hpaned.pack1(vbox, True, True)
         hpaned.pack2(_action_buttons(conf, parent), False, False)
+        hpaned.connect('key-press-event', key_press)
         return hpaned
