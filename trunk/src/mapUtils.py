@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.mapUtils
 # A group of map utilities
 
@@ -100,6 +101,10 @@ def pointer_to_tile(rect, pointer, center, zl):
                  center[1][1] + (pointer[1] - da_center[1])
 
     return tile_adjustEx(zl, fix_tile, fix_offset)
+    
+def pointer_to_coord(rect, pointer, center, zl):
+    tile = pointer_to_tile(rect, pointer, center, zl)
+    return tile_to_coord(tile, zl)
 
 ## Convert km to latitude
 def km_to_lat(height):

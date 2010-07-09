@@ -168,6 +168,7 @@ class MainWindow(gtk.Window):
 
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self, coord, mode):
+        self.current_gps = coord
         zl = self.get_zoom()
         tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
         # The map should be centered around a new GPS location
@@ -197,6 +198,11 @@ class MainWindow(gtk.Window):
             else:
                 self.drawing_area.center = tile
         self.drawing_area.repaint()
+        
+        if self.conf.status_location == STATUS_GPS and self.status_bar:
+            self.status_bar.pop(self.status_bar_id)
+            self.status_bar.push(self.status_bar_id, 
+                                  "Latitude=" + coord[0] + " Longitude=" + coord[1])
 
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
@@ -357,12 +363,23 @@ class MainWindow(gtk.Window):
         da.connect("scroll-event", self.scroll_cb)
 
         da.add_events(gtk.gdk.BUTTON1_MOTION_MASK)
+        da.add_events(gtk.gdk.POINTER_MOTION_MASK)
         da.connect('motion-notify-event', self.da_motion)
 
         menu = gtk_menu(DA_MENU, self.menu_item_response)
         da.connect_object("event", self.da_click_events, menu)
 
         return self.drawing_area
+        
+    def __create_statusbar(self):
+        if self.conf.status_location == STATUS_NONE:
+            return False
+        sb = gtk.Statusbar()
+        self.status_bar = sb
+        self.status_bar_id = sb.get_context_id("init")
+        sb.push(self.status_bar_id, "gmapcatcher map viewer!")
+        sb.show()
+        return sb
 
         ## Zoom to the given pointer
     def do_zoom(self, zoom, doForce=False, dPointer=False):
@@ -394,14 +411,32 @@ class MainWindow(gtk.Window):
             self.show_export(self.myPointer)
         elif strName == DA_MENU[ADD_MARKER]:
             self.add_marker(self.myPointer)
+        elif strName == DA_MENU[MOUSE_LOCATION]:
+            self.mouse_location(self.myPointer)
+        elif strName == DA_MENU[GPS_LOCATION]:
+            self.gps_location()
+
+    ## utility function screen location of pointer to world coord
+    def pointer_to_world_coord(self, pointer=None):
+        return mapUtils.pointer_to_coord(
+                self.drawing_area.get_allocation(),
+                pointer, self.drawing_area.center, self.get_zoom())
+                
+    ## add mouse location latitude/longitude to clipboard
+    def mouse_location(self, pointer=None):
+        coord = self.pointer_to_world_coord(pointer)
+        clipboard = gtk.Clipboard()
+        clipboard.set_text("Latitude=%.6f,Longitude=%.6f" % (coord[0], coord[1]))
+        
+    def gps_location(self):
+        if self.current_gps:
+            clipboard = gtk.Clipboard()
+            clipboard.set_text("Latitude=%.6f, Longitude=%.6f" % 
+                              (self.current_gps[0], self.current_gps[1]))
 
     ## Add a marker
     def add_marker(self, pointer=None):
-        tile = mapUtils.pointer_to_tile(
-            self.drawing_area.get_allocation(),
-            pointer, self.drawing_area.center, self.get_zoom()
-        )
-        coord = mapUtils.tile_to_coord(tile, self.get_zoom())
+        coord = self.pointer_to_world_coord(pointer)
         self.marker.append_marker(coord)
         self.refresh()
 
@@ -430,7 +465,7 @@ class MainWindow(gtk.Window):
         self.bottom_panel.hide()
         self.left_panel.show()
         self.top_panel.show()
-
+        
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
@@ -454,7 +489,15 @@ class MainWindow(gtk.Window):
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
-        self.drawing_area.da_move(event.x, event.y, self.get_zoom())
+        if (event.get_state() & gtk.gdk.BUTTON1_MASK) != 0:
+            self.drawing_area.da_move(event.x, event.y, self.get_zoom())
+        if self.status_bar and (self.conf.status_location == STATUS_MOUSE or 
+                (self.conf.status_location == STATUS_GPS and not mapGPS.available)):
+            self.status_bar.pop(self.status_bar_id)
+            coord = self.pointer_to_world_coord((event.x, event.y))
+            self.status_bar.push(self.status_bar_id, "Latitude=%.6f Longitude=%.6f" % 
+                                (coord[0], coord[1]))
+        
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
@@ -681,6 +724,7 @@ class MainWindow(gtk.Window):
         self.layer = LAYER_MAP
         self.background = []
         self.foreground = []
+        self.current_gps = False
         self.enable_gps()
 
         gtk.Window.__init__(self)
@@ -696,6 +740,7 @@ class MainWindow(gtk.Window):
         self.top_panel = self.__create_top_paned()
         self.left_panel = self.__create_left_paned(self.conf.init_zoom)
         self.bottom_panel = self.__create_bottom_paned()
+        self.status_bar = self.__create_statusbar()
 
         vpaned = gtk.VPaned()
         vpaned.pack1(self.top_panel, False, False)
@@ -708,11 +753,15 @@ class MainWindow(gtk.Window):
 
         hpaned.pack2(inner_vp, True, True)
         vpaned.add2(hpaned)
-        self.add(vpaned)
+        vbox = gtk.VBox(False, 0)
+        vbox.pack_start(vpaned, True, True, 0)
+        if self.status_bar:
+            vbox.pack_start(self.status_bar, False, False, 0)
+        self.add(vbox)
 
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
-        self.set_size_request(450, 400)
+        self.set_size_request(450, 450)
         self.set_default_size(self.conf.init_width, self.conf.init_height)
         self.set_completion()
         self.default_entry()

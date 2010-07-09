@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.mapConf
 # Read and write to the configuration file
 
@@ -46,6 +47,7 @@ class MapConf():
         config.set(SECTION_INIT, 'cloudmade_styleid', self.cloudMade_styleID)
         config.set(SECTION_INIT, 'language', self.language)
         config.set(SECTION_INIT, 'oneDirPerMap', self.oneDirPerMap)
+        config.set(SECTION_INIT, 'status_location', self.status_location)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -103,6 +105,8 @@ class MapConf():
         self.language = read_config('language', 'en', str)
         ## language setting, default is 'en'
         self.oneDirPerMap = read_config('oneDirPerMap', 0, int)
+        ## status setting, default is STATUS_NONE
+        self.status_location = read_config('status_location', 0, int)
 
     ## Write the configuration to the default file
     def save(self):

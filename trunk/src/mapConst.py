@@ -67,14 +67,23 @@ RESET = 3
 BATCH_DOWN = 5
 EXPORT_MAP = 6
 ADD_MARKER = 7
+MOUSE_LOCATION = 9
+GPS_LOCATION = 10
 DA_MENU = ["Zoom In", "Zoom Out", "Center map here",
-        "Reset", "", "Batch Download", "Export Map", "Add Marker"]
+        "Reset", "", "Batch Download", "Export Map", "Add Marker",
+        "", "Copy Location", "Copy GPS"]
 
-ROPES_TYPE_FILES = 0
-ROPES_TYPE_SQLITE3 = 1
+REPOS_TYPE_FILES = 0
+REPOS_TYPE_SQLITE3 = 1
 REPOS_TYPE = ["Files", "SQLite3"]
 DEFAULT_REPOS_TYPE = 0
 SQLITE3_REPOSITORY_FILE = "tilerepository.db"
+
+STATUS_DEFAULT = 0
+STATUS_NONE = 0
+STATUS_GPS = 1
+STATUS_MOUSE = 2
+STATUS_TYPE = ["None", "GPS", "Mouse"]
 
 
 GPS_IMG_SIZE = (48, 48)
