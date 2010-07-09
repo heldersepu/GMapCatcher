@@ -58,7 +58,7 @@ TILES_HEIGHT = 256
 NR_MTS = 4
 SEPARATOR = "\t"
 TOOLS_MENU = ["Settings", "Edit locations", "Edit markers",
-              "Change Theme", "GPS Options"]
+              "Change Theme", "GPS Options", " About "]
 
 ZOOM_IN = 0
 ZOOM_OUT = 1
@@ -69,8 +69,8 @@ EXPORT_MAP = 6
 ADD_MARKER = 7
 MOUSE_LOCATION = 9
 GPS_LOCATION = 10
-DA_MENU = ["Zoom In", "Zoom Out", "Center map here",
-        "Reset", "", "Batch Download", "Export Map", "Add Marker",
+DA_MENU = ["Zoom In", "Zoom Out", "Center map here", "Reset", 
+        "", "Batch Download", "Export Map", "Add Marker",
         "", "Copy Location", "Copy GPS"]
 
 REPOS_TYPE_FILES = 0
