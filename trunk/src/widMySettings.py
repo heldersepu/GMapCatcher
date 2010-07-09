@@ -46,16 +46,19 @@ class MySettings():
             hbox.pack_start(self.s_center11, False)
             hbox.pack_start(lbl(" )) "), False)
             return _frame(" Center ", hbox)
-            
+
         def _status(conf):
             def statuscombo(active_type_id):
+                hbox = gtk.HBox(False, 10)
+                hbox.pack_start( \
+                    lbl(" Select a new option for the status bar and restart. "))
                 self.cmb_status_type = gtk.combo_box_new_text()
                 for strType in STATUS_TYPE:
                     self.cmb_status_type.append_text(strType)
                 self.cmb_status_type.set_active(active_type_id)
-                return self.cmb_status_type
-            return _frame("location status", statuscombo(conf.status_location))
-                
+                hbox.pack_start(self.cmb_status_type)
+                return hbox
+            return _frame(" Location Status ", statuscombo(conf.status_location))
 
         def custom_path(conf):
             def repository_type_combo(repos_type_id):
@@ -146,7 +149,7 @@ class MySettings():
                 conf.init_path = None
                 conf.repository_type = self.cmb_repos_type.get_active()
             conf.save()
-        
+
         def _action_buttons(conf, parent):
             def btn_revert_clicked(button):
                 self.s_center00.set_value(conf.init_center[0][0])
@@ -187,7 +190,7 @@ class MySettings():
             dsize = parent.window.get_size()
             self.s_width.set_value(dsize[0])
             self.s_height.set_value(dsize[1])
-            
+
         def key_press(widget, event):
             if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
                 # S = 83, 115
@@ -211,15 +214,14 @@ class MySettings():
         button.connect('clicked', btn_use_current, parent)
         bbox.add(button)
         hbox.pack_start(bbox)
-        hbox.pack_start(_status(conf), False)
         vbox.pack_start(hbox, False)
-        
-        hbox = gtk.HBox(False, 10)
-        hbox.set_border_width(20)
-        hbox.pack_start(custom_path(conf))
-        vbox.pack_start(hbox, False)
-        
-        
+
+        vbox1 = gtk.VBox(False, 10)
+        vbox1.set_border_width(5)
+        vbox1.pack_start(_status(conf))
+        vbox1.pack_start(custom_path(conf))
+        vbox.pack_start(vbox1, False)
+
         hpaned.pack1(vbox, True, True)
         hpaned.pack2(_action_buttons(conf, parent), False, False)
         hpaned.connect('key-press-event', key_press)
