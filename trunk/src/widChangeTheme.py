@@ -34,7 +34,7 @@ class ChangeTheme():
             cmb_text = self.cmb_themes.get_active_text()
             if cmb_text:
                 fileUtils.write_gtkrc(cmb_text)    ## All the buttons at the bottom
-    
+
     def __action_buttons(self, conf):
         def btn_revert_clicked(button, conf):
             self.load_combo(self.cmb_themes)
@@ -88,7 +88,7 @@ class ChangeTheme():
         hbox.pack_start(self.cb_oneDirPerMap)
         vbox.pack_start(hbox)
         return _frame(" Map service ", vbox)
-        
+
     def key_press(self, widget, event, conf):
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
             # S = 83, 115

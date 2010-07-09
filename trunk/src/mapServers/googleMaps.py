@@ -78,7 +78,7 @@ def parse_start_page(layer, html, language):
         head_str = 'http://mt%d.google.com/vt/lyrs='
         layer_str = layer + '@' + m.group(1)
         return head_str + layer_str + match_str
-            
+
     # List of patterns add more as needed
     paList = ['http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v=([a-z0-9.]+)&',
               'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]lyrs=([a-z@0-9.]+)&',
