@@ -76,7 +76,7 @@ class MainWindow(gtk.Window):
             w.popup(None, None, None, 1, event.time)
         elif event.type == gtk.gdk.KEY_PRESS and \
              event.keyval in [65293, 32]:
-            self.menu_tools(TOOLS_MENU[0])
+            self.menu_tools(None, TOOLS_MENU[0])
 
     ## Set the auto-completion for the entry box
     def set_completion(self):
@@ -198,10 +198,10 @@ class MainWindow(gtk.Window):
             else:
                 self.drawing_area.center = tile
         self.drawing_area.repaint()
-        
-        if self.conf.status_location == STATUS_GPS and self.status_bar:
+
+        if self.conf.status_location == STATUS_GPS:
             self.status_bar.pop(self.status_bar_id)
-            self.status_bar.push(self.status_bar_id, 
+            self.status_bar.push(self.status_bar_id,
                                   "Latitude=" + coord[0] + " Longitude=" + coord[1])
 
     ## Creates a comboBox that will contain the locations
@@ -370,18 +370,15 @@ class MainWindow(gtk.Window):
         da.connect_object("event", self.da_click_events, menu)
 
         return self.drawing_area
-        
+
     def __create_statusbar(self):
-        if self.conf.status_location == STATUS_NONE:
-            return False
         sb = gtk.Statusbar()
-        self.status_bar = sb
+        sb.set_has_resize_grip(False)
         self.status_bar_id = sb.get_context_id("init")
         sb.push(self.status_bar_id, "gmapcatcher map viewer!")
-        sb.show()
         return sb
 
-        ## Zoom to the given pointer
+    ## Zoom to the given pointer
     def do_zoom(self, zoom, doForce=False, dPointer=False):
         if (MAP_MIN_ZOOM_LEVEL <= zoom <= MAP_MAX_ZOOM_LEVEL):
             self.drawing_area.do_scale(
@@ -421,17 +418,17 @@ class MainWindow(gtk.Window):
         return mapUtils.pointer_to_coord(
                 self.drawing_area.get_allocation(),
                 pointer, self.drawing_area.center, self.get_zoom())
-                
+
     ## add mouse location latitude/longitude to clipboard
     def mouse_location(self, pointer=None):
         coord = self.pointer_to_world_coord(pointer)
         clipboard = gtk.Clipboard()
         clipboard.set_text("Latitude=%.6f,Longitude=%.6f" % (coord[0], coord[1]))
-        
+
     def gps_location(self):
         if self.current_gps:
             clipboard = gtk.Clipboard()
-            clipboard.set_text("Latitude=%.6f, Longitude=%.6f" % 
+            clipboard.set_text("Latitude=%.6f, Longitude=%.6f" %
                               (self.current_gps[0], self.current_gps[1]))
 
     ## Add a marker
@@ -465,7 +462,7 @@ class MainWindow(gtk.Window):
         self.bottom_panel.hide()
         self.left_panel.show()
         self.top_panel.show()
-        
+
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
@@ -491,13 +488,13 @@ class MainWindow(gtk.Window):
     def da_motion(self, w, event):
         if (event.get_state() & gtk.gdk.BUTTON1_MASK) != 0:
             self.drawing_area.da_move(event.x, event.y, self.get_zoom())
-        if self.status_bar and (self.conf.status_location == STATUS_MOUSE or 
-                (self.conf.status_location == STATUS_GPS and not mapGPS.available)):
+        if (self.conf.status_location == STATUS_MOUSE or
+           (self.conf.status_location == STATUS_GPS and not mapGPS.available)):
             self.status_bar.pop(self.status_bar_id)
             coord = self.pointer_to_world_coord((event.x, event.y))
-            self.status_bar.push(self.status_bar_id, "Latitude=%.6f Longitude=%.6f" % 
+            self.status_bar.push(self.status_bar_id, "Latitude=%.6f Longitude=%.6f" %
                                 (coord[0], coord[1]))
-        
+
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
@@ -542,7 +539,7 @@ class MainWindow(gtk.Window):
                 # tile to list unless we're all set to add foreground overlay
                 if hybridsat and tile_coord not in self.foreground:
                     self.background.append(tile_coord)
-                
+
                 gc = da.style.black_gc
                 force_update = self.cb_forceupdate.get_active()
                 img = self.ctx_map.load_pixbuf(tile_coord, layer, force_update)
@@ -552,11 +549,11 @@ class MainWindow(gtk.Window):
                 for x,y in xy:
                     da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                           TILES_WIDTH, TILES_HEIGHT)
-                    # here we [re-]add foreground overlay providing 
+                    # here we [re-]add foreground overlay providing
                     # it is already in memory
                     if hybridsat and tile_coord in self.foreground:
                         self.foreground.remove(tile_coord)
-                        da.window.draw_pixbuf(gc, img2, 0, 0, x, y, 
+                        da.window.draw_pixbuf(gc, img2, 0, 0, x, y,
                                               TILES_WIDTH, TILES_HEIGHT)
 
                 if not self.cb_offline.get_active():
@@ -694,6 +691,10 @@ class MainWindow(gtk.Window):
         self.enable_gps()
         self.marker.refresh()
         self.drawing_area.repaint()
+        if self.conf.status_location == STATUS_NONE:
+            self.status_bar.hide()
+        else:
+            self.status_bar.show()
 
     ## Final actions before main_quit
     def on_delete(self, *args):
@@ -755,8 +756,7 @@ class MainWindow(gtk.Window):
         vpaned.add2(hpaned)
         vbox = gtk.VBox(False, 0)
         vbox.pack_start(vpaned, True, True, 0)
-        if self.status_bar:
-            vbox.pack_start(self.status_bar, False, False, 0)
+        vbox.pack_start(self.status_bar, False, False, 0)
         self.add(vbox)
 
         self.set_title(" GMapCatcher ")
@@ -768,6 +768,8 @@ class MainWindow(gtk.Window):
         self.drawing_area.center = self.conf.init_center
         self.show_all()
 
+        if self.conf.status_location == STATUS_NONE:
+            self.status_bar.hide()
         self.bottom_panel.hide()
         self.drawing_area.da_set_cursor()
         self.entry.grab_focus()

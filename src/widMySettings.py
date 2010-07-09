@@ -51,7 +51,7 @@ class MySettings():
             def statuscombo(active_type_id):
                 hbox = gtk.HBox(False, 10)
                 hbox.pack_start( \
-                    lbl(" Select a new option for the status bar and restart. "))
+                    lbl(" Select a new option for the status bar. "))
                 self.cmb_status_type = gtk.combo_box_new_text()
                 for strType in STATUS_TYPE:
                     self.cmb_status_type.append_text(strType)
@@ -149,6 +149,7 @@ class MySettings():
                 conf.init_path = None
                 conf.repository_type = self.cmb_repos_type.get_active()
             conf.save()
+            parent.refresh()
 
         def _action_buttons(conf, parent):
             def btn_revert_clicked(button):
