@@ -633,7 +633,7 @@ class MainWindow(gtk.Window):
         elif keyval == 32:
             self.reCenter_gps = True
 
-        # M = 77,109  S = 83,115  T = 84,116
+        # M = 77,109  S = 83,115  T = 84,116, H=72,104
         elif not self.conf.oneDirPerMap:
         # necessary?
             if keyval in [77, 109]:
