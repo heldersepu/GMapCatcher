@@ -24,7 +24,7 @@
 @RD build /s /q
 
 :: Launch the PYTHON setup
-C:\PYTHON26\PYTHON.EXE setup.py py2exe
+%SystemDrive%\PYTHON26\PYTHON.EXE setup.py py2exe
 
 :: Few seconds delay to show dependencies
 @COLOR F0
