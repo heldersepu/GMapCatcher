@@ -262,19 +262,19 @@ class MainWindow(gtk.Window):
         self.cb_forceupdate.set_active(False)
         hbox.pack_start(self.cb_forceupdate)
 
-        bbox = gtk.HButtonBox()
+        bbox = gtk.HBox(False, 0)
         if mapGPS.available:
             cmb_gps = gtk.combo_box_new_text()
             for w in GPS_NAMES:
                 cmb_gps.append_text(w)
             cmb_gps.set_active(self.conf.gps_mode)
             cmb_gps.connect('changed',self.gps_changed)
-            bbox.pack_start(cmb_gps)
+            bbox.pack_start(cmb_gps, False, False, 0)
 
         gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_HARDDISK)
         button.connect('clicked', self.download_clicked)
-        bbox.pack_start(button)
+        bbox.pack_start(button, False, False, 5)
 
         cmb_layer = gtk.combo_box_new_text()
         if self.conf.oneDirPerMap:
@@ -287,8 +287,7 @@ class MainWindow(gtk.Window):
         cmb_layer.set_active(LAYER_MAP)
         cmb_layer.connect('changed',self.layer_changed)
         self.cmb_layer = cmb_layer
-        bbox.pack_start(cmb_layer)
-        bbox.set_layout(gtk.BUTTONBOX_SPREAD)
+        bbox.pack_start(cmb_layer, False, False, 0)
         hbox.add(bbox)
         return hbox
 
@@ -636,12 +635,15 @@ class MainWindow(gtk.Window):
 
         # M = 77,109  S = 83,115  T = 84,116
         elif not self.conf.oneDirPerMap:
+        # necessary?
             if keyval in [77, 109]:
                 self.cmb_layer.set_active(LAYER_MAP)
             elif keyval in [83, 115]:
                 self.cmb_layer.set_active(LAYER_SATELLITE)
             elif keyval in [84, 116]:
                 self.cmb_layer.set_active(LAYER_TERRAIN)
+            elif keyval in [72, 104]:
+                self.cmb_layer.set_active(LAYER_HYBRID)
 
 
     ## Handles the Key release
