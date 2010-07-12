@@ -114,6 +114,7 @@ Actions of the final 2 items:
 ||   M            ||  Show Map Layer ||
 ||   S            ||  Show Satellite Layer ||
 ||   T            ||  Show Terrain Layer ||
+||   H            ||  Show Hybrid Layer ||
 
 
 <BR>
