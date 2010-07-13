@@ -94,8 +94,9 @@ class DrawingArea(gtk.DrawingArea):
         self.queue_draw()
 
     ## Draw the second layer of elements
-    def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
+    def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf, 
                     downloading=False, visual_dlconfig = {},
+                     visual_downloading = {},
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None):
         def draw_image(imgPos, img, width, height):
@@ -113,6 +114,8 @@ class DrawingArea(gtk.DrawingArea):
                     )
 
         rect = self.get_allocation()
+        middle = (rect.width / 2, rect.height / 2)
+        full = (rect.width, rect.height)
         # Draw cross in the center
         if conf.show_cross:
             self.window.draw_pixbuf(
@@ -148,6 +151,8 @@ class DrawingArea(gtk.DrawingArea):
         if downloading:
             self.window.draw_pixbuf(
                 self.style.black_gc, dlpixbuf, 0, 0, 0, 0, -1, -1)
+                
+        sz = visual_dlconfig.get("sz", 4)
 
         if visual_dlconfig.get("active", False):
             if not self.visualdl_gc:
@@ -166,9 +171,6 @@ class DrawingArea(gtk.DrawingArea):
                 self.visualdl_lo.set_font_description(
                         pango.FontDescription("sans normal 12"))
             thegc = self.visualdl_gc
-            middle = (rect.width / 2, rect.height / 2)
-            full = (rect.width, rect.height)
-            sz = visual_dlconfig.get("sz", 4)
             thezl = str(zl + visual_dlconfig.get("zl", -2))
             self.visualdl_lo.set_text(thezl)
             self.window.draw_rectangle(thegc, False, middle[0] - full[0] / (sz * 2),
@@ -177,3 +179,16 @@ class DrawingArea(gtk.DrawingArea):
                     middle[0] + full[0] / (sz * 2) - len(thezl) * 10,
                     middle[1] - full[1] / (sz * 2),
                     self.visualdl_lo)
+
+        if visual_downloading.get('qd', 0) > 0:
+            self.visualdl_lo.set_text(
+                    str(visual_downloading.get('recd', 0)) + "/" +
+                    str(visual_downloading.get('qd', 0)))
+            if 'sz' == 1:
+                ypos = -15
+            else:
+                ypos = 0
+            self.window.draw_layout(self.visualdl_gc,
+                    middle[0],
+                    middle[1] + full[1] / (sz * 2) + ypos, self.visualdl_lo)
+                

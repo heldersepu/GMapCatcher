@@ -494,6 +494,10 @@ class MainWindow(gtk.Window):
     def da_motion(self, w, event):
         if (event.get_state() & gtk.gdk.BUTTON1_MASK) != 0:
             self.drawing_area.da_move(event.x, event.y, self.get_zoom())
+            if (event.get_state() & gtk.gdk.SHIFT_MASK) != 0 and \
+                        self.visual_dltool.get_active():
+                self.visual_download((event.x, event.y))
+
         if (self.conf.status_location == STATUS_MOUSE or
            (self.conf.status_location == STATUS_GPS and not mapGPS.available)):
             self.status_bar.pop(self.status_bar_id)
@@ -508,6 +512,34 @@ class MainWindow(gtk.Window):
         else:
             self.visual_dlconfig['active'] = False
             self.drawing_area.repaint()
+            
+    def visual_download(self, pointer):
+        online = not self.cb_offline.get_active()
+        force_update = self.cb_forceupdate.get_active()
+        confzl = self.visual_dlconfig.get('zl', -2)
+        thezl = self.get_zoom()
+        sz = self.visual_dlconfig.get('sz', 4)
+        rect = self.drawing_area.get_allocation()
+        for zl in reversed(range(max(thezl + confzl, -2), max(thezl, -2))):
+            self.visualdl_add(self.downloader.query_region_around_point(
+                    mapUtils.tile_adjustEx(zl, self.drawing_area.center[0], 
+                            (self.drawing_area.center[1][0],
+                            self.drawing_area.center[1][1])),
+                    (rect.width / sz, rect.height / sz), zl,
+                    self.layer, gui_callback(self.visualdl_cb),
+                    online=online, force_update=force_update, conf=self.conf))
+
+    def visualdl_cb(self, *args, **kwargs):
+        self.visual_downloading['recd'] = self.visual_downloading.get('recd', 0) + 1
+        if self.visual_downloading.get('recd', 0) >= \
+                self.visual_downloading.get('qd', 0):
+            self.visual_downloading['recd'] = 0
+            self.visual_downloading['qd'] = 0
+        self.drawing_area.repaint()
+
+    def visualdl_add(self, n):
+        self.visual_downloading['qd'] = self.visual_downloading.get('qd', 0) + n
+        self.drawing_area.repaint()
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
@@ -559,7 +591,7 @@ class MainWindow(gtk.Window):
         if redraw:
             self.drawing_area.repaint()
 
-    def scale_change_value(self, range, scroll, value):
+    def scale_change_value(self, therange, scroll, value):
         self.do_zoom(value)
 
     def tile_received(self, tile_coord, layer, download=False):
@@ -609,12 +641,14 @@ class MainWindow(gtk.Window):
         if self.bottom_panel.flags() & gtk.VISIBLE:
             self.drawing_area.draw_overlay(
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
-                self.downloading > 0, self.visual_dlconfig
+                self.downloading > 0, self.visual_dlconfig,
+                self.visual_downloading
             )
         else:
             self.drawing_area.draw_overlay(
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
-                self.downloading > 0, self.visual_dlconfig, self.marker,
+                self.downloading > 0, self.visual_dlconfig,
+                self.visual_downloading, self.marker,
                 self.ctx_map.get_locations(), self.entry.get_text(),
                 self.showMarkers, self.gps
             )
@@ -786,6 +820,7 @@ class MainWindow(gtk.Window):
         self.enable_gps()
         self.downloading = 0
         self.visual_dlconfig = {}
+        self.visual_downloading = {}
 
         gtk.Window.__init__(self)
         try:
