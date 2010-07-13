@@ -232,6 +232,10 @@ class MainWindow(gtk.Window):
         button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
         button.set_size_request(34, -1)
         menu = gtk_menu(TOOLS_MENU, self.menu_tools)
+        self.visual_dltool = gtk.CheckMenuItem(TOOLS_MENU_PLUS)
+        self.visual_dltool.connect('toggled', self.visual_dltool_toggled)
+        menu.append(self.visual_dltool)
+        self.visual_dltool.show()
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
         button.connect("query-tooltip", myToolTip, "Tools",
@@ -494,6 +498,11 @@ class MainWindow(gtk.Window):
             self.status_bar.push(self.status_bar_id, "Latitude=%.6f Longitude=%.6f" %
                                 (coord[0], coord[1]))
 
+    def visual_dltool_toggled(self, menuitem):
+        if (menuitem.get_active()):
+            self.draw_overlay()
+        else:
+            self.drawing_area.repaint()
 
     def expose_cb(self, drawing_area, event):
         #print "expose_cb"
@@ -511,11 +520,40 @@ class MainWindow(gtk.Window):
 
     def scroll_cb(self, widget, event):
         xyPointer = self.drawing_area.get_pointer()
+        dlbool = self.visual_dltool.get_active()
+        ctrlmask = (event.state & gtk.gdk.CONTROL_MASK) != 0
+        shiftmask = (event.state & gtk.gdk.SHIFT_MASK) != 0
+        sz, zl = 0, 0
+        redraw = False
         if (event.direction == gtk.gdk.SCROLL_UP):
-            self.do_zoom(self.get_zoom() - 1, dPointer=xyPointer)
+            if dlbool and ctrlmask:
+                zl = 1
+                redraw = True
+            elif dlbool and shiftmask:
+                sz = 1
+                redraw = True
+            else:
+                self.do_zoom(self.get_zoom() - 1, dPointer=xyPointer)
         else:
-            self.do_zoom(self.get_zoom() + 1, dPointer=xyPointer)
-
+            if dlbool and ctrlmask:
+                zl = -1
+                redraw = True
+            elif dlbool and shiftmask:
+                sz = -1
+                redraw = True
+            else:
+                self.do_zoom(self.get_zoom() + 1, dPointer=xyPointer)
+        self.visual_dlconfig["zl"] = self.visual_dlconfig.get('zl', -2) + zl
+        self.visual_dlconfig['sz'] = self.visual_dlconfig.get('sz', 4) - sz
+        if self.visual_dlconfig.get('zl', -2) > -1:
+            self.visual_dlconfig["zl"] = -1
+        if self.visual_dlconfig.get('sz', 4) < 1:
+            self.visual_dlconfig['sz'] = 1
+        if self.visual_dlconfig.get('zl', -2) + self.get_zoom() < -2:
+            self.visual_dlconfig['zl'] = -2 - self.get_zoom()
+        if redraw:
+            self.drawing_area.repaint()
+        
     def scale_change_value(self, range, scroll, value):
         self.do_zoom(value)
 
@@ -566,12 +604,14 @@ class MainWindow(gtk.Window):
         if self.bottom_panel.flags() & gtk.VISIBLE:
             self.drawing_area.draw_overlay(
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
-                self.downloading > 0
+                self.downloading > 0, self.visual_dltool.get_active(),
+                self.visual_dlconfig
             )
         else:
             self.drawing_area.draw_overlay(
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
-                self.downloading > 0, self.marker,
+                self.downloading > 0, self.visual_dltool.get_active(),
+                self.visual_dlconfig, self.marker,
                 self.ctx_map.get_locations(), self.entry.get_text(),
                 self.showMarkers, self.gps
             )
@@ -737,6 +777,7 @@ class MainWindow(gtk.Window):
         self.current_gps = False
         self.enable_gps()
         self.downloading = 0
+        self.visual_dlconfig = {}
 
         gtk.Window.__init__(self)
         try:
