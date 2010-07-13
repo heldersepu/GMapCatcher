@@ -4,7 +4,7 @@
 
 from __future__ import division
 from mapConst import TILES_HEIGHT
-from threading import Thread
+from threading import Thread, Timer
 from Queue import Queue
 from traceback import print_exc
 
@@ -89,6 +89,7 @@ class MapDownloader:
     def __init__(self, ctx_map, numthreads=4):
         self.ctx_map = ctx_map
         self.threads = []
+        self.bulk_all_placed = False
         self.taskq = Queue(0)
         for i in xrange(numthreads):
             t = DownloaderThread(self.ctx_map, self.taskq)
@@ -187,3 +188,42 @@ class MapDownloader:
         self.query_region(top_left[0][0], bottom_right[0][0],
                           top_left[0][1], bottom_right[0][1],
                           zoom, *args, **kwargs)
+
+    def bulk_download(self, coord, zoomlevels, kmx, kmy, layer, tile_callback,
+                      completion_callback, conf, nodups=True):
+
+        dlon = mapUtils.km_to_lon(mapUtils.nice_round(kmx), coord[0])
+        dlat = mapUtils.km_to_lat(mapUtils.nice_round(kmy))
+        if zoomlevels[0] > zoomlevels[1]:
+            zoomlevels = (zoomlevels[1], zoomlevels[0])
+
+        def downThread():
+            self.bulk_all_placed = False
+            for zoom in xrange(zoomlevels[1], zoomlevels[0] - 1, -1):
+                self.query_region_around_location(
+                    coord[0], coord[1], dlat, dlon,
+                    zoom, layer, tile_callback, conf
+                    )
+            if self.qsize() == 0:
+                completion_callback()
+            self.bulk_all_placed = True
+
+
+        dThread = Timer(0, downThread)
+        if conf.map_service in NO_BULK_DOWN:
+            # could be less intrusive for visual download it would be 
+            # called every few pixels! :-)
+            dialog = gtk.MessageDialog(self,
+                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                    gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
+                    ("This map service (%s) doesn't allow bulk downloading. "
+                    "If you insist on doing so, you break its term of use. \n\n"
+                    "Continue or cancel?") % (self.conf.map_service)))
+            response = dialog.run()
+            dialog.destroy()
+            if response != gtk.RESPONSE_OK:
+                self.all_done("Canceled")
+            else:
+                dThread.start()
+        else:
+            dThread.start()
