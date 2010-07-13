@@ -183,7 +183,7 @@ class DrawingArea(gtk.DrawingArea):
             self.visualdl_lo.set_text(
                     str(visual_dlconfig.get('recd', 0)) + "/" +
                     str(visual_dlconfig.get('qd', 0)))
-            if 'sz' == 1:
+            if sz == 1:
                 ypos = -15
             else:
                 ypos = 0
