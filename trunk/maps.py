@@ -426,13 +426,16 @@ class MainWindow(gtk.Window):
     def mouse_location(self, pointer=None):
         coord = self.pointer_to_world_coord(pointer)
         clipboard = gtk.Clipboard()
-        clipboard.set_text("Latitude=%.6f,Longitude=%.6f" % (coord[0], coord[1]))
+        clipboard.set_text("Latitude=%.6f, Longitude=%.6f" % (coord[0], coord[1]))
 
+    ## add GPS location latitude/longitude to clipboard
     def gps_location(self):
+        clipboard = gtk.Clipboard()
         if self.current_gps:
-            clipboard = gtk.Clipboard()
             clipboard.set_text("Latitude=%.6f, Longitude=%.6f" %
                               (self.current_gps[0], self.current_gps[1]))
+        else:
+            clipboard.set_text("No GPS location detected.")
 
     ## Add a marker
     def add_marker(self, pointer=None):
