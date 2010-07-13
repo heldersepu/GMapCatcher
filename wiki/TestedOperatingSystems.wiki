@@ -9,12 +9,14 @@
 = Details =
 
   * *Microsoft Windows 7 Ultimate* ^(Version 6.1.7000) (Beta)^
+  * *Microsoft Windows 7 Enterprise* ^(Build 7600)^
   * *Microsoft Windows Server 2008 SP1* ^(Version 6.0.6001)^
   * *Microsoft Windows Vista Ultimate SP1* ^(Version 6.0.6001) (64 Bit)^
   * *Microsoft Windows Vista Business* ^(Version 6.0.6000)^
   * *Microsoft Windows XP Pro SP2* ^(Version 5.1.2600)^
   * *Microsoft Windows XP Pro SP2* ^(Spanish & Italian editions)^
   * *Microsoft Windows 2000 SP4* ^(Version 5.0.2195)^
+  * *Ubuntu 10.04* ^(Lucid Lynx) (64 Bit)^
   * *Ubuntu 9.04* ^(Jaunty Jackalope & Netbook Remix)^
   * *Ubuntu 8.10* ^(Intrepid Ibex)^
   * *Ubuntu 8.04* ^(LTS Hardy Heron)^
