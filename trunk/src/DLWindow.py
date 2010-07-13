@@ -226,7 +226,7 @@ class DLWindow(gtk.Window):
         file.write(strInfo)
         file.close()
 
-    def tile_received(self, coord, layer):
+    def tile_received(self, coord, layer, download=False):
         self.complete.append((coord, layer))
         ncomplete = len(self.complete)
         nqueued = self.downloader.qsize() if self.downloader else 0

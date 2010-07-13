@@ -501,7 +501,7 @@ class MainWindow(gtk.Window):
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
         zl = self.get_zoom()
-        self.downloader.query_region_around_point(
+        self.downloading += self.downloader.query_region_around_point(
             self.drawing_area.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
             online=online, force_update=force_update,
@@ -519,7 +519,11 @@ class MainWindow(gtk.Window):
     def scale_change_value(self, range, scroll, value):
         self.do_zoom(value)
 
-    def tile_received(self, tile_coord, layer):
+    def tile_received(self, tile_coord, layer, download=False):
+        if download:
+            self.downloading -= 1
+            if self.downloading <= 0:
+                self.drawing_area.repaint()
         hybridsat = (self.layer == LAYER_HYBRID and layer == LAYER_SATELLITE)
         if (self.layer == layer or hybridsat) and self.get_zoom() == tile_coord[2]:
             da = self.drawing_area
@@ -561,13 +565,15 @@ class MainWindow(gtk.Window):
     def draw_overlay(self):
         if self.bottom_panel.flags() & gtk.VISIBLE:
             self.drawing_area.draw_overlay(
-                self.get_zoom(), self.conf, self.crossPixbuf
+                self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
+                self.downloading > 0
             )
         else:
             self.drawing_area.draw_overlay(
-                self.get_zoom(), self.conf, self.crossPixbuf,
-                self.marker, self.ctx_map.get_locations(),
-                self.entry.get_text(), self.showMarkers, self.gps
+                self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
+                self.downloading > 0, self.marker,
+                self.ctx_map.get_locations(), self.entry.get_text(),
+                self.showMarkers, self.gps
             )
 
     ## Handles the pressing of F11 & F12
@@ -721,6 +727,7 @@ class MainWindow(gtk.Window):
     def __init__(self, parent=None):
         self.conf = MapConf()
         self.crossPixbuf = mapPixbuf.cross()
+        self.dlpixbuf = mapPixbuf.downloading()
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path, self.conf.repository_type)
         self.downloader = MapDownloader(self.ctx_map)
@@ -729,6 +736,7 @@ class MainWindow(gtk.Window):
         self.foreground = []
         self.current_gps = False
         self.enable_gps()
+        self.downloading = 0
 
         gtk.Window.__init__(self)
         try:

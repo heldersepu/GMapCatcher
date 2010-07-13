@@ -63,7 +63,7 @@ class DownloaderThread(Thread):
         )
         if task.callback:
             #print "process_task callback", task
-            task.callback(False, task.coord, task.layer)
+            task.callback(False, task.coord, task.layer, True)
 
 ## Main class used for downloading tiles.
 #
@@ -114,11 +114,14 @@ class MapDownloader:
     def qsize(self):
         return self.taskq.qsize()
 
+    # @return number of tiles queued for download
     def query_tile(self, coord, layer, callback,
                     online=True, force_update=False,
                     conf=None):
+        ret = 0
         if (layer == LAYER_HYBRID):
-            self.query_tile(coord, LAYER_SATELLITE, callback, online, force_update, conf)
+            ret += self.query_tile(coord, LAYER_SATELLITE, callback, 
+                                   online, force_update, conf)
         #print "query_tile(",coord,layer,callback,online,force_update,")"
         world_tiles = mapUtils.tiles_on_level(coord[2])
         coord = (mapUtils.mod(coord[0], world_tiles),
@@ -130,15 +133,18 @@ class MapDownloader:
                 deleted = self.ctx_map.remove_old_tile(coord, layer)
             if not deleted:
                 callback(True, coord, layer)
-                return
+                return ret
 
         self.taskq.put(
             DownloadTask(
                 coord, layer, callback, force_update, conf
             )
         )
+        return ret + 1
 
+    # @return number of tiles queued for download
     def query_region(self, xmin, xmax, ymin, ymax, zoom, *args, **kwargs):
+        ret = 0
         world_tiles = mapUtils.tiles_on_level(zoom)
         if xmax-xmin >= world_tiles:
             xmin,xmax = 0,world_tiles-1
@@ -149,8 +155,10 @@ class MapDownloader:
             x = (xmin+i)%world_tiles
             for j in xrange((ymax-ymin+world_tiles)%world_tiles+1):
                 y = (ymin+j)%world_tiles
-                self.query_tile((x,y,zoom), *args, **kwargs)
+                ret += self.query_tile((x,y,zoom), *args, **kwargs)
+        return ret
 
+    # @return number of tiles queued for download
     def query_region_around_point(self, center, size, zoom, *args, **kwargs):
         x0, y0 = center[0][0], center[0][1]
         dx0, dy0 = int(center[1][0] - size[0]/2), int(center[1][1] - size[1]/2)
@@ -159,7 +167,7 @@ class MapDownloader:
         xmax = int(x0 + ceil(dx1/TILES_WIDTH)) - 1
         ymin = int(y0 + floor(dy0/TILES_HEIGHT))
         ymax = int(y0 + ceil(dy1/TILES_HEIGHT)) - 1
-        self.query_region(xmin, xmax, ymin, ymax, zoom, *args, **kwargs)
+        return self.query_region(xmin, xmax, ymin, ymax, zoom, *args, **kwargs)
 
     def query_region_around_location(self, lat0, lon0, dlat, dlon, zoom,
                                         *args, **kwargs):

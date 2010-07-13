@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.mapPixbuf
 # Get the Pixbuf from image files.
 #
@@ -33,6 +34,14 @@ def cross():
             ('\255\255\255' * 4 + '\0\0\255' * 4 + '\255\255\255' * 4) * 4,
             gtk.gdk.COLORSPACE_RGB, False, 8, 12, 12, 12 * 3)
     return pix_cross
+    
+def downloading():
+    try:
+        pix_dl = gtk.gdk.pixbuf_new_from_file(join(_prefix, 'downloading.png'))
+    except Exception:
+        pix_dl = gtk.gdk.pixbuf_new_from_data(
+            '\0\255\0\127' * 600, gtk.gdk.COLORSPACE_RGB, True, 8, 50, 12, 50 * 4)
+    return pix_dl
 
 ## Get the Pixbuf from the given image.
 # This is used in myToolTip
