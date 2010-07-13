@@ -96,7 +96,6 @@ class DrawingArea(gtk.DrawingArea):
     ## Draw the second layer of elements
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf, 
                     downloading=False, visual_dlconfig = {},
-                     visual_downloading = {},
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None):
         def draw_image(imgPos, img, width, height):
@@ -180,10 +179,10 @@ class DrawingArea(gtk.DrawingArea):
                     middle[1] - full[1] / (sz * 2),
                     self.visualdl_lo)
 
-        if visual_downloading.get('qd', 0) > 0:
+        if visual_dlconfig.get('qd', 0) > 0:
             self.visualdl_lo.set_text(
-                    str(visual_downloading.get('recd', 0)) + "/" +
-                    str(visual_downloading.get('qd', 0)))
+                    str(visual_dlconfig.get('recd', 0)) + "/" +
+                    str(visual_dlconfig.get('qd', 0)))
             if 'sz' == 1:
                 ypos = -15
             else:
