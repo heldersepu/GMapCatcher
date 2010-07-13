@@ -3,6 +3,7 @@
 # DrawingArea widget used to display the map
 
 import gtk
+import pango
 import mapUtils
 from mapConst import *
 
@@ -14,6 +15,8 @@ class DrawingArea(gtk.DrawingArea):
     def __init__(self, scale):
         self.scale = scale
         super(DrawingArea, self).__init__()
+
+        self.visualdl_gc = False
 
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK)
         self.connect('button-press-event', self.da_button_press)
@@ -91,7 +94,9 @@ class DrawingArea(gtk.DrawingArea):
         self.queue_draw()
 
     ## Draw the second layer of elements
-    def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf, downloading=False,
+    def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf, 
+                    downloading=False, visual_dl = False, 
+                    visual_dlconfig = {},
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None):
         def draw_image(imgPos, img, width, height):
@@ -129,8 +134,8 @@ class DrawingArea(gtk.DrawingArea):
         if showMarkers:
             pixDim = marker.get_pixDim(zl)
             img = marker.get_marker_pixbuf(zl)
-            for str in marker.positions.keys():
-                mpos = marker.positions[str]
+            for string in marker.positions.keys():
+                mpos = marker.positions[string]
                 if zl <= mpos[2] and (mpos[0],mpos[1]) != (coord[0],coord[1]):
                     draw_image(mpos, img, pixDim, pixDim)
 
@@ -144,3 +149,32 @@ class DrawingArea(gtk.DrawingArea):
         if downloading:
             self.window.draw_pixbuf(
                 self.style.black_gc, dlpixbuf, 0, 0, 0, 0, -1, -1)
+                
+        if visual_dl:
+            if not self.visualdl_gc:
+                fg_col = gtk.gdk.color_parse("#0F0")
+                bg_col = gtk.gdk.color_parse("#0BB")
+                self.visualdl_gc = self.window.new_gc(
+                        fg_col, bg_col, None, gtk.gdk.COPY,
+                        gtk.gdk.SOLID, None, None, None,
+                        gtk.gdk.INCLUDE_INFERIORS,
+                        0, 0, 0, 0, True, 3, gtk.gdk.LINE_DOUBLE_DASH,
+                        gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_ROUND)
+                self.visualdl_gc.set_dashes(0, [3])
+                self.visualdl_gc.set_rgb_fg_color(fg_col)
+                self.visualdl_gc.set_rgb_bg_color(bg_col)
+                self.visualdl_lo = pango.Layout(self.get_pango_context())
+                self.visualdl_lo.set_font_description(
+                        pango.FontDescription("sans normal 12"))
+            thegc = self.visualdl_gc
+            middle = (rect.width / 2, rect.height / 2)
+            full = (rect.width, rect.height)
+            sz = visual_dlconfig.get("sz", 4)
+            thezl = str(zl + visual_dlconfig.get("zl", -2))
+            self.visualdl_lo.set_text(thezl)
+            self.window.draw_rectangle(thegc, False, middle[0] - full[0] / (sz * 2),
+                    middle[1] - full[1] / (sz * 2), full[0] / sz, full[1] / sz)
+            self.window.draw_layout(thegc, 
+                    middle[0] + full[0] / (sz * 2) - len(thezl) * 10,
+                    middle[1] - full[1] / (sz * 2),
+                    self.visualdl_lo)
