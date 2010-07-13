@@ -495,7 +495,7 @@ class MainWindow(gtk.Window):
         if (event.get_state() & gtk.gdk.BUTTON1_MASK) != 0:
             self.drawing_area.da_move(event.x, event.y, self.get_zoom())
             if (event.get_state() & gtk.gdk.SHIFT_MASK) != 0 and \
-                        self.visual_dltool.get_active():
+                        self.visual_dlconfig.get('active', False):
                 self.visual_download((event.x, event.y))
 
         if (self.conf.status_location == STATUS_MOUSE or
@@ -530,15 +530,15 @@ class MainWindow(gtk.Window):
                     online=online, force_update=force_update, conf=self.conf))
 
     def visualdl_cb(self, *args, **kwargs):
-        self.visual_downloading['recd'] = self.visual_downloading.get('recd', 0) + 1
-        if self.visual_downloading.get('recd', 0) >= \
-                self.visual_downloading.get('qd', 0):
-            self.visual_downloading['recd'] = 0
-            self.visual_downloading['qd'] = 0
+        self.visual_dlconfig['recd'] = self.visual_dlconfig.get('recd', 0) + 1
+        if self.visual_dlconfig.get('recd', 0) >= \
+                self.visual_dlconfig.get('qd', 0):
+            self.visual_dlconfig['recd'] = 0
+            self.visual_dlconfig['qd'] = 0
         self.drawing_area.repaint()
 
     def visualdl_add(self, n):
-        self.visual_downloading['qd'] = self.visual_downloading.get('qd', 0) + n
+        self.visual_dlconfig['qd'] = self.visual_dlconfig.get('qd', 0) + n
         self.drawing_area.repaint()
 
     def expose_cb(self, drawing_area, event):
@@ -641,14 +641,12 @@ class MainWindow(gtk.Window):
         if self.bottom_panel.flags() & gtk.VISIBLE:
             self.drawing_area.draw_overlay(
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
-                self.downloading > 0, self.visual_dlconfig,
-                self.visual_downloading
+                self.downloading > 0, self.visual_dlconfig
             )
         else:
             self.drawing_area.draw_overlay(
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
-                self.downloading > 0, self.visual_dlconfig,
-                self.visual_downloading, self.marker,
+                self.downloading > 0, self.visual_dlconfig, self.marker,
                 self.ctx_map.get_locations(), self.entry.get_text(),
                 self.showMarkers, self.gps
             )
@@ -818,7 +816,6 @@ class MainWindow(gtk.Window):
         self.enable_gps()
         self.downloading = 0
         self.visual_dlconfig = {}
-        self.visual_downloading = {}
 
         gtk.Window.__init__(self)
         try:
