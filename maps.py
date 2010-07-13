@@ -232,10 +232,10 @@ class MainWindow(gtk.Window):
         button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
         button.set_size_request(34, -1)
         menu = gtk_menu(TOOLS_MENU, self.menu_tools)
-        self.visual_dltool = gtk.CheckMenuItem(TOOLS_MENU_PLUS)
-        self.visual_dltool.connect('toggled', self.visual_dltool_toggled)
-        menu.append(self.visual_dltool)
-        self.visual_dltool.show()
+        visual_dltool = gtk.CheckMenuItem(TOOLS_MENU_PLUS)
+        menu.append(visual_dltool)
+        visual_dltool.connect('toggled', self.visual_dltool_toggled)
+        visual_dltool.show()
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
         button.connect("query-tooltip", myToolTip, "Tools",
@@ -503,8 +503,10 @@ class MainWindow(gtk.Window):
 
     def visual_dltool_toggled(self, menuitem):
         if (menuitem.get_active()):
+            self.visual_dlconfig['active'] = True
             self.draw_overlay()
         else:
+            self.visual_dlconfig['active'] = False
             self.drawing_area.repaint()
 
     def expose_cb(self, drawing_area, event):
@@ -523,7 +525,7 @@ class MainWindow(gtk.Window):
 
     def scroll_cb(self, widget, event):
         xyPointer = self.drawing_area.get_pointer()
-        dlbool = self.visual_dltool.get_active()
+        dlbool = self.visual_dlconfig.get("active", False)
         ctrlmask = (event.state & gtk.gdk.CONTROL_MASK) != 0
         shiftmask = (event.state & gtk.gdk.SHIFT_MASK) != 0
         sz, zl = 0, 0
@@ -556,7 +558,7 @@ class MainWindow(gtk.Window):
             self.visual_dlconfig['zl'] = -2 - self.get_zoom()
         if redraw:
             self.drawing_area.repaint()
-        
+
     def scale_change_value(self, range, scroll, value):
         self.do_zoom(value)
 
@@ -607,14 +609,12 @@ class MainWindow(gtk.Window):
         if self.bottom_panel.flags() & gtk.VISIBLE:
             self.drawing_area.draw_overlay(
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
-                self.downloading > 0, self.visual_dltool.get_active(),
-                self.visual_dlconfig
+                self.downloading > 0, self.visual_dlconfig
             )
         else:
             self.drawing_area.draw_overlay(
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
-                self.downloading > 0, self.visual_dltool.get_active(),
-                self.visual_dlconfig, self.marker,
+                self.downloading > 0, self.visual_dlconfig, self.marker,
                 self.ctx_map.get_locations(), self.entry.get_text(),
                 self.showMarkers, self.gps
             )
@@ -728,6 +728,11 @@ class MainWindow(gtk.Window):
         # F5 = 65474
         elif event.keyval == 65474:
             self.refresh()
+        # F6 = 65475
+        elif event.keyval == 65475:
+            self.visual_dlconfig['active'] = \
+                not self.visual_dlconfig.get('active', False)
+            self.drawing_area.repaint()
         # F8 = 65477
         elif event.keyval == 65477:
             self.showMarkers = not self.showMarkers

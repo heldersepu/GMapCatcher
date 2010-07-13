@@ -94,9 +94,8 @@ class DrawingArea(gtk.DrawingArea):
         self.queue_draw()
 
     ## Draw the second layer of elements
-    def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf, 
-                    downloading=False, visual_dl = False, 
-                    visual_dlconfig = {},
+    def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
+                    downloading=False, visual_dlconfig = {},
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None):
         def draw_image(imgPos, img, width, height):
@@ -145,12 +144,12 @@ class DrawingArea(gtk.DrawingArea):
             if location is not None and (zl <= conf.max_gps_zoom):
                 img = gps.pixbuf
                 draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
-                
+
         if downloading:
             self.window.draw_pixbuf(
                 self.style.black_gc, dlpixbuf, 0, 0, 0, 0, -1, -1)
-                
-        if visual_dl:
+
+        if visual_dlconfig.get("active", False):
             if not self.visualdl_gc:
                 fg_col = gtk.gdk.color_parse("#0F0")
                 bg_col = gtk.gdk.color_parse("#0BB")
@@ -174,7 +173,7 @@ class DrawingArea(gtk.DrawingArea):
             self.visualdl_lo.set_text(thezl)
             self.window.draw_rectangle(thegc, False, middle[0] - full[0] / (sz * 2),
                     middle[1] - full[1] / (sz * 2), full[0] / sz, full[1] / sz)
-            self.window.draw_layout(thegc, 
+            self.window.draw_layout(thegc,
                     middle[0] + full[0] / (sz * 2) - len(thezl) * 10,
                     middle[1] - full[1] / (sz * 2),
                     self.visualdl_lo)
