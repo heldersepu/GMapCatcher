@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.widDrawingArea
 # DrawingArea widget used to display the map
 
@@ -90,8 +91,9 @@ class DrawingArea(gtk.DrawingArea):
         self.queue_draw()
 
     ## Draw the second layer of elements
-    def draw_overlay(self, zl, conf, crossPixbuf, marker=None, locations={},
-                     entry_name="", showMarkers=False, gps=None):
+    def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf, downloading=False,
+                    marker=None, locations={}, entry_name="",
+                    showMarkers=False, gps=None):
         def draw_image(imgPos, img, width, height):
             mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
             xy = mapUtils.tile_coord_to_screen(
@@ -138,3 +140,7 @@ class DrawingArea(gtk.DrawingArea):
             if location is not None and (zl <= conf.max_gps_zoom):
                 img = gps.pixbuf
                 draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
+                
+        if downloading:
+            self.window.draw_pixbuf(
+                self.style.black_gc, dlpixbuf, 0, 0, 0, 0, -1, -1)
