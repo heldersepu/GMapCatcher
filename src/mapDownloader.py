@@ -190,8 +190,8 @@ class MapDownloader:
                           zoom, *args, **kwargs)
 
     def bulk_download(self, coord, zoomlevels, kmx, kmy, layer, tile_callback,
-                      completion_callback, conf, nodups=True):
-
+                      completion_callback, force_update=False, conf=None,
+                      nodups=True):
         dlon = mapUtils.km_to_lon(mapUtils.nice_round(kmx), coord[0])
         dlat = mapUtils.km_to_lat(mapUtils.nice_round(kmy))
         if zoomlevels[0] > zoomlevels[1]:
@@ -202,7 +202,8 @@ class MapDownloader:
             for zoom in xrange(zoomlevels[1], zoomlevels[0] - 1, -1):
                 self.query_region_around_location(
                     coord[0], coord[1], dlat, dlon,
-                    zoom, layer, tile_callback, conf
+                    zoom, layer, tile_callback, True,
+                    force_update, conf
                     )
             if self.qsize() == 0:
                 completion_callback()
