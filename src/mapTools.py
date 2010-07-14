@@ -27,23 +27,24 @@ class MapTools():
 
         # Append pages to the notebook
         for str in TOOLS_MENU:
-            frame = gtk.Frame()
-            frame.set_border_width(10)
-            frame.set_size_request(100, 75)
-            if str in [TOOLS_MENU[1], TOOLS_MENU[2]]:
-                frame.add(
-                    myTree.show(str[5:-1], filePath +'/'+ str[5:], parent)
-                )
-            elif str == TOOLS_MENU[0]:
-                frame.add(mySett.show(parent))
-            elif str == TOOLS_MENU[3]:
-                frame.add(myTheme.show(parent.conf))
-            elif str == TOOLS_MENU[4]:
-                frame.add(myGPS.show(parent.conf))
-            else:
-                frame.add(gtk.Label(str + ' coming soon!! '))
-            label = gtk.Label(str)
-            notebook.append_page(frame, label)
+            if str != "":
+                frame = gtk.Frame()
+                frame.set_border_width(10)
+                frame.set_size_request(100, 75)
+                if str in [TOOLS_MENU[1], TOOLS_MENU[2]]:
+                    frame.add(
+                        myTree.show(str[5:-1], filePath +'/'+ str[5:], parent)
+                    )
+                elif str == TOOLS_MENU[0]:
+                    frame.add(mySett.show(parent))
+                elif str == TOOLS_MENU[3]:
+                    frame.add(myTheme.show(parent.conf))
+                elif str == TOOLS_MENU[4]:
+                    frame.add(myGPS.show(parent.conf))
+                else:
+                    frame.add(gtk.Label(str + ' coming soon!! '))
+                label = gtk.Label(str)
+                notebook.append_page(frame, label)
         # Set what page to start at
         return notebook
 
