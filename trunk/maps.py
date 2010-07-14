@@ -150,6 +150,9 @@ class MainWindow(gtk.Window):
         self.layer = w.get_active()
         if self.conf.oneDirPerMap:
             self.conf.map_service = MAP_SERVICES[self.layer]["serviceName"]
+            if self.visual_dlconfig.get('active', False) and \
+                    not self.check_bulk_down():
+                self.visual_dlconfig['active'] = False
         self.drawing_area.repaint()
 
     def download_clicked(self, w, pointer=None):
@@ -184,6 +187,20 @@ class MainWindow(gtk.Window):
                     self.layer, gui_callback(self.visualdl_cb),
                     self.visualdl_update, force_update, self.conf)
         self.visualdl_update()
+        
+    def check_bulk_down(self):
+        if self.conf.map_service in NO_BULK_DOWN:
+            dialog = gtk.MessageDialog(self,
+            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+            gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
+            ("This map service (%s) doesn't allow bulk downloading. "
+            "If you insist on doing so, you break its term of use. \n\n"
+            "Continue or cancel?") % (self.conf.map_service)))
+            response = dialog.run()
+            dialog.destroy()
+            return response == gtk.RESPONSE_OK
+        return True
+                
 
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self, coord, mode):
@@ -251,10 +268,10 @@ class MainWindow(gtk.Window):
         button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
         button.set_size_request(34, -1)
         menu = gtk_menu(TOOLS_MENU, self.menu_tools)
-        visual_dltool = gtk.CheckMenuItem(TOOLS_MENU_PLUS)
-        menu.append(visual_dltool)
-        visual_dltool.connect('toggled', self.visual_dltool_toggled)
-        visual_dltool.show()
+        self.visual_dltool = gtk.CheckMenuItem(TOOLS_MENU_PLUS)
+        menu.append(self.visual_dltool)
+        self.visual_dltool.connect('toggled', self.visual_dltool_toggled)
+        self.visual_dltool.show()
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
         button.connect("query-tooltip", myToolTip, "Tools",
@@ -528,9 +545,12 @@ class MainWindow(gtk.Window):
         if not self.visual_dlconfig.get('downloader', False):
             self.visual_dlconfig['downloader'] = MapDownloader(self.ctx_map)
 
-        if (menuitem.get_active()):
-            self.visual_dlconfig['active'] = True
-            self.draw_overlay()
+        if menuitem.get_active():
+            if self.check_bulk_down():
+                self.visual_dlconfig['active'] = True
+                self.draw_overlay()
+            else:
+                menuitem.set_active(False)
         else:
             self.visual_dlconfig['active'] = False
             self.drawing_area.repaint()
@@ -771,6 +791,10 @@ class MainWindow(gtk.Window):
         elif event.keyval == 65475:
             self.visual_dlconfig['active'] = \
                 not self.visual_dlconfig.get('active', False)
+            if self.visual_dlconfig['active'] and not self.check_bulk_down():
+                self.visual_dlconfig['active'] = False
+            self.visual_dltool.set_active(
+                    self.visual_dlconfig.get('active', False))
             if not self.visual_dlconfig.get('downloader', False):
                 self.visual_dlconfig['downloader'] = \
                         MapDownloader(self.ctx_map)
