@@ -34,10 +34,11 @@ class DownloadTask:
 #    from class MapDownloader.
 class DownloaderThread(Thread):
 
-    def __init__(self, ctx_map, inq):
+    def __init__(self, ctx_map, inq, parent):
         Thread.__init__(self)
         self.ctx_map = ctx_map
         self.inq = inq
+        self.parent = parent
 
     def run(self):
         while True:
@@ -64,6 +65,7 @@ class DownloaderThread(Thread):
         if task.callback:
             #print "process_task callback", task
             task.callback(False, task.coord, task.layer, True)
+        self.parent.queued.remove(task.coord)
 
 ## Main class used for downloading tiles.
 #
@@ -91,8 +93,9 @@ class MapDownloader:
         self.threads = []
         self.bulk_all_placed = False
         self.taskq = Queue(0)
+        self.queued = []
         for i in xrange(numthreads):
-            t = DownloaderThread(self.ctx_map, self.taskq)
+            t = DownloaderThread(self.ctx_map, self.taskq, self)
             self.threads.append(t)
             t.start()
 
@@ -110,7 +113,8 @@ class MapDownloader:
         for t in self.threads:
             print ".",
             t.join(0.1)
-        self.threads=[]
+        self.threads = []
+        self.queued = []
 
     def qsize(self):
         return self.taskq.qsize()
@@ -136,11 +140,13 @@ class MapDownloader:
                 callback(True, coord, layer)
                 return ret
 
-        self.taskq.put(
-            DownloadTask(
-                coord, layer, callback, force_update, conf
+        if not coord in self.queued:
+            self.queued.append(coord)
+            self.taskq.put(
+                DownloadTask(
+                    coord, layer, callback, force_update, conf
+                )
             )
-        )
         return ret + 1
 
     # @return number of tiles queued for download
