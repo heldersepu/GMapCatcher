@@ -65,7 +65,7 @@ class DownloaderThread(Thread):
         if task.callback:
             #print "process_task callback", task
             task.callback(False, task.coord, task.layer, True)
-        self.parent.queued.remove(task.coord)
+        self.parent.queued.remove((task.coord, task.layer))
 
 ## Main class used for downloading tiles.
 #
@@ -141,7 +141,7 @@ class MapDownloader:
                 return ret
 
         if not coord in self.queued:
-            self.queued.append(coord)
+            self.queued.append((coord, layer))
             self.taskq.put(
                 DownloadTask(
                     coord, layer, callback, force_update, conf
