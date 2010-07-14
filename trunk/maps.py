@@ -910,4 +910,5 @@ def main():
 if __name__ == "__main__":
     main()
     pid = os.getpid()
-    os.kill(pid, signal.SIGQUIT)
+    if os.name == 'posix':
+        os.kill(pid, signal.SIGQUIT)
