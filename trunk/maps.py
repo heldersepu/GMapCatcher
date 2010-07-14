@@ -168,20 +168,14 @@ class MainWindow(gtk.Window):
                     )
         dlw.show()
 
-    def visual_download(self, pointer):
+    def visual_download(self):
         force_update = self.cb_forceupdate.get_active()
         confzl = self.visual_dlconfig.get('zl', -2)
         thezl = self.get_zoom()
         sz = self.visual_dlconfig.get('sz', 4)
         rect = self.drawing_area.get_allocation()
-
-        if (pointer is None):
-            tile = self.drawing_area.center
-        else:
-            tile = mapUtils.pointer_to_tile(
-                rect, pointer, self.drawing_area.center, thezl)
-
-        coord = mapUtils.tile_to_coord(tile, thezl)
+        
+        coord = mapUtils.tile_to_coord(self.drawing_area.center, thezl)
         km_px = mapUtils.km_per_pixel(coord)
 
         self.visual_dlconfig['downloader'].bulk_download(
@@ -521,7 +515,7 @@ class MainWindow(gtk.Window):
             self.drawing_area.da_move(event.x, event.y, self.get_zoom())
             if (event.get_state() & gtk.gdk.SHIFT_MASK) != 0 and \
                         self.visual_dlconfig.get('active', False):
-                self.visual_download((event.x, event.y))
+                self.visual_download()
 
         if (self.conf.status_location == STATUS_MOUSE or
            (self.conf.status_location == STATUS_GPS and not mapGPS.available)):
