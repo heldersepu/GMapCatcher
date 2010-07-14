@@ -16,8 +16,6 @@ import mapServices
 from mapConst import *
 from gtkThread import *
 from os.path import join, isdir
-from threading import Timer
-
 
 class DLWindow(gtk.Window):
 
@@ -136,20 +134,22 @@ class DLWindow(gtk.Window):
 
     ## Start the download
     def run(self, w, init_path, repostype, strFolder):
-        def downThread():
-            self.all_placed = False
-            self.processing = True
-            for zoom in xrange(args.max_zl, args.min_zl-1, -1):
-                self.downloader.query_region_around_location(
-                    args.lat, args.lng, dlat, dlon,
-                    zoom, layer,
-                    gui_callback(self.tile_received),
-                    conf=self.conf
-                    )
-            if self.downloader.qsize()==0:
-                self.download_complete()
-            self.all_placed = True
-        self.pbar.set_text(" ")
+        # Creating our own gmap
+        self.gmap = mapServices.MapServ(init_path, repostype)
+        self.complete = []
+        self.downloader = MapDownloader(self.gmap)
+        if self.conf.map_service in NO_BULK_DOWN:
+            dialog = gtk.MessageDialog(self,
+                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                    gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
+                    ("This map service (%s) doesn't allow bulk downloading. "
+                    "If you insist on doing so, you break its term of use. \n\n"
+                    "Continue or cancel?") % (self.conf.map_service)))
+            response = dialog.run()
+            dialog.destroy()
+            if response != gtk.RESPONSE_OK:
+                self.all_done("Canceled")
+                return
         args = MapArgs()
         if self.processing: return
         try:
@@ -169,38 +169,15 @@ class DLWindow(gtk.Window):
         self.b_cancel.set_sensitive(True)
         self.b_download.set_sensitive(False)
         self.b_open.set_sensitive(False)
-
-        # Conversion of Km to coord
-        dlon = mapUtils.km_to_lon(args.width, args.lat)
-        dlat = mapUtils.km_to_lat(args.height)
-
-        # Creating our own gmap
-        self.gmap = mapServices.MapServ(init_path, repostype)
-        self.complete = []
-        self.downloader = MapDownloader(self.gmap)
-        if args.min_zl > args.max_zl:
-            args.min_zl,args.max_zl = args.max_zl,args.min_zl
-
         # Save the map info
         self.save_info(check_dir(strFolder), str(args))
-        dThread = Timer(0, downThread)
-
-        if self.conf.map_service in NO_BULK_DOWN:
-            dialog = gtk.MessageDialog(self,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
-                    ("This map services (%s) doesn't allow bulk downloading. "
-                    "If you insist on doing so, you break its term of use. \n\n"
-                    "Continue or cancel?") % (self.conf.map_service)))
-            response = dialog.run()
-            dialog.destroy()
-            if response != gtk.RESPONSE_OK:
-                self.all_done("Canceled")
-            else:
-                dThread.start()
-        else:
-            dThread.start()
-
+        self.pbar.set_text(" ")
+        self.processing = True
+        self.downloader.bulk_download((args.lat, args.lng, 15),
+                    (args.min_zl, args.max_zl), args.width, args.height,
+                    layer, gui_callback(self.tile_received),
+                    gui_callback(self.download_complete), False, self.conf)
+        self.processing = False
 
     # Open a previously saved file and auto-populate the fields
     def do_open(self, w, strPath):
@@ -230,7 +207,7 @@ class DLWindow(gtk.Window):
         self.complete.append((coord, layer))
         ncomplete = len(self.complete)
         nqueued = self.downloader.qsize() if self.downloader else 0
-        if nqueued==0 and self.all_placed:
+        if nqueued==0 and ((not self.downloader) or self.downloader.bulk_all_placed):
             self.download_complete()
             return
         self.update_pbar(
