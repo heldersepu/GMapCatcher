@@ -1,3 +1,10 @@
+July 14 2010    H.S    <HelderSepu@gmail.com>
+    * 0.7.2.0 - At revision: 881
+    * Display coordinates in StatusBar (Issue 41)
+    * Feedback to the user when maps are downloading (Issue 142)
+    * Allow google Hybrid maps (Issue 174)
+    * Manual tile download from GUI (Issue 182)
+
 July 06 2010    H.S    <HelderSepu@gmail.com>
     * 0.7.1.0 - At revision: 839
     * Change the Google terrain pattern (Issue 175)

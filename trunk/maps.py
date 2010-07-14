@@ -764,8 +764,8 @@ class MainWindow(gtk.Window):
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
+        # Q = 113,81 W = 87,119
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [113, 81, 87, 119]:
-            # Q = 113,81 W = 87,119
             self.on_delete()
             self.destroy()
         # F1 = 65471  Help
