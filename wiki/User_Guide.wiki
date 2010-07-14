@@ -27,7 +27,7 @@ http://gmapcatcher.googlecode.com/svn/wiki/snapshot.gif
 
 By using the scroll bar the resolution/scale of the map can be changed. The toolbar consists of two rows and offers the following actions and settings (first row to second row, left to right):
   * *Main configuration button*
-  Pressing the button opens a drop down menu with 5 configuration categories. Choosing one of them opens the complete programme setup where the chosen category is active.
+  Pressing the button opens a drop down menu with 5 configuration categories. Choosing one of them opens the complete programme setup where the chosen category is active. In addition there is the 'Save Path Maps' Menu item that makes the visual path download tool visible; see the description of the visual path download for details
 
   * *Drop down menu/edit field for new and stored locations*
   By using the drop down menu one of the stored locations is selected. By entering text a place with this name is searched (currently only available if online).
@@ -81,6 +81,19 @@ Actions of the final 2 items:
     * Copy Location: copy mouse location of right-click to the clipboard
     * Copy GPS: copy GPS location to the clipboard
     you may then paste locations from the clipboard as needed
+    
+== Visual path download ==
+  When the visual path download tool is visible, it describes the area that would be included in a visual download.
+  
+http://gmapcatcher.googlecode.com/svn/wiki/visual_download.png
+  
+    * Shift+Scroll changes the size of the area
+    * Ctrl+Scroll changes the minimum zoom level to download
+  
+  When you Shift+drag the map, then the area included in the visual download zone is queued for download, from the zoom level below the current view zoom level, to the visual download's minimum zoom level as set
+  
+  One main function of the tool is to allow you to download close-up maps along a path; it gives feedback of the number of tiles downloaded/requested while downloading
+
 
 = Keyboard shortcuts =
 
@@ -90,6 +103,7 @@ Actions of the final 2 items:
 ||  F2            ||  Export map to image ||
 ||  F4            ||  Import markers from KML file ||
 ||  F5            ||  Refresh ||
+||  F6            ||  Hide/Show the visual path download zone ||
 ||  F8            ||  Hide/Show the markers ||
 ||  F12           ||  Hide/Show all buttons ||
 ||  F11           ||  Full screen   ||
