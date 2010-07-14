@@ -561,12 +561,13 @@ class MainWindow(gtk.Window):
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
         zl = self.get_zoom()
-        self.downloading += self.downloader.query_region_around_point(
+        self.downloader.query_region_around_point(
             self.drawing_area.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
             online=online, force_update=force_update,
             conf=self.conf,
         )
+        self.downloading = self.downloader.qsize()
         self.draw_overlay()
 
     def scroll_cb(self, widget, event):
@@ -610,7 +611,7 @@ class MainWindow(gtk.Window):
 
     def tile_received(self, tile_coord, layer, download=False):
         if download:
-            self.downloading -= 1
+            self.downloading = self.downloader.qsize()
             if self.downloading <= 0:
                 self.drawing_area.repaint()
         hybridsat = (self.layer == LAYER_HYBRID and layer == LAYER_SATELLITE)
