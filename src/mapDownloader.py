@@ -140,7 +140,7 @@ class MapDownloader:
                 callback(True, coord, layer)
                 return ret
 
-        if not coord in self.queued:
+        if not (coord,layer) in self.queued:
             self.queued.append((coord, layer))
             self.taskq.put(
                 DownloadTask(
