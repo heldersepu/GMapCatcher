@@ -176,7 +176,7 @@ class DLWindow(gtk.Window):
         self.downloader.bulk_download((args.lat, args.lng, 15),
                     (args.min_zl, args.max_zl), args.width, args.height,
                     layer, gui_callback(self.tile_received),
-                    gui_callback(self.download_complete), False, self.conf)
+                    self.download_complete, False, self.conf)
         self.processing = False
 
     # Open a previously saved file and auto-populate the fields
