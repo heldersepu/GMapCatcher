@@ -8,6 +8,8 @@ import src.mapGPS as mapGPS
 import src.mapUtils as mapUtils
 import src.mapTools as mapTools
 import src.mapPixbuf as mapPixbuf
+import os
+import signal
 
 from src.mapConst import *
 from src.gtkThread import *
@@ -165,6 +167,29 @@ class MainWindow(gtk.Window):
                         self.layer, self.conf
                     )
         dlw.show()
+
+    def visual_download(self, pointer):
+        force_update = self.cb_forceupdate.get_active()
+        confzl = self.visual_dlconfig.get('zl', -2)
+        thezl = self.get_zoom()
+        sz = self.visual_dlconfig.get('sz', 4)
+        rect = self.drawing_area.get_allocation()
+
+        if (pointer is None):
+            tile = self.drawing_area.center
+        else:
+            tile = mapUtils.pointer_to_tile(
+                rect, pointer, self.drawing_area.center, thezl)
+
+        coord = mapUtils.tile_to_coord(tile, thezl)
+        km_px = mapUtils.km_per_pixel(coord)
+
+        self.visual_dlconfig['downloader'].bulk_download(
+                    coord, (thezl - 1, thezl + confzl),
+                    km_px * rect.width / sz, km_px * rect.height / sz,
+                    self.layer, gui_callback(self.visualdl_cb),
+                    self.visualdl_update, force_update, self.conf)
+        self.visualdl_update()
 
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self, coord, mode):
@@ -506,6 +531,9 @@ class MainWindow(gtk.Window):
                                 (coord[0], coord[1]))
 
     def visual_dltool_toggled(self, menuitem):
+        if not self.visual_dlconfig.get('downloader', False):
+            self.visual_dlconfig['downloader'] = MapDownloader(self.ctx_map)
+
         if (menuitem.get_active()):
             self.visual_dlconfig['active'] = True
             self.draw_overlay()
@@ -513,32 +541,18 @@ class MainWindow(gtk.Window):
             self.visual_dlconfig['active'] = False
             self.drawing_area.repaint()
             
-    def visual_download(self, pointer):
-        online = not self.cb_offline.get_active()
-        force_update = self.cb_forceupdate.get_active()
-        confzl = self.visual_dlconfig.get('zl', -2)
-        thezl = self.get_zoom()
-        sz = self.visual_dlconfig.get('sz', 4)
-        rect = self.drawing_area.get_allocation()
-        for zl in reversed(range(max(thezl + confzl, -2), max(thezl, -2))):
-            self.visualdl_add(self.downloader.query_region_around_point(
-                    mapUtils.tile_adjustEx(zl, self.drawing_area.center[0], 
-                            (self.drawing_area.center[1][0],
-                            self.drawing_area.center[1][1])),
-                    (rect.width / sz, rect.height / sz), zl,
-                    self.layer, gui_callback(self.visualdl_cb),
-                    online=online, force_update=force_update, conf=self.conf))
-
     def visualdl_cb(self, *args, **kwargs):
-        self.visual_dlconfig['recd'] = self.visual_dlconfig.get('recd', 0) + 1
+        self.visualdl_update(1)
+
+    def visualdl_update(self, recd=0):
+        if self.visual_dlconfig.get('downloader', False):
+            temp = self.visual_dlconfig.get('recd', 0)
+            self.visual_dlconfig['qd'] = \
+                    self.visual_dlconfig['downloader'].qsize() + temp + recd
+            self.visual_dlconfig['recd'] = temp + recd
         if self.visual_dlconfig.get('recd', 0) >= \
                 self.visual_dlconfig.get('qd', 0):
-            self.visual_dlconfig['recd'] = 0
-            self.visual_dlconfig['qd'] = 0
-        self.drawing_area.repaint()
-
-    def visualdl_add(self, n):
-        self.visual_dlconfig['qd'] = self.visual_dlconfig.get('qd', 0) + n
+            self.visual_dlconfig['qd'], self.visual_dlconfig['recd'] = 0,0
         self.drawing_area.repaint()
 
     def expose_cb(self, drawing_area, event):
@@ -762,6 +776,9 @@ class MainWindow(gtk.Window):
         elif event.keyval == 65475:
             self.visual_dlconfig['active'] = \
                 not self.visual_dlconfig.get('active', False)
+            if not self.visual_dlconfig.get('downloader', False):
+                self.visual_dlconfig['downloader'] = \
+                        MapDownloader(self.ctx_map)
             self.drawing_area.repaint()
         # F8 = 65477
         elif event.keyval == 65477:
@@ -788,10 +805,14 @@ class MainWindow(gtk.Window):
         if mapGPS.available:
             self.gps.stop_all()
         self.downloader.stop_all()
+        del self.downloader
+        if self.visual_dlconfig.get('downloader', False):
+            self.visual_dlconfig['downloader'].stop_all()
         self.ctx_map.finish()
         # If there was an update show it
         if self.update:
             self.update.finish()
+        gtk.gdk.threads_leave()
         return False
 
     def enable_gps(self):
@@ -869,3 +890,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+    pid = os.getpid()
+    os.kill(pid, signal.SIGQUIT)
