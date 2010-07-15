@@ -350,5 +350,6 @@ Public License instead of this License.
 """)
         self.set_website(WEB_ADDRESS)
         self.set_authors(AUTHORS)
+        self.set_documenters(AUTHORS)
         self.set_program_name(NAME)
         self.run()
