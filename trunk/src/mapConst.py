@@ -6,6 +6,8 @@ NAME = "GMapCatcher"
 VERSION = "0.7.2.0"
 VERSION_NAME = ""
 WEB_ADDRESS = "http://code.google.com/p/gmapcatcher/"
+# add names here! :-)
+AUTHORS = ["Helder Sepulveda", "Maxim Razin", "Mark Benjamin"]
 
 GOOGLE = 0
 OSM = 1
@@ -58,8 +60,9 @@ TILES_HEIGHT = 256
 NR_MTS = 4
 SEPARATOR = "\t"
 TOOLS_MENU = ["Settings", "Edit locations", "Edit markers",
-              "Change Theme", "GPS Options", " About ", ""]
-TOOLS_MENU_PLUS = "Save Path Maps"
+              "Change Theme", "GPS Options", ""]
+TOOLS_MENU_PLUS_CREDITS = " About "
+TOOLS_MENU_PLUS_VISUAL_DL = "Save Path Maps"
 
 ZOOM_IN = 0
 ZOOM_OUT = 1
@@ -86,6 +89,8 @@ STATUS_GPS = 1
 STATUS_MOUSE = 2
 STATUS_TYPE = ["None", "GPS", "Mouse"]
 
+SAVE_NONE = 0
+SAVE_AT_CLOSE = 1
 
 GPS_IMG_SIZE = (48, 48)
 
