@@ -7,7 +7,7 @@ class OurCredits(gtk.AboutDialog):
         gtk.AboutDialog.__init__(self)
         self.set_name(NAME)
         self.set_version(VERSION)
-        self.set_copyright("&copy; 2010 gmapcatcher")
+        self.set_copyright("© 2008-2010 the gmapcatcher team")
         self.set_license("""                    GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
 
