@@ -901,6 +901,11 @@ class MainWindow(gtk.Window):
         self.left_panel = self.__create_left_paned(self.conf.init_zoom)
         self.bottom_panel = self.__create_bottom_paned()
         self.status_bar = self.__create_statusbar()
+        
+        try:
+            self.set_icon_from_file('images/map.svg')
+        except Exception:
+            print "could not load ico"
 
         vpaned = gtk.VPaned()
         vpaned.pack1(self.top_panel, False, False)
