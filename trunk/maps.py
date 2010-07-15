@@ -903,7 +903,7 @@ class MainWindow(gtk.Window):
         self.status_bar = self.__create_statusbar()
         
         try:
-            self.set_icon_from_file('images/map.svg')
+            self.set_icon_from_file('images/map.png')
         except Exception:
             print "could not load ico"
 
