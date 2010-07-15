@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=GMapCatcher
+Version=0.7.2
+GenericName=Offline Map Viewer
+Comment=Download maps, view whenever you need to, view gps
+Type=Application
+Exec=/home/mark/src/gmapcommit/mapcatcher
+Terminal=false
+StartupNotify=true
+Icon=/home/mark/src/gmapcommit/images/map.png
