@@ -123,6 +123,10 @@ class DLWindow(gtk.Window):
 
         self.set_title("GMapCatcher download")
         self.set_border_width(10)
+        try:
+            self.set_icon_from_file('images/map.svg')
+        except Exception:
+            print "could not load ico for download window"
 
         self.complete=[]
         self.processing=False
