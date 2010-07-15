@@ -1,0 +1,5 @@
+mapcatcher (0.7.2.0-1) unstable; urgency=low
+
+  * Initial debian release up to date at svn revision 881
+
+ -- Helder Sepulveda <heldersepu@gmail.com>  Thu, 15 Jul 2010 17:31:40 +0200
