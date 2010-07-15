@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## @package src.customWidgets
 # This is a collection of Custom Widgets
 
@@ -95,13 +96,13 @@ def myToolTip(widget, x, y, keyboard_mode, tooltip, title, desc, filename=None):
 ## Create a gtk Menu with the given items
 def gtk_menu(listItems, activate_action):
     myMenu = gtk.Menu()
-    for str in listItems:
+    for thestr in listItems:
         # An empty item inserts a separator
-        if str == "":
+        if thestr == "":
             menu_items = gtk.MenuItem()
         else:
-            menu_items = gtk.MenuItem(str)
+            menu_items = gtk.MenuItem(thestr)
         myMenu.append(menu_items)
-        menu_items.connect("activate", activate_action, str)
+        menu_items.connect("activate", activate_action, thestr)
         menu_items.show()
     return myMenu

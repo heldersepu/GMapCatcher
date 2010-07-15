@@ -23,6 +23,7 @@ from src.mapDownloader import MapDownloader
 from src.customWidgets import myToolTip, gtk_menu, FileChooser, lbl, _frame, _myEntry
 from src.xmlUtils import kml_to_markers
 from src.widDrawingArea import DrawingArea
+from src.widCredits import OurCredits
 
 class MainWindow(gtk.Window):
 
@@ -268,7 +269,11 @@ class MainWindow(gtk.Window):
         button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
         button.set_size_request(34, -1)
         menu = gtk_menu(TOOLS_MENU, self.menu_tools)
-        self.visual_dltool = gtk.CheckMenuItem(TOOLS_MENU_PLUS)
+        self.credits_menuitem = gtk.MenuItem(TOOLS_MENU_PLUS_CREDITS)
+        menu.append(self.credits_menuitem)
+        self.credits_menuitem.connect('activate', self.view_credits)
+        self.credits_menuitem.show()
+        self.visual_dltool = gtk.CheckMenuItem(TOOLS_MENU_PLUS_VISUAL_DL)
         menu.append(self.visual_dltool)
         self.visual_dltool.connect('toggled', self.visual_dltool_toggled)
         self.visual_dltool.show()
@@ -540,6 +545,10 @@ class MainWindow(gtk.Window):
             coord = self.pointer_to_world_coord((event.x, event.y))
             self.status_bar.push(self.status_bar_id, "Latitude=%.6f Longitude=%.6f" %
                                 (coord[0], coord[1]))
+
+    def view_credits(self, menuitem):
+        w = OurCredits()
+        w.destroy()
 
     def visual_dltool_toggled(self, menuitem):
         if not self.visual_dlconfig.get('downloader', False):
@@ -820,11 +829,12 @@ class MainWindow(gtk.Window):
 
     ## Final actions before main_quit
     def on_delete(self, *args):
+        sz = self.get_size()
+        location = self.get_position()
         self.hide()
         if mapGPS.available:
             self.gps.stop_all()
         self.downloader.stop_all()
-        del self.downloader
         if self.visual_dlconfig.get('downloader', False):
             self.visual_dlconfig['downloader'].stop_all()
         self.ctx_map.finish()
@@ -832,6 +842,20 @@ class MainWindow(gtk.Window):
         if self.update:
             self.update.finish()
         gtk.gdk.threads_leave()
+        if self.conf.save_at_close == SAVE_AT_CLOSE:
+            # this accounts for when the oneDirPerMap setting has recently changed
+            if self.conf.oneDirPerMap or self.layer <= LAYER_HYBRID:
+                self.conf.save_layer = self.layer
+            else:
+                self.conf.save_layer = MAP_SERVICES[self.conf.layer]['ID']
+            self.conf.save_width = sz[0]
+            self.conf.save_height = sz[1]
+            self.conf.save_hlocation = location[0]
+            self.conf.save_vlocation = location[1]
+            try:
+                self.conf.save()
+            except Exception:
+                print "could not save all of the most recent config settings"
         return False
 
     def enable_gps(self):
@@ -849,7 +873,10 @@ class MainWindow(gtk.Window):
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path, self.conf.repository_type)
         self.downloader = MapDownloader(self.ctx_map)
-        self.layer = LAYER_MAP
+        if self.conf.save_at_close == SAVE_AT_CLOSE:
+            self.layer = self.conf.save_layer
+        else:
+            self.layer = LAYER_MAP
         self.background = []
         self.foreground = []
         self.current_gps = False
@@ -891,12 +918,16 @@ class MainWindow(gtk.Window):
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 450)
-        self.set_default_size(self.conf.init_width, self.conf.init_height)
+        if self.conf.save_at_close == SAVE_AT_CLOSE:
+            self.set_default_size(self.conf.save_width, self.conf.save_height)
+        else:
+            self.set_default_size(self.conf.init_width, self.conf.init_height)
         self.set_completion()
         self.default_entry()
         self.drawing_area.center = self.conf.init_center
         self.show_all()
-
+        if self.conf.save_at_close == SAVE_AT_CLOSE:
+            self.move(self.conf.save_hlocation, self.conf.save_vlocation)
         if self.conf.status_location == STATUS_NONE:
             self.status_bar.hide()
         self.bottom_panel.hide()
@@ -910,5 +941,8 @@ def main():
 if __name__ == "__main__":
     main()
     pid = os.getpid()
+    # send ourselves sigquit, particularly necessary in posix as
+    # download threads may be holding system resources - python
+    # signals in windows implemented in python 2.7
     if os.name == 'posix':
         os.kill(pid, signal.SIGQUIT)

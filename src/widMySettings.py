@@ -47,18 +47,31 @@ class MySettings():
             hbox.pack_start(lbl(" )) "), False)
             return _frame(" Center ", hbox)
 
-        def _status(conf):
+        def _status_save(conf):
             def statuscombo(active_type_id):
                 hbox = gtk.HBox(False, 10)
                 hbox.pack_start( \
-                    lbl(" Select a new option for the status bar. "))
+                    lbl(" Select status bar type "))
                 self.cmb_status_type = gtk.combo_box_new_text()
                 for strType in STATUS_TYPE:
                     self.cmb_status_type.append_text(strType)
                 self.cmb_status_type.set_active(active_type_id)
                 hbox.pack_start(self.cmb_status_type)
                 return hbox
-            return _frame(" Location Status ", statuscombo(conf.status_location))
+            def save_checkbox(active_bool):
+                self.save_at_close_button = \
+                        gtk.CheckButton(" Save View Params ")
+                self.save_at_close_button.set_active(active_bool)
+                return self.save_at_close_button
+            status = _frame(" Location Status ", 
+                            statuscombo(conf.status_location))
+            save = _frame(" Close Settings ", 
+                          save_checkbox(conf.save_at_close == SAVE_AT_CLOSE))
+            hbox = gtk.HBox(False, 10)
+            hbox.pack_start(save)
+            hbox.pack_start(status)
+            return hbox
+            
 
         def custom_path(conf):
             def repository_type_combo(repos_type_id):
@@ -129,6 +142,7 @@ class MySettings():
             conf.init_height = self.s_height.get_value_as_int()
             conf.language = self.s_language.get_active_text()
             conf.status_location = self.cmb_status_type.get_active()
+            conf.save_at_close = self.save_at_close_button.get_active()
 
             if( os.pathsep == ';' ):
                 # we have windows OS, filesystem is case insensitive
@@ -193,7 +207,8 @@ class MySettings():
             self.s_height.set_value(dsize[1])
 
         def key_press(widget, event):
-            if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
+            if (event.state & gtk.gdk.CONTROL_MASK) != 0 and \
+                    event.keyval in [83, 115]:
                 # S = 83, 115
                 btn_save_clicked(0)
 
@@ -219,7 +234,7 @@ class MySettings():
 
         vbox1 = gtk.VBox(False, 10)
         vbox1.set_border_width(5)
-        vbox1.pack_start(_status(conf))
+        vbox1.pack_start(_status_save(conf))
         vbox1.pack_start(custom_path(conf))
         vbox.pack_start(vbox1, False)
 

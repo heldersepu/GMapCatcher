@@ -12,7 +12,7 @@ from mapUtils import str_to_tuple
 class MapConf():
     ## Returns the Path to the configuration file
     def get_configpath(self):
-        # the config file most be in the DEFAULT_PATH
+        # the config file must be found at DEFAULT_PATH
         configpath = os.path.expanduser(DEFAULT_PATH)
         fileUtils.check_dir(configpath)
         configpath = os.path.join(configpath, 'gmapcatcher.conf')
@@ -48,6 +48,12 @@ class MapConf():
         config.set(SECTION_INIT, 'language', self.language)
         config.set(SECTION_INIT, 'oneDirPerMap', self.oneDirPerMap)
         config.set(SECTION_INIT, 'status_location', self.status_location)
+        config.set(SECTION_INIT, 'save_at_close', self.save_at_close)
+        config.set(SECTION_INIT, 'save_layer', self.save_layer)
+        config.set(SECTION_INIT, 'save_hlocation', self.save_hlocation)
+        config.set(SECTION_INIT, 'save_vlocation', self.save_vlocation)
+        config.set(SECTION_INIT, 'save_width', self.save_width)
+        config.set(SECTION_INIT, 'save_height', self.save_height)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -103,10 +109,21 @@ class MapConf():
         self.cloudMade_styleID = read_config('cloudmade_styleid', 1, int)
         ## language setting, default is 'en'
         self.language = read_config('language', 'en', str)
-        ## language setting, default is 'en'
+        ## oneDirPerMap setting, default is False
         self.oneDirPerMap = read_config('oneDirPerMap', 0, int)
         ## status setting, default is STATUS_NONE
         self.status_location = read_config('status_location', 0, int)
+        ## save width/height/layer/location at close, default is SAVE_AT_CLOSE
+        self.save_at_close = read_config('save_at_close', SAVE_AT_CLOSE, int)
+        ## layer when saved at close
+        self.save_layer = read_config('save_layer', LAYER_MAP, int)
+        ## location when saved at close
+        self.save_hlocation = read_config('save_hlocation', 0, int)
+        self.save_vlocation = read_config('save_vlocation', 0, int)
+        ## width when saved at close
+        self.save_width = read_config('save_width', 550, int)
+        ## height when saved at close
+        self.save_height = read_config('save_height', 450, int)
 
     ## Write the configuration to the default file
     def save(self):
