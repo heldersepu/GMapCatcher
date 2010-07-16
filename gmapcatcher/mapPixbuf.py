@@ -5,7 +5,7 @@
 
 import gtk
 from mapConst import *
-from os.path import join, dirname, abspath, exists
+from os.path import join, dirname, abspath, exists, isfile
 
 ## Absolute Path to the images directory
 if 'library.zip' in __file__:
@@ -13,7 +13,7 @@ if 'library.zip' in __file__:
 else:
     _prefix = abspath(join(dirname(__file__), "../images"))
     
-if not os.path.is_file(join(_prefix, 'missing.png')):
+if not isfile(join(_prefix, 'missing.png')):
     _prefix = '/usr/share/pixmaps/gmapcatcher'
 
 def ico():
