@@ -69,10 +69,12 @@ rm -r -f $dirname/common
 if [ "$1" = "lin" -o "$1" = "refreshdebian" ]
 then
     rm -r -f $dirname/WindowsMobile
+    mv $dirname/maps.py $dirname/mapcatcher
 fi
 rm -r -f $dirname/debian
 
 find . -name \.svn | xargs rm -r -f
+
 
 # Create the tar.gz file
 if [ "$1" = "lin" -o "$1" = "refreshdebian" ]
@@ -109,6 +111,9 @@ then
     cd $dirname
     mkdir debian
     cp -r $MAINDIR/debian/* debian
+    cd debian
+    find . -name \.svn | xargs rm -r -f
+    cd ..
     debuild -us -uc
     cd ..
     cp *.deb $MAINDIR

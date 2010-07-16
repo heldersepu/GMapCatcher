@@ -8,33 +8,32 @@ import os
 
 if os.name == "posix":
     ico = "images/map.png"
-    theoptions = None
-    thedatafiles = [('share/doc/mapcatcher', ['README', 'Changelog'])]
+    setup(
+        name = NAME,
+        description = 'Offline Map Viewer',
+        version = VERSION,
+        url = WEB_ADDRESS,
+        data_files = [('share/doc/mapcatcher', ['README', 'Changelog']),
+                    ('share/applications', ['gmapcatcher.desktop'])
+        ],
+        scripts = ['mapcatcher']
+    )
 else:
-    ico = "images\maps.ico"
     import py2exe
-    theoptions = {
-        'py2exe': {
-            'packages':'encodings',
-            'includes': 'cairo, pango, pangocairo, atk, gobject',
+    setup(
+        name = NAME,
+        description = 'Offline Google Map Viewer',
+        version = VERSION,
+        url = WEB_ADDRESS,
+        windows = [{
+            'script': 'maps.py',
+            'icon_resources': [(1, "images\maps.ico")],
+        }],
+        options = {
+            'py2exe': {
+                'packages':'encodings',
+                'includes': 'cairo, pango, pangocairo, atk, gobject',
             }
-        }
-    thedatafiles = ['Changelog', 'README']
-
-setup(
-    name = NAME,
-    description = 'Offline Google Map Viewer',
-    version = VERSION,
-    url = WEB_ADDRESS,
-
-    windows = [
-                  {
-                      'script': 'maps.py',
-                      'icon_resources': [(1, ico)],
-                  }
-              ],
-
-    options = theoptions,
-
-    data_files = thedatafiles
-)
+        },
+        data_files = ['Changelog', 'README']
+    )
