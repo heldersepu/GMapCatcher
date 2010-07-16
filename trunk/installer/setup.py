@@ -17,7 +17,7 @@ if os.name == "posix":
                     ('share/applications', ['gmapcatcher.desktop']),
                     ('share/man/man1', 
                         ['man/mapcatcher.1.gz', 'man/mapdownloader.1.gz']),
-                    ('share/pixmaps', ['images/map.png'])
+                    ('share/pixmaps', ['images/mapcatcher.png'])
         ],
         scripts = ['mapcatcher', 'mapdownloader'],
         packages = ['gmapcatcher']
