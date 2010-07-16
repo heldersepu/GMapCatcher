@@ -13,6 +13,13 @@ if 'library.zip' in __file__:
 else:
     _prefix = abspath(join(dirname(__file__), "../images"))
 
+def ico():
+    try:
+        pix_ico = gtk.gdk.pixbuf_new_from_file(join(_prefix, 'map.png'))
+    except Exception:
+        pix_ico = False
+    return pix_ico
+
 ## Get the Pixbuf from missing.png
 def missing():
     try:
