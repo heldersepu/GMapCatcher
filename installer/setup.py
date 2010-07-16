@@ -20,7 +20,9 @@ if os.name == "posix":
                     ('share/pixmaps', ['images/mapcatcher.png'])
         ],
         scripts = ['mapcatcher', 'mapdownloader'],
-        packages = ['gmapcatcher']
+        packages = ['gmapcatcher', 'gmapcatcher.mapServers', 
+                    'gmapcatcher.pyGPSD', 'gmapcatcher.pyGPSD.nmea',
+                    'gmapcatcher.pyGPSD.nmea.serial']
     )
 else:
     import py2exe
