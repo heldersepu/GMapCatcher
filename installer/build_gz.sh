@@ -70,7 +70,9 @@ if [ "$1" = "lin" -o "$1" = "refreshdebian" ]
 then
     rm -r -f $dirname/WindowsMobile
     mv $dirname/maps.py $dirname/mapcatcher
+    mv $dirname/download.py $dirname/mapdownloader
     gzip -9 $dirname/man/mapcatcher.1
+    gzip -9 $dirname/man/mapdownloader.1
 fi
 rm -r -f $dirname/debian
 
