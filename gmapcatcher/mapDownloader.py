@@ -65,7 +65,11 @@ class DownloaderThread(Thread):
         if task.callback:
             #print "process_task callback", task
             task.callback(False, task.coord, task.layer, True)
-        self.parent.queued.remove((task.coord, task.layer))
+        try:
+            self.parent.queued.remove((task.coord, task.layer))
+        except ValueError:
+            True
+# seems to happen at completion - tuple not in list
 
 ## Main class used for downloading tiles.
 #
