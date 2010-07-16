@@ -114,7 +114,7 @@ class MapConf():
         ## status setting, default is STATUS_NONE
         self.status_location = read_config('status_location', 0, int)
         ## save width/height/layer/location at close, default is SAVE_AT_CLOSE
-        self.save_at_close = read_config('save_at_close', SAVE_AT_CLOSE, int)
+        self.save_at_close = read_config('save_at_close', True, bool)
         ## layer when saved at close
         self.save_layer = read_config('save_layer', LAYER_MAP, int)
         ## location when saved at close
