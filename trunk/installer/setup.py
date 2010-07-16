@@ -15,9 +15,10 @@ if os.name == "posix":
         url = WEB_ADDRESS,
         data_files = [('share/doc/mapcatcher', ['README', 'Changelog']),
                     ('share/applications', ['gmapcatcher.desktop']),
-                    ('share/man/man1', ['man/mapcatcher.1.gz'])
+                    ('share/man/man1', 
+                        ['man/mapcatcher.1.gz', 'man/mapdownloader.1.gz'])
         ],
-        scripts = ['mapcatcher']
+        scripts = ['mapcatcher', 'mapdownloader']
     )
 else:
     import py2exe
