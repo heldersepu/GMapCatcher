@@ -14,7 +14,8 @@ if os.name == "posix":
         version = VERSION,
         url = WEB_ADDRESS,
         data_files = [('share/doc/mapcatcher', ['README', 'Changelog']),
-                    ('share/applications', ['gmapcatcher.desktop'])
+                    ('share/applications', ['gmapcatcher.desktop']),
+                    ('share/man/man1', ['man/mapcatcher.1.gz'])
         ],
         scripts = ['mapcatcher']
     )
