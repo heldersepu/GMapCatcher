@@ -66,7 +66,7 @@ class MySettings():
             status = _frame(" Location Status ", 
                             statuscombo(conf.status_location))
             save = _frame(" Close Settings ", 
-                          save_checkbox(conf.save_at_close == SAVE_AT_CLOSE))
+                          save_checkbox(conf.save_at_close))
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(save)
             hbox.pack_start(status)

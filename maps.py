@@ -332,7 +332,7 @@ class MainWindow(gtk.Window):
         else:
             for w in LAYER_NAMES:
                 cmb_layer.append_text(w)
-        cmb_layer.set_active(LAYER_MAP)
+        cmb_layer.set_active(self.layer)
         cmb_layer.connect('changed',self.layer_changed)
         self.cmb_layer = cmb_layer
         bbox.pack_start(cmb_layer, False, False, 0)
@@ -845,12 +845,12 @@ class MainWindow(gtk.Window):
         if self.update:
             self.update.finish()
         gtk.gdk.threads_leave()
-        if self.conf.save_at_close == SAVE_AT_CLOSE:
+        if self.conf.save_at_close:
             # this accounts for when the oneDirPerMap setting has recently changed
             if self.conf.oneDirPerMap or self.layer <= LAYER_HYBRID:
                 self.conf.save_layer = self.layer
             else:
-                self.conf.save_layer = MAP_SERVICES[self.conf.layer]['ID']
+                self.conf.save_layer = MAP_SERVICES[self.layer]['ID']
             self.conf.save_width = sz[0]
             self.conf.save_height = sz[1]
             self.conf.save_hlocation = location[0]
@@ -876,7 +876,7 @@ class MainWindow(gtk.Window):
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf.init_path, self.conf.repository_type)
         self.downloader = MapDownloader(self.ctx_map)
-        if self.conf.save_at_close == SAVE_AT_CLOSE:
+        if self.conf.save_at_close:
             self.layer = self.conf.save_layer
         else:
             self.layer = LAYER_MAP
@@ -925,7 +925,7 @@ class MainWindow(gtk.Window):
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 450)
-        if self.conf.save_at_close == SAVE_AT_CLOSE:
+        if self.conf.save_at_close:
             self.set_default_size(self.conf.save_width, self.conf.save_height)
         else:
             self.set_default_size(self.conf.init_width, self.conf.init_height)
@@ -933,7 +933,7 @@ class MainWindow(gtk.Window):
         self.default_entry()
         self.drawing_area.center = self.conf.init_center
         self.show_all()
-        if self.conf.save_at_close == SAVE_AT_CLOSE:
+        if self.conf.save_at_close:
             self.move(self.conf.save_hlocation, self.conf.save_vlocation)
         if self.conf.status_location == STATUS_NONE:
             self.status_bar.hide()
