@@ -18,7 +18,9 @@ if os.name == "posix":
                     ('share/man/man1', 
                         ['man/mapcatcher.1.gz', 'man/mapdownloader.1.gz'])
         ],
-        scripts = ['mapcatcher', 'mapdownloader']
+        scripts = ['mapcatcher', 'mapdownloader'],
+        package_dir = {'gmapcatcher' : 'src'},
+        packages = ['gmapcatcher']
     )
 else:
     import py2exe
