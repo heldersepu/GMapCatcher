@@ -1,0 +1,125 @@
+# -*- coding: utf-8 -*-
+## @package gmapcatcher.widChangeTheme
+# Change Theme widget used to change the GTK theme.
+# Displayed inside a tab in MapTools.
+
+import gtk
+import fileUtils
+from mapConst import *
+from customWidgets import _frame, lbl
+
+## This widget lets the user change the visual theme
+class ChangeTheme():
+    ## Load the items into the Combo box
+    def load_combo(self, myCombo):
+        listThemes = fileUtils.get_themes()
+        actualTheme = fileUtils.read_gtkrc()
+        intTheme = 0
+        model = myCombo.get_model()
+        model.clear()
+        myCombo.set_model(None)
+        for l in range(len(listThemes)):
+            model.append([listThemes[l]])
+            if listThemes[l] == actualTheme:
+                intTheme = l
+        myCombo.set_model(model)
+        myCombo.set_active(intTheme)
+
+    def btn_save_clicked(self, button, conf):
+        conf.show_cross = int(self.cb_show_cross.get_active())
+        conf.oneDirPerMap = int(self.cb_oneDirPerMap.get_active())
+        conf.map_service = MAP_SERVERS[self.cmb_service.get_active()]
+        conf.save()
+        if self.cmb_themes.get_model():
+            cmb_text = self.cmb_themes.get_active_text()
+            if cmb_text:
+                fileUtils.write_gtkrc(cmb_text)    ## All the buttons at the bottom
+
+    def __action_buttons(self, conf):
+        def btn_revert_clicked(button, conf):
+            self.load_combo(self.cmb_themes)
+            self.cb_show_cross.set_active(conf.show_cross)
+            intActive = 0
+            for intPos in range(len(MAP_SERVERS)):
+                if MAP_SERVERS[intPos] == conf.map_service:
+                    intActive = intPos
+            self.cmb_service.set_active(intActive)
+
+        bbox = gtk.HButtonBox()
+        bbox.set_layout(gtk.BUTTONBOX_END)
+        bbox.set_border_width(10)
+        bbox.set_spacing(60)
+
+        button = gtk.Button(stock=gtk.STOCK_REVERT_TO_SAVED)
+        button.connect('clicked', btn_revert_clicked, conf)
+        bbox.add(button)
+
+        button = gtk.Button(stock=gtk.STOCK_SAVE)
+        button.connect('clicked', self.btn_save_clicked, conf)
+        bbox.add(button)
+        return bbox
+
+    ## Option to display a cross in the center of the map
+    def cross_check_box(self, show_cross):
+        self.cb_show_cross = gtk.CheckButton('Show a "+" in the center of the map')
+        self.cb_show_cross.set_active(show_cross)
+        return _frame(" Mark center of the map ", self.cb_show_cross)
+
+    ## ComboBox to change the map service
+    def service_combo(self, map_service, oneDirPerMap):
+        vbox = gtk.VBox(False, 5)
+        hbox = gtk.HBox(False, 10)
+        hbox.pack_start(lbl("Select your favorite map service: "))
+        self.cmb_service = gtk.combo_box_new_text()
+        intActive = 0
+        for intPos in range(len(MAP_SERVERS)):
+            self.cmb_service.append_text(MAP_SERVERS[intPos])
+            if MAP_SERVERS[intPos] == map_service:
+                intActive = intPos
+        self.cmb_service.set_active(intActive)
+        hbox.pack_start(self.cmb_service)
+        vbox.pack_start(hbox)
+
+        # Check box for option to create a dir per Map service
+        hbox = gtk.HBox()
+        self.cb_oneDirPerMap = gtk.CheckButton( \
+            "Use a different folder per Map Service (Relaunch required)")
+        self.cb_oneDirPerMap.set_active(oneDirPerMap)
+        hbox.pack_start(self.cb_oneDirPerMap)
+        vbox.pack_start(hbox)
+        return _frame(" Map service ", vbox)
+
+    def key_press(self, widget, event, conf):
+        if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
+            # S = 83, 115
+            self.btn_save_clicked(0, conf)
+
+    ## Put all the ChangeTheme Widgets together
+    def show(self, conf):
+        def inner_box():
+            vbox = gtk.VBox(False, 10)
+            vbox.pack_start(self.cross_check_box(conf.show_cross))
+            vbox.pack_start(self.service_combo(conf.map_service, conf.oneDirPerMap))
+            hbox = gtk.HBox(False, 10)
+            hbox.set_border_width(20)
+            hbox.pack_start(vbox)
+            return hbox
+
+        vbox = gtk.VBox(False, 10)
+        vbox.set_border_width(10)
+        hbox = gtk.HBox(False, 10)
+        hbox.pack_start(lbl("Select new theme and restart GMapCatcher."))
+        self.cmb_themes = gtk.combo_box_new_text()
+
+        self.load_combo(self.cmb_themes)
+        hbox.pack_start(self.cmb_themes)
+        vbox.pack_start(_frame(" Available themes ", hbox), False)
+        vbox.pack_start(inner_box(), False)
+
+        hpaned = gtk.VPaned()
+        hpaned.pack1(vbox, True, True)
+        buttons = self.__action_buttons(conf)
+        hpaned.connect('key-press-event', self.key_press, conf)
+        hpaned.pack2(buttons, False, False)
+        return hpaned
+

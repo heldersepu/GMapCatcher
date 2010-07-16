@@ -4,26 +4,26 @@
 ## @package maps
 # This is the Main Window
 
-import src.mapGPS as mapGPS
-import src.mapUtils as mapUtils
-import src.mapTools as mapTools
-import src.mapPixbuf as mapPixbuf
+import gmapcatcher.mapGPS as mapGPS
+import gmapcatcher.mapUtils as mapUtils
+import gmapcatcher.mapTools as mapTools
+import gmapcatcher.mapPixbuf as mapPixbuf
 import os
 import signal
 
-from src.mapConst import *
-from src.gtkThread import *
-from src.mapConf import MapConf
-from src.mapMark import MyMarkers
-from src.DLWindow import DLWindow
-from src.mapUpdate import CheckForUpdates
-from src.mapServices import MapServ
-from src.customMsgBox import error_msg
-from src.mapDownloader import MapDownloader
-from src.customWidgets import myToolTip, gtk_menu, FileChooser, lbl, _frame, _myEntry
-from src.xmlUtils import kml_to_markers
-from src.widDrawingArea import DrawingArea
-from src.widCredits import OurCredits
+from gmapcatcher.mapConst import *
+from gmapcatcher.gtkThread import *
+from gmapcatcher.mapConf import MapConf
+from gmapcatcher.mapMark import MyMarkers
+from gmapcatcher.DLWindow import DLWindow
+from gmapcatcher.mapUpdate import CheckForUpdates
+from gmapcatcher.mapServices import MapServ
+from gmapcatcher.customMsgBox import error_msg
+from gmapcatcher.mapDownloader import MapDownloader
+from gmapcatcher.customWidgets import myToolTip, gtk_menu, FileChooser, lbl, _frame, _myEntry
+from gmapcatcher.xmlUtils import kml_to_markers
+from gmapcatcher.widDrawingArea import DrawingArea
+from gmapcatcher.widCredits import OurCredits
 
 class MainWindow(gtk.Window):
 
