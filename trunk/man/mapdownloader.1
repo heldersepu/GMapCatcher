@@ -30,6 +30,45 @@ independently of map providers' javascript so should work even though
 the scripts may change.
 .I mapdowloader
 is the cli downloading tool that allows you to bulk download map tiles without the gui.
+Download all maps of given location with one command
+.SH SYNOPSIS
+.B mapdownloader [options]
+.SH OPTIONS
+.P
+--location=   location to download
+.P
+--latitude=   Latitude of the location 
+.P
+--longitude=  Longitude of the location
+.P
+.P
+--map         Retrieve map images (default)
+.P
+--satellite   Retrieve satellite images
+.P
+--terrain     Retrieve terrain images
+.P
+.P
+--latrange=   Latitude Range to get    (default = 0.050000)
+.P
+--lngrange=   Longitude Range to get   (default = 0.050000)
+.P
+--max-zoom=   Maximum Zoom   (default = 17)
+.P
+--min-zoom=   Minimum Zoom   (default = 2)
+.P
+--threads=    Number of threads   (default = 5)
+.P
+--full-range  Sets lat, lng to (0, 0) and range to the Max,
+very useful to download maps of entire world
+
+.SH SAMPLE USAGE
+download.py --location="Paris, France"
+.P
+download.py --min-zoom=13 --full-range
+.P
+download.py --latitude=37.979180 --longitude=23.716647
+
 .SH SUGGESTIONS AND BUG REPORTS
 should be notified at http://code.google.com/p/gmapcatcher/issues
 .SH Authors and Copyright Conditions
