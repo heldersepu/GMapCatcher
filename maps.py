@@ -902,10 +902,9 @@ class MainWindow(gtk.Window):
         self.bottom_panel = self.__create_bottom_paned()
         self.status_bar = self.__create_statusbar()
         
-        try:
-            self.set_icon_from_file('images/map.png')
-        except Exception:
-            print "could not load ico"
+        ico = mapPixbuf.ico()
+        if ico:
+            self.set_icon(ico)
 
         vpaned = gtk.VPaned()
         vpaned.pack1(self.top_panel, False, False)
