@@ -7,4 +7,4 @@ Type=Application
 Exec=mapcatcher
 Terminal=false
 StartupNotify=true
-Icon=/home/mark/src/gmapcommit/images/map.png
+Icon=mapcatcher

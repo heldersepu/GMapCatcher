@@ -28,7 +28,7 @@ then
 fi
 
 # Get the Name 
-dName="`grep -w "NAME = " src/mapConst.py`"
+dName="`grep -w "NAME = " gmapcatcher/mapConst.py`"
 dName=${dName:8}
 dName=${dName/%\"}
 echo "Name $dName"
@@ -41,7 +41,7 @@ export DEBFULLNAME="Helder Sepulveda"
 export DEBEMAIL="heldersepu@gmail.com"
 
 # Get the Version
-dVer="`grep -w "VERSION = " src/mapConst.py`"
+dVer="`grep -w "VERSION = " gmapcatcher/mapConst.py`"
 dVer=${dVer:11}
 dVer=${dVer/%\"}
 echo "Version $dVer"
@@ -73,6 +73,7 @@ then
     mv $dirname/download.py $dirname/mapdownloader
     gzip -9 $dirname/man/mapcatcher.1
     gzip -9 $dirname/man/mapdownloader.1
+    cp $dirname/images/map.png $dirname/images/mapcatcher.png
 fi
 rm -r -f $dirname/debian
 
