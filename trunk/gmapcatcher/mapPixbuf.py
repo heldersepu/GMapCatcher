@@ -12,6 +12,9 @@ if 'library.zip' in __file__:
     _prefix = abspath(join(dirname(__file__), "../../images"))
 else:
     _prefix = abspath(join(dirname(__file__), "../images"))
+    
+if not os.path.is_file(join(_prefix, 'missing.png')):
+    _prefix = '/usr/share/pixmaps/gmapcatcher'
 
 def ico():
     try:
