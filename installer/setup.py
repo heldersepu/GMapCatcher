@@ -9,15 +9,17 @@ import os
 if os.name == "posix":
     ico = "images/map.png"
     theoptions = None
+    thedatafiles = [('share/doc/mapcatcher', ['README', 'Changelog'])]
 else:
     ico = "images\maps.ico"
     import py2exe
     theoptions = {
         'py2exe': {
-        'packages':'encodings',
-        'includes': 'cairo, pango, pangocairo, atk, gobject',
+            'packages':'encodings',
+            'includes': 'cairo, pango, pangocairo, atk, gobject',
+            }
         }
-        }
+    thedatafiles = ['Changelog', 'README']
 
 setup(
     name = NAME,
@@ -34,5 +36,5 @@ setup(
 
     options = theoptions,
 
-    data_files = ['Changelog', 'README']
+    data_files = thedatafiles
 )
