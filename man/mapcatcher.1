@@ -30,10 +30,29 @@ them using a custom GUI. User may view maps offline. GMapCatcher is
 independent of map providers' javascript so should work even though 
 the scripts may change. It also provides a downloading tool. See
 .I mapdownloader(1)
+.SH INTERFACE
+when you view maps while connected to the internet, GMapCatcher
+downloads map tiles as needed; 'force update' allows re-downloading of
+tiles
+.P
+when in offline mode, tiles you have already downloaded 
+- then automatically saved - are visible; scroll to change zoom level
+.P
+the 'bulk download' window allows you to download all map tiles for
+an area you set, between zoom levels you set
+.P
+the 'visual path download' feature allows you to download all map tiles in a
+region of the screen, at up to a zoom level you set, to allow you to
+map a specific path - ctrl-scroll / shift scroll to change its parameters
+.P
+keyboard shortcuts, additional mouse features, etcetera are documented at
+.P
+http://code.google.com/p/gmapcatcher/wiki/User_Guide
 .SH SUGGESTIONS AND BUG REPORTS
 should be notified at http://code.google.com/p/gmapcatcher/issues
 .SH Authors and Copyright Conditions
 the Authors of the gmapcatcher project are listed at
+.P
 http://code.google.com/p/gmapcatcher/people/list
 .P
 this manpage is copyright Mark Benjamin 2010
