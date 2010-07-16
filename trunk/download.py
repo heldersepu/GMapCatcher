@@ -1,15 +1,16 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 ## @package download
 # Downloader tool without GUI
 
 import sys
-import src.mapConf as mapConf
+import gmapcatcher.mapConf as mapConf
 
-from src.mapUtils import *
-from src.mapArgs import MapArgs
-from src.mapServices import MapServ
-from src.mapDownloader import MapDownloader
+from gmapcatcher.mapUtils import *
+from gmapcatcher.mapArgs import MapArgs
+from gmapcatcher.mapServices import MapServ
+from gmapcatcher.mapDownloader import MapDownloader
 
 mConf = mapConf.MapConf()
 ctx_map = MapServ(mConf.init_path, mConf.repository_type)
@@ -17,7 +18,6 @@ downloader = None
 
 def do_nothing(*args, **kwargs):
     pass
-
 
 def download(lat, lng, lat_range, lng_range, max_zl, min_zl, layer):
     for zl in range(max_zl, min_zl - 1, -1):

@@ -3,7 +3,7 @@
 # Setup file used to build the Windows Installer
 
 from distutils.core import setup
-from src.mapConst import *
+from gmapcatcher.mapConst import *
 import os
 
 if os.name == "posix":
@@ -16,10 +16,10 @@ if os.name == "posix":
         data_files = [('share/doc/mapcatcher', ['README', 'Changelog']),
                     ('share/applications', ['gmapcatcher.desktop']),
                     ('share/man/man1', 
-                        ['man/mapcatcher.1.gz', 'man/mapdownloader.1.gz'])
+                        ['man/mapcatcher.1.gz', 'man/mapdownloader.1.gz']),
+                    ('share/pixmaps', ['images/map.png'])
         ],
         scripts = ['mapcatcher', 'mapdownloader'],
-        package_dir = {'gmapcatcher' : 'src'},
         packages = ['gmapcatcher']
     )
 else:
