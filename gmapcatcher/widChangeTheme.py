@@ -28,8 +28,11 @@ class ChangeTheme():
     def btn_save_clicked(self, button, conf):
         conf.show_cross = int(self.cb_show_cross.get_active())
         conf.oneDirPerMap = int(self.cb_oneDirPerMap.get_active())
+        memservice = conf.map_service
         conf.map_service = MAP_SERVERS[self.cmb_service.get_active()]
         conf.save()
+        if memservice != conf.map_service:
+            self.mapswindow.layer_combo(True)
         if self.cmb_themes.get_model():
             cmb_text = self.cmb_themes.get_active_text()
             if cmb_text:
@@ -122,4 +125,7 @@ class ChangeTheme():
         hpaned.connect('key-press-event', self.key_press, conf)
         hpaned.pack2(buttons, False, False)
         return hpaned
+
+    def __init__(self, mapswindow):
+        self.mapswindow = mapswindow
 

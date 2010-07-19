@@ -300,20 +300,21 @@ class MainWindow(gtk.Window):
     def layer_combo(self, refresh=False):
         if (refresh):
             self.cmb_layer_container.remove(self.cmb_layer)
-        cmb_layer = gtk.combo_box_new_text()
+        self.cmb_layer = gtk.combo_box_new_text()
         if self.conf.oneDirPerMap:
             for kv in MAP_SERVICES:
                 w = kv["serviceName"] + " " + kv["layerName"]
-                cmb_layer.append_text(w)
+                self.cmb_layer.append_text(w)
         else:
             for w in range(len(LAYER_NAMES)):
                 for kv in MAP_SERVICES:
                     if kv['serviceName'] == self.conf.map_service and kv['ID'] == w:
-                        cmb_layer.append_text(LAYER_NAMES[w])
-        cmb_layer.set_active(self.layer)
-        cmb_layer.connect('changed',self.layer_changed)
-        self.cmb_layer = cmb_layer
-        self.cmb_layer_container.pack_start(cmb_layer)
+                        self.cmb_layer.append_text(LAYER_NAMES[w])
+        self.cmb_layer.set_active(self.layer)
+        self.cmb_layer.connect('changed',self.layer_changed)
+        self.cmb_layer_container.pack_start(self.cmb_layer)
+        self.cmb_layer.show()
+        self.cmb_layer_container.show()
 
     ## Creates the box with the CheckButtons
     def __create_check_buttons(self):

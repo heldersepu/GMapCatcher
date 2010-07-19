@@ -22,7 +22,7 @@ class MapTools():
 
         myTree = widTreeView.TreeView()
         mySett = widMySettings.MySettings()
-        myTheme = widChangeTheme.ChangeTheme()
+        myTheme = widChangeTheme.ChangeTheme(parent)
         myGPS = widMyGPS.MyGPS()
 
         # Append pages to the notebook
