@@ -37,6 +37,7 @@ else:
         description = 'Offline Google Map Viewer',
         version = VERSION,
         url = WEB_ADDRESS,
+        console = ['download.py'],
         windows = [{
             'script': 'maps.py',
             'icon_resources': [(1, "images\maps.ico")],

@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     if (args.location is None) and ((args.lat is None) or (args.lng is None)):
         args.print_help()
-        exit(0)
+        sys.exit(0)
 
     print "location = %s" % args.location
     if ((args.lat is None) or (args.lng is None)):
@@ -45,7 +45,7 @@ if __name__ == "__main__":
             args.location = ctx_map.search_location(args.location)
             if (args.location[:6] == "error="):
                 print args.location[6:]
-                exit(0)
+                sys.exit(0)
 
         coord = ctx_map.get_locations()[args.location]
         args.lat = coord[0]

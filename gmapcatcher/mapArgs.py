@@ -38,9 +38,9 @@ class MapArgs():
         print '                very useful to download maps of entire world'
         print ' '
         print 'SAMPLE USAGE'
-        print '  download.py --location="Paris, France"'
-        print '  download.py --min-zoom=13 --full-range'
-        print '  download.py --latitude=37.979180 --longitude=23.716647'
+        print '  download --location="Paris, France"'
+        print '  download --min-zoom=13 --full-range'
+        print '  download --latitude=37.979180 --longitude=23.716647'
 
     def __init__(self, arrArgs=()):
         if len(arrArgs) > 1:
