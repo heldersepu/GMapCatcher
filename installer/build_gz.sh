@@ -80,6 +80,12 @@ find . -name \*~ | xargs rm -f
 
 # Remove some files
 rm -r -f $dirname/common
+if [ -e $dirname/debian ]
+then
+    rm -r -f $dirname/debian
+fi
+
+# prepare files for debian-type arrangement
 if [ "$1" = "makedeb" -o "$1" = "refreshdebdir" ]
 then
     rm -r -f $dirname/WindowsMobile
@@ -90,12 +96,18 @@ then
     gzip -9 $dirname/man/mapdownloader.1
     cp $dirname/images/map.png $dirname/images/mapcatcher.png
 fi
-rm -r -f $dirname/debian
+
+# clear such cruft as there may be
 rm $dirname/*.gz
 rm $dirname/*.deb
 rm $dirname/*.lzma
+rm $dirname/*.zip
 rm $dirname/*.dsc
-rm -rf $dirname/debian_support
+
+if [ -e $dirname/debian_support ]
+then
+    rm -rf $dirname/debian_support
+fi
 
 find . -name \.svn | xargs rm -r -f
 
@@ -139,9 +151,16 @@ then
     find . -name \.svn | xargs rm -r -f
     cd ..
     debuild -us -uc
+# -us -uc is unsigned; -us for source, -uc for debian changes;
+# in an upload to a repo then signing is obligatory
+# for instance -kEE8E4DE8
     cd ..
     mv *.deb $MAINDIR
     cp *.orig.tar.gz $MAINDIR/$pkgname.tar.gz
+    if [ ! -d $MAINDIR/debian_support ]
+    then
+        mkdir $MAINDIR/debian_support
+    fi
     mv *.orig.tar.gz $MAINDIR/debian_support
     mv *.diff.gz $MAINDIR/debian_support
     mv *.dsc $MAINDIR/debian_support
