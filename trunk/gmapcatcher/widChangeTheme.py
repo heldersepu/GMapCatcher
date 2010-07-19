@@ -27,11 +27,12 @@ class ChangeTheme():
 
     def btn_save_clicked(self, button, conf):
         conf.show_cross = int(self.cb_show_cross.get_active())
-        conf.oneDirPerMap = int(self.cb_oneDirPerMap.get_active())
         memservice = conf.map_service
+        memtype = conf.oneDirPerMap
+        conf.oneDirPerMap = int(self.cb_oneDirPerMap.get_active())
         conf.map_service = MAP_SERVERS[self.cmb_service.get_active()]
         conf.save()
-        if memservice != conf.map_service:
+        if memservice != conf.map_service or memtype != conf.oneDirPerMap:
             self.mapswindow.layer_combo(True)
         if self.cmb_themes.get_model():
             cmb_text = self.cmb_themes.get_active_text()
@@ -86,7 +87,7 @@ class ChangeTheme():
         # Check box for option to create a dir per Map service
         hbox = gtk.HBox()
         self.cb_oneDirPerMap = gtk.CheckButton( \
-            "Use a different folder per Map Service (Relaunch required)")
+            "Use a different folder per Map Service")
         self.cb_oneDirPerMap.set_active(oneDirPerMap)
         hbox.pack_start(self.cb_oneDirPerMap)
         vbox.pack_start(hbox)
