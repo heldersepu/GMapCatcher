@@ -1,15 +1,16 @@
 This work was packaged for Debian by:
 
-    Helder Sepulveda <heldersepu@gmail.com> on Thu, 15 Jul 2010 17:31:40 +0200
+    Mark Benjamin <MarkieB.lists.20090330@gmail.com> on Thu, 15 Jul 2010 17:31:40 +0200
 
 It was downloaded from:
 
     <http://code.google.com/p/gmapcatcher>
 
-Upstream Author(s):
+Upstream Authors:
 
     Helder Sepulveda <heldersepu@gmail.com>
     pi3orama <pi3orama@gmail.com>
+    the gmapcatcher team
 
 Copyright:
 
@@ -36,9 +37,9 @@ Public License version 2 can be found in `/usr/share/common-licenses/GPL-2'.
 
 The Debian packaging is:
 
-    Copyright (c) 2010 Helder Sepulveda <heldersepu@gmail.com>
+    Copyright (c) 2010 Mark Benjamin <MarkieB.lists.20090330@gmail.com>
 
-you can redistribute it and/or modify
+you may redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.

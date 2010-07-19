@@ -1,7 +1,7 @@
 Source: mapcatcher
 Section: web
 Priority: optional
-Maintainer: Helder Sepulveda <heldersepu@gmail.com>
+Maintainer: Mark Benjamin <MarkieB.lists.20090330@gmail.com>
 Build-Depends: cdbs, debhelper (>= 7), python (>= 2.5), python-support (>= 0.5.3)
 Standards-Version: 3.8.4
 Homepage: http://code.google.com/p/gmapcatcher

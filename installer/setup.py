@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ## @package setup
-# Setup file used to build the Windows Installer
+# Setup file used to build the Installers
 
 from distutils.core import setup
 from gmapcatcher.mapConst import *
