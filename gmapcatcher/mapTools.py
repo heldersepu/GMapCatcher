@@ -63,10 +63,11 @@ class MapTools():
         myNotebook.set_current_page(start_page)
 
     def key_press_event(self, widget, event, window):
-        if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]:
-            # W = 87,119
+        # W = 87,119; Esc = 65307
+        if event.keyval == 65307 or \
+                (event.state & gtk.gdk.CONTROL_MASK) != 0 and \
+                event.keyval in [87, 119]:
             window.destroy()
-
 
 def main(parent, start_page):
     MapTools(parent, start_page)
