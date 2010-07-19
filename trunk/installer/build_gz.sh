@@ -91,6 +91,11 @@ then
     cp $dirname/images/map.png $dirname/images/mapcatcher.png
 fi
 rm -r -f $dirname/debian
+rm $dirname/*.gz
+rm $dirname/*.deb
+rm $dirname/*.lzma
+rm $dirname/*.dsc
+rm -rf $dirname/debian_support
 
 find . -name \.svn | xargs rm -r -f
 
@@ -137,8 +142,9 @@ then
     cd ..
     mv *.deb $MAINDIR
     cp *.orig.tar.gz $MAINDIR/$pkgname.tar.gz
-    mv *.diff.gz $MAINDIR
-    mv *.dsc $MAINDIR
+    mv *.orig.tar.gz $MAINDIR/debian_support
+    mv *.diff.gz $MAINDIR/debian_support
+    mv *.dsc $MAINDIR/debian_support
 fi
 
 # Delete temp directory

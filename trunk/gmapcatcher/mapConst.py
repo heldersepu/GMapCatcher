@@ -26,37 +26,51 @@ MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade", "Yahoo",
                "InformationFreeway", "OpenCycleMap", "Google Map Maker",
                "Virtual Earth"]
 
-#element of the array "ID" is constant and is associated with the layer. Never change it.
-# order in the comboBox is given by the order of the lines.
-#If wants to change the order - move lines, but don't change "ID".
-#If layers are added / removed - change the decision making in mapServices.get_url_from_coord()
-# name of the lauer service is created as: serviceName + layerName
-FIRST_LAYER_ID = 0
-MAP_SERVICES = [
-    {"ID": 0, "TextID": "gmap",   "serviceName":"Google",             "layerDir": "tiles", "layerName": "Map" },
-    {"ID": 1, "TextID": "gsat",   "serviceName":"Google",             "layerDir": "sat_tiles", "layerName": "Satellite" },
-    {"ID": 2, "TextID": "gter",   "serviceName":"Google",             "layerDir": "ter_tiles", "layerName": "Terrain" },
-    {"ID": 3, "TextID": "ghyb",   "serviceName":"Google",             "layerDir": "hyb_tiles", "layerName": "Hybrid"},
-    {"ID": 0, "TextID": "ymap",   "serviceName":"Yahoo",              "layerDir": "yahoomap", "layerName": "Map" },
-    {"ID": 1, "TextID": "yter",   "serviceName":"Yahoo",              "layerDir": "yahooter", "layerName": "Satellite" },
-    {"ID": 0, "TextID": "vemap",  "serviceName":"Virtual Earth",      "layerDir": "vemap", "layerName": "Map" },
-    {"ID": 1, "TextID": "vesat",  "serviceName":"Virtual Earth",      "layerDir": "vesat", "layerName": "Satellite" },
-    {"ID": 2, "TextID": "veter",  "serviceName":"Virtual Earth",      "layerDir": "veter", "layerName": "Terrain" },
-    {"ID": 0, "TextID": "osmmap", "serviceName":"OpenStreetMap",      "layerDir": "osmtiles", "layerName": ""},
-    {"ID": 0, "TextID": "cmmap",  "serviceName":"CloudMade",          "layerDir": "cloudmatetiles", "layerName": "" },
-    {"ID": 0, "TextID": "ifwmap", "serviceName":"InformationFreeway", "layerDir": "ifwtiles", "layerName": "" },
-    {"ID": 0, "TextID": "ocmmap", "serviceName":"OpenCycleMap",       "layerDir": "ocmtiles", "layerName": ""},
-    {"ID": 0, "TextID": "gmmmap", "serviceName":"Google Map Maker",   "layerDir": "gmmtiles", "layerName": "" }
-               ]
-
-NO_BULK_DOWN = ["OpenStreetMap", "OpenCycleMap"]
-
 LAYER_MAP = 0
 LAYER_SATELLITE = 1
 LAYER_TERRAIN = 2
 LAYER_HYBRID = 3
 LAYER_NAMES = ["Map", "Satellite", "Terrain", "Hybrid"]
 LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles", "hyb_tiles"]
+
+#element of the array "ID" is constant and is associated with the layer. Never change it.
+# order in the comboBox is given by the order of the lines.
+#If wants to change the order - move lines, but don't change "ID".
+#If layers are added / removed - change the decision making in mapServices.get_url_from_coord()
+# name of the layer service is created as: serviceName + layerName
+FIRST_LAYER_ID = 0
+MAP_SERVICES = [
+    {"ID": LAYER_MAP, "TextID": "gmap",   "serviceName":"Google", 
+            "layerDir": "tiles", "layerName": "Map" },
+    {"ID": LAYER_SATELLITE, "TextID": "gsat",   "serviceName":"Google",
+            "layerDir": "sat_tiles", "layerName": "Satellite" },
+    {"ID": LAYER_TERRAIN, "TextID": "gter",   "serviceName":"Google",
+            "layerDir": "ter_tiles", "layerName": "Terrain" },
+    {"ID": LAYER_HYBRID, "TextID": "ghyb",   "serviceName":"Google",
+            "layerDir": "hyb_tiles", "layerName": "Hybrid"},
+    {"ID": LAYER_MAP, "TextID": "ymap",   "serviceName":"Yahoo",
+            "layerDir": "yahoomap", "layerName": "Map" },
+    {"ID": LAYER_SATELLITE, "TextID": "yter",   "serviceName":"Yahoo",
+            "layerDir": "yahooter", "layerName": "Satellite" },
+    {"ID": LAYER_MAP, "TextID": "vemap",  "serviceName":"Virtual Earth",
+            "layerDir": "vemap", "layerName": "Map" },
+    {"ID": LAYER_SATELLITE, "TextID": "vesat",  "serviceName":"Virtual Earth",
+            "layerDir": "vesat", "layerName": "Satellite" },
+    {"ID": LAYER_TERRAIN, "TextID": "veter",  "serviceName":"Virtual Earth",
+            "layerDir": "veter", "layerName": "Terrain" },
+    {"ID": LAYER_MAP, "TextID": "osmmap", "serviceName":"OpenStreetMap",
+            "layerDir": "osmtiles", "layerName": ""},
+    {"ID": LAYER_MAP, "TextID": "cmmap",  "serviceName":"CloudMade",
+            "layerDir": "cloudmatetiles", "layerName": "" },
+    {"ID": LAYER_MAP, "TextID": "ifwmap", "serviceName":"InformationFreeway",
+            "layerDir": "ifwtiles", "layerName": "" },
+    {"ID": LAYER_MAP, "TextID": "ocmmap", "serviceName":"OpenCycleMap",
+            "layerDir": "ocmtiles", "layerName": ""},
+    {"ID": LAYER_MAP, "TextID": "gmmmap", "serviceName":"Google Map Maker",
+            "layerDir": "gmmtiles", "layerName": "" }
+               ]
+
+NO_BULK_DOWN = ["OpenStreetMap", "OpenCycleMap"]
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
