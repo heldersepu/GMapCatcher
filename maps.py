@@ -330,8 +330,10 @@ class MainWindow(gtk.Window):
                 w = kv["serviceName"] + " " + kv["layerName"]
                 cmb_layer.append_text(w)
         else:
-            for w in LAYER_NAMES:
-                cmb_layer.append_text(w)
+            for w in range(len(LAYER_NAMES)):
+                for kv in MAP_SERVICES:
+                    if kv['serviceName'] == self.conf.map_service and kv['ID'] == w:
+                        cmb_layer.append_text(LAYER_NAMES[w])
         cmb_layer.set_active(self.layer)
         cmb_layer.connect('changed',self.layer_changed)
         self.cmb_layer = cmb_layer
@@ -878,6 +880,14 @@ class MainWindow(gtk.Window):
         self.downloader = MapDownloader(self.ctx_map)
         if self.conf.save_at_close:
             self.layer = self.conf.save_layer
+            if not self.conf.oneDirPerMap:
+                changelayer = True
+                for kv in MAP_SERVICES:
+                    if kv['serviceName'] == self.conf.map_service and \
+                            kv['ID'] == self.layer:
+                        changelayer = False
+                if changelayer:
+                    self.layer = LAYER_MAP
         else:
             self.layer = LAYER_MAP
         self.background = []
