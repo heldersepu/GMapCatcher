@@ -49,9 +49,10 @@ debname=$(echo $dName | awk '{print tolower($0)}')
 debname=$(echo $debname | awk '{sub(/g/,"",$0); print $0}')
 echo "debian name $debname"
 
-#debian package variables
-export DEBFULLNAME="Helder Sepulveda"
-export DEBEMAIL="heldersepu@gmail.com"
+# debian package variables
+# should match the key that signs the .deb we upload to debian
+export DEBFULLNAME="Mark Benjamin"
+export DEBEMAIL="MarkieB.lists.20090330@gmail.com"
 
 # Get the Version
 dVer="`grep -w "VERSION = " gmapcatcher/mapConst.py`"
