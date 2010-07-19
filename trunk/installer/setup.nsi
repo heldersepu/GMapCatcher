@@ -160,20 +160,21 @@ SectionEnd
 ; Optional Shortcuts sections (can be disabled by the user)
 Section "Start Menu Shortcuts"
     CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe" "" "$INSTDIR\maps.exe" 0
-    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Export Maps.lnk" "$INSTDIR\ExportMaps.bat" "" "$INSTDIR\ExportMaps.bat" 0
+    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe" 
+    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Konsole Downloader.lnk" "%COMSPEC%" '/t:0A /k CD "$INSTDIR" && "$INSTDIR\download.exe"'
+    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\uninstall.exe" 
+    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Export Maps.lnk" "$INSTDIR\ExportMaps.bat" 
     ; Create a shortcut to the project Homepage
     WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
     CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
 SectionEnd
 
 Section "Desktop Shortcut"
-    CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe" "" "$INSTDIR\maps.exe" 0
+    CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe"
 SectionEnd
 
 Section "Quick Launch Shortcut"
-    CreateShortCut "$QUICKLAUNCH\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe" "" "$INSTDIR\maps.exe" 0
+    CreateShortCut "$QUICKLAUNCH\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe"
 SectionEnd
 
 ;--------------------------------
