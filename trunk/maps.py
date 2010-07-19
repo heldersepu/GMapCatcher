@@ -297,6 +297,24 @@ class MainWindow(gtk.Window):
         hbox.pack_start(bbox, False, True, 15)
         return hbox
 
+    def layer_combo(self, refresh=False):
+        if (refresh):
+            self.cmb_layer_container.remove(self.cmb_layer)
+        cmb_layer = gtk.combo_box_new_text()
+        if self.conf.oneDirPerMap:
+            for kv in MAP_SERVICES:
+                w = kv["serviceName"] + " " + kv["layerName"]
+                cmb_layer.append_text(w)
+        else:
+            for w in range(len(LAYER_NAMES)):
+                for kv in MAP_SERVICES:
+                    if kv['serviceName'] == self.conf.map_service and kv['ID'] == w:
+                        cmb_layer.append_text(LAYER_NAMES[w])
+        cmb_layer.set_active(self.layer)
+        cmb_layer.connect('changed',self.layer_changed)
+        self.cmb_layer = cmb_layer
+        self.cmb_layer_container.pack_start(cmb_layer)
+
     ## Creates the box with the CheckButtons
     def __create_check_buttons(self):
         hbox = gtk.HBox(False, 10)
@@ -324,20 +342,9 @@ class MainWindow(gtk.Window):
         button.connect('clicked', self.download_clicked)
         bbox.pack_start(button, False, False, 5)
 
-        cmb_layer = gtk.combo_box_new_text()
-        if self.conf.oneDirPerMap:
-            for kv in MAP_SERVICES:
-                w = kv["serviceName"] + " " + kv["layerName"]
-                cmb_layer.append_text(w)
-        else:
-            for w in range(len(LAYER_NAMES)):
-                for kv in MAP_SERVICES:
-                    if kv['serviceName'] == self.conf.map_service and kv['ID'] == w:
-                        cmb_layer.append_text(LAYER_NAMES[w])
-        cmb_layer.set_active(self.layer)
-        cmb_layer.connect('changed',self.layer_changed)
-        self.cmb_layer = cmb_layer
-        bbox.pack_start(cmb_layer, False, False, 0)
+        self.cmb_layer_container = gtk.HBox()
+        self.layer_combo()
+        bbox.pack_start(self.cmb_layer_container, False, False, 0)
         hbox.add(bbox)
         return hbox
 
