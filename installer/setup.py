@@ -13,16 +13,17 @@ if os.name == "posix":
         description = 'Offline Map Viewer',
         version = VERSION,
         url = WEB_ADDRESS,
-        data_files = [('share/doc/mapcatcher', ['README', 'Changelog']),
+        data_files = [('share/doc/mapcatcher', ['README', 'changelog']),
                     ('share/applications', ['gmapcatcher.desktop']),
                     ('share/man/man1', 
                         ['man/mapcatcher.1.gz', 'man/mapdownloader.1.gz']),
                     ('share/pixmaps', ['images/mapcatcher.png']),
                     ('share/pixmaps/gmapcatcher',
-                        ['images/cross.png', 'images/downloading.png', 
-                        'images/map.png', 'images/marker.png',
-                        'images/marker1.png', 'images/marker_gps.png',
-                        'images/missing.png'])
+                    # TODO
+                    # change detection of png images to programmatical
+                        ['images/downloading.png', 'images/map.png',
+                        'images/marker.png', 'images/marker1.png',
+                        'images/marker_gps.png', 'images/missing.png'])
         ],
         scripts = ['mapcatcher', 'mapdownloader'],
         packages = ['gmapcatcher', 'gmapcatcher.mapServers', 

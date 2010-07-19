@@ -1,7 +1,20 @@
 #!/bin/bash
 # This Script is used to build the tar.gz file
+# to make the .deb you'll need ubuntu-dev-tools plus many of its suggested packages
+# - build-essential, lintian, debhelper, cdbs, fakeroot, pbuilder dh-make notably
+echo "$0 - script for packaging gmapcatcher"
+if [ "$1" = "help" ]
+then
+    echo "$0 makedeb - makes .deb installer plus mapcatcher tar.gz"
+    echo "$0 refreshdebdir - makes new debian directory in project tree"
+    echo " -- make sure you have backed up the original debian directory --"
+    echo " -- as the automatic creation is merely the preliminary stage  --"
+    exit
+else
+    echo "$ $0 help for more"
+fi
 
-if [ "$1" = "refreshdebian" ]
+if [ "$1" = "refreshdebdir" ]
 then
     echo "warning - replacing entire debian directory"
     echo "make sure you have made a backup for the manual stage!"
@@ -21,7 +34,7 @@ echo $MAINDIR
 # Clean up temporary files
 find . -name \*.pyc | xargs rm -f
 
-if [ "$1" = "refreshdebian" ]
+if [ "$1" = "refreshdebdir" ]
 then
     rm $MAINDIR/debian/*
     rmdir $MAINDIR/debian
@@ -33,7 +46,7 @@ dName=${dName:8}
 dName=${dName/%\"}
 echo "Name $dName"
 debname=$(echo $dName | awk '{print tolower($0)}')
-debname=$(echo $debname | awk '{print gensub(/g/,"",1)}')
+debname=$(echo $debname | awk '{sub(/g/,"",$0); print $0}')
 echo "debian name $debname"
 
 #debian package variables
@@ -46,7 +59,7 @@ dVer=${dVer:11}
 dVer=${dVer/%\"}
 echo "Version $dVer"
 
-if [ "$1" = "lin" -o "$1" = "refreshdebian" ]
+if [ "$1" = "makedeb" -o "$1" = "refreshdebdir" ]
 then
     pkgname=$debname"_"$dVer
     dirname=$debname"-"$dVer
@@ -66,11 +79,12 @@ find . -name \*~ | xargs rm -f
 
 # Remove some files
 rm -r -f $dirname/common
-if [ "$1" = "lin" -o "$1" = "refreshdebian" ]
+if [ "$1" = "makedeb" -o "$1" = "refreshdebdir" ]
 then
     rm -r -f $dirname/WindowsMobile
     mv $dirname/maps.py $dirname/mapcatcher
     mv $dirname/download.py $dirname/mapdownloader
+    mv $dirname/Changelog $dirname/changelog
     gzip -9 $dirname/man/mapcatcher.1
     gzip -9 $dirname/man/mapdownloader.1
     cp $dirname/images/map.png $dirname/images/mapcatcher.png
@@ -81,7 +95,7 @@ find . -name \.svn | xargs rm -r -f
 
 
 # Create the tar.gz file
-if [ "$1" = "lin" -o "$1" = "refreshdebian" ]
+if [ "$1" = "makedeb" -o "$1" = "refreshdebdir" ]
 then
     filename="$pkgname.orig.tar.gz"
 else
@@ -93,7 +107,7 @@ mv $dirname/installer/setup.py $dirname/setup.py
 echo "making file $filename"
 tar czf $filename $dirname
  
-if [ "$1" = "refreshdebian" ]
+if [ "$1" = "refreshdebdir" ]
 then
     cd $dirname
     dh_make -b -c gpl2
@@ -110,7 +124,7 @@ then
     mv ../temp/$pkgname.orig.tar.gz ../$pkgname.tar.gz
 fi
 
-if [ "$1" = "lin" ]
+if [ "$1" = "makedeb" ]
 then
     cd $dirname
     mkdir debian
@@ -120,8 +134,10 @@ then
     cd ..
     debuild -us -uc
     cd ..
-    cp *.deb $MAINDIR
+    mv *.deb $MAINDIR
     cp *.orig.tar.gz $MAINDIR/$pkgname.tar.gz
+    mv *.diff.gz $MAINDIR
+    mv *.dsc $MAINDIR
 fi
 
 # Delete temp directory
