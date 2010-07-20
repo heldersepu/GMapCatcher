@@ -6,6 +6,8 @@ echo "$0 - script for packaging gmapcatcher"
 if [ "$1" = "help" ]
 then
     echo "$0 makedeb - makes .deb installer plus mapcatcher tar.gz"
+    echo "$0 makedeb debupload - additionally saves *all* debian upload files"
+    echo "together in debian_support subdirectory im project tree"
     echo "$0 refreshdebdir - makes new debian directory in project tree"
     echo " -- make sure you have backed up the original debian directory --"
     echo " -- as the automatic creation is merely the preliminary stage  --"
@@ -98,11 +100,11 @@ then
 fi
 
 # clear such cruft as there may be
-rm $dirname/*.gz
-rm $dirname/*.deb
-rm $dirname/*.lzma
-rm $dirname/*.zip
-rm $dirname/*.dsc
+rm -f $dirname/*.gz
+rm -f $dirname/*.deb
+rm -f $dirname/*.lzma
+rm -f $dirname/*.zip
+rm -f $dirname/*.dsc
 
 if [ -e $dirname/debian_support ]
 then
@@ -152,18 +154,23 @@ then
     cd ..
     debuild -us -uc
 # -us -uc is unsigned; -us for source, -uc for debian changes;
-# in an upload to a repo then signing is obligatory
-# for instance -kEE8E4DE8
+# in an upload to a repo then signing is obligatory; for instance
+# debuild -kEE8E4DE8
     cd ..
-    mv *.deb $MAINDIR
+    cp *.deb $MAINDIR
     cp *.orig.tar.gz $MAINDIR/$pkgname.tar.gz
     if [ ! -d $MAINDIR/debian_support ]
     then
         mkdir $MAINDIR/debian_support
     fi
+    rm $MAINDIR/debian_support/*
     mv *.orig.tar.gz $MAINDIR/debian_support
     mv *.diff.gz $MAINDIR/debian_support
     mv *.dsc $MAINDIR/debian_support
+    if [ "$2" = "debupload" ]
+    then
+        cp * $MAINDIR/debian_support
+    fi
 fi
 
 # Delete temp directory
