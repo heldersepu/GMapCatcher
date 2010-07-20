@@ -9,7 +9,7 @@ import gtk
 from mapArgs import MapArgs
 from fileUtils import check_dir
 from mapDownloader import MapDownloader
-from customWidgets import _SpinBtn, _myEntry, _frame, lbl, FileChooser
+from customWidgets import _SpinBtn, _myEntry, _frame, lbl, FileChooser, legal_warning
 
 import mapPixbuf
 import mapUtils
@@ -143,15 +143,7 @@ class DLWindow(gtk.Window):
         self.complete = []
         self.downloader = MapDownloader(self.gmap)
         if self.conf.map_service in NO_BULK_DOWN:
-            dialog = gtk.MessageDialog(self,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
-                    ("This map service (%s) doesn't allow bulk downloading. "
-                    "If you insist on doing so, you break its term of use. \n\n"
-                    "Continue or cancel?") % (self.conf.map_service)))
-            response = dialog.run()
-            dialog.destroy()
-            if response != gtk.RESPONSE_OK or STRICT_LEGAL:
+            if not legal_warning(self, self.conf.map_service, "bulk downloading"):
                 self.all_done("Canceled")
                 return
         args = MapArgs()

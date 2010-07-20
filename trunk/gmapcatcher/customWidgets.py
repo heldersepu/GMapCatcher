@@ -10,6 +10,8 @@ from inputValidation import allow_only_numbers
 import warnings
 warnings.filterwarnings("ignore")
 
+ternary = lambda a,b,c: (b,c)[not a]
+
 
 ## A simple right justify label
 def lbl(text):
@@ -106,3 +108,18 @@ def gtk_menu(listItems, activate_action):
         menu_items.connect("activate", activate_action, thestr)
         menu_items.show()
     return myMenu
+    
+def legal_warning(parent, servicename, feature):
+    msgtype = ternary(STRICT_LEGAL, gtk.MESSAGE_INFO, gtk.MESSAGE_WARNING)
+    buttons = ternary(STRICT_LEGAL, gtk.BUTTONS_CANCEL, gtk.BUTTONS_OK_CANCEL)
+    additional = ternary(STRICT_LEGAL, "", 
+            "If you insist on doing so, you break its term of use. \n\n"
+            "Continue or cancel?")
+    dialog = gtk.MessageDialog(parent,
+    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+    msgtype, buttons,(
+    ("This map service (%s) doesn't allow %s. " +
+    additional) % (servicename, feature)))
+    response = dialog.run()
+    dialog.destroy()
+    return response == gtk.RESPONSE_OK and not STRICT_LEGAL

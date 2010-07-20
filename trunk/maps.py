@@ -20,7 +20,7 @@ from gmapcatcher.mapUpdate import CheckForUpdates
 from gmapcatcher.mapServices import MapServ
 from gmapcatcher.customMsgBox import error_msg
 from gmapcatcher.mapDownloader import MapDownloader
-from gmapcatcher.customWidgets import myToolTip, gtk_menu, FileChooser, lbl, _frame, _myEntry
+from gmapcatcher.customWidgets import myToolTip, gtk_menu, FileChooser, lbl, _frame, _myEntry, legal_warning
 from gmapcatcher.xmlUtils import kml_to_markers
 from gmapcatcher.widDrawingArea import DrawingArea
 from gmapcatcher.widCredits import OurCredits
@@ -195,15 +195,7 @@ class MainWindow(gtk.Window):
         
     def check_bulk_down(self):
         if self.conf.map_service in NO_BULK_DOWN:
-            dialog = gtk.MessageDialog(self,
-            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-            gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
-            ("This map service (%s) doesn't allow bulk downloading. "
-            "If you insist on doing so, you break its term of use. \n\n"
-            "Continue or cancel?") % (self.conf.map_service)))
-            response = dialog.run()
-            dialog.destroy()
-            return response == gtk.RESPONSE_OK and not STRICT_LEGAL
+            return legal_warning(self, self.conf.map_service, "bulk downloading")
         return True
                 
 
@@ -887,15 +879,7 @@ class MainWindow(gtk.Window):
 
     def gps_warning(self):
         if mapGPS.available and self.conf.map_service in NO_GPS:
-            dialog = gtk.MessageDialog(self,
-            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-            gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
-            ("This map service (%s) doesn't allow gps integration. "
-            "If you insist on doing so, you break its term of use. \n\n"
-            "Continue or cancel?") % (self.conf.map_service)))
-            response = dialog.run()
-            dialog.destroy()
-            return response == gtk.RESPONSE_OK and not STRICT_LEGAL
+            return legal_warning(self, self.conf.map_service, "gps integration")
         return True
 
 
