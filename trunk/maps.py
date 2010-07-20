@@ -845,7 +845,7 @@ class MainWindow(gtk.Window):
         sz = self.get_size()
         location = self.get_position()
         self.hide()
-        if mapGPS.available:
+        if mapGPS.available and self.gps:
             self.gps.stop_all()
         self.downloader.stop_all()
         if self.visual_dlconfig.get('downloader', False):
@@ -872,12 +872,28 @@ class MainWindow(gtk.Window):
         return False
 
     def enable_gps(self):
-        if mapGPS.available:
+        if mapGPS.available and self.gps_warning:
             self.gps = mapGPS.GPS(
                 self.gps_callback,
                 self.conf.gps_update_rate,
                 self.conf.gps_mode
             )
+        else:
+            self.gps = False
+
+    def gps_warning(self):
+        if mapGPS.available and self.conf.map_service in NO_GPS:
+            dialog = gtk.MessageDialog(self,
+            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+            gtk.MESSAGE_WARNING, gtk.BUTTONS_OK_CANCEL,(
+            ("This map service (%s) doesn't allow gps integration. "
+            "If you insist on doing so, you break its term of use. \n\n"
+            "Continue or cancel?") % (self.conf.map_service)))
+            response = dialog.run()
+            dialog.destroy()
+            return response == gtk.RESPONSE_OK
+        return True
+
 
     def __init__(self, parent=None):
         self.conf = MapConf()
