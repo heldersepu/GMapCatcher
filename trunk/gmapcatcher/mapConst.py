@@ -2,6 +2,8 @@
 ## @package gmapcatcher.mapConst
 # Place to keep all constants
 
+from changeableConst import *
+
 NAME = "GMapCatcher"
 VERSION = "0.7.2.0"
 VERSION_NAME = ""

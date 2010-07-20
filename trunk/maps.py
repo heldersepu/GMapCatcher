@@ -143,8 +143,9 @@ class MainWindow(gtk.Window):
 
     ## Handles the change in the GPS combo box
     def gps_changed(self, w):
-        self.gps.set_mode(w.get_active())
-        self.drawing_area.repaint()
+        if self.gps:
+            self.gps.set_mode(w.get_active())
+            self.drawing_area.repaint()
 
     ## Handles the change in the combo box Layer(Map, Sat.. )
     def layer_changed(self, w):
@@ -154,6 +155,9 @@ class MainWindow(gtk.Window):
             if self.visual_dlconfig.get('active', False) and \
                     not self.check_bulk_down():
                 self.visual_dlconfig['active'] = False
+            if self.gps and not self.gps_warning():
+                self.gps.stop_all()
+                self.gps = False
         self.drawing_area.repaint()
 
     def download_clicked(self, w, pointer=None):
@@ -199,7 +203,7 @@ class MainWindow(gtk.Window):
             "Continue or cancel?") % (self.conf.map_service)))
             response = dialog.run()
             dialog.destroy()
-            return response == gtk.RESPONSE_OK
+            return response == gtk.RESPONSE_OK and not STRICT_LEGAL
         return True
                 
 
@@ -330,7 +334,7 @@ class MainWindow(gtk.Window):
         hbox.pack_start(self.cb_forceupdate)
 
         bbox = gtk.HBox(False, 0)
-        if mapGPS.available:
+        if mapGPS.available and self.gps:
             cmb_gps = gtk.combo_box_new_text()
             for w in GPS_NAMES:
                 cmb_gps.append_text(w)
@@ -872,7 +876,7 @@ class MainWindow(gtk.Window):
         return False
 
     def enable_gps(self):
-        if mapGPS.available and self.gps_warning:
+        if mapGPS.available and self.gps_warning():
             self.gps = mapGPS.GPS(
                 self.gps_callback,
                 self.conf.gps_update_rate,
@@ -891,7 +895,7 @@ class MainWindow(gtk.Window):
             "Continue or cancel?") % (self.conf.map_service)))
             response = dialog.run()
             dialog.destroy()
-            return response == gtk.RESPONSE_OK
+            return response == gtk.RESPONSE_OK and not STRICT_LEGAL
         return True
 
 
@@ -917,6 +921,7 @@ class MainWindow(gtk.Window):
         self.background = []
         self.foreground = []
         self.current_gps = False
+        self.gps = False
         self.enable_gps()
         self.downloading = 0
         self.visual_dlconfig = {}
