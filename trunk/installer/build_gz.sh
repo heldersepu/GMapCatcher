@@ -104,6 +104,7 @@ rm -f $dirname/*.deb
 rm -f $dirname/*.lzma
 rm -f $dirname/*.zip
 rm -f $dirname/*.dsc
+rm -f $dirname/*.rpm
 
 if [ -e $dirname/debian_support ]
 then
@@ -150,6 +151,7 @@ then
     cp -r $MAINDIR/debian/* debian
     cd debian
     find . -name \.svn | xargs rm -r -f
+    rm legacy.diff
     cd ..
     debuild -us -uc
 # -us -uc is unsigned; -us for source, -uc for debian changes;
