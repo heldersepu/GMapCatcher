@@ -48,5 +48,5 @@ else:
                 'includes': 'cairo, pango, pangocairo, atk, gobject',
             }
         },
-        data_files = ['Changelog', 'README']
+        data_files = ['changelog', 'README']
     )

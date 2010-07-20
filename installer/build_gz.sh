@@ -93,7 +93,6 @@ then
     rm -r -f $dirname/WindowsMobile
     mv $dirname/maps.py $dirname/mapcatcher
     mv $dirname/download.py $dirname/mapdownloader
-    mv $dirname/Changelog $dirname/changelog
     gzip -9 $dirname/man/mapcatcher.1
     gzip -9 $dirname/man/mapdownloader.1
     cp $dirname/images/map.png $dirname/images/mapcatcher.png
