@@ -141,7 +141,7 @@ class DrawingArea(gtk.DrawingArea):
                     draw_image(mpos, img, pixDim, pixDim)
 
         # Draw GPS position
-        if gps is not None:
+        if gps:
             location = gps.get_location()
             if location is not None and (zl <= conf.max_gps_zoom):
                 img = gps.pixbuf

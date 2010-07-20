@@ -151,7 +151,7 @@ class DLWindow(gtk.Window):
                     "Continue or cancel?") % (self.conf.map_service)))
             response = dialog.run()
             dialog.destroy()
-            if response != gtk.RESPONSE_OK:
+            if response != gtk.RESPONSE_OK or STRICT_LEGAL:
                 self.all_done("Canceled")
                 return
         args = MapArgs()
