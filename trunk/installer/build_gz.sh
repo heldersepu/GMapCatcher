@@ -117,7 +117,7 @@ if [ "$1" = "makedeb" ]
 then
     if [ "$2" = "strict" -o "$3" = "strict" ]
     then
-        echo "STRICT_LEGAL = True\n\n" > $dirname/gmapcatcher/changeableConst.py
+        echo "STRICT_LEGAL = True" > $dirname/gmapcatcher/changeableConst.py
     fi
 fi
 
