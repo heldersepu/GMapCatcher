@@ -70,7 +70,7 @@ MAP_SERVICES = [
             "layerDir": "gmmtiles", "layerName": "" }
                ]
 
-NO_BULK_DOWN = ["OpenStreetMap", "OpenCycleMap"]
+NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
