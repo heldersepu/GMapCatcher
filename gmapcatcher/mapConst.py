@@ -5,7 +5,7 @@
 from changeableConst import *
 
 NAME = "GMapCatcher"
-VERSION = "0.7.2.0"
+VERSION = "0.7.2.2"
 VERSION_NAME = ""
 WEB_ADDRESS = "http://code.google.com/p/gmapcatcher/"
 # add real names here! :-)

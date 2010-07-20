@@ -113,6 +113,14 @@ fi
 
 find . -name \.svn | xargs rm -r -f
 
+if [ "$1" = "makedeb" ]
+then
+    if [ "$2" = "strict" -o "$3" = "strict" ]
+    then
+        echo "STRICT_LEGAL = True\n\n" > $dirname/gmapcatcher/changeableConst.py
+    fi
+fi
+
 
 # Create the tar.gz file
 if [ "$1" = "makedeb" -o "$1" = "refreshdebdir" ]
