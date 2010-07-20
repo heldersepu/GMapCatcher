@@ -19,11 +19,7 @@ if os.name == "posix":
                         ['man/mapcatcher.1.gz', 'man/mapdownloader.1.gz']),
                     ('share/pixmaps', ['images/mapcatcher.png']),
                     ('share/pixmaps/gmapcatcher',
-                    # TODO
-                    # change detection of png images to programmatical
-                        ['images/downloading.png', 'images/map.png',
-                        'images/marker.png', 'images/marker1.png',
-                        'images/marker_gps.png', 'images/missing.png'])
+                    map(lambda(thestr): "images/" + thestr, os.listdir('images')))
         ],
         scripts = ['mapcatcher', 'mapdownloader'],
         packages = ['gmapcatcher', 'gmapcatcher.mapServers', 
