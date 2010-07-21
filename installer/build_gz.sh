@@ -113,15 +113,6 @@ fi
 
 find . -name \.svn | xargs rm -r -f
 
-if [ "$1" = "makedeb" ]
-then
-    if [ "$2" = "strict" -o "$3" = "strict" ]
-    then
-        echo "STRICT_LEGAL = True" > $dirname/gmapcatcher/changeableConst.py
-    fi
-fi
-
-
 # Create the tar.gz file
 if [ "$1" = "makedeb" -o "$1" = "refreshdebdir" ]
 then
@@ -134,7 +125,7 @@ mv $dirname/installer/setup.py $dirname/setup.py
 
 echo "making file $filename"
 tar czf $filename $dirname
- 
+
 if [ "$1" = "refreshdebdir" ]
 then
     cd $dirname
@@ -155,6 +146,10 @@ fi
 if [ "$1" = "makedeb" ]
 then
     cd $dirname
+    if [ "$2" = "strict" -o "$3" = "strict" ]
+    then
+        echo "STRICT_LEGAL = True" > gmapcatcher/changeableConst.py
+    fi
     mkdir debian
     cp -r $MAINDIR/debian/* debian
     cd debian
