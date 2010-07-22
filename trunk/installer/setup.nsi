@@ -27,9 +27,9 @@ RequestExecutionLevel admin
 ;Version Information
 VIProductVersion "${PRODUCT_VERSION}"
 VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
-VIAddVersionKey "Comments" "GMapCatcher is an offline viewer of google maps. It downloads google-map tiles automatically, display them using a specific GUI. User can view google map offline."
+VIAddVersionKey "Comments" "GMapCatcher is an offline map viewer. It downloads map tiles automatically, display them using a specific GUI. User can view maps offline."
 VIAddVersionKey "LegalCopyright" "${PRODUCT_WEB_SITE}"
-VIAddVersionKey "FileDescription" "Offline Google Map Viewer"
+VIAddVersionKey "FileDescription" "Offline Map Viewer"
 VIAddVersionKey "FileVersion" "${PRODUCT_VERSION}"
 
 ;--------------------------------
