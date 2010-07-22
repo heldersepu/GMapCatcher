@@ -30,7 +30,7 @@ else:
     import py2exe
     setup(
         name = NAME,
-        description = 'Offline Google Map Viewer',
+        description = 'Offline Map Viewer',
         version = VERSION,
         url = WEB_ADDRESS,
         console = ['download.py'],
