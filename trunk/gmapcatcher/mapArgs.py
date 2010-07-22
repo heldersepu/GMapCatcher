@@ -28,9 +28,13 @@ class MapArgs():
         print '  --map         Retrieve map images (default)'
         print '  --satellite   Retrieve satellite images'
         print '  --terrain     Retrieve terrain images'
+        print '  --hybrid      Retrieve hybrid images'
         print ' '
         print '  --latrange=   Latitude Range to get    (default = %f)' % self.lat_range
         print '  --lngrange=   Longitude Range to get   (default = %f)' % self.lng_range
+        print '  --height=     Height in Km (will override latrange)'  
+        print '  --width=      Width in Km (will override lngrange)'   
+        print ' '
         print '  --max-zoom=   Maximum Zoom   (default = %d)' % self.max_zl
         print '  --min-zoom=   Minimum Zoom   (default = %d)' % self.min_zl
         print '  --threads=    Number of threads   (default = %d)' % self.nr_threads
@@ -75,6 +79,8 @@ class MapArgs():
                         self.layer = LAYER_SATELLITE
                     elif arg.startswith('--terrain'):
                         self.layer = LAYER_TERRAIN
+                    elif arg.startswith('--hybrid'):
+                        self.layer = LAYER_HYBRID
                     elif arg.startswith('--full-range'):
                         self.location = "Whole World"
                         self.lng = 0
