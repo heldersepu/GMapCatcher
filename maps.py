@@ -639,7 +639,7 @@ class MainWindow(gtk.Window):
             self.drawing_area.repaint()
 
     def scale_change_value(self, therange, scroll, value):
-        self.do_zoom(value)
+        self.do_zoom(int(round(value)))
 
     def tile_received(self, tile_coord, layer, download=False):
         if download:
