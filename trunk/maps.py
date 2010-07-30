@@ -503,14 +503,14 @@ class MainWindow(gtk.Window):
     ## Export tiles to one big map
     def do_export(self, button, pointer=None):
         if (pointer is None):
-            tile = self.drawing_area.center[0]
+            tile = self.drawing_area.center
         else:
-            tile, offset = mapUtils.pointer_to_tile(
+            tile = mapUtils.pointer_to_tile(
                  self.drawing_area.get_allocation(),
                 pointer, self.drawing_area.center, self.get_zoom()
             )
         self.ctx_map.do_export(
-            (tile[0], tile[1], self.get_zoom()),
+            tile, self.get_zoom(),
             self.layer, not self.cb_offline.get_active(),
             self.conf, size=(1024, 1024)
         )
