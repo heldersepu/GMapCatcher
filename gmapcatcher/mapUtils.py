@@ -55,9 +55,14 @@ def km_per_pixel(coord):
     world_tiles = tiles_on_level(coord[2])
     return 2*math.pi*R_EARTH/world_tiles/TILES_WIDTH * math.cos(coord[0]*math.pi/180.0)
 
+## should return a tuple of (60 <= pixels <= 125, nice round number of m 
+#                            [% 1000 = 0 when nice round number of km])
 def friendly_scale(zoomlevel):
-    km = km_per_pixel((0, 0, zoomlevel))
-    return (100, 100 * nice_round(km))
+    km = local_round(km_per_pixel((0, 0, zoomlevel)), 4)
+    for i in range (0, 65):
+        if (abs(km * (125 -i)) <= 0.025):
+            return (i , int(km * i * 1000))
+    return (100, int(100000 * nice_round(km))) #currently simplified
 
 ## Convert tuple-like string to real tuples
 # eg: '((1, 2), (2, 3))' -> ((1, 2), (2, 3))
@@ -70,8 +75,11 @@ def str_to_tuple(strCenter):
             (center[2], center[3]))
 
 def nice_round(f):
+    return local_round(f, 2)
+
+def local_round(f, dp):
     n = int(math.log(f, 10))
-    return round(f, 2 - n)
+    return round(f, dp - n)
 
 ##  Convert from ((tile, zoom), rect, center) to screen coordinates
 def tile_coord_to_screen(tile_coord, rect, center):
