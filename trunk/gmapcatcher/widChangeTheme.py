@@ -29,11 +29,14 @@ class ChangeTheme():
         conf.show_cross = int(self.cb_show_cross.get_active())
         memservice = conf.map_service
         memtype = conf.oneDirPerMap
+        memscale = conf.scale_visible
         conf.oneDirPerMap = int(self.cb_oneDirPerMap.get_active())
         conf.map_service = MAP_SERVERS[self.cmb_service.get_active()]
         conf.save()
         if memservice != conf.map_service or memtype != conf.oneDirPerMap:
             self.mapswindow.layer_combo(True)
+        if conf.scale_visible != memscale:
+            self.mapswindow.refresh();
         if self.cmb_themes.get_model():
             cmb_text = self.cmb_themes.get_active_text()
             if cmb_text:
@@ -69,6 +72,17 @@ class ChangeTheme():
         self.cb_show_cross.set_active(show_cross)
         return _frame(" Mark center of the map ", self.cb_show_cross)
 
+    def view_scale_check(self, view_scale):
+        self.cb_view_scale = gtk.CheckButton('View scale of map')
+        self.cb_view_scale.set_active(view_scale)
+        return _frame(' Map Scale ', self.cb_view_scale)
+
+    def scale_cross_element(self, view_scale, show_cross):
+        hbox = gtk.HBox()
+        hbox.pack_start(self.cross_check_box(show_cross))
+        hbox.pack_start(self.view_scale_check(view_scale))
+        return hbox
+
     ## ComboBox to change the map service
     def service_combo(self, map_service, oneDirPerMap):
         vbox = gtk.VBox(False, 5)
@@ -102,7 +116,7 @@ class ChangeTheme():
     def show(self, conf):
         def inner_box():
             vbox = gtk.VBox(False, 10)
-            vbox.pack_start(self.cross_check_box(conf.show_cross))
+            vbox.pack_start(self.scale_cross_element(conf.scale_visible, conf.show_cross))
             vbox.pack_start(self.service_combo(conf.map_service, conf.oneDirPerMap))
             hbox = gtk.HBox(False, 10)
             hbox.set_border_width(20)
