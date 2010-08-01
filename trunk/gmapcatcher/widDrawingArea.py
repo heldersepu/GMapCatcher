@@ -7,6 +7,8 @@ import pango
 import mapUtils
 from mapConst import *
 
+ternary = lambda a,b,c : (b,c)[not a]
+
 ## This widget is where the map is drawn
 class DrawingArea(gtk.DrawingArea):
     center = ((0,0),(128,128))
@@ -140,7 +142,9 @@ class DrawingArea(gtk.DrawingArea):
                 self.scale_lo.set_font_description(pango.FontDescription("sans normal 10"))
             scale_gc = self.scale_gc
             scaledata = mapUtils.friendly_scale(zl)
-            self.scale_lo.set_text(str(scaledata[1]) + " km")
+            scalestr = ternary(scaledata[1] % 1000 == 0, 
+                    str(scaledata[1] // 1000) + "km", str(scaledata[1]) + "m")
+            self.scale_lo.set_text(scalestr)
             self.window.draw_line(scale_gc, 10, full[1] - 10, scaledata[0] + 10, full[1] - 10)
             self.window.draw_layout(self.scale_gc, 10, full[1] - 25, self.scale_lo)
         # Draw the selected location
