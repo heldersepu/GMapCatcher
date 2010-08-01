@@ -135,7 +135,7 @@ class DrawingArea(gtk.DrawingArea):
                         None, None, None,
                         gtk.gdk.INCLUDE_INFERIORS,
                         0, 0, 0, 0, True, 3, gtk.gdk.LINE_SOLID,
-                        gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_ROUND)
+                        gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_MITER)
                 self.scale_gc.set_rgb_bg_color(bg_scale)
                 self.scale_gc.set_rgb_fg_color(fg_scale)
                 self.scale_lo = pango.Layout(self.get_pango_context())
@@ -145,8 +145,11 @@ class DrawingArea(gtk.DrawingArea):
             scalestr = ternary(scaledata[1] % 1000 == 0, 
                     str(scaledata[1] // 1000) + "km", str(scaledata[1]) + "m")
             self.scale_lo.set_text(scalestr)
+            self.window.draw_line(scale_gc, 10, full[1] - 10, 10, full[1] - 15)
             self.window.draw_line(scale_gc, 10, full[1] - 10, scaledata[0] + 10, full[1] - 10)
-            self.window.draw_layout(self.scale_gc, 10, full[1] - 25, self.scale_lo)
+            self.window.draw_line(scale_gc, scaledata[0] + 10, full[1] - 10, scaledata[0] + 10, full[1] - 15)
+            self.window.draw_layout(self.scale_gc, 15, full[1] - 25, self.scale_lo)
+
         # Draw the selected location
         if (entry_name in locations.keys()):
             pixDim = marker.get_pixDim(zl)
