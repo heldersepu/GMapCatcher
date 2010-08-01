@@ -55,6 +55,10 @@ def km_per_pixel(coord):
     world_tiles = tiles_on_level(coord[2])
     return 2*math.pi*R_EARTH/world_tiles/TILES_WIDTH * math.cos(coord[0]*math.pi/180.0)
 
+def friendly_scale(zoomlevel):
+    km = km_per_pixel((0, 0, zoomlevel))
+    return (100, 100 * nice_round(km))
+
 ## Convert tuple-like string to real tuples
 # eg: '((1, 2), (2, 3))' -> ((1, 2), (2, 3))
 def str_to_tuple(strCenter):

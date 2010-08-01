@@ -17,6 +17,7 @@ class DrawingArea(gtk.DrawingArea):
         super(DrawingArea, self).__init__()
 
         self.visualdl_gc = False
+        self.scale_gc = False
 
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK)
         self.connect('button-press-event', self.da_button_press)
@@ -122,6 +123,26 @@ class DrawingArea(gtk.DrawingArea):
                 rect.width/2 - 6, rect.height/2 - 6, 12, 12
             )
 
+        # draw scale
+        if conf.scale_visible:
+            if not self.scale_gc:
+                fg_scale = gtk.gdk.color_parse("#000")
+                bg_scale = gtk.gdk.color_parse("#FFF")
+                self.scale_gc = self.window.new_gc(fg_scale, bg_scale, None,
+                        gtk.gdk.INVERT, gtk.gdk.SOLID,
+                        None, None, None,
+                        gtk.gdk.INCLUDE_INFERIORS,
+                        0, 0, 0, 0, True, 3, gtk.gdk.LINE_SOLID,
+                        gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_ROUND)
+                self.scale_gc.set_rgb_bg_color(bg_scale)
+                self.scale_gc.set_rgb_fg_color(fg_scale)
+                self.scale_lo = pango.Layout(self.get_pango_context())
+                self.scale_lo.set_font_description(pango.FontDescription("sans normal 10"))
+            scale_gc = self.scale_gc
+            scaledata = mapUtils.friendly_scale(zl)
+            self.scale_lo.set_text(str(scaledata[1]) + " km")
+            self.window.draw_line(scale_gc, 10, full[1] - 10, scaledata[0] + 10, full[1] - 10)
+            self.window.draw_layout(self.scale_gc, 10, full[1] - 25, self.scale_lo)
         # Draw the selected location
         if (entry_name in locations.keys()):
             pixDim = marker.get_pixDim(zl)

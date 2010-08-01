@@ -54,6 +54,7 @@ class MapConf():
         config.set(SECTION_INIT, 'save_vlocation', self.save_vlocation)
         config.set(SECTION_INIT, 'save_width', self.save_width)
         config.set(SECTION_INIT, 'save_height', self.save_height)
+        config.set(SECTION_INIT, "scale_visible", self.scale_visible)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -124,6 +125,8 @@ class MapConf():
         self.save_width = read_config('save_width', 550, int)
         ## height when saved at close
         self.save_height = read_config('save_height', 450, int)
+        ## should scale be visible
+        self.scale_visible = read_config('scale_visible', True, int)
 
     ## Write the configuration to the default file
     def save(self):
