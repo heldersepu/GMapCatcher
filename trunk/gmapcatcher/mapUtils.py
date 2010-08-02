@@ -75,11 +75,11 @@ def str_to_tuple(strCenter):
             (center[2], center[3]))
 
 def nice_round(f):
-    return local_round(f, 2)
+    return sig_figs(f, 2)
 
-def local_round(f, dp):
+def sig_figs(f, sf):
     n = int(math.log(f, 10))
-    return round(f, dp - n)
+    return round(f, sf - n)
 
 ##  Convert from ((tile, zoom), rect, center) to screen coordinates
 def tile_coord_to_screen(tile_coord, rect, center):
