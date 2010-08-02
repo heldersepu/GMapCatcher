@@ -142,8 +142,11 @@ class DrawingArea(gtk.DrawingArea):
                 self.scale_lo.set_font_description(pango.FontDescription("sans normal 10"))
             scale_gc = self.scale_gc
             scaledata = mapUtils.friendly_scale(zl)
-            scalestr = ternary(scaledata[1] > 9000, 
-                    str(scaledata[1] // 1000) + " km", str(scaledata[1]) + " m")
+            # some 'dirty' rounding seems necessary :-)
+            scaled = ternary(scaledata[1] % 10 == 9, scaledata[1] + 1, scaledata[1])
+            scaled -= ternary(scaled % 10000 == 1000, 1000, 0)
+            scalestr = ternary(scaled > 9000, 
+                    str(scaled // 1000) + " km", str(scaled) + " m")
             self.scale_lo.set_text(scalestr)
             self.window.draw_line(scale_gc, 10, full[1] - 10, 10, full[1] - 15)
             self.window.draw_line(scale_gc, 10, full[1] - 10, scaledata[0] + 10, full[1] - 10)
