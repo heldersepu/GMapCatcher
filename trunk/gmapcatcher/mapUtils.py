@@ -58,7 +58,7 @@ def km_per_pixel(coord):
 ## should return a tuple of (60 <= pixels <= 125, nice round number of m 
 #                            [% 1000 = 0 when nice round number of km])
 def friendly_scale(zoomlevel):
-    km = local_round(km_per_pixel((0, 0, zoomlevel)), 4)
+    km = sig_figs(km_per_pixel((0, 0, zoomlevel)), 4)
     for i in range (0, 65):
         if (abs(km * (125 -i)) <= 0.025):
             return (i , int(km * i * 1000))
