@@ -20,7 +20,7 @@ from gmapcatcher.mapUpdate import CheckForUpdates
 from gmapcatcher.mapServices import MapServ
 from gmapcatcher.customMsgBox import error_msg
 from gmapcatcher.mapDownloader import MapDownloader
-from gmapcatcher.customWidgets import myToolTip, gtk_menu, FileChooser, lbl, _frame, _myEntry, legal_warning
+from gmapcatcher.customWidgets import *
 from gmapcatcher.xmlUtils import kml_to_markers
 from gmapcatcher.widDrawingArea import DrawingArea
 from gmapcatcher.widCredits import OurCredits
@@ -34,6 +34,7 @@ class MainWindow(gtk.Window):
     reCenter_gps = False
     showMarkers = True
     key_down = None
+    tPoint = {}
 
     ## Get the zoom level from the scale
     def get_zoom(self):
@@ -182,7 +183,7 @@ class MainWindow(gtk.Window):
         thezl = self.get_zoom()
         sz = self.visual_dlconfig.get('sz', 4)
         rect = self.drawing_area.get_allocation()
-        
+
         coord = mapUtils.tile_to_coord(self.drawing_area.center, thezl)
         km_px = mapUtils.km_per_pixel(coord)
 
@@ -192,12 +193,12 @@ class MainWindow(gtk.Window):
                     self.layer, gui_callback(self.visualdl_cb),
                     self.visualdl_update, force_update, self.conf)
         self.visualdl_update()
-        
+
     def check_bulk_down(self):
         if self.conf.map_service in NO_BULK_DOWN:
             return legal_warning(self, self.conf.map_service, "bulk downloading")
         return True
-                
+
 
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self, coord, mode):
@@ -350,48 +351,58 @@ class MainWindow(gtk.Window):
         vbox.set_border_width(5)
         vbox.pack_start(self.__create_upper_box())
         vbox.pack_start(self.__create_check_buttons())
-        return _frame(" Query ", vbox, 0)
+        return myFrame(" Query ", vbox, 0)
 
-    def __create_bottom_paned(self):
+    def __create_export_paned(self):
         vboxCoord = gtk.VBox(False, 5)
-        vboxCoord.set_border_width(5)
+        vboxCoord.set_border_width(10)
 
-        entry1 = gtk.Entry()
-        entry2 = gtk.Entry()
-        entry3 = gtk.Entry()
-        entry4 = gtk.Entry()
+        self.entryUpperLeft = gtk.Entry()
+        self.entryUpperLeft.connect("key-release-event", self.update_export)
+        self.entryLowerRight = gtk.Entry()
+        self.entryLowerRight.connect("key-release-event", self.update_export)
 
-        hbox = gtk.HBox(False, 5)
-        hbox.pack_start(lbl(" lat: "), False, True)
-        hbox.pack_start(entry1)
-        hbox.pack_start(lbl(" lon: "), False, True)
-        hbox.pack_start(entry2)
-        vboxCoord.pack_start(_frame(" Upper Coordinates ", hbox))
+        hbox = gtk.HBox(False)
+        vbox = gtk.VBox(False, 5)
+        vbox.pack_start(lbl("  Upper Left: "))
+        vbox.pack_start(lbl(" Lower Right: "))
+        hbox.pack_start(vbox, False, True)
+        vbox = gtk.VBox(False, 5)
+        vbox.pack_start(self.entryUpperLeft)
+        vbox.pack_start(self.entryLowerRight)
+        hbox.pack_start(vbox)
+        vboxCoord.pack_start(myFrame(" Coordinates of the corners ", hbox))
 
-        hbox = gtk.HBox(False, 5)
-        hbox.pack_start(lbl(" lat: "), False, True)
-        hbox.pack_start(entry3)
-        hbox.pack_start(lbl(" lon: "), False, True)
-        hbox.pack_start(entry4)
-        vboxCoord.pack_start(_frame(" Lower Coordinates ", hbox))
-
+        hboxInput = gtk.HBox(False, 20)
         vboxSize = gtk.VBox(False, 5)
-        hbox = gtk.HBox(False, 5)
         vboxSize.pack_start(lbl(" Width: "), False, True)
-        vboxSize.pack_start(_myEntry("1024"))
+        self.sbWidth = SpinBtn(1024, 256, 99999, 256, 5)
+        self.sbWidth.connect("value-changed", self.update_export)
+        vboxSize.pack_start(self.sbWidth)
         vboxSize.pack_start(lbl(" Height: "), False, True)
-        vboxSize.pack_start(_myEntry("1024"))
+        self.sbHeight = SpinBtn(1024, 256, 99999, 256, 5)
+        self.sbHeight.connect("value-changed", self.update_export)
+        vboxSize.pack_start(self.sbHeight)
+        hboxInput.pack_start(vboxSize)
+
+        vboxZoom = gtk.VBox(False, 5)
+        vboxZoom.set_border_width(20)
+        vboxZoom.pack_start(lbl(" Zoom: "))
+        self.expZoom = SpinBtn(self.get_zoom())
+        self.expZoom.connect("value-changed", self.update_export)
+        vboxZoom.pack_start(self.expZoom)
+        hboxInput.pack_start(vboxZoom)
 
         button = gtk.Button(stock='gtk-ok')
         button.connect('clicked', self.do_export)
         bbox = gtk.HButtonBox()
         bbox.add(button)
+        hboxInput.pack_start(bbox)
 
         hbox = gtk.HBox(False, 5)
         hbox.pack_start(vboxCoord)
-        hbox.pack_start(_frame(" Image Dimensions ", vboxSize))
-        hbox.pack_start(bbox)
-        return _frame(" Export map to PNG image ", hbox)
+        hbox.pack_start(myFrame(" Image Dimensions ", hboxInput))
+        return myFrame(" Export map to PNG image ", hbox)
 
     def __create_left_paned(self, init_zoom):
         scale = gtk.VScale()
@@ -438,6 +449,7 @@ class MainWindow(gtk.Window):
                 zoom, self.get_zoom(), doForce, dPointer
             )
             self.scale.set_value(zoom)
+        self.update_export()
 
     def menu_tools(self, w, strName):
         for intPos in range(len(TOOLS_MENU)):
@@ -495,27 +507,52 @@ class MainWindow(gtk.Window):
 
     ## Show the bottom panel with the export
     def show_export(self, pointer=None):
-        self.maximize()
+        #self.maximize()
         self.left_panel.hide()
         self.top_panel.hide()
-        self.bottom_panel.show()
+        self.export_panel.show()
+
+    ## Update the Map Export Widgets
+    def update_export(self, *args):
+        if self.export_panel.flags() & gtk.VISIBLE:
+            # Convert given size to a tile size factor
+            widthFact = int(self.sbWidth.get_value()/TILES_WIDTH)
+            self.sbWidth.set_value(widthFact * TILES_WIDTH)
+            heightFact = int(self.sbHeight.get_value()/TILES_HEIGHT)
+            self.sbHeight.set_value(heightFact * TILES_HEIGHT)
+            # Get Upper & Lower points
+            coord = mapUtils.tile_to_coord(
+                self.drawing_area.center, self.get_zoom()
+            )            
+            tile = mapUtils.coord_to_tile(
+                (coord[0], coord[1], self.expZoom.get_value_as_int())
+            )            
+            self.tPoint['xLow']  = tile[0][0] - int(widthFact/2)
+            self.tPoint['xHigh'] = tile[0][0] + (widthFact - int(widthFact/2))
+            self.tPoint['yLow']  = tile[0][1] - int(heightFact/2)
+            self.tPoint['yHigh'] = tile[0][1] + (heightFact - int(heightFact/2))
+
+            coord = mapUtils.tile_to_coord(
+                ((self.tPoint['xLow'], self.tPoint['yLow']),
+                 (0,0)), self.expZoom.get_value()
+            )
+            self.entryUpperLeft.set_text(str(coord[0]) + ", " + str(coord[1]))
+            coord = mapUtils.tile_to_coord(
+                ((self.tPoint['xHigh'], self.tPoint['yHigh']),
+                 (TILES_WIDTH, TILES_HEIGHT)), self.expZoom.get_value()
+            )
+            self.entryLowerRight.set_text(str(coord[0]) + ", " + str(coord[1]))
 
     ## Export tiles to one big map
-    def do_export(self, button, pointer=None):
-        if (pointer is None):
-            tile = self.drawing_area.center
-        else:
-            tile = mapUtils.pointer_to_tile(
-                 self.drawing_area.get_allocation(),
-                pointer, self.drawing_area.center, self.get_zoom()
-            )
+    def do_export(self, button):
+        self.update_export()
         self.ctx_map.do_export(
-            tile, self.get_zoom(),
-            self.layer, not self.cb_offline.get_active(),
-            self.conf, size=(1024, 1024)
+            self.tPoint, self.expZoom.get_value_as_int(), self.layer,
+            not self.cb_offline.get_active(), self.conf,
+            (self.sbWidth.get_value(), self.sbHeight.get_value())
         )
 
-        self.bottom_panel.hide()
+        self.export_panel.hide()
         self.left_panel.show()
         self.top_panel.show()
 
@@ -547,6 +584,7 @@ class MainWindow(gtk.Window):
             if (event.get_state() & gtk.gdk.SHIFT_MASK) != 0 and \
                         self.visual_dlconfig.get('active', False):
                 self.visual_download()
+            self.update_export()
 
         if (self.conf.status_location == STATUS_MOUSE or
            (self.conf.status_location == STATUS_GPS and not mapGPS.available)):
@@ -572,7 +610,7 @@ class MainWindow(gtk.Window):
         else:
             self.visual_dlconfig['active'] = False
             self.drawing_area.repaint()
-            
+
     def visualdl_cb(self, *args, **kwargs):
         self.visualdl_update(1)
 
@@ -608,23 +646,18 @@ class MainWindow(gtk.Window):
         ctrlmask = (event.state & gtk.gdk.CONTROL_MASK) != 0
         shiftmask = (event.state & gtk.gdk.SHIFT_MASK) != 0
         sz, zl = 0, 0
-        redraw = False
         if (event.direction == gtk.gdk.SCROLL_UP):
             if dlbool and ctrlmask:
                 zl = 1
-                redraw = True
             elif dlbool and shiftmask:
                 sz = 1
-                redraw = True
             else:
                 self.do_zoom(self.get_zoom() - 1, dPointer=xyPointer)
         else:
             if dlbool and ctrlmask:
                 zl = -1
-                redraw = True
             elif dlbool and shiftmask:
                 sz = -1
-                redraw = True
             else:
                 self.do_zoom(self.get_zoom() + 1, dPointer=xyPointer)
         self.visual_dlconfig["zl"] = self.visual_dlconfig.get('zl', -2) + zl
@@ -635,7 +668,7 @@ class MainWindow(gtk.Window):
             self.visual_dlconfig['sz'] = 1
         if self.visual_dlconfig.get('zl', -2) + self.get_zoom() < -2:
             self.visual_dlconfig['zl'] = -2 - self.get_zoom()
-        if redraw:
+        if sz != 0 or zl != 0:
             self.drawing_area.repaint()
 
     def scale_change_value(self, therange, scroll, value):
@@ -685,7 +718,7 @@ class MainWindow(gtk.Window):
                     self.draw_overlay()
 
     def draw_overlay(self):
-        if self.bottom_panel.flags() & gtk.VISIBLE:
+        if self.export_panel.flags() & gtk.VISIBLE:
             self.drawing_area.draw_overlay(
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
                 self.downloading > 0, self.visual_dlconfig
@@ -718,13 +751,13 @@ class MainWindow(gtk.Window):
                 self.top_panel.hide()
                 self.set_border_width(0)
             else:
-                self.bottom_panel.hide()
+                self.export_panel.hide()
                 self.left_panel.show()
                 self.top_panel.show()
                 self.set_border_width(10)
         # ESC = 65307
         elif keyval == 65307:
-            self.bottom_panel.hide()
+            self.export_panel.hide()
             self.left_panel.show()
             self.top_panel.show()
             self.set_border_width(10)
@@ -829,6 +862,7 @@ class MainWindow(gtk.Window):
     ## All the refresh operations
     def refresh(self):
         self.enable_gps()
+        self.update_export()
         self.marker.refresh()
         self.drawing_area.repaint()
         if self.conf.status_location == STATUS_NONE:
@@ -922,9 +956,9 @@ class MainWindow(gtk.Window):
 
         self.top_panel = self.__create_top_paned()
         self.left_panel = self.__create_left_paned(self.conf.init_zoom)
-        self.bottom_panel = self.__create_bottom_paned()
+        self.export_panel = self.__create_export_paned()
         self.status_bar = self.__create_statusbar()
-        
+
         ico = mapPixbuf.ico()
         if ico:
             self.set_icon(ico)
@@ -936,7 +970,7 @@ class MainWindow(gtk.Window):
 
         inner_vp = gtk.VPaned()
         inner_vp.pack1(self.__create_right_paned(), True, True)
-        inner_vp.pack2(self.bottom_panel, False, False)
+        inner_vp.pack2(self.export_panel, False, False)
 
         hpaned.pack2(inner_vp, True, True)
         vpaned.add2(hpaned)
@@ -960,7 +994,7 @@ class MainWindow(gtk.Window):
             self.move(self.conf.save_hlocation, self.conf.save_vlocation)
         if self.conf.status_location == STATUS_NONE:
             self.status_bar.hide()
-        self.bottom_panel.hide()
+        self.export_panel.hide()
         self.drawing_area.da_set_cursor()
         self.entry.grab_focus()
 

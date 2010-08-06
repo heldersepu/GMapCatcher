@@ -9,7 +9,7 @@ import gtk
 from mapArgs import MapArgs
 from fileUtils import check_dir
 from mapDownloader import MapDownloader
-from customWidgets import _SpinBtn, _myEntry, _frame, lbl, FileChooser, legal_warning
+from customWidgets import *
 
 import mapPixbuf
 import mapUtils
@@ -27,51 +27,51 @@ class DLWindow(gtk.Window):
             out_hbox.set_border_width(10)
             in_hbox = gtk.HBox(False, 20)
             in_hbox.pack_start(lbl("min:"), False)
-            self.s_zoom0 = _SpinBtn(zoom0)
+            self.s_zoom0 = SpinBtn(zoom0)
             self.s_zoom0.set_digits(0)
             in_hbox.pack_start(self.s_zoom0)
             out_hbox.pack_start(in_hbox)
 
             in_hbox = gtk.HBox(False, 20)
             in_hbox.pack_start(lbl("max:"), False)
-            self.s_zoom1 = _SpinBtn(zoom1)
+            self.s_zoom1 = SpinBtn(zoom1)
             self.s_zoom1.set_digits(0)
             in_hbox.pack_start(self.s_zoom1)
             out_hbox.pack_start(in_hbox)
             hbox = gtk.HBox()
             hbox.set_border_width(10)
-            hbox.pack_start(_frame(" Zoom ", out_hbox, 0))
+            hbox.pack_start(myFrame(" Zoom ", out_hbox, 0))
             return hbox
 
         def _center(lat0, lon0):
             vbox = gtk.VBox(False, 5)
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("latitude:"))
-            self.e_lat0 = _myEntry("%.6f" % lat0, 15, False)
+            self.e_lat0 = myEntry("%.6f" % lat0, 15, False)
             hbox.pack_start(self.e_lat0, False)
             vbox.pack_start(hbox)
 
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("longitude:"))
-            self.e_lon0 = _myEntry("%.6f" % lon0, 15, False)
+            self.e_lon0 = myEntry("%.6f" % lon0, 15, False)
             hbox.pack_start(self.e_lon0, False)
             vbox.pack_start(hbox)
-            return _frame(" Center ", vbox)
+            return myFrame(" Center ", vbox)
 
         def _area(kmx, kmy):
             vbox = gtk.VBox(False, 5)
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("width:"))
-            self.e_kmx = _myEntry("%.6g" % kmx, 10, False)
+            self.e_kmx = myEntry("%.6g" % kmx, 10, False)
             hbox.pack_start(self.e_kmx, False)
             vbox.pack_start(hbox)
 
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("height:"))
-            self.e_kmy = _myEntry("%.6g" % kmy, 10, False)
+            self.e_kmy = myEntry("%.6g" % kmy, 10, False)
             hbox.pack_start(self.e_kmy, False)
             vbox.pack_start(hbox)
-            return _frame(" Area (km) ", vbox)
+            return myFrame(" Area (km) ", vbox)
 
         def _buttons(strFolder):
             hbbox = gtk.HButtonBox()

@@ -6,7 +6,7 @@
 import gtk
 import fileUtils
 from mapConst import *
-from customWidgets import _frame, lbl
+from customWidgets import myFrame, lbl
 
 ## This widget lets the user change the visual theme
 class ChangeTheme():
@@ -71,12 +71,12 @@ class ChangeTheme():
     def cross_check_box(self, show_cross):
         self.cb_show_cross = gtk.CheckButton('Show a "+" in the center of the map')
         self.cb_show_cross.set_active(show_cross)
-        return _frame(" Mark center of the map ", self.cb_show_cross)
+        return myFrame(" Mark center of the map ", self.cb_show_cross)
 
     def view_scale_check(self, view_scale):
         self.cb_view_scale = gtk.CheckButton('View scale of map')
         self.cb_view_scale.set_active(view_scale)
-        return _frame(' Map Scale ', self.cb_view_scale)
+        return myFrame(' Map Scale ', self.cb_view_scale)
 
     def scale_cross_element(self, view_scale, show_cross):
         hbox = gtk.HBox()
@@ -106,7 +106,7 @@ class ChangeTheme():
         self.cb_oneDirPerMap.set_active(oneDirPerMap)
         hbox.pack_start(self.cb_oneDirPerMap)
         vbox.pack_start(hbox)
-        return _frame(" Map service ", vbox)
+        return myFrame(" Map service ", vbox)
 
     def key_press(self, widget, event, conf):
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
@@ -132,7 +132,7 @@ class ChangeTheme():
 
         self.load_combo(self.cmb_themes)
         hbox.pack_start(self.cmb_themes)
-        vbox.pack_start(_frame(" Available themes ", hbox), False)
+        vbox.pack_start(myFrame(" Available themes ", hbox), False)
         vbox.pack_start(inner_box(), False)
 
         hpaned = gtk.VPaned()
