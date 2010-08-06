@@ -516,6 +516,9 @@ class MainWindow(gtk.Window):
     ## Show the bottom panel with the export
     def show_export(self, pointer=None):
         #self.maximize()
+        if pointer != None:
+           self.do_zoom(self.get_zoom(), True, pointer) 
+        self.visual_dlconfig['active'] = False
         self.left_panel.hide()
         self.top_panel.hide()
         self.export_panel.show()
