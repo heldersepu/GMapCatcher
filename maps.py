@@ -371,37 +371,45 @@ class MainWindow(gtk.Window):
         vbox.pack_start(self.entryUpperLeft)
         vbox.pack_start(self.entryLowerRight)
         hbox.pack_start(vbox)
-        vboxCoord.pack_start(myFrame(" Coordinates of the corners ", hbox))
+        vboxCoord.pack_start(myFrame(" Corners' coordinates ", hbox))
 
-        hboxInput = gtk.HBox(False, 20)
-        vboxSize = gtk.VBox(False, 5)
-        vboxSize.pack_start(lbl(" Width: "), False, True)
+        vboxInput = gtk.VBox(False, 5)
+        vboxInput.set_border_width(10)
+        vbox = gtk.VBox(False, 20)
+        vbox.set_border_width(10)
+        hboxSize = gtk.HBox(False, 20)
+        hbox = gtk.HBox(False, 5)
+        hbox.pack_start(lbl("Width / Height: "), False, True)
         self.sbWidth = SpinBtn(1024, 256, 99999, 256, 5)
         self.sbWidth.connect("value-changed", self.update_export)
-        vboxSize.pack_start(self.sbWidth)
-        vboxSize.pack_start(lbl(" Height: "), False, True)
+        hbox.pack_start(self.sbWidth, False, True)
+        hbox.pack_start(lbl("/"), False, True)
         self.sbHeight = SpinBtn(1024, 256, 99999, 256, 5)
         self.sbHeight.connect("value-changed", self.update_export)
-        vboxSize.pack_start(self.sbHeight)
-        hboxInput.pack_start(vboxSize)
+        hbox.pack_start(self.sbHeight, False, True)
+        hboxSize.pack_start(hbox)
+        vbox.pack_start(hboxSize)
 
-        vboxZoom = gtk.VBox(False, 5)
-        vboxZoom.set_border_width(20)
-        vboxZoom.pack_start(lbl(" Zoom: "))
+        hboxZoom = gtk.HBox(False, 5)
+        hboxZoom.pack_start(lbl("    Zoom Level: "), False, True)
         self.expZoom = SpinBtn(self.get_zoom())
         self.expZoom.connect("value-changed", self.update_export)
-        vboxZoom.pack_start(self.expZoom)
-        hboxInput.pack_start(vboxZoom)
+        hboxZoom.pack_start(self.expZoom, False, True)
+        vbox.pack_start(hboxZoom)
 
         button = gtk.Button(stock='gtk-ok')
         button.connect('clicked', self.do_export)
+        
+        hboxInput = gtk.HBox(False, 5)
+        hboxInput.pack_start(vbox)        
         bbox = gtk.HButtonBox()
         bbox.add(button)
         hboxInput.pack_start(bbox)
-
+        vboxInput.pack_start(myFrame(" Image settings ", hboxInput))
+        
         hbox = gtk.HBox(False, 5)
         hbox.pack_start(vboxCoord)
-        hbox.pack_start(myFrame(" Image Dimensions ", hboxInput))
+        hbox.pack_start(vboxInput)
         return myFrame(" Export map to PNG image ", hbox)
 
     def __create_left_paned(self, init_zoom):
@@ -511,6 +519,7 @@ class MainWindow(gtk.Window):
         self.left_panel.hide()
         self.top_panel.hide()
         self.export_panel.show()
+        self.update_export()
 
     ## Update the Map Export Widgets
     def update_export(self, *args):
