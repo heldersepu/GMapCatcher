@@ -20,7 +20,7 @@ import mapServers.virtualEarth as virtualEarth
 from mapConst import *
 from threading import Timer
 from gobject import TYPE_STRING
-from mapUtils import tile_to_coord
+
 
 class MapServException(Exception):
     pass
@@ -144,20 +144,17 @@ class MapServ:
         return self.tile_repository.is_tile_in_local_repos(coord, layer)
 
     ## Combine tiles to one big map
-    #  tile are the tile coordinates of the upper left tile
-    def do_combine(self, tile, zoom, layer, online, conf, size):
+    def do_combine(self, tPoint, zoom, layer, online, conf, size):
         from PIL import Image
-        # Convert given size to a tile size factor
-        xFact = int(size[0]/TILES_WIDTH)
-        yFact = int(size[1]/TILES_HEIGHT)
+
         # Initialise the image
-        result = Image.new("RGBA", (xFact* TILES_WIDTH, yFact* TILES_HEIGHT))
+        result = Image.new("RGBA", size)
         x = 0
-        for i in range(tile[0][0], tile[0][0] + xFact):
+        for i in range(tPoint['xLow'], tPoint['xHigh']):
             y = 0
-            for j in range(tile[0][1], tile[0][1] + yFact):
-                if self.tile_repository.get_tile((i,j,zoom), layer, online, False, conf):
-                    pb = self.tile_repository.load_pixbuf((i,j,zoom), layer, False)
+            for j in range(tPoint['yLow'], tPoint['yHigh']):
+                if self.get_tile((i,j,zoom), layer, online, False, conf):
+                    pb = self.load_pixbuf((i,j,zoom), layer, False)
                     width, height = pb.get_width(), pb.get_height()
 
                     result.paste(
@@ -168,20 +165,11 @@ class MapServ:
             x += 1
         result.save("map.png")
 
-        #Upper-Left Tile Coordinates
-        print tile_to_coord((tile[0],(0,0)), zoom)
-        #Lower-Right Tile Coordinates
-        print tile_to_coord(
-            ((tile[0][0] + xFact, tile[0][1] + yFact),
-             (TILES_WIDTH, TILES_HEIGHT)), zoom
-        )
-
-
     ## Export tiles to one big map
-    def do_export(self, tile, zoom, layer, online, conf, size):
+    def do_export(self, tPoint, zoom, layer, online, conf, size):
         def exportThread():
             self.do_combine(
-                tile, zoom, layer, online, conf, size
+                tPoint, zoom, layer, online, conf, size
             )
             print "Export completed!"
         self.exThread = Timer(0, exportThread)

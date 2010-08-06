@@ -6,7 +6,7 @@
 import gtk
 import fileUtils
 from mapConst import *
-from customWidgets import _myEntry, _SpinBtn, _frame, lbl
+from customWidgets import myEntry, SpinBtn, myFrame, lbl
 
 ## This widget lets the user change GPS settings
 class MyGPS():
@@ -42,18 +42,18 @@ class MyGPS():
     def gps_updt_rate(self, gps_update_rate):
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(lbl("Here you can change the GPS update rate: "))
-        self.e_gps_updt_rate = _myEntry(str(gps_update_rate), 4, False)
+        self.e_gps_updt_rate = myEntry(str(gps_update_rate), 4, False)
         hbox.pack_start(self.e_gps_updt_rate)
-        return _frame(" GPS Update Rate ", hbox)
+        return myFrame(" GPS Update Rate ", hbox)
 
     ## Option to change the GPS max zoom
     def gps_max_zoom(self, max_gps_zoom):
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(lbl("Here you can set the maximum zoom for the GPS: "))
-        self.s_gps_max_zoom = _SpinBtn(max_gps_zoom,
+        self.s_gps_max_zoom = SpinBtn(max_gps_zoom,
                 MAP_MIN_ZOOM_LEVEL, MAP_MAX_ZOOM_LEVEL-1)
         hbox.pack_start(self.s_gps_max_zoom)
-        return _frame(" GPS Max Zoom ", hbox)
+        return myFrame(" GPS Max Zoom ", hbox)
 
     ## ComboBox to change the GPS mode
     def gps_mode_combo(self, gps_mode):
@@ -64,7 +64,7 @@ class MyGPS():
             self.cmb_gps_mode.append_text(strMode)
         self.cmb_gps_mode.set_active(gps_mode)
         hbox.pack_start(self.cmb_gps_mode)
-        return _frame(" GPS Mode ", hbox)
+        return myFrame(" GPS Mode ", hbox)
 
     def key_press(self, widget, event, conf):
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
@@ -90,7 +90,7 @@ class MyGPS():
         self.cmb_themes = gtk.combo_box_new_text()
 
         hbox.pack_start(self.cmb_themes)
-        #vbox.pack_start(_frame(" Available themes ", hbox), False)
+        #vbox.pack_start(myFrame(" Available themes ", hbox), False)
         vbox.pack_start(inner_box(), False)
 
         hpaned = gtk.VPaned()

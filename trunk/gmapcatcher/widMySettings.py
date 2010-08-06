@@ -6,7 +6,7 @@
 import os
 import gtk
 from mapConst import *
-from customWidgets import _SpinBtn, _frame, lbl, FolderChooser
+from customWidgets import SpinBtn, myFrame, lbl, FolderChooser
 
 
 ## This widget lets the user change common settings
@@ -16,36 +16,36 @@ class MySettings():
         def _size(width, height):
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(lbl("Width:"), False)
-            self.s_width = _SpinBtn(width, 450, 1024, 100, 4)
+            self.s_width = SpinBtn(width, 450, 1024, 100, 4)
             hbox.pack_start(self.s_width)
 
             hbox.pack_start(lbl("Height:"), False)
-            self.s_height = _SpinBtn(height, 400, 768, 100, 4)
+            self.s_height = SpinBtn(height, 400, 768, 100, 4)
             hbox.pack_start(self.s_height)
-            return _frame(" Size ", hbox)
+            return myFrame(" Size ", hbox)
 
         def _zoom(zoom):
             hbox = gtk.HBox(False, 10)
-            self.s_zoom = _SpinBtn(zoom)
+            self.s_zoom = SpinBtn(zoom)
             hbox.pack_start(self.s_zoom, False)
-            return _frame(" Zoom ", hbox)
+            return myFrame(" Zoom ", hbox)
 
         def _center(center):
             hbox = gtk.HBox(False, 0)
             hbox.pack_start(lbl(" (( "), False)
-            self.s_center00 = _SpinBtn(center[0][0], 0, 999999, 1, 6)
+            self.s_center00 = SpinBtn(center[0][0], 0, 999999, 1, 6)
             hbox.pack_start(self.s_center00, False)
             hbox.pack_start(lbl(" ,  "), False)
-            self.s_center01 = _SpinBtn(center[0][1], 0, 999999, 1, 6)
+            self.s_center01 = SpinBtn(center[0][1], 0, 999999, 1, 6)
             hbox.pack_start(self.s_center01, False)
             hbox.pack_start(lbl(" ), ( "), False)
-            self.s_center10 = _SpinBtn(center[1][0], 0, 256, 32, 3)
+            self.s_center10 = SpinBtn(center[1][0], 0, 256, 32, 3)
             hbox.pack_start(self.s_center10, False)
             hbox.pack_start(lbl(" ,  "), False)
-            self.s_center11 = _SpinBtn(center[1][1], 0, 256, 32, 3)
+            self.s_center11 = SpinBtn(center[1][1], 0, 256, 32, 3)
             hbox.pack_start(self.s_center11, False)
             hbox.pack_start(lbl(" )) "), False)
-            return _frame(" Center ", hbox)
+            return myFrame(" Center ", hbox)
 
         def _status_save(conf):
             def statuscombo(active_type_id):
@@ -63,9 +63,9 @@ class MySettings():
                         gtk.CheckButton(" Save View Params ")
                 self.save_at_close_button.set_active(active_bool)
                 return self.save_at_close_button
-            status = _frame(" Location Status ", 
+            status = myFrame(" Location Status ", 
                             statuscombo(conf.status_location))
-            save = _frame(" Close Settings ", 
+            save = myFrame(" Close Settings ", 
                           save_checkbox(conf.save_at_close))
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(save)
@@ -114,7 +114,7 @@ class MySettings():
             button.connect('clicked', get_folder)
             hbox.pack_start(button, False)
             vbox.pack_start(hbox)
-            return _frame(" Custom Maps Directory ", vbox)
+            return myFrame(" Custom Maps Directory ", vbox)
 
         def _language(old_lang="en"):
             vbox = gtk.VBox(False, 5)
@@ -129,7 +129,7 @@ class MySettings():
             combo.set_active(df)
             vbox.pack_start(combo)
             self.s_language = combo
-            return _frame(" Language ", vbox)
+            return myFrame(" Language ", vbox)
 
         def btn_save_clicked(button):
             conf.init_center = ((self.s_center00.get_value_as_int()),

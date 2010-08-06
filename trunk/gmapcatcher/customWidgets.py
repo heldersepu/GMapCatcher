@@ -20,7 +20,7 @@ def lbl(text):
     return l
 
 ## Pack a given container in a nice frame
-def _frame(strName, container, spacing = 5):
+def myFrame(strName, container, spacing = 5):
     frame = gtk.Frame(strName)
     vbox = gtk.VBox(False, spacing)
     vbox.set_border_width(spacing)
@@ -29,7 +29,7 @@ def _frame(strName, container, spacing = 5):
     return frame
 
 ## A Spin button that allows numbers only
-def _SpinBtn(value=0, lower=MAP_MIN_ZOOM_LEVEL,
+def SpinBtn(value=0, lower=MAP_MIN_ZOOM_LEVEL,
              upper=MAP_MAX_ZOOM_LEVEL, step=1, maxChars=2):
     a_zoom = gtk.Adjustment(value, lower, upper, step)
     spin = gtk.SpinButton(a_zoom)
@@ -37,11 +37,11 @@ def _SpinBtn(value=0, lower=MAP_MIN_ZOOM_LEVEL,
     return spin
 
 ## An entry box that allows numbers only
-def _myEntry(strText, maxChars=8, isInt=True):
-    myEntry = gtk.Entry()
-    myEntry.set_text(strText)
-    myEntry.connect('insert-text', allow_only_numbers, maxChars, isInt)
-    return myEntry
+def myEntry(strText, maxChars=8, isInt=True):
+    dEntry = gtk.Entry()
+    dEntry.set_text(strText)
+    dEntry.connect('insert-text', allow_only_numbers, maxChars, isInt)
+    return dEntry
 
 ## Prompt user to select a Folder
 def FolderChooser():
