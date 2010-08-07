@@ -98,16 +98,49 @@ class DrawingArea(gtk.DrawingArea):
 
     ## Convert coord to screen
     def coord_to_screen(self, x, y, zl):
-        mct = mapUtils.coord_to_tile((x, y, zl)) 
+        mct = mapUtils.coord_to_tile((x, y, zl))
         xy = mapUtils.tile_coord_to_screen(
             (mct[0][0], mct[0][1], zl), self.get_allocation(), self.center
         )
         if xy:
             for x,y in xy:
                 return (x + mct[1][0], y + mct[1][1])
-    
+
+    def set_visualdl_gc(self):
+        if not self.visualdl_gc:
+            fg_col = gtk.gdk.color_parse("#0F0")
+            bg_col = gtk.gdk.color_parse("#0BB")
+            self.visualdl_gc = self.window.new_gc(
+                    fg_col, bg_col, None, gtk.gdk.COPY,
+                    gtk.gdk.SOLID, None, None, None,
+                    gtk.gdk.INCLUDE_INFERIORS,
+                    0, 0, 0, 0, True, 3, gtk.gdk.LINE_DOUBLE_DASH,
+                    gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_ROUND)
+            self.visualdl_gc.set_dashes(0, [3])
+            self.visualdl_gc.set_rgb_fg_color(fg_col)
+            self.visualdl_gc.set_rgb_bg_color(bg_col)
+            self.visualdl_lo = pango.Layout(self.get_pango_context())
+            self.visualdl_lo.set_font_description(
+                pango.FontDescription("sans normal 12"))
+
+    def set_scale_gc(self):
+        if not self.scale_gc:
+            fg_scale = gtk.gdk.color_parse("#000")
+            bg_scale = gtk.gdk.color_parse("#FFF")
+            self.scale_gc = self.window.new_gc(
+                    fg_scale, bg_scale, None, gtk.gdk.INVERT, 
+                    gtk.gdk.SOLID, None, None, None,
+                    gtk.gdk.INCLUDE_INFERIORS,
+                    0, 0, 0, 0, True, 3, gtk.gdk.LINE_SOLID,
+                    gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_MITER)
+            self.scale_gc.set_rgb_bg_color(bg_scale)
+            self.scale_gc.set_rgb_fg_color(fg_scale)
+            self.scale_lo = pango.Layout(self.get_pango_context())
+            self.scale_lo.set_font_description(
+                pango.FontDescription("sans normal 10"))
+            
     ## Draw the second layer of elements
-    def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf, 
+    def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
                     downloading=False, visual_dlconfig = {},
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None):
@@ -125,6 +158,8 @@ class DrawingArea(gtk.DrawingArea):
                         width, height
                     )
 
+        self.set_scale_gc()
+        self.set_visualdl_gc()
         rect = self.get_allocation()
         middle = (rect.width / 2, rect.height / 2)
         full = (rect.width, rect.height)
@@ -135,32 +170,18 @@ class DrawingArea(gtk.DrawingArea):
                 rect.width/2 - 6, rect.height/2 - 6, 12, 12
             )
 
-        # draw scale
-        if conf.scale_visible:
-            if not self.scale_gc:
-                fg_scale = gtk.gdk.color_parse("#000")
-                bg_scale = gtk.gdk.color_parse("#FFF")
-                self.scale_gc = self.window.new_gc(fg_scale, bg_scale, None,
-                        gtk.gdk.INVERT, gtk.gdk.SOLID,
-                        None, None, None,
-                        gtk.gdk.INCLUDE_INFERIORS,
-                        0, 0, 0, 0, True, 3, gtk.gdk.LINE_SOLID,
-                        gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_MITER)
-                self.scale_gc.set_rgb_bg_color(bg_scale)
-                self.scale_gc.set_rgb_fg_color(fg_scale)
-                self.scale_lo = pango.Layout(self.get_pango_context())
-                self.scale_lo.set_font_description(pango.FontDescription("sans normal 10"))
-            scale_gc = self.scale_gc
+        # Draw scale
+        if conf.scale_visible:            
             scaledata = mapUtils.friendly_scale(zl)
             # some 'dirty' rounding seems necessary :-)
             scaled = ternary(scaledata[1] % 10 == 9, scaledata[1] + 1, scaledata[1])
             scaled -= ternary(scaled % 10000 == 1000, 1000, 0)
-            scalestr = ternary(scaled > 9000, 
+            scalestr = ternary(scaled > 9000,
                     str(scaled // 1000) + " km", str(scaled) + " m")
             self.scale_lo.set_text(scalestr)
-            self.window.draw_line(scale_gc, 10, full[1] - 10, 10, full[1] - 15)
-            self.window.draw_line(scale_gc, 10, full[1] - 10, scaledata[0] + 10, full[1] - 10)
-            self.window.draw_line(scale_gc, scaledata[0] + 10, full[1] - 10, scaledata[0] + 10, full[1] - 15)
+            self.window.draw_line(self.scale_gc, 10, full[1] - 10, 10, full[1] - 15)
+            self.window.draw_line(self.scale_gc, 10, full[1] - 10, scaledata[0] + 10, full[1] - 10)
+            self.window.draw_line(self.scale_gc, scaledata[0] + 10, full[1] - 10, scaledata[0] + 10, full[1] - 15)
             self.window.draw_layout(self.scale_gc, 15, full[1] - 25, self.scale_lo)
 
         # Draw the selected location
@@ -191,42 +212,29 @@ class DrawingArea(gtk.DrawingArea):
         if downloading:
             self.window.draw_pixbuf(
                 self.style.black_gc, dlpixbuf, 0, 0, 0, 0, -1, -1)
-                
+
         sz = visual_dlconfig.get("sz", 4)
 
+        # Draw a rectangle
         if visual_dlconfig.get("show_rectangle", False):
             width = visual_dlconfig.get("width_rect", 0)
             height = visual_dlconfig.get("height_rect", 0)
-            if width > 0 and height > 0:
+            if width > 0 and height > 0:                
                 self.window.draw_rectangle(
-                    self.style.black_gc, False, 
+                    self.scale_gc, True,
                     visual_dlconfig.get("x_rect", 0),
                     visual_dlconfig.get("y_rect", 0),
                     width, height
                 )
+
+        # Draw the download utility
         elif visual_dlconfig.get("active", False):
-            if not self.visualdl_gc:
-                fg_col = gtk.gdk.color_parse("#0F0")
-                bg_col = gtk.gdk.color_parse("#0BB")
-                self.visualdl_gc = self.window.new_gc(
-                        fg_col, bg_col, None, gtk.gdk.COPY,
-                        gtk.gdk.SOLID, None, None, None,
-                        gtk.gdk.INCLUDE_INFERIORS,
-                        0, 0, 0, 0, True, 3, gtk.gdk.LINE_DOUBLE_DASH,
-                        gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_ROUND)
-                self.visualdl_gc.set_dashes(0, [3])
-                self.visualdl_gc.set_rgb_fg_color(fg_col)
-                self.visualdl_gc.set_rgb_bg_color(bg_col)
-                self.visualdl_lo = pango.Layout(self.get_pango_context())
-                self.visualdl_lo.set_font_description(
-                        pango.FontDescription("sans normal 12"))
-            thegc = self.visualdl_gc
             thezl = str(zl + visual_dlconfig.get("zl", -2))
             self.visualdl_lo.set_text(thezl)
-            self.window.draw_rectangle(thegc, False, 
+            self.window.draw_rectangle(self.visualdl_gc, False,
                     middle[0] - full[0] / (sz * 2),
                     middle[1] - full[1] / (sz * 2), full[0] / sz, full[1] / sz)
-            self.window.draw_layout(thegc,
+            self.window.draw_layout(self.visualdl_gc,
                     middle[0] + full[0] / (sz * 2) - len(thezl) * 10,
                     middle[1] - full[1] / (sz * 2),
                     self.visualdl_lo)
@@ -241,6 +249,6 @@ class DrawingArea(gtk.DrawingArea):
                 ypos = 0
             self.window.draw_layout(self.visualdl_gc,
                     middle[0],
-                    middle[1] + full[1] / (sz * 2) + ypos, 
+                    middle[1] + full[1] / (sz * 2) + ypos,
                     self.visualdl_lo)
-                
+
