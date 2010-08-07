@@ -515,7 +515,9 @@ class MainWindow(gtk.Window):
 
     ## Show the bottom panel with the export
     def show_export(self, pointer=None):
-        #self.maximize()
+        size = self.get_size()
+        if size[0] < 700:
+            self.resize(700, size[1])
         if pointer != None:
            self.do_zoom(self.get_zoom(), True, pointer) 
         self.visual_dlconfig['active'] = False
@@ -884,6 +886,7 @@ class MainWindow(gtk.Window):
 
     ## Final actions before main_quit
     def on_delete(self, *args):
+        self.unmaximize()
         sz = self.get_size()
         location = self.get_position()
         self.hide()
