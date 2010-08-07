@@ -96,6 +96,16 @@ class DrawingArea(gtk.DrawingArea):
     def repaint(self):
         self.queue_draw()
 
+    ## Convert coord to screen
+    def coord_to_screen(self, x, y, zl):
+        mct = mapUtils.coord_to_tile((x, y, zl)) 
+        xy = mapUtils.tile_coord_to_screen(
+            (mct[0][0], mct[0][1], zl), self.get_allocation(), self.center
+        )
+        if xy:
+            for x,y in xy:
+                return (x + mct[1][0], y + mct[1][1])
+    
     ## Draw the second layer of elements
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf, 
                     downloading=False, visual_dlconfig = {},
@@ -184,9 +194,16 @@ class DrawingArea(gtk.DrawingArea):
                 
         sz = visual_dlconfig.get("sz", 4)
 
-        if visual_dlconfig.get("draw_rectangle", False):
-            self.window.draw_rectangle(self.get_style().black_gc, False, 
-                    middle[0]-50, middle[1]-40, 100, 80)
+        if visual_dlconfig.get("show_rectangle", False):
+            width = visual_dlconfig.get("width_rect", 0)
+            height = visual_dlconfig.get("height_rect", 0)
+            if width > 0 and height > 0:
+                self.window.draw_rectangle(
+                    self.style.black_gc, False, 
+                    visual_dlconfig.get("x_rect", 0),
+                    visual_dlconfig.get("y_rect", 0),
+                    width, height
+                )
         elif visual_dlconfig.get("active", False):
             if not self.visualdl_gc:
                 fg_col = gtk.gdk.color_parse("#0F0")
