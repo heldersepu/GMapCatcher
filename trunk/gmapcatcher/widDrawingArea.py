@@ -184,7 +184,10 @@ class DrawingArea(gtk.DrawingArea):
                 
         sz = visual_dlconfig.get("sz", 4)
 
-        if visual_dlconfig.get("active", False):
+        if visual_dlconfig.get("draw_rectangle", False):
+            self.window.draw_rectangle(self.get_style().black_gc, False, 
+                    middle[0]-50, middle[1]-40, 100, 80)
+        elif visual_dlconfig.get("active", False):
             if not self.visualdl_gc:
                 fg_col = gtk.gdk.color_parse("#0F0")
                 bg_col = gtk.gdk.color_parse("#0BB")
@@ -203,7 +206,8 @@ class DrawingArea(gtk.DrawingArea):
             thegc = self.visualdl_gc
             thezl = str(zl + visual_dlconfig.get("zl", -2))
             self.visualdl_lo.set_text(thezl)
-            self.window.draw_rectangle(thegc, False, middle[0] - full[0] / (sz * 2),
+            self.window.draw_rectangle(thegc, False, 
+                    middle[0] - full[0] / (sz * 2),
                     middle[1] - full[1] / (sz * 2), full[0] / sz, full[1] / sz)
             self.window.draw_layout(thegc,
                     middle[0] + full[0] / (sz * 2) - len(thezl) * 10,
@@ -220,5 +224,6 @@ class DrawingArea(gtk.DrawingArea):
                 ypos = 0
             self.window.draw_layout(self.visualdl_gc,
                     middle[0],
-                    middle[1] + full[1] / (sz * 2) + ypos, self.visualdl_lo)
+                    middle[1] + full[1] / (sz * 2) + ypos, 
+                    self.visualdl_lo)
                 

@@ -519,8 +519,9 @@ class MainWindow(gtk.Window):
         if size[0] < 700:
             self.resize(700, size[1])
         if pointer != None:
-           self.do_zoom(self.get_zoom(), True, pointer) 
+            self.do_zoom(self.get_zoom(), True, pointer) 
         self.visual_dlconfig['active'] = False
+        self.visual_dltool.set_active(False)
         self.left_panel.hide()
         self.top_panel.hide()
         self.export_panel.show()
@@ -529,6 +530,7 @@ class MainWindow(gtk.Window):
     ## Update the Map Export Widgets
     def update_export(self, *args):
         if self.export_panel.flags() & gtk.VISIBLE:
+            self.visual_dlconfig["draw_rectangle"] = True
             # Convert given size to a tile size factor
             widthFact = int(self.sbWidth.get_value()/TILES_WIDTH)
             self.sbWidth.set_value(widthFact * TILES_WIDTH)
@@ -556,6 +558,8 @@ class MainWindow(gtk.Window):
                  (TILES_WIDTH, TILES_HEIGHT)), self.expZoom.get_value()
             )
             self.entryLowerRight.set_text(str(coord[0]) + ", " + str(coord[1]))
+        else:
+            self.visual_dlconfig["draw_rectangle"] = False
 
     ## Export tiles to one big map
     def do_export(self, button):
@@ -854,16 +858,15 @@ class MainWindow(gtk.Window):
             self.refresh()
         # F6 = 65475
         elif event.keyval == 65475:
-            self.visual_dlconfig['active'] = \
-                not self.visual_dlconfig.get('active', False)
-            if self.visual_dlconfig['active'] and not self.check_bulk_down():
-                self.visual_dlconfig['active'] = False
-            self.visual_dltool.set_active(
-                    self.visual_dlconfig.get('active', False))
-            if not self.visual_dlconfig.get('downloader', False):
-                self.visual_dlconfig['downloader'] = \
-                        MapDownloader(self.ctx_map)
-            self.drawing_area.repaint()
+            if not(self.export_panel.flags() & gtk.VISIBLE):
+                self.visual_dlconfig['active'] = \
+                    not self.visual_dlconfig.get('active', False)
+                self.visual_dltool.set_active(
+                        self.visual_dlconfig.get('active', False))
+                if not self.visual_dlconfig.get('downloader', False):
+                    self.visual_dlconfig['downloader'] = \
+                            MapDownloader(self.ctx_map)
+                self.drawing_area.repaint()
         # F8 = 65477
         elif event.keyval == 65477:
             self.showMarkers = not self.showMarkers
