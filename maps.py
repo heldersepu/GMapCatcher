@@ -760,12 +760,12 @@ class MainWindow(gtk.Window):
                 self.unmaximize()
         # F12 = 65481
         elif keyval == 65481:
+            self.export_panel.hide()
             if self.get_border_width() > 0:
                 self.left_panel.hide()
                 self.top_panel.hide()
                 self.set_border_width(0)
             else:
-                self.export_panel.hide()
                 self.left_panel.show()
                 self.top_panel.show()
                 self.set_border_width(10)
