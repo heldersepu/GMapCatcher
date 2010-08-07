@@ -399,14 +399,14 @@ class MainWindow(gtk.Window):
 
         button = gtk.Button(stock='gtk-ok')
         button.connect('clicked', self.do_export)
-        
+
         hboxInput = gtk.HBox(False, 5)
-        hboxInput.pack_start(vbox)        
+        hboxInput.pack_start(vbox)
         bbox = gtk.HButtonBox()
         bbox.add(button)
         hboxInput.pack_start(bbox)
         vboxInput.pack_start(myFrame(" Image settings ", hboxInput))
-        
+
         hbox = gtk.HBox(False, 5)
         hbox.pack_start(vboxCoord)
         hbox.pack_start(vboxInput)
@@ -519,7 +519,7 @@ class MainWindow(gtk.Window):
         if size[0] < 700:
             self.resize(700, size[1])
         if pointer != None:
-            self.do_zoom(self.get_zoom(), True, pointer) 
+            self.do_zoom(self.get_zoom(), True, pointer)
         self.visual_dlconfig['active'] = False
         self.visual_dltool.set_active(False)
         self.left_panel.hide()
@@ -529,37 +529,56 @@ class MainWindow(gtk.Window):
 
     ## Update the Map Export Widgets
     def update_export(self, *args):
+        self.visual_dlconfig["show_rectangle"] = False
         if self.export_panel.flags() & gtk.VISIBLE:
-            self.visual_dlconfig["draw_rectangle"] = True
             # Convert given size to a tile size factor
             widthFact = int(self.sbWidth.get_value()/TILES_WIDTH)
             self.sbWidth.set_value(widthFact * TILES_WIDTH)
             heightFact = int(self.sbHeight.get_value()/TILES_HEIGHT)
             self.sbHeight.set_value(heightFact * TILES_HEIGHT)
-            # Get Upper & Lower points
+            # Get Upper & Lower points 
             coord = mapUtils.tile_to_coord(
                 self.drawing_area.center, self.get_zoom()
-            )            
+            )
             tile = mapUtils.coord_to_tile(
                 (coord[0], coord[1], self.expZoom.get_value_as_int())
-            )            
+            )
             self.tPoint['xLow']  = tile[0][0] - int(widthFact/2)
             self.tPoint['xHigh'] = tile[0][0] + (widthFact - int(widthFact/2))
             self.tPoint['yLow']  = tile[0][1] - int(heightFact/2)
             self.tPoint['yHigh'] = tile[0][1] + (heightFact - int(heightFact/2))
 
-            coord = mapUtils.tile_to_coord(
+            lowCoord = mapUtils.tile_to_coord(
                 ((self.tPoint['xLow'], self.tPoint['yLow']),
-                 (0,0)), self.expZoom.get_value()
+                 (0,0)), self.expZoom.get_value_as_int()
             )
-            self.entryUpperLeft.set_text(str(coord[0]) + ", " + str(coord[1]))
-            coord = mapUtils.tile_to_coord(
+            self.entryUpperLeft.set_text(str(lowCoord[0]) + ", " + str(lowCoord[1]))
+
+            highCoord = mapUtils.tile_to_coord(
                 ((self.tPoint['xHigh'], self.tPoint['yHigh']),
-                 (TILES_WIDTH, TILES_HEIGHT)), self.expZoom.get_value()
+                 (0, 0)), self.expZoom.get_value_as_int()
             )
-            self.entryLowerRight.set_text(str(coord[0]) + ", " + str(coord[1]))
-        else:
-            self.visual_dlconfig["draw_rectangle"] = False
+            self.entryLowerRight.set_text(str(highCoord[0]) + ", " + str(highCoord[1]))
+            
+            # Set the vars to draw rectangle
+            lowScreen = self.drawing_area.coord_to_screen(
+                lowCoord[0], lowCoord[1], self.get_zoom()
+            )
+            if lowScreen:
+                self.visual_dlconfig["x_rect"] = lowScreen[0]
+                self.visual_dlconfig["y_rect"] = lowScreen[1]
+                highScreen = self.drawing_area.coord_to_screen(
+                    highCoord[0], highCoord[1], self.get_zoom()
+                )
+                if highScreen:
+                    self.visual_dlconfig["show_rectangle"] = True
+                    self.visual_dlconfig["width_rect"] = \
+                        highScreen[0] - lowScreen[0]
+                    self.visual_dlconfig["height_rect"] = \
+                        highScreen[1] - lowScreen[1]
+            
+            self.drawing_area.repaint()
+            
 
     ## Export tiles to one big map
     def do_export(self, button):
@@ -573,6 +592,7 @@ class MainWindow(gtk.Window):
         self.export_panel.hide()
         self.left_panel.show()
         self.top_panel.show()
+        self.update_export()
 
 
     ## Handles Right & Double clicks events in the drawing_area
@@ -781,6 +801,7 @@ class MainWindow(gtk.Window):
             self.set_border_width(10)
             self.set_keep_above(False)
             self.set_decorated(True)
+            self.update_export()
             self.unmaximize()
 
     ## Handles the keyboard navigation
