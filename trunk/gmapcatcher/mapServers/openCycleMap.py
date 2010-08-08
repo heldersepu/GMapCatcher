@@ -5,7 +5,6 @@ from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 
 ## Returns a template URL for the OpenCycleMap
 def layer_url_template():
-
     return 'http://%s.andy.sandbox.cloudmade.com/tiles/cycle/%i/%i/%i.png'
 
 ## Returns the URL to the OpenCycleMap tile

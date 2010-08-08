@@ -3,7 +3,6 @@
 
 import re
 import gmapcatcher.openanything as openanything
-from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 
 known_layers = {}
 

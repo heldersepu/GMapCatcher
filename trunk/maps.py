@@ -414,7 +414,7 @@ class MainWindow(gtk.Window):
 
     def __create_left_paned(self, init_zoom):
         scale = gtk.VScale()
-        scale.set_range(MAP_MIN_ZOOM_LEVEL, MAP_MAX_ZOOM_LEVEL)
+        scale.set_range(MAP_MIN_ZOOM_LEVEL, MAP_MAX_ZOOM_LEVEL-1)
         # scale.set_inverted(True)
         scale.set_property("update-policy", gtk.UPDATE_DISCONTINUOUS)
         scale.set_size_request(30, -1)
@@ -452,7 +452,7 @@ class MainWindow(gtk.Window):
 
     ## Zoom to the given pointer
     def do_zoom(self, zoom, doForce=False, dPointer=False):
-        if (MAP_MIN_ZOOM_LEVEL <= zoom <= MAP_MAX_ZOOM_LEVEL):
+        if (MAP_MIN_ZOOM_LEVEL <= zoom <= (MAP_MAX_ZOOM_LEVEL-1)):
             self.drawing_area.do_scale(
                 zoom, self.get_zoom(), doForce, dPointer
             )
@@ -474,7 +474,7 @@ class MainWindow(gtk.Window):
         elif strName == DA_MENU[CENTER_MAP]:
             self.do_zoom(self.get_zoom(), True, self.myPointer)
         elif strName == DA_MENU[RESET]:
-            self.do_zoom(MAP_MAX_ZOOM_LEVEL)
+            self.do_zoom(MAP_MAX_ZOOM_LEVEL -1)
         elif strName == DA_MENU[BATCH_DOWN]:
             self.download_clicked(w, self.myPointer)
         elif strName == DA_MENU[EXPORT_MAP]:
