@@ -457,7 +457,7 @@ class MainWindow(gtk.Window):
                 zoom, self.get_zoom(), doForce, dPointer
             )
             self.scale.set_value(zoom)
-        self.update_export()
+            self.update_export()
 
     def menu_tools(self, w, strName):
         for intPos in range(len(TOOLS_MENU)):
@@ -518,14 +518,15 @@ class MainWindow(gtk.Window):
         size = self.get_size()
         if size[0] < 700:
             self.resize(700, size[1])
-        if pointer != None:
-            self.do_zoom(self.get_zoom(), True, pointer)
         self.visual_dlconfig['active'] = False
         self.visual_dltool.set_active(False)
-        self.left_panel.hide()
         self.top_panel.hide()
         self.export_panel.show()
-        self.update_export()
+        zl = self.get_zoom()
+        if zl < (MAP_MIN_ZOOM_LEVEL + 2):
+            zl = MAP_MIN_ZOOM_LEVEL + 2
+        self.expZoom.set_value(zl - 2)
+        self.do_zoom(zl, True, pointer)
 
     ## Update the Map Export Widgets
     def update_export(self, *args):
@@ -536,7 +537,7 @@ class MainWindow(gtk.Window):
             self.sbWidth.set_value(widthFact * TILES_WIDTH)
             heightFact = int(self.sbHeight.get_value()/TILES_HEIGHT)
             self.sbHeight.set_value(heightFact * TILES_HEIGHT)
-            # Get Upper & Lower points 
+            # Get Upper & Lower points
             coord = mapUtils.tile_to_coord(
                 self.drawing_area.center, self.get_zoom()
             )
@@ -559,7 +560,7 @@ class MainWindow(gtk.Window):
                  (0, 0)), self.expZoom.get_value_as_int()
             )
             self.entryLowerRight.set_text(str(highCoord[0]) + ", " + str(highCoord[1]))
-            
+
             # Set the vars to draw rectangle
             lowScreen = self.drawing_area.coord_to_screen(
                 lowCoord[0], lowCoord[1], self.get_zoom()
@@ -576,9 +577,13 @@ class MainWindow(gtk.Window):
                         highScreen[0] - lowScreen[0]
                     self.visual_dlconfig["height_rect"] = \
                         highScreen[1] - lowScreen[1]
-            
+                else:
+                    self.do_zoom(self.get_zoom() +1, True)
+            else:
+                self.do_zoom(self.get_zoom() +1, True)
+
             self.drawing_area.repaint()
-            
+
 
     ## Export tiles to one big map
     def do_export(self, button):
@@ -793,6 +798,7 @@ class MainWindow(gtk.Window):
                 self.left_panel.show()
                 self.top_panel.show()
                 self.set_border_width(10)
+            self.update_export()
         # ESC = 65307
         elif keyval == 65307:
             self.export_panel.hide()
@@ -1002,17 +1008,18 @@ class MainWindow(gtk.Window):
         if ico:
             self.set_icon(ico)
 
-        vpaned = gtk.VPaned()
-        vpaned.pack1(self.top_panel, False, False)
         hpaned = gtk.HPaned()
         hpaned.pack1(self.left_panel, False, False)
+        hpaned.pack2(self.__create_right_paned(), True, True)
 
         inner_vp = gtk.VPaned()
-        inner_vp.pack1(self.__create_right_paned(), True, True)
+        inner_vp.pack1(hpaned, True, True)
         inner_vp.pack2(self.export_panel, False, False)
 
-        hpaned.pack2(inner_vp, True, True)
-        vpaned.add2(hpaned)
+        vpaned = gtk.VPaned()
+        vpaned.pack1(self.top_panel, False, False)
+        vpaned.pack2(inner_vp)
+
         vbox = gtk.VBox(False, 0)
         vbox.pack_start(vpaned, True, True, 0)
         vbox.pack_start(self.status_bar, False, False, 0)
