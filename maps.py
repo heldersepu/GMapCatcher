@@ -583,7 +583,9 @@ class MainWindow(gtk.Window):
                 self.do_zoom(self.get_zoom() +1, True)
 
             self.drawing_area.repaint()
-
+    
+    def export_done(self, text):
+        error_msg(self, "Export completed \n" + text)
 
     ## Export tiles to one big map
     def do_export(self, button):
@@ -591,7 +593,8 @@ class MainWindow(gtk.Window):
         self.ctx_map.do_export(
             self.tPoint, self.expZoom.get_value_as_int(), self.layer,
             not self.cb_offline.get_active(), self.conf,
-            (self.sbWidth.get_value(), self.sbHeight.get_value())
+            (self.sbWidth.get_value(), self.sbHeight.get_value()),
+            gui_callback(self.export_done)
         )
 
         self.export_panel.hide()
