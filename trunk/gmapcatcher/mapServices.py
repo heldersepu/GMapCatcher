@@ -166,12 +166,13 @@ class MapServ:
         result.save("map.png")
 
     ## Export tiles to one big map
-    def do_export(self, tPoint, zoom, layer, online, conf, size):
+    def do_export(self, tPoint, zoom, layer, online, conf, size, callback):
         def exportThread():
             self.do_combine(
                 tPoint, zoom, layer, online, conf, size
             )
             print "Export completed!"
+            callback(None, "map.png")
         self.exThread = Timer(0, exportThread)
         self.exThread.start()
 
