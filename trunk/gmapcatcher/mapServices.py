@@ -145,42 +145,44 @@ class MapServ:
 
     ## Combine tiles to one big map
     def do_combine(self, tPoint, zoom, layer, online, conf, size):
-        from PIL import Image
+        try:
+            from PIL import Image
 
-        # Initialise the image
-        result = Image.new("RGBA", size)
-        x = 0
-        for i in range(tPoint['xLow'], tPoint['xHigh']):
-            y = 0
-            for j in range(tPoint['yLow'], tPoint['yHigh']):
-                if self.get_tile((i,j,zoom), layer, online, False, conf):
-                    pb = self.load_pixbuf((i,j,zoom), layer, False)
-                    width, height = pb.get_width(), pb.get_height()
+            # Initialise the image
+            result = Image.new("RGBA", size)
+            x = 0
+            for i in range(tPoint['xLow'], tPoint['xHigh']):
+                y = 0
+                for j in range(tPoint['yLow'], tPoint['yHigh']):
+                    if self.get_tile((i,j,zoom), layer, online, False, conf):
+                        pb = self.load_pixbuf((i,j,zoom), layer, False)
+                        width, height = pb.get_width(), pb.get_height()
 
-                    result.paste(
-                        Image.fromstring("RGB", (width,height), pb.get_pixels()),
-                        (x* TILES_WIDTH, y* TILES_HEIGHT)
-                    )
-                y += 1
-            x += 1
-        result.save("map.png")
+                        result.paste(
+                            Image.fromstring("RGB", (width,height), pb.get_pixels()),
+                            (x* TILES_WIDTH, y* TILES_HEIGHT)
+                        )
+                    y += 1
+                x += 1
+            fileName = tPoint['FileName']
+            result.save(fileName)
+            return fileName
+        except Exception, inst:
+            return str(inst)
 
     ## Export tiles to one big map
     def do_export(self, tPoint, zoom, layer, online, conf, size, callback):
         def exportThread():
-            self.do_combine(
+            fileName = self.do_combine(
                 tPoint, zoom, layer, online, conf, size
             )
-            print "Export completed!"
-            callback(None, "map.png")
+            callback(None, fileName)
         self.exThread = Timer(0, exportThread)
         self.exThread.start()
 
 
     def load_pixbuf(self, coord, layer, force_update):
         return self.tile_repository.load_pixbuf(coord, layer, force_update)
-
-
 
     def completion_model(self, strAppend=''):
         store = gtk.ListStore(TYPE_STRING)

@@ -3,6 +3,7 @@
 # This is a collection of Custom Widgets
 
 import gtk
+import gobject
 import mapPixbuf
 from mapConst import *
 from inputValidation import allow_only_numbers
@@ -108,11 +109,11 @@ def gtk_menu(listItems, activate_action):
         menu_items.connect("activate", activate_action, thestr)
         menu_items.show()
     return myMenu
-    
+
 def legal_warning(parent, servicename, feature):
     msgtype = ternary(STRICT_LEGAL, gtk.MESSAGE_INFO, gtk.MESSAGE_WARNING)
     buttons = ternary(STRICT_LEGAL, gtk.BUTTONS_CANCEL, gtk.BUTTONS_OK_CANCEL)
-    additional = ternary(STRICT_LEGAL, "", 
+    additional = ternary(STRICT_LEGAL, "",
             "If you insist on doing so, you break its term of use. \n\n"
             "Continue or cancel?")
     dialog = gtk.MessageDialog(parent,
@@ -123,3 +124,29 @@ def legal_warning(parent, servicename, feature):
     response = dialog.run()
     dialog.destroy()
     return response == gtk.RESPONSE_OK and not STRICT_LEGAL
+
+## A looping ProgressBar
+class ProgressBar(gtk.ProgressBar):
+    timer = 0
+
+    def progress_timeout(pbobj):
+        pbobj.pulse()
+        return True
+
+    def __init__(self, strText):
+        super(ProgressBar, self).__init__()
+        self.set_text(strText)
+
+    def off(self):
+        try:
+            if self.timer != 0:
+                gobject.source_remove(self.timer)
+                self.timer = 0
+        finally:
+            self.hide()
+
+    def on(self):
+        try:
+            self.timer = gobject.timeout_add(100, self.progress_timeout)
+        finally:
+            self.show()
