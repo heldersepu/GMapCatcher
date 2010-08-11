@@ -407,9 +407,14 @@ class MainWindow(gtk.Window):
         hboxInput.pack_start(bbox)
         vboxInput.pack_start(myFrame(" Image settings ", hboxInput))
 
+        self.export_box = gtk.HBox(False, 5)
+        self.export_box.pack_start(vboxCoord)
+        self.export_box.pack_start(vboxInput)
+        self.export_pbar = ProgressBar(" Exporting... ")
         hbox = gtk.HBox(False, 5)
-        hbox.pack_start(vboxCoord)
-        hbox.pack_start(vboxInput)
+        hbox.pack_start(self.export_box)
+        hbox.pack_start(self.export_pbar)
+
         return myFrame(" Export map to PNG image ", hbox)
 
     def __create_left_paned(self, init_zoom):
@@ -515,6 +520,7 @@ class MainWindow(gtk.Window):
 
     ## Show the bottom panel with the export
     def show_export(self, pointer=None):
+        self.cb_offline.set_active(True)
         size = self.get_size()
         if size[0] < 700:
             self.resize(700, size[1])
@@ -522,6 +528,8 @@ class MainWindow(gtk.Window):
         self.visual_dltool.set_active(False)
         self.top_panel.hide()
         self.export_panel.show()
+        self.export_pbar.off()
+        #Set the zoom level
         zl = self.get_zoom()
         if zl < (MAP_MIN_ZOOM_LEVEL + 2):
             zl = MAP_MIN_ZOOM_LEVEL + 2
@@ -554,6 +562,7 @@ class MainWindow(gtk.Window):
                  (0,0)), self.expZoom.get_value_as_int()
             )
             self.entryUpperLeft.set_text(str(lowCoord[0]) + ", " + str(lowCoord[1]))
+            self.tPoint['FileName'] = "coord=%.6f,%.6f_zoom=%d.png" % lowCoord
 
             highCoord = mapUtils.tile_to_coord(
                 ((self.tPoint['xHigh'], self.tPoint['yHigh']),
@@ -583,12 +592,16 @@ class MainWindow(gtk.Window):
                 self.do_zoom(self.get_zoom() +1, True)
 
             self.drawing_area.repaint()
-    
+
     def export_done(self, text):
+        self.export_pbar.off()
+        self.export_box.show()
         error_msg(self, "Export completed \n" + text)
 
     ## Export tiles to one big map
     def do_export(self, button):
+        self.export_box.hide()
+        self.export_pbar.on()
         self.update_export()
         self.ctx_map.do_export(
             self.tPoint, self.expZoom.get_value_as_int(), self.layer,
@@ -596,12 +609,6 @@ class MainWindow(gtk.Window):
             (self.sbWidth.get_value(), self.sbHeight.get_value()),
             gui_callback(self.export_done)
         )
-
-        self.export_panel.hide()
-        self.left_panel.show()
-        self.top_panel.show()
-        self.update_export()
-
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
@@ -793,6 +800,7 @@ class MainWindow(gtk.Window):
         # F12 = 65481
         elif keyval == 65481:
             self.export_panel.hide()
+            self.export_pbar.off()
             if self.get_border_width() > 0:
                 self.left_panel.hide()
                 self.top_panel.hide()
@@ -805,6 +813,7 @@ class MainWindow(gtk.Window):
         # ESC = 65307
         elif keyval == 65307:
             self.export_panel.hide()
+            self.export_pbar.off()
             self.left_panel.show()
             self.top_panel.show()
             self.set_border_width(10)
