@@ -103,7 +103,7 @@ class MapServ:
             elif (MAP_SERVICES[layer]["TextID"] == "osmmap"):
                 return openStreetMaps.get_url(self.mt_counter, coord)
             elif (MAP_SERVICES[layer]["TextID"] == "cmmap"):
-                return cloudMade.get_url(self.mt_counter, coord, conf.cloudMade_styleID)
+                return cloudMade.get_url(self.mt_counter, coord, cloudMade_styleID)
             elif (MAP_SERVICES[layer]["TextID"] in ["yter", "ymap"]):
                 return yahoo.get_url(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
             elif (MAP_SERVICES[layer]["TextID"] == "ifwmap"):

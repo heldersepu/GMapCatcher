@@ -63,7 +63,7 @@ class DownloaderThread(Thread):
             task.force_update, task.conf
         )
         if task.callback:
-            #print "process_task callback", task
+            # print "process_task callback", task
             task.callback(False, task.coord, task.layer, True)
         try:
             self.parent.queued.remove((task.coord, task.layer))

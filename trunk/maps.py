@@ -679,8 +679,10 @@ class MainWindow(gtk.Window):
         self.drawing_area.repaint()
 
     def expose_cb(self, drawing_area, event):
-        #print "expose_cb"
-        online = not self.cb_offline.get_active()
+        
+        # print "expose_cb"
+        online = not self.cb_offline.get_active() and not self.hide_dlfeedback
+        self.hide_dlfeedback = False
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
         zl = self.get_zoom()
@@ -731,6 +733,7 @@ class MainWindow(gtk.Window):
         if download:
             self.downloading = self.downloader.qsize()
             if self.downloading <= 0:
+                self.hide_dlfeedback = True
                 self.drawing_area.repaint()
         hybridsat = (self.layer == LAYER_HYBRID and layer == LAYER_SATELLITE)
         if (self.layer == layer or hybridsat) and self.get_zoom() == tile_coord[2]:
@@ -1000,6 +1003,7 @@ class MainWindow(gtk.Window):
         self.enable_gps()
         self.downloading = 0
         self.visual_dlconfig = {}
+        self.hide_dlfeedback = False
 
         gtk.Window.__init__(self)
         try:
