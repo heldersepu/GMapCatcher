@@ -20,7 +20,7 @@ import gobject, pygtk
 pygtk.require('2.0')
 import gtk
 
-import gps, gps.clienthelpers
+import gps, helper
 
 class unit_adjustments:
     "Encapsulate adjustments for unit systems."
@@ -30,15 +30,15 @@ class unit_adjustments:
         self.speedfactor = gps.MPS_TO_MPH
         self.speedunits = "mph"
         if units is None:
-            units = gps.clienthelpers.gpsd_units()
-        if units in (gps.clienthelpers.unspecified, gps.clienthelpers.imperial, "imperial", "i"):
+            units = helper.gpsd_units()
+        if units in (helper.UNSPECIFIED, helper.IMPERIAL, "imperial", "i"):
             pass
-        elif units in (gps.clienthelpers.nautical, "nautical", "n"):
+        elif units in (helper.NAUTICAL, "nautical", "n"):
             self.altfactor = gps.METERS_TO_FEET
             self.altunits = "ft"
             self.speedfactor = gps.MPS_TO_KNOTS
             self.speedunits = "knots"
-        elif units in (gps.clienthelpers.metric, "metric", "m"):
+        elif units in (helper.METRIC, "metric", "m"):
             self.altfactor = 1
             self.altunits = "m"
             self.speedfactor = gps.MPS_TO_KPH
@@ -230,7 +230,7 @@ class AISView:
         else:
             latsuff = ""
         lat = abs(lat)
-        lat = gps.clienthelpers.deg_to_str(self.deg_type, lat)
+        lat = helper.deg_to_str(self.deg_type, lat)
         if lon < 0:
             lonsuff = "W"
         elif lon > 0:
@@ -238,7 +238,7 @@ class AISView:
         else:
             lonsuff = ""
         lon = abs(lon)
-        lon = gps.clienthelpers.deg_to_str(gps.clienthelpers.deg_ddmmss, lon)
+        lon = helper.deg_to_str(helper.DEG_ddmmss, lon)
         return lat + latsuff + "/" + lon + lonsuff
 
     def update(self, ais):
@@ -485,7 +485,7 @@ class Base:
 
     def update_latitude(self, data):
         if data.mode >= gps.MODE_2D:
-            lat = gps.clienthelpers.deg_to_str(self.deg_type, abs(data.lat))
+            lat = helper.deg_to_str(self.deg_type, abs(data.lat))
             if data.lat < 0:
                 ns = 'S'
             else:
@@ -496,7 +496,7 @@ class Base:
 
     def update_longitude(self, data):
         if data.mode >= gps.MODE_2D:
-            lon = gps.clienthelpers.deg_to_str(self.deg_type, abs(data.lon))
+            lon = helper.deg_to_str(self.deg_type, abs(data.lon))
             if data.lon < 0:
                 ew = 'W'
             else:
@@ -531,7 +531,7 @@ class Base:
 
     def update_track(self, data):
         if hasattr(data, "track"):
-            return gps.clienthelpers.deg_to_str(self.deg_type, abs(data.track))
+            return helper.deg_to_str(self.deg_type, abs(data.track))
         else:
             return "n/a"
 
@@ -649,9 +649,9 @@ if __name__ == "__main__":
             sys.stderr.write("xgps 1.0\n")
             sys.exit(0)
 
-    degreefmt = {'d':gps.clienthelpers.deg_dd,
-                 'm':gps.clienthelpers.deg_ddmm,
-                 's':gps.clienthelpers.deg_ddmmss}[degreefmt]
+    degreefmt = {'d':helper.DEG_dd,
+                 'm':helper.DEG_ddmm,
+                 's':helper.DEG_ddmmss}[degreefmt]
 
     (host, port, device) = ("localhost", "2947", None)
     if len(arguments):
