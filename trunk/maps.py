@@ -10,6 +10,7 @@ import gmapcatcher.mapTools as mapTools
 import gmapcatcher.mapPixbuf as mapPixbuf
 import os
 import signal
+import gobject
 
 from gmapcatcher.mapConst import *
 from gmapcatcher.gtkThread import *
@@ -928,6 +929,7 @@ class MainWindow(gtk.Window):
             self.status_bar.hide()
         else:
             self.status_bar.show()
+        return True
 
     ## Final actions before main_quit
     def on_delete(self, *args):
@@ -1059,6 +1061,8 @@ class MainWindow(gtk.Window):
         self.export_panel.hide()
         self.drawing_area.da_set_cursor()
         self.entry.grab_focus()
+        if self.conf.auto_refresh > 0: 
+            gobject.timeout_add(self.conf.auto_refresh, self.refresh)
 
 def main():
     MainWindow()
