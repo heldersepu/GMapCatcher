@@ -596,7 +596,7 @@ class MainWindow(gtk.Window):
     def export_done(self, text):
         self.export_pbar.off()
         self.export_box.show()
-        error_msg(self, "Export completed \n\n" + text)
+        #error_msg(self, "Export completed \n\n" + text)
 
     ## Export tiles to one big map
     def do_export(self, button):
