@@ -55,6 +55,7 @@ class MapConf():
         config.set(SECTION_INIT, 'save_width', self.save_width)
         config.set(SECTION_INIT, 'save_height', self.save_height)
         config.set(SECTION_INIT, "scale_visible", self.scale_visible)
+        config.set(SECTION_INIT, "auto_refresh", self.auto_refresh)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -127,6 +128,9 @@ class MapConf():
         self.save_height = read_config('save_height', 450, int)
         ## should scale be visible
         self.scale_visible = read_config('scale_visible', True, int)
+        ## auto-refresh frequency in miliseconds
+        self.auto_refresh = read_config('auto_refresh', 0, int)
+
 
     ## Write the configuration to the default file
     def save(self):
