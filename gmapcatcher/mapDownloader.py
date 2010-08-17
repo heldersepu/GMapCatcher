@@ -137,10 +137,7 @@ class MapDownloader:
                  mapUtils.mod(coord[1], world_tiles), coord[2])
         # try to get a tile offline
         if self.ctx_map.is_tile_in_local_repos(coord, layer) or (not online):
-            deleted = False
-            if (force_update and online):
-                deleted = self.ctx_map.remove_old_tile(coord, layer)
-            if not deleted:
+            if not (force_update and online):
                 callback(True, coord, layer)
                 return ret
 
