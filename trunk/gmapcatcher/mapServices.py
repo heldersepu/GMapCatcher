@@ -137,9 +137,6 @@ class MapServ:
                     coord, layer, online, force_update, conf
                 )
 
-    def remove_old_tile(self, coord, layer):
-        return self.tile_repository.remove_old_tile(coord, layer)
-
     def is_tile_in_local_repos(self, coord, layer):
         return self.tile_repository.is_tile_in_local_repos(coord, layer)
 
