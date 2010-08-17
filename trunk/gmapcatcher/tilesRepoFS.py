@@ -11,14 +11,12 @@
 #    def load_pixbuf(self, coord, layer, force_update):
 #    def get_tile(self, tcoord, layer, online, conf):
 #    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
-#    def remove_old_tile(self, coord, layer, filename=None, interval=86400):
 #    def is_tile_in_local_repos(self, coord, layer):
 #    def set_repository_path(self, newpath):
 # - module is finalized from MapServ.finish() method
 
 
 import os
-import sys
 import gtk
 
 import lrucache
@@ -53,20 +51,6 @@ class TilesRepositoryFS(TilesRepository):
         path = self.coord_to_path(coord, layer)
         return  os.path.isfile(path)
 
-
-    def remove_old_tile(self, coord, layer, filename=None, intSeconds=86400):
-        if filename is None:
-            filename = self.coord_to_path(coord, layer)
-
-        retval = fileUtils.delete_old( self.coord_to_path(coord, layer), intSeconds )
-        if retval:
-            try:
-                del self.tile_cache[ filename ]
-            except KeyError:
-                pass
-        return retval
-
-
     ## Returns the PixBuf of the tile
     #  Uses a cache to optimise HDD read access
     def load_pixbuf(self, coord, layer, force_update):
@@ -91,10 +75,9 @@ class TilesRepositoryFS(TilesRepository):
     def get_png_file(self, coord, layer, filename,
                         online, force_update, conf):
         # remove tile only when online
-        if (force_update and online):
-            fileUtils.delete_old(filename)
+        remove_tile = (force_update and online)
 
-        if os.path.isfile(filename):
+        if os.path.isfile(filename) and not remove_tile:
             return True
         if not online:
             return False
@@ -104,15 +87,18 @@ class TilesRepositoryFS(TilesRepository):
                         coord, layer, conf
                     )
             self.coord_to_path_checkdirs(coord, layer)
+            # Remove the old tile only after getting the new data
+            if remove_tile:
+                fileUtils.delete_old(filename)
             file = open( filename, 'wb' )
             file.write( data )
             file.close()
+            
             return True
         except KeyboardInterrupt:
             raise
-        except:
-            print "Debug: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]) + str(sys.exc_info()[2])
-            print '\tdownload failed -', sys.exc_info()[0]
+        except Exception, excInst:
+            print excInst
         return False
 
     ## Return the absolute path to a tile
