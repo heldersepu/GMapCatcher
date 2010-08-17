@@ -9,7 +9,6 @@
 # - this module is not used directly. It is used via MapServ() methods:
 #    def finish(self):
 #    def load_pixbuf(self, coord, layer, force_update):
-#    def get_tile(self, tcoord, layer, online, conf):
 #    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
 #    def is_tile_in_local_repos(self, coord, layer):
 #    def set_repository_path(self, newpath):
@@ -72,8 +71,9 @@ class TilesRepositoryFS(TilesRepository):
 
     ## Get the png file for the given location
     #  Returns true if the file is successfully retrieved
-    def get_png_file(self, coord, layer, filename,
+    def get_png_file(self, coord, layer,
                         online, force_update, conf):
+        filename = self.coord_to_path(coord, layer)
         # remove tile only when online
         remove_tile = (force_update and online)
 
@@ -93,7 +93,7 @@ class TilesRepositoryFS(TilesRepository):
             file = open( filename, 'wb' )
             file.write( data )
             file.close()
-            
+
             return True
         except KeyboardInterrupt:
             raise
@@ -137,21 +137,3 @@ class TilesRepositoryFS(TilesRepository):
         path = fileUtils.check_dir(path, "%d" % (tile_coord[1] / 1024))
         self.lock.release()
         return os.path.join(path, "%d.png" % (tile_coord[1] % 1024))
-
-
-    ## Get the tile for the given location
-    #  Validates the given tile coordinates and,
-    #  returns tile coords if successfully retrieved
-    def get_tile(self, tcoord, layer, online, force_update, conf):
-        if (MAP_MIN_ZOOM_LEVEL <= tcoord[2] <= MAP_MAX_ZOOM_LEVEL):
-            world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - tcoord[2])
-            if (tcoord[0] > world_tiles) or (tcoord[1] > world_tiles):
-                return None
-            ## Tiles dir structure
-            filename = self.coord_to_path(tcoord, layer)
-            # print "tCoord to path: %s" % filename
-            if self.get_png_file(tcoord, layer, filename, online,
-                                    force_update, conf):
-                return (tcoord, layer)
-        return None
-
