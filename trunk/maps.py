@@ -521,7 +521,6 @@ class MainWindow(gtk.Window):
 
     ## Show the bottom panel with the export
     def show_export(self, pointer=None):
-        self.cb_offline.set_active(True)
         size = self.get_size()
         if size[0] < 700:
             self.resize(700, size[1])
