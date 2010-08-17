@@ -22,7 +22,7 @@ def layer_url_template(layer, language):
             print "Trying to fetch http://maps.google.com/maps but failed"
             return None
         html = oa['data']
-
+        
         known_layers[layer] = parse_start_page(layers_name[ MAP_SERVICES[layer]["TextID"] ], html, language)
     return known_layers[layer]
 
@@ -59,7 +59,7 @@ def parse_start_page(layer, html, language):
     # we first check the existence of the uniform URL pattern,
     # if not, we fall back to the old method.
     if layer == 't':
-        upattern = 'http://mt[0-9].google.com/vt/lyrs\\\\x3d(t@[0-9]+,r@[0-9]+)'
+        upattern = 'http://mt[0-9].google.com/vt/lyrs=(t@[0-9]+,r@[0-9]+)'
         p = re.compile(upattern)
         m = p.search(html)
 
