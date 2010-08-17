@@ -680,7 +680,7 @@ class MainWindow(gtk.Window):
         self.drawing_area.repaint()
 
     def expose_cb(self, drawing_area, event):
-        
+
         # print "expose_cb"
         online = not self.cb_offline.get_active() and not self.hide_dlfeedback
         self.hide_dlfeedback = False
@@ -771,8 +771,6 @@ class MainWindow(gtk.Window):
                         da.window.draw_pixbuf(gc, img2, 0, 0, x, y,
                                               TILES_WIDTH, TILES_HEIGHT)
 
-                if not self.cb_offline.get_active():
-                    self.draw_overlay()
 
     def draw_overlay(self):
         if self.export_panel.flags() & gtk.VISIBLE:
@@ -1061,7 +1059,7 @@ class MainWindow(gtk.Window):
         self.export_panel.hide()
         self.drawing_area.da_set_cursor()
         self.entry.grab_focus()
-        if self.conf.auto_refresh > 0: 
+        if self.conf.auto_refresh > 0:
             gobject.timeout_add(self.conf.auto_refresh, self.refresh)
 
 def main():
