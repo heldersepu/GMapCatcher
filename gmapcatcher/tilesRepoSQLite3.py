@@ -9,7 +9,6 @@
 # - this module is not used directly. It is used via MapServ() methods:
 #    def finish(self):
 #    def load_pixbuf(self, coord, layer, force_update):
-#    def get_tile(self, tcoord, layer, online, force_update, conf):
 #    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
 #    def remove_old_tile(self, coord, layer, filename=None, interval=86400):
 #    def is_tile_in_local_repos(self, coord, layer):
@@ -324,21 +323,6 @@ class TilesRepositorySQLite3(TilesRepository):
                     pixbuf = self.missingPixbuf
 
         return pixbuf
-
-    ## Get the tile for the given location
-    # Validates the given tile coordinates and,
-    # returns tile coords if successfully retrieved
-    # PUBLIC
-    def get_tile(self, tcoord, layer, online, force_update, conf):
-        if (MAP_MIN_ZOOM_LEVEL <= tcoord[2] <= MAP_MAX_ZOOM_LEVEL):
-            world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - tcoord[2])
-            if (tcoord[0] > world_tiles) or (tcoord[1] > world_tiles):
-                return None
-            # print "tCoord to path: %s" % filename
-            if self.get_png_file(tcoord, layer, online,
-                                    force_update, conf):
-                return (tcoord, layer)
-        return None
 
 
     # PUBLIC

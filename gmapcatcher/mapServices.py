@@ -132,10 +132,18 @@ class MapServ:
             except:
                 raise
 
-    def get_tile(self, coord, layer, online, force_update, conf):
-        return self.tile_repository.get_tile(
-                    coord, layer, online, force_update, conf
-                )
+    ## Get the tile for the given location
+    #  Validates the given tile coordinates and,
+    #  returns tile coords if successfully retrieved
+    def get_tile(self, tcoord, layer, online, force_update, conf):
+        if (MAP_MIN_ZOOM_LEVEL <= tcoord[2] <= MAP_MAX_ZOOM_LEVEL):
+            world_tiles = 2 ** (MAP_MAX_ZOOM_LEVEL - tcoord[2])
+            if (tcoord[0] > world_tiles) or (tcoord[1] > world_tiles):
+                return None
+            if self.tile_repository.get_png_file(tcoord, layer, online,
+                                    force_update, conf):
+                return (tcoord, layer)
+        return None
 
     def is_tile_in_local_repos(self, coord, layer):
         return self.tile_repository.is_tile_in_local_repos(coord, layer)
