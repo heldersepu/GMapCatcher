@@ -12,16 +12,16 @@ known_layers = {}
 ## Returns a template URL for the GoogleMaps
 def layer_url_template(layer, language):
     if layer not in known_layers:
-        map_server_query = {"gmap":"", "ghyb":"h", "gsat":"h", "gter":"p"}
-        layers_name = {"gmap":"m", "ghyb": "h", "gsat":"s", "gter":"t"}
+        map_server_query = {"gmap":"m", "ghyb":"h", "gsat":"k", "gter":"p"}
+        layers_name =      {"gmap":"m", "ghyb":"h", "gsat":"s", "gter":"t"}
 
         oa = openanything.fetch(
-            'http://maps.google.com/maps?t=' + map_server_query[ MAP_SERVICES[layer]["TextID"]  ])
+            'http://maps.google.com/maps?t=' + map_server_query[MAP_SERVICES[layer]["TextID"]])
 
         if oa['status'] != 200:
             print "Trying to fetch http://maps.google.com/maps but failed"
             return None
-        html = oa['data']
+        html = oa['data']        
         
         known_layers[layer] = parse_start_page(layers_name[ MAP_SERVICES[layer]["TextID"] ], html, language)
     return known_layers[layer]
