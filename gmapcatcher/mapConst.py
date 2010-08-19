@@ -42,37 +42,40 @@ LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles", "hyb_tiles"]
 # name of the layer service is created as: serviceName + layerName
 FIRST_LAYER_ID = 0
 MAP_SERVICES = [
-    {"ID": LAYER_MAP, "TextID": "gmap",   "serviceName":"Google", 
-            "layerDir": "tiles", "layerName": "Map" },
-    {"ID": LAYER_SATELLITE, "TextID": "gsat",   "serviceName":"Google",
-            "layerDir": "sat_tiles", "layerName": "Satellite" },
-    {"ID": LAYER_TERRAIN, "TextID": "gter",   "serviceName":"Google",
-            "layerDir": "ter_tiles", "layerName": "Terrain" },
-    {"ID": LAYER_HYBRID, "TextID": "ghyb",   "serviceName":"Google",
-            "layerDir": "hyb_tiles", "layerName": "Hybrid"},
-    {"ID": LAYER_MAP, "TextID": "ymap",   "serviceName":"Yahoo",
-            "layerDir": "yahoomap", "layerName": "Map" },
-    {"ID": LAYER_SATELLITE, "TextID": "yter",   "serviceName":"Yahoo",
-            "layerDir": "yahooter", "layerName": "Satellite" },
-    {"ID": LAYER_HYBRID, "TextID": "yhyb",   "serviceName":"Yahoo",
-            "layerDir": "yahoohyb", "layerName": "Hybrid" },
-    {"ID": LAYER_MAP, "TextID": "vemap",  "serviceName":"Virtual Earth",
-            "layerDir": "vemap", "layerName": "Map" },
-    {"ID": LAYER_SATELLITE, "TextID": "vesat",  "serviceName":"Virtual Earth",
-            "layerDir": "vesat", "layerName": "Satellite" },
-    {"ID": LAYER_TERRAIN, "TextID": "veter",  "serviceName":"Virtual Earth",
-            "layerDir": "veter", "layerName": "Terrain" },
-    {"ID": LAYER_MAP, "TextID": "osmmap", "serviceName":"OpenStreetMap",
-            "layerDir": "osmtiles", "layerName": ""},
-    {"ID": LAYER_MAP, "TextID": "cmmap",  "serviceName":"CloudMade",
-            "layerDir": "cloudmatetiles", "layerName": "" },
-    {"ID": LAYER_MAP, "TextID": "ifwmap", "serviceName":"InformationFreeway",
-            "layerDir": "ifwtiles", "layerName": "" },
-    {"ID": LAYER_MAP, "TextID": "ocmmap", "serviceName":"OpenCycleMap",
-            "layerDir": "ocmtiles", "layerName": ""},
-    {"ID": LAYER_MAP, "TextID": "gmmmap", "serviceName":"Google Map Maker",
-            "layerDir": "gmmtiles", "layerName": "" }
-               ]
+    {"ID": LAYER_MAP,       "TextID": "gmap",  "serviceName":MAP_SERVERS[GOOGLE], 
+            "layerDir": "tiles",     "layerName": LAYER_NAMES[LAYER_MAP] },
+    {"ID": LAYER_SATELLITE, "TextID": "gsat",  "serviceName":MAP_SERVERS[GOOGLE],
+            "layerDir": "sat_tiles", "layerName": LAYER_NAMES[LAYER_SATELLITE] },
+    {"ID": LAYER_TERRAIN,   "TextID": "gter",  "serviceName":MAP_SERVERS[GOOGLE],
+            "layerDir": "ter_tiles", "layerName": LAYER_NAMES[LAYER_TERRAIN] },
+    {"ID": LAYER_HYBRID,    "TextID": "ghyb",  "serviceName":MAP_SERVERS[GOOGLE],
+            "layerDir": "hyb_tiles", "layerName": LAYER_NAMES[LAYER_HYBRID]},
+			
+    {"ID": LAYER_MAP,       "TextID": "ymap",  "serviceName":MAP_SERVERS[YAHOO],
+            "layerDir": "yahoomap", "layerName": LAYER_NAMES[LAYER_MAP] },
+    {"ID": LAYER_SATELLITE, "TextID": "yter",  "serviceName":MAP_SERVERS[YAHOO],
+            "layerDir": "yahooter", "layerName": LAYER_NAMES[LAYER_SATELLITE] },
+    {"ID": LAYER_HYBRID,    "TextID": "yhyb",  "serviceName":MAP_SERVERS[YAHOO],
+            "layerDir": "yahoohyb", "layerName": LAYER_NAMES[LAYER_HYBRID] },
+			
+    {"ID": LAYER_MAP,       "TextID": "vemap", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
+            "layerDir": "vemap",    "layerName": LAYER_NAMES[LAYER_MAP] },
+    {"ID": LAYER_SATELLITE, "TextID": "vesat", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
+            "layerDir": "vesat",    "layerName": LAYER_NAMES[LAYER_SATELLITE] },
+    {"ID": LAYER_TERRAIN,   "TextID": "veter", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
+            "layerDir": "veter",    "layerName": LAYER_NAMES[LAYER_TERRAIN] },
+			
+    {"ID": LAYER_MAP,       "TextID": "osmmap", "serviceName":MAP_SERVERS[OSM],
+            "layerDir": "osmTiles", "layerName": ""},
+    {"ID": LAYER_MAP,       "TextID": "cmmap",  "serviceName":MAP_SERVERS[CLOUDMADE}",
+            "layerDir": "cloudmadeTiles", "layerName": "" },
+    {"ID": LAYER_MAP,       "TextID": "ifwmap", "serviceName":MAP_SERVERS[INFO_FREEWAY}",
+            "layerDir": "ifwTiles", "layerName": "" },
+    {"ID": LAYER_MAP,       "TextID": "ocmmap", "serviceName":MAP_SERVERS[OPENCYCLEMAP}",
+            "layerDir": "ocmTiles", "layerName": ""},
+    {"ID": LAYER_MAP,       "TextID": "gmmmap", "serviceName":MAP_SERVERS[GOOGLE_MAKER}",
+            "layerDir": "gmmTiles", "layerName": "" }
+]
 HYB_SAT_LAYER_OFFSETS = {"Google": 2, "Yahoo": 1}
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
 NO_GPS = ["Yahoo"]
