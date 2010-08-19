@@ -67,18 +67,20 @@ MAP_SERVICES = [
 			
     {"ID": LAYER_MAP,       "TextID": "osmmap", "serviceName":MAP_SERVERS[OSM],
             "layerDir": "osmTiles", "layerName": ""},
-    {"ID": LAYER_MAP,       "TextID": "cmmap",  "serviceName":MAP_SERVERS[CLOUDMADE}",
+    {"ID": LAYER_MAP,       "TextID": "cmmap",  "serviceName":MAP_SERVERS[CLOUDMADE],
             "layerDir": "cloudmadeTiles", "layerName": "" },
-    {"ID": LAYER_MAP,       "TextID": "ifwmap", "serviceName":MAP_SERVERS[INFO_FREEWAY}",
+    {"ID": LAYER_MAP,       "TextID": "ifwmap", "serviceName":MAP_SERVERS[INFO_FREEWAY],
             "layerDir": "ifwTiles", "layerName": "" },
-    {"ID": LAYER_MAP,       "TextID": "ocmmap", "serviceName":MAP_SERVERS[OPENCYCLEMAP}",
+    {"ID": LAYER_MAP,       "TextID": "ocmmap", "serviceName":MAP_SERVERS[OPENCYCLEMAP],
             "layerDir": "ocmTiles", "layerName": ""},
-    {"ID": LAYER_MAP,       "TextID": "gmmmap", "serviceName":MAP_SERVERS[GOOGLE_MAKER}",
+    {"ID": LAYER_MAP,       "TextID": "gmmmap", "serviceName":MAP_SERVERS[GOOGLE_MAKER],
             "layerDir": "gmmTiles", "layerName": "" }
 ]
 HYB_SAT_LAYER_OFFSETS = {"Google": 2, "Yahoo": 1}
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
 NO_GPS = ["Yahoo"]
+NON_ONEDIR_COMBO_INDICES = {}
+
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
