@@ -54,6 +54,8 @@ MAP_SERVICES = [
             "layerDir": "yahoomap", "layerName": "Map" },
     {"ID": LAYER_SATELLITE, "TextID": "yter",   "serviceName":"Yahoo",
             "layerDir": "yahooter", "layerName": "Satellite" },
+    {"ID": LAYER_HYBRID, "TextID": "yhyb",   "serviceName":"Yahoo",
+            "layerDir": "yahoohyb", "layerName": "Hybrid" },
     {"ID": LAYER_MAP, "TextID": "vemap",  "serviceName":"Virtual Earth",
             "layerDir": "vemap", "layerName": "Map" },
     {"ID": LAYER_SATELLITE, "TextID": "vesat",  "serviceName":"Virtual Earth",

@@ -1,14 +1,16 @@
 ## @package gmapcatcher.mapServers.yahoo
 # All the interaction with yahoo.com
 
-from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL, LAYER_MAP
+from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL, LAYER_MAP, LAYER_SATELLITE, LAYER_HYBRID
 
 ## Returns a template URL for the Yahoo mas
 def layer_url_template(layer):
     if layer == LAYER_MAP:
         return 'http://maps.yimg.com/hw/tile?&v=9&imgtype=png&s=256&x=%i&y=%i&z=%i'
-    else:
+    elif layer == LAYER_SATELLITE:
         return 'http://maps.yimg.com/ae/ximg?v=9&t=s&imgtype=png&s=256&x=%i&y=%i&z=%i'
+    elif layer == LAYER_HYBRID:
+        return 'http://maps.yimg.com/hx/tl?v=9&t=h&imgtype=png&s=256&x=%i&y=%i&z=%i'
 
 ## Returns the URL to the Yahoo map tile
 def get_url(counter, coord, layer):
