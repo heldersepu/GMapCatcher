@@ -81,6 +81,13 @@ NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
 NO_GPS = ["Yahoo"]
 NON_ONEDIR_COMBO_INDICES = {}
 
+for name in MAP_SERVERS:
+    thelist = []
+    for i in range(len(MAP_SERVICES)):
+        if MAP_SERVICES[i]['serviceName'] == name:
+            thelist.append(MAP_SERVICES[i]["ID"])
+    NON_ONEDIR_COMBO_INDICES[name] = thelist[:]
+
 
 MAP_MAX_ZOOM_LEVEL = 17
 MAP_MIN_ZOOM_LEVEL = -2
