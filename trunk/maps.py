@@ -151,15 +151,19 @@ class MainWindow(gtk.Window):
 
     ## Handles the change in the combo box Layer(Map, Sat.. )
     def layer_changed(self, w):
-        self.layer = w.get_active()
+        newlayer = w.get_active()
         if self.conf.oneDirPerMap:
-            self.conf.map_service = MAP_SERVICES[self.layer]["serviceName"]
+            self.conf.map_service = MAP_SERVICES[newlayer]["serviceName"]
             if self.visual_dlconfig.get('active', False) and \
                     not self.check_bulk_down():
                 self.visual_dlconfig['active'] = False
             if self.gps and not self.gps_warning():
                 self.gps.stop_all()
                 self.gps = False
+            self.layer = newlayer
+        elif self.conf.map_service == "Yahoo" and newlayer == LAYER_TERRAIN:
+        # special case as Yahoo! has! no! specific! terrain! layer!
+            self.layer = LAYER_HYBRID
         self.drawing_area.repaint()
 
     def download_clicked(self, w, pointer=None):
@@ -308,7 +312,12 @@ class MainWindow(gtk.Window):
                 for kv in MAP_SERVICES:
                     if kv['serviceName'] == self.conf.map_service and kv['ID'] == w:
                         self.cmb_layer.append_text(LAYER_NAMES[w])
-        self.cmb_layer.set_active(self.layer)
+        if (not self.conf.oneDirPerMap) and self.conf.map_service == "Yahoo" \
+                and self.layer == LAYER_HYBRID:
+        # special case
+            self.cmb_layer.set_active(LAYER_TERRAIN)
+        else:
+            self.cmb_layer.set_active(self.layer)
         self.cmb_layer.connect('changed',self.layer_changed)
         self.cmb_layer_container.pack_start(self.cmb_layer)
         self.cmb_layer.show()
