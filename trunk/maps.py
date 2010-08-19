@@ -735,7 +735,9 @@ class MainWindow(gtk.Window):
             if self.downloading <= 0:
                 self.hide_dlfeedback = True
                 self.drawing_area.repaint()
-        hybridsat = (self.layer == LAYER_HYBRID and layer == LAYER_SATELLITE)
+        hybridsat = (self.layer == LAYER_HYBRID and layer == LAYER_SATELLITE) or \
+                (MAP_SERVICES[self.layer]['ID'] == LAYER_HYBRID and \
+                MAP_SERVICES[layer]['ID'] == LAYER_SATELLITE)
         if (self.layer == layer or hybridsat) and self.get_zoom() == tile_coord[2]:
             da = self.drawing_area
             rect = da.get_allocation()
