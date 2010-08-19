@@ -73,7 +73,7 @@ MAP_SERVICES = [
     {"ID": LAYER_MAP, "TextID": "gmmmap", "serviceName":"Google Map Maker",
             "layerDir": "gmmtiles", "layerName": "" }
                ]
-
+HYB_SAT_LAYER_OFFSETS = {"Google": 2, "Yahoo":1}
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
 NO_GPS = ["Yahoo"]
 
