@@ -161,9 +161,9 @@ class MainWindow(gtk.Window):
                 self.gps.stop_all()
                 self.gps = False
             self.layer = newlayer
-        elif self.conf.map_service == "Yahoo" and newlayer == LAYER_TERRAIN:
-        # special case as Yahoo! has! no! specific! terrain! layer!
-            self.layer = LAYER_HYBRID
+        else:
+            self.layer = \
+                    NON_ONEDIR_COMBO_INDICES[self.conf.map_service][newlayer]
         self.drawing_area.repaint()
 
     def download_clicked(self, w, pointer=None):
@@ -312,10 +312,10 @@ class MainWindow(gtk.Window):
                 for kv in MAP_SERVICES:
                     if kv['serviceName'] == self.conf.map_service and kv['ID'] == w:
                         self.cmb_layer.append_text(LAYER_NAMES[w])
-        if (not self.conf.oneDirPerMap) and self.conf.map_service == "Yahoo" \
-                and self.layer == LAYER_HYBRID:
-        # special case
-            self.cmb_layer.set_active(LAYER_TERRAIN)
+        if (not self.conf.oneDirPerMap):
+            self.cmb_layer.set_active(
+                    NON_ONEDIR_COMBO_INDICES[self.conf.map_service]
+                    .index(self.layer))
         else:
             self.cmb_layer.set_active(self.layer)
         self.cmb_layer.connect('changed',self.layer_changed)
