@@ -32,7 +32,7 @@ def get_url(counter, coord, layer, language):
         return template % (counter, coord[0], coord[1], 17 - coord[2])
 
 ## The json.dumps is desired but not required
-def json_dumps(string)
+def json_dumps(string):
     try:
         import json
         return json.dumps(string)
