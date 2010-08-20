@@ -5,9 +5,9 @@
 from __future__ import division
 from mapConst import TILES_HEIGHT
 from threading import Thread, Timer
-from Queue import Queue
 from traceback import print_exc
 
+import Queue
 import fileUtils
 import mapUtils
 from mapConst import *
@@ -96,7 +96,10 @@ class MapDownloader:
         self.ctx_map = ctx_map
         self.threads = []
         self.bulk_all_placed = False
-        self.taskq = Queue(0)
+        try:
+            self.taskq = Queue.LifoQueue(0)
+        except:
+            self.taskq = Queue.Queue(0)
         self.queued = []
         for i in xrange(numthreads):
             t = DownloaderThread(self.ctx_map, self.taskq, self)
