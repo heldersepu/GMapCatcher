@@ -3,7 +3,6 @@
 # All the interaction with google.com
 
 import re
-import json
 import urllib
 import gmapcatcher.openanything as openanything
 from gmapcatcher.mapConst import *
@@ -32,6 +31,13 @@ def get_url(counter, coord, layer, language):
     if template:
         return template % (counter, coord[0], coord[1], 17 - coord[2])
 
+## The json.dumps is desired but not required
+def json_dumps(string)
+    try:
+        import json
+        return json.dumps(string)
+    except:
+        return string
 
 ## Parse maps.google.com/maps.
 #  the return value is a url pattern like this:
@@ -47,7 +53,7 @@ def parse_start_page(layer, html, language):
     p = re.compile(uPattern)
     match = p.search(html)
     if match:
-        baseUrl = json.dumps(match.group(1))
+        baseUrl = json_dumps(match.group(1))
         baseUrl = baseUrl.replace('&hl=en&', '', 1)
         baseUrl = baseUrl.replace('0.', '%d.', 1)
         baseUrl = baseUrl.replace('"', '')
