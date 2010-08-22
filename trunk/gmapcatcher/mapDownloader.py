@@ -4,7 +4,7 @@
 
 from __future__ import division
 from mapConst import TILES_HEIGHT
-from threading import Thread, Timer
+from threading import Thread, Timer, Lock, RLock
 from traceback import print_exc
 
 import Queue
@@ -12,6 +12,9 @@ import fileUtils
 import mapUtils
 from mapConst import *
 from math import floor,ceil
+from time import sleep, clock
+
+ternary = lambda a,b,c: (b,c)[not a]
 
 
 class DownloadTask:
@@ -99,7 +102,7 @@ class MapDownloader:
         try:
             self.taskq = Queue.LifoQueue(0)
         except:
-            self.taskq = Queue.Queue(0)
+            self.taskq = MapQueue()
         self.queued = []
         for i in xrange(numthreads):
             t = DownloaderThread(self.ctx_map, self.taskq, self)
@@ -226,3 +229,92 @@ class MapDownloader:
 
         dThread = Timer(0, downThread)
         dThread.start()
+
+class MapQueue:
+    
+    def __init__(self, iterable=None, maxlen=0):
+        self.stack = []
+        self.maxlen = maxlen
+        if iterable == None:
+            self.length = 0
+        else:
+            self.length = max(len(iterable, maxlen))
+            for i in range(self.length):
+                self.stack.append(iterable[i])
+        self.pending = 0
+        self.mainlock = Lock()
+        self.innerlock = RLock()
+
+    def qsize(self):
+        self.innerlock.acquire()
+        try:
+            ret = self.length
+        finally:
+            self.innerlock.release()
+        return ret
+
+    def task_done(self):
+        self.mainlock.acquire()
+        try :
+            self.pending -= 1
+        finally :
+            self.mainlock.release()
+
+    def join(self):
+        self.mainlock.acquire()
+        try :
+            while self.pending > 0:
+                self.mainlock.release()
+                sleep(0.1)
+                self.mainlock.acquire()
+        finally:
+            self.mainlock.release()
+
+    def get(self, block=True, timeout=None):
+        infinite = timeout == None
+        timeout = ternary(timeout == None, 0, timeout)
+        self.mainlock.acquire()
+        if (self.empty()):
+            if not block:
+                self.mainlock.release()
+                raise Queue.Empty
+            t = clock()
+            curtime = t
+
+            while self.empty() and curtime - t <= timeout:
+                self.mainlock.release()
+                sleep(0.1)
+                curtime = clock()
+                self.mainlock.acquire()
+                if infinite and self.empty():
+                    timeout = curtime + 1
+
+            if (infinite or clock() - t > timeout) and self.empty():
+                self.mainlock.release()
+                raise Queue.Empty
+
+        ret = self.stack.pop()
+        self.pending += 1
+        self.length -= 1
+        self.mainlock.release()
+        return ret
+
+    def get_nowait(self):
+        return self.get(False)
+   
+    def put(self, item):
+        self.mainlock.acquire()
+        try :
+            self.stack.append(item)
+            self.length += 1
+        finally:
+            self.mainlock.release()
+
+    def empty(self):
+        self.innerlock.acquire()
+        try:
+            ret = self.qsize() == 0
+        finally:
+            self.innerlock.release()
+        return ret
+         
