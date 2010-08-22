@@ -124,7 +124,7 @@ def search_location(location):
     if match:
         zoom = 10
         try:
-            zoom = match.group('zoom')
+            zoom = set_zoom(MAP_MAX_ZOOM_LEVEL - int(match.group('zoom')))
         except IndexError:
             p = re.compile('center:.*zoom:([0-9.-]+).*mapType:')
             m2 = p.search(html)
