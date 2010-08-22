@@ -1,11 +1,19 @@
+July 21 2010    H.S    <HelderSepu@gmail.com>
+    * 0.7.5.0 - At revision: 986
+    * Complete the Export Image tool (Issue 99)
+    * Fix Google's URL pattern (Issues 197, 198, 199)
+    * Add Yahoo Hybrid
+    * Change Download Queue to "Last In First Out" (Issue 204)
+    * Fix zoom level after search (Issue 206)
+
 July 21 2010    M.B    <MarkieB.lists.20090330@gmail.com>
     * 0.7.2.2 - At revision: 928
-    * save window size/location/layer at close
-    * add gtk window ico
-    * debian build
-    * mark up map center without image file needed
-    * change onedirpermap / map service provider without restart
-    * add possibility for distributions to demand strict legal adherence
+    * Save window size/location/layer at close
+    * Add gtk window ico
+    * Debian build
+    * Mark up map center without image file needed
+    * Change onedirpermap / map service provider without restart
+    * Add possibility for distributions to demand strict legal adherence
 
 July 14 2010    H.S    <HelderSepu@gmail.com>
     * 0.7.2.0 - At revision: 881
