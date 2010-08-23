@@ -25,27 +25,31 @@
 </div>
 <div class="contents">
 <h1>Package setup</h1>
-<p>Setup file used to build the Windows Installer.  
+<p>Setup file used to build the Installers.  
 <a href="#_details">More...</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Variables</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#a4fb4a55a9cfc92ee2876362a1bbc80e8">ico</a> = &quot;images/map.png&quot;</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#ab3a7a0638d76a01367c5bc3cc699447f">name</a> = NAME,</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#ade8aa54df2083113a10326ea2fe7934b">description</a> = 'Offline Google Map Viewer'</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#a4ad612547892c74be7035043265eb65c">description</a> = 'Offline Map Viewer'</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#a2aa722b36a933088812b50ea79b97a5c">version</a> = VERSION,</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#afc13124aa5c0124e84e1d965e3f4b0fb">url</a> = WEB_ADDRESS,</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">list&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#a7c31b01320c210cfb3363c7e4c264eac">data_files</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">list&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#ac1f45f8d37050b278bf63c812b1130dd">scripts</a> = ['mapcatcher', 'mapdownloader']</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">list&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#aada4406eeab94f62c5f72fee617f0b82">packages</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">list&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#a4b2ffe06021980ccbed5224c05989d86">console</a> = ['download.py']</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">list&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#adb4ed9317269408ab8e010e8ef8849f0">windows</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">dictionary&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#a844fd5627742eeb61a5d9b85677765a3">options</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">list&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesetup.html#aa53ac83b0960b5acd92e9692d0297097">data_files</a> = ['Changelog', 'README']</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
-<p>Setup file used to build the Windows Installer. </p>
+<p>Setup file used to build the Installers. </p>
 <hr/><h2>Variable Documentation</h2>
-<a class="anchor" id="aa53ac83b0960b5acd92e9692d0297097"></a><!-- doxytag: member="setup::data_files" ref="aa53ac83b0960b5acd92e9692d0297097" args="" -->
+<a class="anchor" id="a4b2ffe06021980ccbed5224c05989d86"></a><!-- doxytag: member="setup::console" ref="a4b2ffe06021980ccbed5224c05989d86" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">list <a class="el" href="namespacesetup.html#aa53ac83b0960b5acd92e9692d0297097">setup.data_files</a> = ['Changelog', 'README']</td>
+          <td class="memname">list <a class="el" href="namespacesetup.html#a4b2ffe06021980ccbed5224c05989d86">setup.console</a> = ['download.py']</td>
         </tr>
       </table>
 </div>
@@ -53,12 +57,46 @@
 
 </div>
 </div>
-<a class="anchor" id="ade8aa54df2083113a10326ea2fe7934b"></a><!-- doxytag: member="setup::description" ref="ade8aa54df2083113a10326ea2fe7934b" args="" -->
+<a class="anchor" id="a7c31b01320c210cfb3363c7e4c264eac"></a><!-- doxytag: member="setup::data_files" ref="a7c31b01320c210cfb3363c7e4c264eac" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string <a class="el" href="namespacesetup.html#ade8aa54df2083113a10326ea2fe7934b">setup.description</a> = 'Offline Google Map Viewer'</td>
+          <td class="memname">list <a class="el" href="namespacesetup.html#a7c31b01320c210cfb3363c7e4c264eac">setup::data_files</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<b>Initial value:</b><div class="fragment"><pre class="fragment">[(<span class="stringliteral">&apos;share/doc/mapcatcher&apos;</span>, [<span class="stringliteral">&apos;README&apos;</span>, <span class="stringliteral">&apos;changelog&apos;</span>]),
+                    (<span class="stringliteral">&apos;share/applications&apos;</span>, [<span class="stringliteral">&apos;gmapcatcher.desktop&apos;</span>]),
+                    (<span class="stringliteral">&apos;share/man/man1&apos;</span>, 
+                        [<span class="stringliteral">&apos;man/mapcatcher.1.gz&apos;</span>, <span class="stringliteral">&apos;man/mapdownloader.1.gz&apos;</span>]),
+                    (<span class="stringliteral">&apos;share/pixmaps&apos;</span>, [<span class="stringliteral">&apos;images/mapcatcher.png&apos;</span>]),
+                    (<span class="stringliteral">&apos;share/pixmaps/gmapcatcher&apos;</span>,
+                    map(<span class="keyword">lambda</span>(thestr): <span class="stringliteral">&quot;images/&quot;</span> + thestr, os.listdir(<span class="stringliteral">&apos;images&apos;</span>)))
+        ]
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="a4ad612547892c74be7035043265eb65c"></a><!-- doxytag: member="setup::description" ref="a4ad612547892c74be7035043265eb65c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="namespacesetup.html#a4ad612547892c74be7035043265eb65c">setup::description</a> = 'Offline Map Viewer'</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4fb4a55a9cfc92ee2876362a1bbc80e8"></a><!-- doxytag: member="setup::ico" ref="a4fb4a55a9cfc92ee2876362a1bbc80e8" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="namespacesetup.html#a4fb4a55a9cfc92ee2876362a1bbc80e8">setup.ico</a> = &quot;images/map.png&quot;</td>
         </tr>
       </table>
 </div>
@@ -90,12 +128,41 @@
 </div>
 <div class="memdoc">
 <b>Initial value:</b><div class="fragment"><pre class="fragment">{
-                  <span class="stringliteral">&apos;py2exe&apos;</span>: {
-                      <span class="stringliteral">&apos;packages&apos;</span>:<span class="stringliteral">&apos;encodings&apos;</span>,
-                      <span class="stringliteral">&apos;includes&apos;</span>: <span class="stringliteral">&apos;cairo, pango, pangocairo, atk, gobject&apos;</span>,
-                  }
-              }
+            <span class="stringliteral">&apos;py2exe&apos;</span>: {
+                <span class="stringliteral">&apos;packages&apos;</span>:<span class="stringliteral">&apos;encodings&apos;</span>,
+                <span class="stringliteral">&apos;includes&apos;</span>: <span class="stringliteral">&apos;cairo, pango, pangocairo, atk, gobject&apos;</span>,
+            }
+        }
 </pre></div>
+</div>
+</div>
+<a class="anchor" id="aada4406eeab94f62c5f72fee617f0b82"></a><!-- doxytag: member="setup::packages" ref="aada4406eeab94f62c5f72fee617f0b82" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">list <a class="el" href="namespacesetup.html#aada4406eeab94f62c5f72fee617f0b82">setup.packages</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<b>Initial value:</b><div class="fragment"><pre class="fragment">[<span class="stringliteral">&apos;gmapcatcher&apos;</span>, <span class="stringliteral">&apos;gmapcatcher.mapServers&apos;</span>, 
+                    <span class="stringliteral">&apos;gmapcatcher.pyGPSD&apos;</span>, <span class="stringliteral">&apos;gmapcatcher.pyGPSD.nmea&apos;</span>,
+                    <span class="stringliteral">&apos;gmapcatcher.pyGPSD.nmea.serial&apos;</span>]
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="ac1f45f8d37050b278bf63c812b1130dd"></a><!-- doxytag: member="setup::scripts" ref="ac1f45f8d37050b278bf63c812b1130dd" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">list <a class="el" href="namespacesetup.html#ac1f45f8d37050b278bf63c812b1130dd">setup.scripts</a> = ['mapcatcher', 'mapdownloader']</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
 </div>
 </div>
 <a class="anchor" id="afc13124aa5c0124e84e1d965e3f4b0fb"></a><!-- doxytag: member="setup::url" ref="afc13124aa5c0124e84e1d965e3f4b0fb" args="" -->
@@ -134,12 +201,10 @@
       </table>
 </div>
 <div class="memdoc">
-<b>Initial value:</b><div class="fragment"><pre class="fragment">[
-                  {
-                      <span class="stringliteral">&apos;script&apos;</span>: <span class="stringliteral">&apos;maps.py&apos;</span>,
-                      <span class="stringliteral">&apos;icon_resources&apos;</span>: [(1, <span class="stringliteral">&quot;images\maps.ico&quot;</span>)],
-                  }
-              ]
+<b>Initial value:</b><div class="fragment"><pre class="fragment">[{
+            <span class="stringliteral">&apos;script&apos;</span>: <span class="stringliteral">&apos;maps.py&apos;</span>,
+            <span class="stringliteral">&apos;icon_resources&apos;</span>: [(1, <span class="stringliteral">&quot;images\maps.ico&quot;</span>)],
+        }]
 </pre></div>
 </div>
 </div>
