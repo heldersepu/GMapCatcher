@@ -11,7 +11,7 @@ import gmapcatcher.mapPixbuf as mapPixbuf
 import os
 import signal
 import gobject
-import gio
+#import gio
 
 from gmapcatcher.mapConst import *
 from gmapcatcher.gtkThread import *
