@@ -10,7 +10,7 @@
 
  ==  Main stuff (Required)  ==
         <table cellspacing=10>
-         <tr align="left"><th> - Python 2.6  </th><th> http://www.python.org/download/</th></tr>
+         <tr align="left"><th> - Python 2.6  </th><th> http://www.python.org/download/releases/2.6.5/</th></tr>
          <tr align="left"><th> + GTK+ runtime</th><th> http://gtk-win.sourceforge.net/home/index.php/en/Downloads</th></tr>
          <tr align="left"><th> + Py(Stuff) </th><th> http://www.pygtk.org/downloads.html ^(pygtk, pygobject & pycairo)^</th></tr>
          <tr align="left"><th> + PIL </th><th> http://www.pythonware.com/products/pil/</th></tr>
