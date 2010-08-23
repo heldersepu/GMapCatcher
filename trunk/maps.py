@@ -37,8 +37,6 @@ class MainWindow(gtk.Window):
     showMarkers = True
     key_down = None
     tPoint = {}
-    maximized_flag = False
-    maximized_on_full = False
 
     ## Get the zoom level from the scale
     def get_zoom(self):
@@ -799,30 +797,19 @@ class MainWindow(gtk.Window):
                 self.showMarkers, self.gps
             )
 
-    ## Handles window style changes
-    def on_window_state_event(self, w, event):
-        try:
-            i = event.new_window_state.value_names.index('GDK_WINDOW_STATE_MAXIMIZED')
-            self.maximized_flag = True
-        except ValueError:
-            self.maximized_flag = False
-
     ## Handles the pressing of F11 & F12
     def full_screen(self, keyval):
         # F11 = 65480
         if keyval == 65480:
             if self.get_decorated():
-                self.maximized_on_full = self.maximized_flag
-                self.unmaximize()
                 self.set_keep_above(True)
                 self.set_decorated(False)
-                self.maximize()
+                self.fullscreen()
             else:
-                self.set_keep_above(False)
+                self.unfullscreen()
                 self.set_decorated(True)
-                self.unmaximize()
-                if self.maximized_on_full == True:
-                    self.maximize()
+                self.set_keep_above(False)
+
         # F12 = 65481
         elif keyval == 65481:
             self.export_panel.hide()
@@ -838,6 +825,7 @@ class MainWindow(gtk.Window):
             self.update_export()
         # ESC = 65307
         elif keyval == 65307:
+            self.unfullscreen()
             self.export_panel.hide()
             self.export_pbar.off()
             self.left_panel.show()
@@ -846,7 +834,6 @@ class MainWindow(gtk.Window):
             self.set_keep_above(False)
             self.set_decorated(True)
             self.update_export()
-            self.unmaximize()
 
     ## Handles the keyboard navigation
     def navigation(self, keyval, zoom):
@@ -955,6 +942,7 @@ class MainWindow(gtk.Window):
 
     ## Final actions before main_quit
     def on_delete(self, *args):
+        self.unfullscreen()
         self.unmaximize()
         sz = self.get_size()
         location = self.get_position()
@@ -1038,7 +1026,6 @@ class MainWindow(gtk.Window):
         self.connect('key-press-event', self.key_press_event)
         self.connect('key-release-event', self.key_release_event)
         self.connect('delete-event', self.on_delete)
-        self.connect('window-state-event', self.on_window_state_event)
 
         self.top_panel = self.__create_top_paned()
         self.left_panel = self.__create_left_paned(self.conf.init_zoom)
