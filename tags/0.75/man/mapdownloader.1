@@ -1,0 +1,85 @@
+.\" Copyright (c) 2010 Mark Benjamin <mapcatcher.code.Markie1@dfgh.net>
+.\" Fri 16 Jul 2010 11:43 AM
+.\"
+.\" This is free documentation; you may redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.TH MAPDOWNLOADER 1 2010-07-16 "Linux" "Linux Programmer's Manual"
+.SH NAME
+mapdownloader - the cli downloader for the debian distribution of the
+GMapCatcher offline map viewer
+.SH DESCRIPTION
+GMapCatcher downloads tiles automatically from many providers 
+independently of map providers' javascript so should work even though 
+the scripts may change.
+.I mapdowloader
+is the cli downloading tool that allows you to bulk download map tiles without the gui.
+Download all maps of given location with one command
+.SH SYNOPSIS
+.B mapdownloader [options]
+.SH OPTIONS
+.P
+--location=   location to download
+.P
+--latitude=   Latitude of the location 
+.P
+--longitude=  Longitude of the location
+.P
+.P
+--map         Retrieve map images (default)
+.P
+--satellite   Retrieve satellite images
+.P
+--terrain     Retrieve terrain images
+.P
+.P
+--latrange=   Latitude Range to get    (default = 0.050000)
+.P
+--lngrange=   Longitude Range to get   (default = 0.050000)
+.P
+--max-zoom=   Maximum Zoom   (default = 17)
+.P
+--min-zoom=   Minimum Zoom   (default = 2)
+.P
+--threads=    Number of threads   (default = 5)
+.P
+--full-range  Sets lat, lng to (0, 0) and range to the Max,
+very useful to download maps of entire world
+
+.SH SAMPLE USAGE
+mapdownloader --location="Paris, France"
+.P
+mapdownloader --min-zoom=13 --full-range
+.P
+mapdownloader --latitude=37.979180 --longitude=23.716647
+
+.SH SUGGESTIONS AND BUG REPORTS
+should be notified at http://code.google.com/p/gmapcatcher/issues
+.SH Authors and Copyright Conditions
+the Authors of the gmapcatcher project are listed at
+http://code.google.com/p/gmapcatcher/people/list
+.P
+this manpage is copyright Mark Benjamin 2010
+.SH INFO
+.I mapcatcher 
+project; A description of the project, as well as
+how to report bugs,may be found at
+.P
+.I http://code.google.com/p/gmapcatcher
