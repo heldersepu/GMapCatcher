@@ -116,7 +116,7 @@ http://gmapcatcher.googlecode.com/svn/wiki/visual_download.png
 ||  Ctrl + S      ||  Saves current page of config settings from config window ||
 
 <BR>
-== Navigation (only after hiding buttons)==
+== Navigation (only after hiding buttons [F12])==
 || *Shortcut Key* || *Description* ||
 ||  Arrow Keys    ||  Pan Left, Right, Up and Down ||
 ||  +             ||  Zoom in      ||
