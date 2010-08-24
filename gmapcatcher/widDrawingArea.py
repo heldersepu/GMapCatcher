@@ -128,7 +128,7 @@ class DrawingArea(gtk.DrawingArea):
             fg_scale = gtk.gdk.color_parse("#000")
             bg_scale = gtk.gdk.color_parse("#FFF")
             self.scale_gc = self.window.new_gc(
-                    fg_scale, bg_scale, None, gtk.gdk.INVERT, 
+                    fg_scale, bg_scale, None, gtk.gdk.INVERT,
                     gtk.gdk.SOLID, None, None, None,
                     gtk.gdk.INCLUDE_INFERIORS,
                     0, 0, 0, 0, True, 3, gtk.gdk.LINE_SOLID,
@@ -138,25 +138,29 @@ class DrawingArea(gtk.DrawingArea):
             self.scale_lo = pango.Layout(self.get_pango_context())
             self.scale_lo.set_font_description(
                 pango.FontDescription("sans normal 10"))
-            
+
     ## Draw the second layer of elements
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
                     downloading=False, visual_dlconfig = {},
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None):
-        def draw_image(imgPos, img, width, height):
+        def draw_image(imgPos, img, width, height, marker_name=''):
             mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
             xy = mapUtils.tile_coord_to_screen(
                 (mct[0][0], mct[0][1], zl), rect, self.center
             )
             if xy:
                 for x,y in xy:
-                    self.window.draw_pixbuf(
-                        self.style.black_gc, img, 0, 0,
-                        x + mct[1][0] - width/2,
-                        y + mct[1][1] - height/2,
-                        width, height
-                    )
+                    if marker_name.startswith('point'): 
+                        self.window.draw_point(
+                            self.scale_gc, x + mct[1][0], y + mct[1][1]
+                        )
+                    else:
+                        self.window.draw_pixbuf(
+                            self.style.black_gc, img, 0, 0,
+                            x + mct[1][0] - width/2, y + mct[1][1] - height/2,
+                            width, height
+                        )
 
         self.set_scale_gc()
         self.set_visualdl_gc()
@@ -171,7 +175,7 @@ class DrawingArea(gtk.DrawingArea):
             )
 
         # Draw scale
-        if conf.scale_visible:            
+        if conf.scale_visible:
             scaledata = mapUtils.friendly_scale(zl)
             # some 'dirty' rounding seems necessary :-)
             scaled = ternary(scaledata[1] % 10 == 9, scaledata[1] + 1, scaledata[1])
@@ -200,7 +204,7 @@ class DrawingArea(gtk.DrawingArea):
             for string in marker.positions.keys():
                 mpos = marker.positions[string]
                 if zl <= mpos[2] and (mpos[0],mpos[1]) != (coord[0],coord[1]):
-                    draw_image(mpos, img, pixDim, pixDim)
+                    draw_image(mpos, img, pixDim, pixDim, string)
 
         # Draw GPS position
         if gps:
@@ -219,7 +223,7 @@ class DrawingArea(gtk.DrawingArea):
         if visual_dlconfig.get("show_rectangle", False):
             width = visual_dlconfig.get("width_rect", 0)
             height = visual_dlconfig.get("height_rect", 0)
-            if width > 0 and height > 0:                
+            if width > 0 and height > 0:
                 self.window.draw_rectangle(
                     self.scale_gc, True,
                     visual_dlconfig.get("x_rect", 0),
