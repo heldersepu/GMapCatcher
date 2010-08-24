@@ -33,10 +33,10 @@ Index: changelog
 --- changelog	(revision 912)
 +++ changelog	(working copy)
 @@ -1,5 +1,5 @@
--mapcatcher (0.7.2.0-1) unstable; urgency=low
-+mapcatcher (0.7.2.0-0) unstable; urgency=low
+-mapcatcher (0.7.5.0-1) unstable; urgency=low
++mapcatcher (0.7.5.0-0) unstable; urgency=low
  
 -  * Initial release (closes: #589254)
 +  * Initial release (closes: #0)
  
-  -- Mark Benjamin <MarkieB.lists.20090330@gmail.com>  Thu, 15 Jul 2010 17:31:40 +0200
+  -- Mark Benjamin <MarkieB.lists.20090330@gmail.com>  Sun, 22 Aug 2010 20:33:40 +0200
