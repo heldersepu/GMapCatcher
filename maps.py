@@ -223,6 +223,12 @@ class MainWindow(gtk.Window):
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self, coord, mode):
         self.current_gps = coord
+        l = len(self.save_gps)
+        if l > 0:
+            mostrecentcoord = self.save_gps[l]
+            if abs(mostrecentcoord[0] - coord[0]) > 0.001 or \
+                    abs(mostrecentcoord[1] - coord[1] > 0.001):
+                self.save_gps.append(coord)
         zl = self.get_zoom()
         tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
         # The map should be centered around a new GPS location
@@ -1024,6 +1030,7 @@ class MainWindow(gtk.Window):
             self.layer = LAYER_MAP
         self.background = []
         self.foreground = []
+        self.save_gps = []
         self.current_gps = False
         self.gps = False
         self.enable_gps()
