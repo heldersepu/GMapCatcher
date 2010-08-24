@@ -7,7 +7,7 @@ Index: control
  Priority: optional
  Maintainer: Mark Benjamin <MarkieB.lists.20090330@gmail.com>
 -Build-Depends: cdbs, debhelper (>= 7), python (>= 2.5), python-support (>= 0.5.3)
--Standards-Version: 3.8.4
+-Standards-Version: 3.9.0
 +Build-Depends: cdbs, debhelper (>= 6), python (>= 2.5), python-support (>= 0.5.3)
 +Standards-Version: 3.7.3
  Homepage: http://code.google.com/p/gmapcatcher
