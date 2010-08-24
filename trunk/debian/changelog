@@ -1,5 +1,5 @@
-mapcatcher (0.7.2.2-1) unstable; urgency=low
+mapcatcher (0.7.5.0-1) unstable; urgency=low
 
   * Initial release (closes: #589254)
 
- -- Mark Benjamin <MarkieB.lists.20090330@gmail.com>  Wed, 21 Jul 2010 01:33:40 +0200
+ -- Mark Benjamin <MarkieB.lists.20090330@gmail.com>  Sun, 22 Aug 2010 20:33:40 +0200
