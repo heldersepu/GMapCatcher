@@ -145,22 +145,18 @@ class DrawingArea(gtk.DrawingArea):
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None):
         def draw_image(imgPos, img, width, height, marker_name=''):
-            mct = mapUtils.coord_to_tile((imgPos[0], imgPos[1], zl))
-            xy = mapUtils.tile_coord_to_screen(
-                (mct[0][0], mct[0][1], zl), rect, self.center
-            )
-            if xy:
-                for x,y in xy:
-                    if marker_name.startswith('point'): 
-                        self.window.draw_point(
-                            self.scale_gc, x + mct[1][0], y + mct[1][1]
-                        )
-                    else:
-                        self.window.draw_pixbuf(
-                            self.style.black_gc, img, 0, 0,
-                            x + mct[1][0] - width/2, y + mct[1][1] - height/2,
-                            width, height
-                        )
+            screen_coord = self.coord_to_screen(imgPos[0], imgPos[1], zl)            
+            if screen_coord:
+                if marker_name.startswith('point'): 
+                    self.window.draw_point(
+                        self.scale_gc, screen_coord[0], screen_coord[1]
+                    )
+                else:
+                    self.window.draw_pixbuf(
+                        self.style.black_gc, img, 0, 0,
+                        screen_coord[0] - width/2, screen_coord[1] - height/2,
+                        width, height
+                    )
 
         self.set_scale_gc()
         self.set_visualdl_gc()
