@@ -11,6 +11,7 @@ import gmapcatcher.mapPixbuf as mapPixbuf
 import os
 import signal
 import gobject
+import re
 #import gio
 
 from gmapcatcher.mapConst import *
@@ -106,27 +107,40 @@ class MainWindow(gtk.Window):
             self.clean_entry(self)
         else:
             locations = self.ctx_map.get_locations()
-            if (not location in locations.keys()):
-                if self.cb_offline.get_active():
-                    if error_msg(self, "Offline mode, cannot do search!" + \
-                                  "      Would you like to get online?",
-                                  gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
-                        self.combo_popup()
-                        return
-                self.cb_offline.set_active(False)
-
-                location = self.ctx_map.search_location(location)
-                if (location[:6] == "error="):
-                    error_msg(self, location[6:])
-                    self.entry.grab_focus()
-                    return
-
-                self.entry.set_text(location)
-                self.set_completion()
-                coord = self.ctx_map.get_locations()[location]
+            coords = re.search('(-?\d+\.?\d*)[ ]*,[ ]*(-?\d+\.?\d*).*', location)
+            # nb needs 0.-- for coords 0 < |coord| < 1
+            try:
+                longitude = float(coords.group(1))
+                latitude = float(coords.group(2))
+            except:
+                longitude = 0
+                latitude = -100
+            if -180 <= longitude <= 180 and -90 <= latitude <= 90:
+                print longitude, latitude
+                coord = (latitude, longitude, self.get_zoom())
             else:
-                coord = locations[location]
-            print "%s at %f, %f" % (location, coord[0], coord[1])
+                if (not location in locations.keys()):
+                    
+                    if self.cb_offline.get_active():
+                        if error_msg(self, "Offline mode, cannot do search!" + \
+                                    "      Would you like to get online?",
+                                    gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
+                            self.combo_popup()
+                            return
+                    self.cb_offline.set_active(False)
+
+                    location = self.ctx_map.search_location(location)
+                    if (location[:6] == "error="):
+                        error_msg(self, location[6:])
+                        self.entry.grab_focus()
+                        return
+
+                    self.entry.set_text(location)
+                    self.set_completion()
+                    coord = self.ctx_map.get_locations()[location]
+                else:
+                    coord = locations[location]
+                print "%s at %f, %f" % (location, coord[0], coord[1])
 
             self.drawing_area.center = mapUtils.coord_to_tile(coord)
             self.scale.set_value(coord[2])
