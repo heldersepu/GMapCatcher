@@ -73,7 +73,7 @@ The first four items change the map section display and explain themselves:
     * Reset: Display map with highest zoom level.
 
 Actions of the next three items:
-    * Batch Download: See description [User_Guide#Download_configuration Download configuration]
+    * Batch Download: See description [http://code.google.com/p/gmapcatcher/wiki/User_Guide#Download_configuration Download configuration]
     * Export Map: Open dialog to save current display of map to file 'map.png' in home folder
     * Add Marker: Add a marker at position of cursor (description of marker must be done afterwards by using the main configuration menu)
 
