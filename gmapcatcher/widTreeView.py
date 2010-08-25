@@ -132,7 +132,7 @@ class TreeView():
         myTree = gtk.TreeView(self.__read_file(strInfo, filePath, listStore))
         myTree.connect("key-press-event", self.key_press_tree, listStore)
 
-        strCols = ['Location', 'Latitude', 'Longitude', 'Zoom']
+        strCols = ['Description', 'Latitude', 'Longitude', 'Zoom']
         for intPos in range(len(strCols)):
             # Create a CellRenderers to render the data
             cell = gtk.CellRendererText()
