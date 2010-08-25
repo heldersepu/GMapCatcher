@@ -107,7 +107,8 @@ class MainWindow(gtk.Window):
             self.clean_entry(self)
         else:
             locations = self.ctx_map.get_locations()
-            coords = re.search('(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:long)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', location)
+            p = re.compile('(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:long)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', re.IGNORECASE)
+            coords = p.search(location)
             # nb needs 0.-- for coords 0 < |coord| < 1
             try:
                 latitude  = float(coords.group(1))
