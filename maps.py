@@ -227,7 +227,7 @@ class MainWindow(gtk.Window):
         if l > 0:
             mostrecentcoord = self.save_gps[l]
             if abs(mostrecentcoord[0] - coord[0]) > 0.001 or \
-                    abs(mostrecentcoord[1] - coord[1] > 0.001):
+                    abs(mostrecentcoord[1] - coord[1]) > 0.001:
                 self.save_gps.append(coord)
         else:
             self.save_gps.append(coord)
