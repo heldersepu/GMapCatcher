@@ -229,6 +229,8 @@ class MainWindow(gtk.Window):
             if abs(mostrecentcoord[0] - coord[0]) > 0.001 or \
                     abs(mostrecentcoord[1] - coord[1] > 0.001):
                 self.save_gps.append(coord)
+        else:
+            self.save_gps.append(coord)
         zl = self.get_zoom()
         tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
         # The map should be centered around a new GPS location
