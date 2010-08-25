@@ -143,9 +143,10 @@ class DrawingArea(gtk.DrawingArea):
 
     ## Draws a circle
     def draw_circle(self, screen_coord, gc):
+        radius = 10
         self.window.draw_arc(
-            gc, True, screen_coord[0], screen_coord[1],
-            20, 20, 0, 360*64
+            gc, True, screen_coord[0] - radius, screen_coord[1] - radius,
+            radius * 2, radius * 2, 0, 360*64
         )
 
     ## Draws a point
