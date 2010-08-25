@@ -141,39 +141,48 @@ class DrawingArea(gtk.DrawingArea):
             self.scale_lo.set_font_description(
                 pango.FontDescription("sans normal 10"))
 
-    ## Draws a circle 
+    ## Draws a circle
     def draw_circle(self, screen_coord, gc):
         self.window.draw_arc(
-            gc, True, screen_coord[0], screen_coord[1], 
+            gc, True, screen_coord[0], screen_coord[1],
             20, 20, 0, 360*64
         )
 
-    ## Draws a point 
+    ## Draws a point
     def draw_point(self, screen_coord, gc):
         self.window.draw_point(
             gc, screen_coord[0], screen_coord[1]
         )
-    
+
     ## Draws an image
-    def draw_image(self, screen_coord, img, width, height):            
+    def draw_image(self, screen_coord, img, width, height):
         self.window.draw_pixbuf(
             self.style.black_gc, img, 0, 0,
             screen_coord[0] - width/2, screen_coord[1] - height/2,
             width, height
-        )                  
-           
+        )
+
     ## Draws the marker
     def draw_marker(self, mcoord, zl, img, pixDim, marker_name):
         screen_coord = self.coord_to_screen(mcoord[0], mcoord[1], zl)
         if screen_coord:
             gc = self.scale_gc
+            cPos = marker_name.find('#')
+            if (cPos > -1):
+                try:
+                    my_gc = self.window.new_gc()
+                    color = gtk.gdk.color_parse(marker_name[cPos:cPos+7])
+                    my_gc.set_rgb_fg_color(color)
+                    gc = my_gc
+                except:
+                    pass
             if marker_name.startswith('point'):
                 self.draw_point(screen_coord, gc)
             elif marker_name.startswith('circle'):
                 self.draw_circle(screen_coord, gc)
             else:
-                self.draw_image(screen_coord, img, pixDim, pixDim)        
-           
+                self.draw_image(screen_coord, img, pixDim, pixDim)
+
     ## Draw the second layer of elements
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
                     downloading=False, visual_dlconfig = {},
@@ -183,8 +192,8 @@ class DrawingArea(gtk.DrawingArea):
         self.set_visualdl_gc()
         rect = self.get_allocation()
         middle = (rect.width / 2, rect.height / 2)
-        full = (rect.width, rect.height)        
-        
+        full = (rect.width, rect.height)
+
         # Draw cross in the center
         if conf.show_cross:
             self.draw_image(middle, crossPixbuf, 12, 12)
@@ -218,7 +227,7 @@ class DrawingArea(gtk.DrawingArea):
             # Draw the markers
             img = marker.get_marker_pixbuf(zl)
             for string in marker.positions.keys():
-                mpos = marker.positions[string]                
+                mpos = marker.positions[string]
                 if (zl <= mpos[2]) and (mpos[0],mpos[1]) != (coord[0],coord[1]):
                     self.draw_marker(mpos, zl, img, pixDim, string)
 
@@ -229,7 +238,7 @@ class DrawingArea(gtk.DrawingArea):
                 img = gps.pixbuf
                 draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
 
-        # Draw the downloading notification 
+        # Draw the downloading notification
         if downloading:
             self.window.draw_pixbuf(
                 self.style.black_gc, dlpixbuf, 0, 0, 0, 0, -1, -1)
