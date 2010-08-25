@@ -107,16 +107,16 @@ class MainWindow(gtk.Window):
             self.clean_entry(self)
         else:
             locations = self.ctx_map.get_locations()
-            coords = re.search('(?:long)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', location)
+            coords = re.search('(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:long)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', location)
             # nb needs 0.-- for coords 0 < |coord| < 1
             try:
-                longitude = float(coords.group(1))
-                latitude = float(coords.group(2))
+                latitude  = float(coords.group(1))
+                longitude = float(coords.group(2))
             except:
                 longitude = 0
                 latitude = -100
             if -180 <= longitude <= 180 and -90 <= latitude <= 90:
-                print longitude, latitude
+                print latitude, longitude
                 coord = (latitude, longitude, self.get_zoom())
             else:
                 if (not location in locations.keys()):
