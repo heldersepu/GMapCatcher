@@ -40,6 +40,7 @@ class MapConf():
         config.set(SECTION_INIT, 'gps_update_rate', self.gps_update_rate)
         config.set(SECTION_INIT, 'show_cross', self.show_cross)
         config.set(SECTION_INIT, 'max_gps_zoom', self.max_gps_zoom)
+        config.set(SECTION_INIT, "gps_increment", self.gps_increment)
         config.set(SECTION_INIT, 'map_service', self.map_service)
         config.set(SECTION_INIT, 'version_url', self.version_url)
         config.set(SECTION_INIT, 'check_for_updates', self.check_for_updates)
@@ -98,6 +99,8 @@ class MapConf():
         self.show_cross = read_config('show_cross', 0, int)
         ## Maximum zoom to show the GPS, default is 16
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int)
+        ## default increment for gps track saving
+        self.gps_increment = read_config('gps_increment', GPS_INCREMENT, int)
         ## Map service to get images, default is Google
         self.map_service = read_config('map_service', MAP_SERVERS[GOOGLE], str)
         ## URL with the latest version used for the notification updates.
