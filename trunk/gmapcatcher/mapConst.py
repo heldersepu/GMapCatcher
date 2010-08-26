@@ -131,6 +131,8 @@ GPS_MARKER = 1
 GPS_CENTER = 2
 GPS_ON_SCREEN = 3
 GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center", "GPS on Screen"]
+# default distance - fraction of deg - for gps track increment
+GPS_INCREMENT = 0.001
 
 SECTION_INIT  = 'init'
 R_EARTH = 6371.
