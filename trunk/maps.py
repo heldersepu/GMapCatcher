@@ -998,12 +998,14 @@ class MainWindow(gtk.Window):
         return False
 
     def enable_gps(self):
-        if mapGPS.available and self.gps_warning():
+        if mapGPS.available:
             self.gps = mapGPS.GPS(
                 self.gps_callback,
                 self.conf.gps_update_rate,
                 self.conf.gps_mode
             )
+            if self.gps and not self.gps_warning():
+                self.gps = False
         else:
             self.gps = False
 
