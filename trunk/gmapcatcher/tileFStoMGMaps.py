@@ -23,9 +23,9 @@ def calc_v2_hash(x, y, hash_size=97):
 #  file = C:\Users\Dog\.googlemaps\tiles\-1\74\541\96\982.png
 # coord = 74*1024 + 541,  96*1024 + 982,  -1
 def get_coord_from_name(filename):
-    m = re.match('.*(-\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)\.png',filename)
+    m = re.match('.*\D(-\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)\.png',filename)
     if not m:
-        m = re.match('.*(\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)\.png',filename)
+        m = re.match('.*\D(\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)\.png',filename)
     if m:
         g = m.groups()
         if len(g) == 5:
