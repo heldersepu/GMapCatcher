@@ -111,8 +111,9 @@ class TilesRepositoryMGMaps(TilesRepository):
     #  \MGMapsCache\YahooMap_1\63\1_1.mgm
     def coord_to_path(self, tile_coord, layer):
         return os.path.join(
-            self.configpath,
-            "YahooMap_" + str(MAP_MAX_ZOOM_LEVEL - tile_coord[2]),
+            self.configpath,            
+            "Yahoo" + MAP_SERVICES[layer]["layerName"][:3] + \
+            "_" + str(MAP_MAX_ZOOM_LEVEL - tile_coord[2]),
             self.calc_v2_hash(tile_coord[0], tile_coord[1]),
             str(tile_coord[0]) + "_" + str(tile_coord[1]) + ".mgm"
         )
@@ -122,7 +123,9 @@ class TilesRepositoryMGMaps(TilesRepository):
         self.lock.acquire()
         path = fileUtils.check_dir(self.configpath)
         path = fileUtils.check_dir(
-            path, "YahooMap_" + str(MAP_MAX_ZOOM_LEVEL - tile_coord[2])
+            path, 
+            "Yahoo" + MAP_SERVICES[layer]["layerName"][:3] + \
+            "_" + str(MAP_MAX_ZOOM_LEVEL - tile_coord[2])
         )
         path = fileUtils.check_dir(
             path, self.calc_v2_hash(tile_coord[0], tile_coord[1])
