@@ -31,7 +31,7 @@ from tilesRepo import TilesRepository
 class TilesRepositoryFS(TilesRepository):
 
     def __init__(self, MapServ_inst):
-        self.configpath = self.mapServ_inst.configpath
+        self.configpath = MapServ_inst.configpath
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
         self.lock = Lock()

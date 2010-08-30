@@ -111,7 +111,7 @@ class TilesRepositoryMGMaps(TilesRepository):
     def coord_to_path(self, tile_coord, layer):
         return os.path.join(
             self.configpath,
-            MAP_SERVICES[layer]["layerDir"] + "_" + str(tile_coord[2])
+            MAP_SERVICES[layer]["layerDir"] + "_" + str(tile_coord[2]),
             str(tile_coord[0]) + "_" + str(tile_coord[1]) + ".mgm"
         )
 
