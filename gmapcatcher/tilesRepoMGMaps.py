@@ -1,4 +1,4 @@
-## @package gmapcatcher.tilesRepoFS
+## @package gmapcatcher.tilesRepoMGMaps
 # This modul provides filebased tile repository functions
 #
 # Usage:
@@ -28,7 +28,7 @@ from mapConst import *
 from tilesRepo import TilesRepository
 
 
-class TilesRepositoryFS(TilesRepository):
+class TilesRepositoryMGMaps(TilesRepository):
 
     def __init__(self, MapServ_inst):
         self.configpath = self.mapServ_inst.configpath
@@ -104,35 +104,23 @@ class TilesRepositoryFS(TilesRepository):
     #  only check path
     #  tile_coord = (tile_X, tile_Y, zoom_level)
     #  smaple of the Naming convention:
-    #  \.googlemaps\tiles\15\0\1\0\1.png
+    #  \.googlemaps\tiles\15\1_1.mgm
     #  We only have 2 levels for one axis
     #  at most 1024 files in one dir
     # private
     def coord_to_path(self, tile_coord, layer):
         return os.path.join(
-                            self.configpath,
-                            MAP_SERVICES[layer]["layerDir"],
-                            str(tile_coord[2]),
-                            str(tile_coord[0] / 1024),
-                            str(tile_coord[0] % 1024),
-                            str(tile_coord[1] / 1024),
-                            str(tile_coord[1] % 1024) + ".png"
-                           )
+            self.configpath,
+            MAP_SERVICES[layer]["layerDir"] + "_" + str(tile_coord[2])
+            str(tile_coord[0]) + "_" + str(tile_coord[1]) + ".mgm"
+        )
 
     ## create path if doesn't exists
-    #  tile_coord = (tile_X, tile_Y, zoom_level)
-    #  smaple of the Naming convention:
-    #  \.googlemaps\tiles\15\0\1\0\1.png
-    #  We only have 2 levels for one axis
-    #  at most 1024 files in one dir
-    # private
     def coord_to_path_checkdirs(self, tile_coord, layer):
         self.lock.acquire()
-        path = os.path.join(self.configpath, MAP_SERVICES[layer]["layerDir"],)
-        path = fileUtils.check_dir(path)
-        path = fileUtils.check_dir(path, '%d' % tile_coord[2])
-        path = fileUtils.check_dir(path, "%d" % (tile_coord[0] / 1024))
-        path = fileUtils.check_dir(path, "%d" % (tile_coord[0] % 1024))
-        path = fileUtils.check_dir(path, "%d" % (tile_coord[1] / 1024))
+        path = fileUtils.check_dir(self.configpath)
+        path = fileUtils.check_dir(
+            path, MAP_SERVICES[layer]["layerDir"] + "_" + str(tile_coord[2])
+        )
         self.lock.release()
-        return os.path.join(path, "%d.png" % (tile_coord[1] % 1024))
+        return os.path.join(path, "%d_%d.mgm" % (tile_coord[0], tile_coord[1]))
