@@ -114,7 +114,8 @@ DA_MENU = ["Zoom In", "Zoom Out", "Center map here", "Reset",
 
 REPOS_TYPE_FILES = 0
 REPOS_TYPE_SQLITE3 = 1
-REPOS_TYPE = ["Files", "SQLite3"]
+REPOS_TYPE_MGMAPS = 2
+REPOS_TYPE = ["Files", "SQLite3", "MGMaps"]
 DEFAULT_REPOS_TYPE = 0
 SQLITE3_REPOSITORY_FILE = "tilerepository.db"
 
