@@ -237,7 +237,7 @@ class DrawingArea(gtk.DrawingArea):
             location = gps.get_location()
             if location is not None and (zl <= conf.max_gps_zoom):
                 img = gps.pixbuf
-                draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
+                self.draw_image(location, img, GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
 
         # Draw the downloading notification
         if downloading:

@@ -237,15 +237,14 @@ class MainWindow(gtk.Window):
             else:
                 self.gps_timeout = 0
         l = len(self.save_gps)
-## following code does not working
-##        if l > 0:
-##            mostrecentcoord = self.save_gps[l]
-##            if abs(mostrecentcoord[0] - coord[0]) > self.conf.gps_increment \
-##                    or abs(mostrecentcoord[1] - coord[1]) >\
-##                    self.conf.gps_increment:
-##                self.save_gps.append(coord)
-##        else:
-##            self.save_gps.append(coord)
+        if l > 0:
+            mostrecentcoord = self.save_gps[l - 1]
+            if abs(mostrecentcoord[0] - coord[0]) > self.conf.gps_increment \
+                    or abs(mostrecentcoord[1] - coord[1]) >\
+                    self.conf.gps_increment:
+                self.save_gps.append(coord)
+        else:
+            self.save_gps.append(coord)
         zl = self.get_zoom()
         tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
         # The map should be centered around a new GPS location
