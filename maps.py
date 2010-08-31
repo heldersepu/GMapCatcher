@@ -39,7 +39,7 @@ class MainWindow(gtk.Window):
     showMarkers = True
     key_down = None
     tPoint = {}
-    gps_timeout = 0
+    gps_idle_time = time.time()
 
     ## Get the zoom level from the scale
     def get_zoom(self):
@@ -266,19 +266,10 @@ class MainWindow(gtk.Window):
                             self.drawing_area.da_jump(4, zl, True)
             else:
                 self.drawing_area.center = tile
-        # GPS update timeout
+        # GPS update timeout, recenter GPS only after 3 sec idle 
         elif mode == GPS_TIMEOUT:
-            if (self.gps_timeout != 0):
-                if time.time() - self.gps_timeout < 3:
-                    self.drawing_area.repaint()
-
-                    if self.conf.status_location == STATUS_GPS:
-                        self.status_bar.pop(self.status_bar_id)
-                        self.status_bar.push(self.status_bar_id,
-                                              "Latitude=" + coord[0] + " Longitude=" + coord[1])
-                    return
-                else:
-                    self.gps_timeout = 0
+            if (time.time() - self.gps_idle_time) > 3:
+                self.drawing_area.center = tile
 
         self.drawing_area.repaint()
 
@@ -687,7 +678,7 @@ class MainWindow(gtk.Window):
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
         if (event.get_state() & gtk.gdk.BUTTON1_MASK) != 0:
-            self.gps_timeout = time.time()
+            self.gps_idle_time = time.time()
             self.drawing_area.da_move(event.x, event.y, self.get_zoom())
             if (event.get_state() & gtk.gdk.SHIFT_MASK) != 0 and \
                         self.visual_dlconfig.get('active', False):
@@ -886,7 +877,7 @@ class MainWindow(gtk.Window):
         # Right = 65363  Down = 65364
         if keyval in range(65361, 65365):
             self.drawing_area.da_jump(keyval - 65360, zoom)
-            self.gps_timeout = time.time()
+            self.gps_idle_time = time.time()
 
         # Page Up = 65365  Page Down = 65366
         # Home    = 65360  End       = 65367
@@ -909,7 +900,6 @@ class MainWindow(gtk.Window):
         # Space = 32   ReCenter the GPS
         elif keyval == 32:
             self.reCenter_gps = True
-            self.gps_timeout = 0
 
         # M = 77,109  S = 83,115  T = 84,116, H = 72,104
         if keyval in [77, 109]:
