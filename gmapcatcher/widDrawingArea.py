@@ -4,6 +4,7 @@
 
 import gtk
 import pango
+import math
 import mapUtils
 from mapConst import *
 
@@ -151,10 +152,10 @@ class DrawingArea(gtk.DrawingArea):
                     fg_arrow, bg_arrow, None, gtk.gdk.INVERT,
                     gtk.gdk.SOLID, None, None, None,
                     gtk.gdk.INCLUDE_INFERIORS,
-                    0, 0, 0, 0, True, 3, gtk.gdk.LINE_SOLID,
+                    0, 0, 0, 0, True, 2, gtk.gdk.LINE_SOLID,
                     gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_MITER)
-            self.arrow_gc.set_rgb_bg_color(bg_scale)
-            self.arrow_gc.set_rgb_fg_color(fg_scale)
+            self.arrow_gc.set_rgb_bg_color(bg_arrow)
+            self.arrow_gc.set_rgb_fg_color(fg_arrow)
 
     ## Draws a circle
     def draw_circle(self, screen_coord, gc):
@@ -182,19 +183,19 @@ class DrawingArea(gtk.DrawingArea):
         self.set_arrow_gc()
         cos = math.cos(direction)
         sin = math.sin(direction)
-        arrowtop = (screen_coord[0] + 10 * cos, screen_coord[1] + 10 * sin)
+        arrowtop = (screen_coord[0] + 12 * cos, screen_coord[1] + 12 * sin)
         self.window.draw_line(self.arrow_gc,
-                screen_coord[0] - 10 * cos,
-                screen_coord[1] - 10 * sin,
+                screen_coord[0] - 12 * cos,
+                screen_coord[1] - 12 * sin,
                 arrowtop[0], arrowtop[1])
         self.window.draw_line(self.arrow_gc,
                 arrowtop[0], arrowtop[1],
-                arrowtop[0] + 3 * math.cos(direction + 3 * math.pi / 4.0),
-                arrowtop[1] + 3 * math.sin(direction + 3 * math.pi / 4.0))
+                arrowtop[0] + 7 * math.cos(direction + 3 * math.pi / 4.0),
+                arrowtop[1] + 7 * math.sin(direction + 3 * math.pi / 4.0))
         self.window.draw_line(self.arrow_gc, 
                 arrowtop[0], arrowtop[1],
-                arrowtop[0] + 3 * math.cos(direction - 3 * math.pi / 4.0),
-                arrowtop[1] + 3 * math.sin(direction - 3 * math.pi / 4.0))
+                arrowtop[0] + 7 * math.cos(direction - 3 * math.pi / 4.0),
+                arrowtop[1] + 7 * math.sin(direction - 3 * math.pi / 4.0))
 
     ## Draws the marker
     def draw_marker(self, mcoord, zl, img, pixDim, marker_name):
@@ -318,4 +319,3 @@ class DrawingArea(gtk.DrawingArea):
                     middle[0],
                     middle[1] + full[1] / (sz * 2) + ypos,
                     self.visualdl_lo)
-
