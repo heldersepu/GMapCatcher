@@ -13,6 +13,7 @@ import signal
 import gobject
 import re
 #import gio
+import time
 
 from gmapcatcher.mapConst import *
 from gmapcatcher.gtkThread import *
@@ -245,6 +246,17 @@ class MainWindow(gtk.Window):
                 self.save_gps.append(coord)
         else:
             self.save_gps.append(coord)
+#        if (self.gps_timeout != 0):
+#            if time.time() - self.gps_timeout < 3:
+#                self.drawing_area.repaint()
+#
+#                if self.conf.status_location == STATUS_GPS:
+#                    self.status_bar.pop(self.status_bar_id)
+#                    self.status_bar.push(self.status_bar_id,
+#                                          "Latitude=" + coord[0] + " Longitude=" + coord[1])
+#                return
+#            else:
+#                self.gps_timeout = 0
         zl = self.get_zoom()
         tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
         # The map should be centered around a new GPS location
