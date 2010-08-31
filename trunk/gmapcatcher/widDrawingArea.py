@@ -222,7 +222,7 @@ class DrawingArea(gtk.DrawingArea):
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
                     downloading=False, visual_dlconfig = {},
                     marker=None, locations={}, entry_name="",
-                    showMarkers=False, gps=None):
+                    showMarkers=False, gps=None, gps_direction=False):
         self.set_scale_gc()
         self.set_visualdl_gc()
         rect = self.get_allocation()
@@ -273,8 +273,10 @@ class DrawingArea(gtk.DrawingArea):
                 img = gps.pixbuf
                 screen_coord = self.coord_to_screen(coord[0], coord[1], zl)
                 if screen_coord:
-                    self.draw_image(self.screen_coord, img,
+                    self.draw_image(screen_coord, img,
                         GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
+                    if gps_direction:
+                        self.draw_arrow(screen_coord, gps_direction)
 
         # Draw the downloading notification
         if downloading:

@@ -838,7 +838,7 @@ class MainWindow(gtk.Window):
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
                 self.downloading > 0, self.visual_dlconfig, self.marker,
                 self.ctx_map.get_locations(), self.entry.get_text(),
-                self.showMarkers, self.gps
+                self.showMarkers, self.gps, self.gps_direction()
             )
 
     ## Handles the pressing of F11 & F12
