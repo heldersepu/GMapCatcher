@@ -12,7 +12,7 @@ import os
 import signal
 import gobject
 import re
-#import gio
+import math
 import time
 
 from gmapcatcher.mapConst import *
@@ -278,7 +278,15 @@ class MainWindow(gtk.Window):
             self.status_bar.pop(self.status_bar_id)
             self.status_bar.push(self.status_bar_id,
                                   "Latitude=" + coord[0] + " Longitude=" + coord[1])
-
+    def gps_direction(self):
+        if not self.gps or len(self.save_gps) < 2:
+            return False
+        l = len(self.save_gps)
+        h = self.save_gps[l - 1][0] - self.save_gps[l - 2][0]
+        v = self.save_gps[l - 1][1] - self.save_gps[l - 2][1]
+        return ternary(h != 0, math.acos(v/h), ternary(v > 0, math.pi / 2.0, 
+                ternary(v < 0, -1 * math.pi / 2.0, False)))
+        
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
         combo = gtk.combo_box_entry_new_text()
