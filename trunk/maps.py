@@ -284,7 +284,7 @@ class MainWindow(gtk.Window):
         l = len(self.save_gps)
         h = self.save_gps[l - 1][0] - self.save_gps[l - 2][0]
         v = self.save_gps[l - 1][1] - self.save_gps[l - 2][1]
-        return ternary(h != 0, math.acos(v/h), ternary(v > 0, math.pi / 2.0, 
+        return ternary(h != 0, math.atan(v/h), ternary(v > 0, math.pi / 2.0, 
                 ternary(v < 0, -1 * math.pi / 2.0, False)))
         
     ## Creates a comboBox that will contain the locations
