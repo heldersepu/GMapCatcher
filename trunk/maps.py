@@ -225,18 +225,11 @@ class MainWindow(gtk.Window):
 
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self, coord, mode):
+        zl = self.get_zoom()
         self.current_gps = coord
-        if (self.gps_timeout != 0):
-            if time.time() - self.gps_timeout < 3:
-                self.drawing_area.repaint()
+        tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))        
 
-                if self.conf.status_location == STATUS_GPS:
-                    self.status_bar.pop(self.status_bar_id)
-                    self.status_bar.push(self.status_bar_id,
-                                          "Latitude=" + coord[0] + " Longitude=" + coord[1])
-                return
-            else:
-                self.gps_timeout = 0
+        # Save the GPS coordinates
         l = len(self.save_gps)
         if l > 0:
             mostrecentcoord = self.save_gps[l - 1]
@@ -246,19 +239,7 @@ class MainWindow(gtk.Window):
                 self.save_gps.append(coord)
         else:
             self.save_gps.append(coord)
-#        if (self.gps_timeout != 0):
-#            if time.time() - self.gps_timeout < 3:
-#                self.drawing_area.repaint()
-#
-#                if self.conf.status_location == STATUS_GPS:
-#                    self.status_bar.pop(self.status_bar_id)
-#                    self.status_bar.push(self.status_bar_id,
-#                                          "Latitude=" + coord[0] + " Longitude=" + coord[1])
-#                return
-#            else:
-#                self.gps_timeout = 0
-        zl = self.get_zoom()
-        tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
+            
         # The map should be centered around a new GPS location
         if mode == GPS_CENTER or self.reCenter_gps:
             self.reCenter_gps = False
@@ -285,8 +266,23 @@ class MainWindow(gtk.Window):
                             self.drawing_area.da_jump(4, zl, True)
             else:
                 self.drawing_area.center = tile
+        # GPS update timeout
+        elif mode == GPS_TIMEOUT:
+            if (self.gps_timeout != 0):
+                if time.time() - self.gps_timeout < 3:
+                    self.drawing_area.repaint()
+
+                    if self.conf.status_location == STATUS_GPS:
+                        self.status_bar.pop(self.status_bar_id)
+                        self.status_bar.push(self.status_bar_id,
+                                              "Latitude=" + coord[0] + " Longitude=" + coord[1])
+                    return
+                else:
+                    self.gps_timeout = 0
+
         self.drawing_area.repaint()
 
+        # Update the status bar with the GPS Coordinates 
         if self.conf.status_location == STATUS_GPS:
             self.status_bar.pop(self.status_bar_id)
             self.status_bar.push(self.status_bar_id,

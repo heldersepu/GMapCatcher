@@ -131,7 +131,10 @@ GPS_DISABLED = 0
 GPS_MARKER = 1
 GPS_CENTER = 2
 GPS_ON_SCREEN = 3
-GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center", "GPS on Screen"]
+GPS_TIMEOUT = 4
+GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center", 
+             "GPS on Screen", "GPS Timeout"]
+
 # default distance - fraction of deg - for gps track increment
 GPS_INCREMENT = 0.001
 
