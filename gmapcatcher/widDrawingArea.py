@@ -20,6 +20,7 @@ class DrawingArea(gtk.DrawingArea):
 
         self.visualdl_gc = False
         self.scale_gc = False
+        self.arrow_gc = False
 
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK)
         self.connect('button-press-event', self.da_button_press)
@@ -141,6 +142,20 @@ class DrawingArea(gtk.DrawingArea):
             self.scale_lo.set_font_description(
                 pango.FontDescription("sans normal 10"))
 
+    ## Set the graphics context for the gps arrow
+    def set_arrow_gc(self):
+        if not self.arrow_gc:
+            fg_arrow = gtk.gdk.color_parse("#777")
+            bg_arrow = gtk.gdk.color_parse("#FFF")
+            self.arrow_gc = self.window.new_gc(
+                    fg_arrow, bg_arrow, None, gtk.gdk.INVERT,
+                    gtk.gdk.SOLID, None, None, None,
+                    gtk.gdk.INCLUDE_INFERIORS,
+                    0, 0, 0, 0, True, 3, gtk.gdk.LINE_SOLID,
+                    gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_MITER)
+            self.arrow_gc.set_rgb_bg_color(bg_scale)
+            self.arrow_gc.set_rgb_fg_color(fg_scale)
+
     ## Draws a circle
     def draw_circle(self, screen_coord, gc):
         radius = 10
@@ -162,6 +177,24 @@ class DrawingArea(gtk.DrawingArea):
             screen_coord[0] - width/2, screen_coord[1] - height/2,
             width, height
         )
+        
+    def draw_arrow(self, screen_coord, direction):
+        self.set_arrow_gc()
+        cos = math.cos(direction)
+        sin = math.sin(direction)
+        arrowtop = (screen_coord[0] + 10 * cos, screen_coord[1] + 10 * sin)
+        self.window.draw_line(self.arrow_gc,
+                screen_coord[0] - 10 * cos,
+                screen_coord[1] - 10 * sin,
+                arrowtop[0], arrowtop[1])
+        self.window.draw_line(self.arrow_gc,
+                arrowtop[0], arrowtop[1],
+                arrowtop[0] + 3 * math.cos(direction + 3 * math.pi / 4.0),
+                arrowtop[1] + 3 * math.sin(direction + 3 * math.pi / 4.0))
+        self.window.draw_line(self.arrow_gc, 
+                arrowtop[0], arrowtop[1],
+                arrowtop[0] + 3 * math.cos(direction - 3 * math.pi / 4.0),
+                arrowtop[1] + 3 * math.sin(direction - 3 * math.pi / 4.0))
 
     ## Draws the marker
     def draw_marker(self, mcoord, zl, img, pixDim, marker_name):
