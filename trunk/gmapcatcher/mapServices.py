@@ -4,6 +4,7 @@
 import os
 if os.environ.get('MAPS_GTK', 'False') == 'True':
     import gtk
+    from gobject import TYPE_STRING
 import sys
 import fileUtils
 import tilesRepoFactory
@@ -20,7 +21,7 @@ import mapServers.virtualEarth as virtualEarth
 
 from mapConst import *
 from threading import Timer
-from gobject import TYPE_STRING
+
 
 
 class MapServException(Exception):
