@@ -17,8 +17,9 @@
 
 
 import os
+if os.environ.get('MAPS_GTK', 'False') == 'True':
+    import gtk
 import sys
-import gtk
 import time
 
 import lrucache
@@ -361,11 +362,12 @@ class TilesRepositorySQLite3(TilesRepository):
 
     def create_pixbuf_from_data(self, data):
         try:
-            loader = gtk.gdk.PixbufLoader()
-            loader.write( data )
-            loader.close()
+            if os.environ.get('MAPS_GTK', 'False') == 'True':
+                loader = gtk.gdk.PixbufLoader()
+                loader.write( data )
+                loader.close()
 
-            pixbuf = loader.get_pixbuf()
+                pixbuf = loader.get_pixbuf()
 
         except:
             print traceback.format_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])

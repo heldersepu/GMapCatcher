@@ -4,11 +4,13 @@
 ## @package maps
 # This is the Main Window
 
+import os
+os.environ["MAPS_GTK"] = "True"
+
 import gmapcatcher.mapGPS as mapGPS
 import gmapcatcher.mapUtils as mapUtils
 import gmapcatcher.mapTools as mapTools
 import gmapcatcher.mapPixbuf as mapPixbuf
-import os
 import signal
 import gobject
 import re

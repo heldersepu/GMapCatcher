@@ -2,6 +2,10 @@
 ## @package gmapcatcher.DLWindow
 # Widget that allows Download of entire locations
 
+import os
+if os.environ.get('MAPS_GTK', 'False') == 'False':
+    raise Exception('gtk module', __file__)
+
 import pygtk
 pygtk.require('2.0')
 import gtk

@@ -4,6 +4,10 @@
 # Displayed inside a tab in MapTools.
 
 import os
+if os.environ.get('MAPS_GTK', 'False') == 'False':
+    raise Exception('gtk module', __file__)
+
+import os
 import gtk
 from mapConst import *
 from customWidgets import SpinBtn, myFrame, lbl, FolderChooser

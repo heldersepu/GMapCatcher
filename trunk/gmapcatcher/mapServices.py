@@ -2,7 +2,8 @@
 # All the interaction with the map services
 
 import os
-import gtk
+if os.environ.get('MAPS_GTK', 'False') == 'True':
+    import gtk
 import sys
 import fileUtils
 import tilesRepoFactory
@@ -190,8 +191,9 @@ class MapServ:
         return self.tile_repository.load_pixbuf(coord, layer, force_update)
 
     def completion_model(self, strAppend=''):
-        store = gtk.ListStore(TYPE_STRING)
-        for str in sorted(self.locations.keys()):
-            iter = store.append()
-            store.set(iter, 0, str + strAppend)
+        if os.environ.get('MAPS_GTK', 'False') == 'True':
+            store = gtk.ListStore(TYPE_STRING)
+            for str in sorted(self.locations.keys()):
+                iter = store.append()
+                store.set(iter, 0, str + strAppend)
         return store
