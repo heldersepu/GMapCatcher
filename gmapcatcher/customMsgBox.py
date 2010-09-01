@@ -1,6 +1,10 @@
 ## @package gmapcatcher.customMsgBox
 # A group of custom message box widgets.
 
+import os
+if os.environ.get('MAPS_GTK', 'False') == 'False':
+    raise Exception('gtk module', __file__)
+
 import pygtk
 pygtk.require('2.0')
 import gtk

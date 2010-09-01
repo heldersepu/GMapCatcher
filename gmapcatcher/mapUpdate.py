@@ -1,11 +1,14 @@
 ## @package gmapcatcher.mapUpdate
 # All the update related logic
 
-import gtk
+import os
+if os.environ.get('MAPS_GTK', 'False') == 'True':
+    import gtk
+    from customMsgBox import updateMsgBox
 import openanything
 from mapConst import *
 from threading import Timer
-from customMsgBox import updateMsgBox
+
 
 
 ## Class used to get latest version info
@@ -48,15 +51,17 @@ class CheckForUpdates():
         self.myThread.cancel()
         if self.update:
             if self.update.latest_version > VERSION:
-                updateMsgBox(
-                    "Update detected! \n" +
-                    ("A new version of %s is available \n\n" % NAME) +
-                    ("Your version is %s \n" % VERSION ) +
-                    ("Current version is %s" % self.update.latest_version ),
-                    WEB_ADDRESS,
-                    self.update.latest_installer
-                )
-                gtk.main()
+                if os.environ.get('MAPS_GTK', 'False') == 'True':
+                    updateMsgBox(
+                            "Update detected! \n" +
+                            ("A new version of %s is available \n\n" % NAME) +
+                            ("Your version is %s \n" % VERSION ) +
+                            ("Current version is %s" % 
+                            self.update.latest_version),
+                            WEB_ADDRESS,
+                            self.update.latest_installer
+                    )
+                    gtk.main()
 
 if __name__ == "__main__":
     # Test some URLs

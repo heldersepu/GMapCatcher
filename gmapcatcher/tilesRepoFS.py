@@ -16,7 +16,8 @@
 
 
 import os
-import gtk
+if os.environ.get('MAPS_GTK', 'False') == 'True':
+    import gtk
 
 import lrucache
 import mapPixbuf
@@ -58,8 +59,9 @@ class TilesRepositoryFS(TilesRepository):
         else:
             if os.path.isfile(filename):
                 try:
-                    pixbuf = gtk.gdk.pixbuf_new_from_file(filename)
-                    self.tile_cache[filename] = pixbuf
+                    if os.environ.get('MAPS_GTK', 'False') == 'True':
+                        pixbuf = gtk.gdk.pixbuf_new_from_file(filename)
+                        self.tile_cache[filename] = pixbuf
                 except Exception:
                     pixbuf = self.missingPixbuf
                     print "File corrupted: %s" % filename

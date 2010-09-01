@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+import os
+if os.environ.get('MAPS_GTK', 'False') == 'False':
+    raise Exception('gtk module', __file__)
+
 import gtk
 from mapConst import *
 
