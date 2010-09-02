@@ -161,7 +161,6 @@ SectionEnd
 Section "Start Menu Shortcuts"
     CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
     CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe" 
-    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Konsole Downloader.lnk" "%COMSPEC%" '/t:0A /k CD "$INSTDIR" && "$INSTDIR\download.exe"'
     CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\uninstall.exe" 
     CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Export Maps.lnk" "$INSTDIR\ExportMaps.bat" 
     ; Create a shortcut to the project Homepage
