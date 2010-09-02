@@ -21,8 +21,7 @@ if not isfile(join(_prefix, 'missing.png')):
 def ico():
     pix_ico = False
     try:
-        if os.environ.get('MAPS_GTK', 'False') == 'True':
-            pix_ico = gtk.gdk.pixbuf_new_from_file(join(_prefix, 'map.png'))
+        pix_ico = image_data_fs(join(_prefix, 'map.png'))
     except Exception:
         pix_ico = False
     return pix_ico
@@ -31,39 +30,21 @@ def ico():
 def missing():
     pix_missing = False
     try:
-        if os.environ.get('MAPS_GTK', 'False') == 'True':
-            pix_missing = gtk.gdk.pixbuf_new_from_file(
-                    join(_prefix, 'missing.png'))
+        pix_missing = image_data_fs(join(_prefix, 'missing.png'))
     except Exception:
-        if os.environ.get('MAPS_GTK', 'False') == 'True':
-            pix_missing = gtk.gdk.pixbuf_new_from_data(
-                    ('\0\0\0' + '\255\255\255' * 3) * (TILES_WIDTH / 4) + 
-                    (('\0\0\0' + '\255\255\255' * (TILES_WIDTH - 1)) +
-                    ('\255\255\255' * 3 * TILES_WIDTH)) * (TILES_HEIGHT / 4),
-                    gtk.gdk.COLORSPACE_RGB, False, 8,
-                    TILES_WIDTH, TILES_HEIGHT, TILES_HEIGHT * 3)
+        pix_missing = image_data_direct("missing")
     return pix_missing
 
 ## Get the Pixbuf of a Cross
 def cross():
-    if os.environ.get('MAPS_GTK', 'False') == 'True':
-        return gtk.gdk.pixbuf_new_from_data(
-                ('\0\0\0\0' * 5 + '\0\0\255\350' * 2 + '\0\0\0\0' * 5) * 5 +
-                ('\0\0\255\350' * 12) * 2 +
-                ('\0\0\0\0' * 5 + '\0\0\255\350' * 2 + '\0\0\0\0' * 5) * 5,
-                gtk.gdk.COLORSPACE_RGB, True, 8, 12, 12, 12 * 4)
+    return image_data_direct("cross")
 
 def downloading():
     pix_dl = False
     try:
-        if os.environ.get('MAPS_GTK', 'False') == 'True':
-            pix_dl = gtk.gdk.pixbuf_new_from_file(
-                    join(_prefix, 'downloading.png'))
+        pix_dl = image_data_fs(join(_prefix, 'downloading.png'))
     except Exception:
-        if os.environ.get('MAPS_GTK', 'False') == 'True':
-            pix_dl = gtk.gdk.pixbuf_new_from_data(
-                    '\0\255\0\127' * 150 * 38,
-                    gtk.gdk.COLORSPACE_RGB, True, 8, 150, 38, 150 * 4)
+        pix_dl = image_data_direct("downloading")
     return pix_dl
 
 ## Get the Pixbuf from the given image.
@@ -91,3 +72,38 @@ def getImage(filename, intWidth=56, intHeight=56):
                     gtk.gdk.COLORSPACE_RGB, True, 8, intWidth, intHeight,
                     intHeight * 4)
     return pix_buf
+    
+def image_data_fs(filename):
+    if os.environ.get('MAPS_GTK', 'False') == 'True':
+        return gtk.gdk.pixbuf_new_from_file(filename)
+    else:
+        thefile = open(filename, 'rb')
+        ret = thefile.read()
+        thefile.close()
+        return ret
+
+def image_data_direct(name):
+    if os.environ.get('MAPS_GTK', 'False') == 'True':
+        if name == "missing":
+            return gtk.gdk.pixbuf_new_from_data(
+                    ('\0\0\0' + '\255\255\255' * 3) * (TILES_WIDTH / 4) + 
+                    (('\0\0\0' + '\255\255\255' * (TILES_WIDTH - 1)) +
+                    ('\255\255\255' * 3 * TILES_WIDTH)) * (TILES_HEIGHT / 4),
+                    gtk.gdk.COLORSPACE_RGB, False, 8,
+                    TILES_WIDTH, TILES_HEIGHT, TILES_HEIGHT * 3)
+        elif name == "cross":
+            return gtk.gdk.pixbuf_new_from_data(
+                    ('\0\0\0\0' * 5 + '\0\0\255\350' * 2 + '\0\0\0\0' * 5)
+                    * 5 + ('\0\0\255\350' * 12) * 2 +
+                    ('\0\0\0\0' * 5 + '\0\0\255\350' * 2 + '\0\0\0\0' * 5)
+                    * 5,
+                    gtk.gdk.COLORSPACE_RGB, True, 8, 12, 12, 12 * 4)
+        elif name == "downloading":
+            return gtk.gdk.pixbuf_new_from_data(
+                    '\0\255\0\127' * 150 * 38,
+                    gtk.gdk.COLORSPACE_RGB, True, 8, 150, 38, 150 * 4)
+        else:
+            raise Exception('image type not recognized')
+    else:
+        ## TODO needs implementation
+        return None
