@@ -59,9 +59,8 @@ class TilesRepositoryFS(TilesRepository):
         else:
             if os.path.isfile(filename):
                 try:
-                    if os.environ.get('MAPS_GTK', 'False') == 'True':
-                        pixbuf = gtk.gdk.pixbuf_new_from_file(filename)
-                        self.tile_cache[filename] = pixbuf
+                    pixbuf = mapPixbuf.image_data_fs(filename)
+                    self.tile_cache[filename] = pixbuf
                 except Exception:
                     pixbuf = self.missingPixbuf
                     print "File corrupted: %s" % filename

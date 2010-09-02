@@ -59,8 +59,7 @@ class TilesRepositoryMGMaps(TilesRepository):
         else:
             if os.path.isfile(filename):
                 try:
-                    if os.environ.get('MAPS_GTK', 'False') == 'True':
-                        pixbuf = gtk.gdk.pixbuf_new_from_file(filename)
+                    pixbuf = mapPixbuf.image_data_fs(filename)
                     self.tile_cache[filename] = pixbuf
                 except Exception:
                     pixbuf = self.missingPixbuf
