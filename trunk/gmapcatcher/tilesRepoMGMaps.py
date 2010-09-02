@@ -16,9 +16,6 @@
 
 
 import os
-if os.environ.get('MAPS_GTK', 'False') == 'True':
-    import gtk
-
 import lrucache
 import mapPixbuf
 import fileUtils
