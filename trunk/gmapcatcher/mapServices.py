@@ -1,8 +1,8 @@
 ## @package gmapcatcher.mapServices
 # All the interaction with the map services
 
-import os
-if os.environ.get('MAPS_GTK', 'False') == 'True':
+from mapConst import *
+if IS_GTK:
     import gtk
     from gobject import TYPE_STRING
 import sys
@@ -19,7 +19,6 @@ import mapServers.openCycleMap as openCycleMap
 import mapServers.googleMapMaker as googleMapMaker
 import mapServers.virtualEarth as virtualEarth
 
-from mapConst import *
 from threading import Timer
 
 
@@ -192,7 +191,7 @@ class MapServ:
         return self.tile_repository.load_pixbuf(coord, layer, force_update)
 
     def completion_model(self, strAppend=''):
-        if os.environ.get('MAPS_GTK', 'False') == 'True':
+        if IS_GTK:
             store = gtk.ListStore(TYPE_STRING)
             for str in sorted(self.locations.keys()):
                 iter = store.append()

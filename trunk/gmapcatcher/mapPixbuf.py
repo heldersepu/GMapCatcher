@@ -3,11 +3,9 @@
 # Get the Pixbuf from image files.
 #
 
-import os
-IS_GTK = os.environ.get('MAPS_GTK', "False") == "True"
+from mapConst import *
 if IS_GTK:
     import gtk
-from mapConst import *
 from os.path import join, dirname, abspath, exists, isfile
 
 ## Absolute Path to the images directory
@@ -19,8 +17,6 @@ else:
 if not isfile(join(_prefix, 'missing.png')):
     _prefix = '/usr/share/pixmaps/gmapcatcher'
     
-
-
 def ico():
     pix_ico = False
     try:

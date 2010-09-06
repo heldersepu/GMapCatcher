@@ -3,6 +3,8 @@
 # Place to keep all constants
 
 from changeableConst import *
+import os
+IS_GTK = os.environ.get("MAPS_GTK", "False") == "True"
 
 NAME = "GMapCatcher"
 VERSION = "0.7.5.0"
