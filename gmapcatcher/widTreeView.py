@@ -3,13 +3,12 @@
 # TreeView widget used to display the list of the locations.
 # Displayed inside a tab in MapTools.
 
-import os
-if os.environ.get('MAPS_GTK', 'False') == 'False':
+from mapConst import *
+if not IS_GTK:
     raise Exception('gtk module', __file__)
 
 import gtk
 import fileUtils
-from mapConst import *
 
 ## This widget allows the user to modify the locations and markers
 class TreeView():

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import os
-if os.environ.get('MAPS_GTK', 'False') == 'False':
+from mapConst import *
+if not IS_GTK:
     raise Exception('gtk module', __file__)
 
 import gtk
-from mapConst import *
 
 class OurCredits(gtk.AboutDialog):
     def __init__(self):

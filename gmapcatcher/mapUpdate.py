@@ -2,11 +2,11 @@
 # All the update related logic
 
 import os
-if os.environ.get('MAPS_GTK', 'False') == 'True':
+from mapConst import *
+if IS_GTK:
     import gtk
     from customMsgBox import updateMsgBox
 import openanything
-from mapConst import *
 from threading import Timer
 
 
@@ -51,7 +51,7 @@ class CheckForUpdates():
         self.myThread.cancel()
         if self.update:
             if self.update.latest_version > VERSION:
-                if os.environ.get('MAPS_GTK', 'False') == 'True':
+                if IS_GTK:
                     updateMsgBox(
                             "Update detected! \n" +
                             ("A new version of %s is available \n\n" % NAME) +

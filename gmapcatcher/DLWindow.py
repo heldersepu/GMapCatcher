@@ -2,8 +2,8 @@
 ## @package gmapcatcher.DLWindow
 # Widget that allows Download of entire locations
 
-import os
-if os.environ.get('MAPS_GTK', 'False') == 'False':
+from mapConst import *
+if not IS_GTK:
     raise Exception('gtk module', __file__)
 
 import pygtk
@@ -18,7 +18,6 @@ from customWidgets import *
 import mapPixbuf
 import mapUtils
 import mapServices
-from mapConst import *
 from gtkThread import *
 from os.path import join, isdir
 

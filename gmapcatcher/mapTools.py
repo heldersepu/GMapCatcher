@@ -2,8 +2,8 @@
 ## @package gmapcatcher.mapTools
 # The tools widget, items are displayed in multiple tabs.
 
-import os
-if os.environ.get('MAPS_GTK', 'False') == 'False':
+from mapConst import *
+if not IS_GTK:
     raise Exception('gtk module', __file__)
 
 import pygtk
@@ -13,7 +13,7 @@ import widTreeView
 import widMySettings
 import widChangeTheme
 import widMyGPS
-from mapConst import *
+
 
 
 class MapTools():

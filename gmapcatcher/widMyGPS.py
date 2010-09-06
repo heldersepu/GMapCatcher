@@ -3,13 +3,12 @@
 # GPS widget used to modify some GPS settings
 # Displayed inside a tab in MapTools.
 
-import os
-if os.environ.get('MAPS_GTK', 'False') == 'False':
+from mapConst import *
+if not IS_GTK:
     raise Exception('gtk module', __file__)
 
 import gtk
 import fileUtils
-from mapConst import *
 from customWidgets import myEntry, SpinBtn, myFrame, lbl
 
 ## This widget lets the user change GPS settings
