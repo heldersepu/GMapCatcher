@@ -16,6 +16,7 @@
   * *Microsoft Windows XP Pro SP2* ^(Version 5.1.2600)^
   * *Microsoft Windows XP Pro SP2* ^(Spanish & Italian editions)^
   * *Microsoft Windows 2000 SP4* ^(Version 5.0.2195)^
+  * *Ubuntu 10.10* ^(Maverick Meercat) (64 Bit)^
   * *Ubuntu 10.04* ^(Lucid Lynx) (64 Bit)^
   * *Ubuntu 9.04* ^(Jaunty Jackalope & Netbook Remix)^
   * *Ubuntu 8.10* ^(Intrepid Ibex)^
