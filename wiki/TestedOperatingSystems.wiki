@@ -20,6 +20,8 @@
   * *Ubuntu 9.04* ^(Jaunty Jackalope & Netbook Remix)^
   * *Ubuntu 8.10* ^(Intrepid Ibex)^
   * *Ubuntu 8.04* ^(LTS Hardy Heron)^
+  * *FreeBSD*
+  * *OpenBSD*
 
 
 If you have tested gmapcatcher in an OS that is not on the list please add a comment below
