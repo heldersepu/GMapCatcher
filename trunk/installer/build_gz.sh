@@ -188,4 +188,4 @@ fi
 rm -rf ../temp/
 
 # cd $MAINDIR/debian_support
-# dput ppa:ubunt-u-markbenjamin/mapcatcher $pkgname-1_source.changes
+# dput ppa:ubunt-u-markbenjamin/mapcatcher $pkgname-1ubuntu1_source.changes
