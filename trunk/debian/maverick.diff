@@ -1,0 +1,9 @@
+Index: debian/changelog
+===================================================================
+--- debian/changelog	(revision 1044)
++++ debian/changelog	(working copy)
+@@ -1,4 +1,4 @@
+-mapcatcher (0.7.5.0-1) unstable; urgency=low
++mapcatcher (0.7.5.0-1ubuntu1) maverick; urgency=low
+ 
+   * Initial release (closes: #589254)

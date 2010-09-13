@@ -188,4 +188,9 @@ fi
 rm -rf ../temp/
 
 # cd $MAINDIR/debian_support
+
+# maverick
 # dput ppa:ubunt-u-markbenjamin/mapcatcher $pkgname-1ubuntu1_source.changes
+
+# lucid
+# dput ppa:ubunt-u-markbenjamin/mapcatcher $pkgname-1ubuntu0_source.changes
