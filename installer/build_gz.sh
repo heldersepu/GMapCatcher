@@ -7,6 +7,7 @@ if [ "$1" = "help" ]
 then
     echo "$0 makedeb - makes .deb installer plus mapcatcher tar.gz"
     echo "$0 makedeb debupload - additionally saves *all* debian upload files"
+    echo "$0 makedeb debupload ubuntu - additionally makes/saves .changes file"
     echo "together in debian_support subdirectory im project tree"
     echo "$0 refreshdebdir - makes new debian directory in project tree"
     echo " -- make sure you have backed up the original debian directory --"
@@ -156,10 +157,16 @@ then
     find . -name \.svn | xargs rm -r -f
     rm legacy.diff
     cd ..
-    debuild -us -uc
+    if [ "$3" = "ubuntu" ]
+    then
+        debuild -S -us -uc
+#        debuild -S -kEE8E4DE8
+    else
+        debuild -us -uc
 # -us -uc is unsigned; -us for source, -uc for debian changes;
 # in an upload to a repo then signing is obligatory; for instance
 # debuild -kEE8E4DE8
+    fi
     cd ..
     cp *.deb $MAINDIR
     cp *.orig.tar.gz $MAINDIR/$pkgname.tar.gz
@@ -179,3 +186,6 @@ fi
 
 # Delete temp directory
 rm -rf ../temp/
+
+# cd $MAINDIR/debian_support
+# dput ppa:ubunt-u-markbenjamin/mapcatcher $pkgname-1_source.changes

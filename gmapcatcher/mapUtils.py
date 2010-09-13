@@ -99,8 +99,8 @@ def tile_coord_to_screen(tile_coord, rect, center):
     if dx + TILES_WIDTH >= 0 and dx < rect.width and \
        dy + TILES_HEIGHT >= 0 and dy < rect.height:
         return [(xx,yy)
-            for xx in xrange(dx, rect.width, x_rollup)
-            for yy in xrange(dy, rect.height, y_rollup)]
+            for xx in xrange(int(dx), rect.width, x_rollup)
+            for yy in xrange(int(dy), rect.height, y_rollup)]
     else:
         return None
 
