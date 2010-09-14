@@ -127,9 +127,9 @@ def del_file(filename):
 
 ## Remove file if is older than given time
 #  (24h * 3600s) = 86400s
-def delete_old(filename, intSeconds=86400):
+def delete_old(filename, intDays):
     if os.path.isfile(filename):
-        if (int(time() - os.path.getmtime(filename)) > intSeconds):
+        if (int(time() - os.path.getmtime(filename)) > (86400 * intDays)):
             try:
                 os.remove(filename)
                 return True

@@ -86,7 +86,7 @@ class TilesRepositoryMGMaps(TilesRepository):
             self.coord_to_path_checkdirs(coord, layer)
             # Remove the old tile only after getting the new data
             if remove_tile:
-                fileUtils.delete_old(filename)
+                fileUtils.delete_old(filename, conf.force_update_days)
             file = open( filename, 'wb' )
             file.write( data )
             file.close()

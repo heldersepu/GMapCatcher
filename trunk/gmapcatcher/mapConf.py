@@ -57,6 +57,7 @@ class MapConf():
         config.set(SECTION_INIT, 'save_height', self.save_height)
         config.set(SECTION_INIT, "scale_visible", self.scale_visible)
         config.set(SECTION_INIT, "auto_refresh", self.auto_refresh)
+        config.set(SECTION_INIT, "force_update_days", self.force_update_days)
 
         configfile = open(configpath, 'wb')
         config.write(configfile)
@@ -133,6 +134,8 @@ class MapConf():
         self.scale_visible = read_config('scale_visible', True, int)
         ## auto-refresh frequency in miliseconds
         self.auto_refresh = read_config('auto_refresh', 0, int)
+        ## Amount of days used when user selects the Force Update
+        self.force_update_days = read_config('force_update_days', 1, int)
 
 
     ## Write the configuration to the default file
