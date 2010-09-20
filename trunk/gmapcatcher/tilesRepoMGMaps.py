@@ -29,11 +29,11 @@ from tilesRepo import TilesRepository
 class TilesRepositoryMGMaps(TilesRepository):
 
     def __init__(self, MapServ_inst):
-        self.configpath = MapServ_inst.configpath
+        self.set_repository_path(MapServ_inst.configpath)
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
         self.lock = Lock()
-        self.missingPixbuf = mapPixbuf.missing()
+        self.missingPixbuf = mapPixbuf.missing()        
 
     def finish(self):
         pass
@@ -41,6 +41,7 @@ class TilesRepositoryMGMaps(TilesRepository):
     ## Sets new repository path to be used for storing tiles
     def set_repository_path(self, newpath):
         self.configpath = newpath
+        self.create_conf_file(newpath)
 
     ## check if we have locally downloaded tile
     def is_tile_in_local_repos(self, coord, layer):
@@ -130,3 +131,14 @@ class TilesRepositoryMGMaps(TilesRepository):
         )
         self.lock.release()
         return os.path.join(path, "%d_%d.mgm" % (tile_coord[0], tile_coord[1]))
+
+    ## Create the MGMaps conf fie
+    def create_conf_file(self, dir):
+        fileName = os.path.join(dir, 'cache.conf')
+        if not os.path.isfile(fileName):
+            file = open(fileName, 'w')
+            file.write('version=3\n')
+            file.write('tiles_per_file=1\n')
+            file.write('hash_size=97\n')
+            file.write('center=0,0,1,YahooMap')
+            file.close()

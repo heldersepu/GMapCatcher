@@ -11,9 +11,9 @@ from mapConst import *
 ## Create the MGMaps conf fie
 def create_conf_file(dir):
     file = open( os.path.join(dir, 'cache.conf'), 'w')
-    file.write('version=3')
-    file.write('tiles_per_file=1')
-    file.write('hash_size=97')
+    file.write('version=3\n')
+    file.write('tiles_per_file=1\n')
+    file.write('hash_size=97\n')
     file.write('center=0,0,1,YahooMap')
     file.close()
 
