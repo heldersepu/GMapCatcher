@@ -110,7 +110,6 @@ class MainWindow(gtk.Window):
         if (location == self.default_text):
             self.clean_entry(self)
             return
-        locations = self.ctx_map.get_locations()
         p = re.compile('(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:long)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', re.IGNORECASE)
         coords = p.search(location)
         # nb needs 0.-- for coords 0 < |coord| < 1
@@ -124,8 +123,8 @@ class MainWindow(gtk.Window):
             print latitude, longitude
             coord = (latitude, longitude, self.get_zoom())
         else:
+            locations = self.ctx_map.get_locations()
             if (not location in locations.keys()):
-
                 if self.cb_offline.get_active():
                     if error_msg(self, "Offline mode, cannot do search!" + \
                                 "      Would you like to get online?",
