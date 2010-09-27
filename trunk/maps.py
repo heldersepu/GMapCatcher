@@ -141,9 +141,8 @@ class MainWindow(gtk.Window):
 
                 self.entry.set_text(location)
                 self.set_completion()
-                coord = self.ctx_map.get_locations()[location]
-            else:
-                coord = locations[location]
+                locations = self.ctx_map.get_locations()
+            coord = locations[location]
             print "%s at %f, %f" % (location, coord[0], coord[1])
 
         self.drawing_area.center = mapUtils.coord_to_tile(coord)
