@@ -109,47 +109,47 @@ class MainWindow(gtk.Window):
             return
         if (location == self.default_text):
             self.clean_entry(self)
+            return
+        locations = self.ctx_map.get_locations()
+        p = re.compile('(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:long)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', re.IGNORECASE)
+        coords = p.search(location)
+        # nb needs 0.-- for coords 0 < |coord| < 1
+        try:
+            latitude  = float(coords.group(1))
+            longitude = float(coords.group(2))
+        except:
+            longitude = 0
+            latitude = -100
+        if -180 <= longitude <= 180 and -90 <= latitude <= 90:
+            print latitude, longitude
+            coord = (latitude, longitude, self.get_zoom())
         else:
-            locations = self.ctx_map.get_locations()
-            p = re.compile('(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:long)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', re.IGNORECASE)
-            coords = p.search(location)
-            # nb needs 0.-- for coords 0 < |coord| < 1
-            try:
-                latitude  = float(coords.group(1))
-                longitude = float(coords.group(2))
-            except:
-                longitude = 0
-                latitude = -100
-            if -180 <= longitude <= 180 and -90 <= latitude <= 90:
-                print latitude, longitude
-                coord = (latitude, longitude, self.get_zoom())
-            else:
-                if (not location in locations.keys()):
+            if (not location in locations.keys()):
 
-                    if self.cb_offline.get_active():
-                        if error_msg(self, "Offline mode, cannot do search!" + \
-                                    "      Would you like to get online?",
-                                    gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
-                            self.combo_popup()
-                            return
-                    self.cb_offline.set_active(False)
-
-                    location = self.ctx_map.search_location(location)
-                    if (location[:6] == "error="):
-                        error_msg(self, location[6:])
-                        self.entry.grab_focus()
+                if self.cb_offline.get_active():
+                    if error_msg(self, "Offline mode, cannot do search!" + \
+                                "      Would you like to get online?",
+                                gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
+                        self.combo_popup()
                         return
+                self.cb_offline.set_active(False)
 
-                    self.entry.set_text(location)
-                    self.set_completion()
-                    coord = self.ctx_map.get_locations()[location]
-                else:
-                    coord = locations[location]
-                print "%s at %f, %f" % (location, coord[0], coord[1])
+                location = self.ctx_map.search_location(location)
+                if (location[:6] == "error="):
+                    error_msg(self, location[6:])
+                    self.entry.grab_focus()
+                    return
 
-            self.drawing_area.center = mapUtils.coord_to_tile(coord)
-            self.scale.set_value(coord[2])
-            self.do_zoom(coord[2], True)
+                self.entry.set_text(location)
+                self.set_completion()
+                coord = self.ctx_map.get_locations()[location]
+            else:
+                coord = locations[location]
+            print "%s at %f, %f" % (location, coord[0], coord[1])
+
+        self.drawing_area.center = mapUtils.coord_to_tile(coord)
+        self.scale.set_value(coord[2])
+        self.do_zoom(coord[2], True)
 
     ## Handles the click in the offline check box
     def offline_clicked(self, w):
