@@ -110,7 +110,7 @@ class MainWindow(gtk.Window):
         if (location == self.default_text):
             self.clean_entry(self)
             return
-        p = re.compile('(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:long)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', re.IGNORECASE)
+        p = re.compile('(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:lon)?g?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', re.IGNORECASE)
         coords = p.search(location)
         # nb needs 0.-- for coords 0 < |coord| < 1
         try:
