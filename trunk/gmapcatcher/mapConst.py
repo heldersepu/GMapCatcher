@@ -26,9 +26,10 @@ INFO_FREEWAY = 4
 OPENCYCLEMAP = 5
 GOOGLE_MAKER = 6
 VIRTUAL_EARTH = 7
+YANDEX = 8
 MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade", "Yahoo",
                "InformationFreeway", "OpenCycleMap", "Google Map Maker",
-               "Virtual Earth"]
+               "Virtual Earth", "Yandex"]
 
 LAYER_MAP = 0
 LAYER_SATELLITE = 1
@@ -76,7 +77,9 @@ MAP_SERVICES = [
     {"ID": LAYER_MAP,       "TextID": "ocmmap", "serviceName":MAP_SERVERS[OPENCYCLEMAP],
             "layerDir": "ocmTiles", "layerName": ""},
     {"ID": LAYER_MAP,       "TextID": "gmmmap", "serviceName":MAP_SERVERS[GOOGLE_MAKER],
-            "layerDir": "gmmTiles", "layerName": "" }
+            "layerDir": "gmmTiles", "layerName": "" },
+    {"ID": LAYER_MAP,       "TextID": "yandexmap", "serviceName":MAP_SERVERS[YANDEX],
+            "layerDir": "yandexTiles", "layerName": "" }            
 ]
 HYB_SAT_LAYER_OFFSETS = {"Google": 2, "Yahoo": 1}
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
