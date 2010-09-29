@@ -18,6 +18,7 @@ import mapServers.informationFreeway as informationFreeway
 import mapServers.openCycleMap as openCycleMap
 import mapServers.googleMapMaker as googleMapMaker
 import mapServers.virtualEarth as virtualEarth
+import mapServers.yandex as yandex
 
 from threading import Timer
 
@@ -96,6 +97,8 @@ class MapServ:
                     return openCycleMap.get_url(self.mt_counter, coord)
                 elif conf.map_service == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
                     return googleMapMaker.get_url(self.mt_counter, coord)
+                elif conf.map_service == MAP_SERVERS[YANDEX] and (layer == LAYER_MAP):
+                    return yandex.get_url(self.mt_counter, coord)
                 else:
                     return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
 
