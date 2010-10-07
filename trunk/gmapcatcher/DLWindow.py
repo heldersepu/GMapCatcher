@@ -93,11 +93,11 @@ class DLWindow(gtk.Window):
             if isdir(fldDown):
                 hbbox.pack_start(hbox)
 
-            self.b_cancel = gtk.Button(stock='gtk-cancel')
-            self.b_cancel.connect('clicked', self.cancel)
-            self.b_cancel.set_sensitive(False)
+            self.b_pause = gtk.Button(stock='gtk-media-pause')
+            self.b_pause.connect('clicked', self.do_pause)
+            self.b_pause.set_sensitive(False)
 
-            hbbox.pack_start(self.b_cancel)
+            hbbox.pack_start(self.b_pause)
             return hbbox
 
         fldDown = join(conf.init_path, 'download')
@@ -165,7 +165,7 @@ class DLWindow(gtk.Window):
             d.run()
             d.destroy()
             return
-        self.b_cancel.set_sensitive(True)
+        self.b_pause.set_sensitive(True)
         self.b_download.set_sensitive(False)
         self.b_open.set_sensitive(False)
         # Save the map info
@@ -223,18 +223,18 @@ class DLWindow(gtk.Window):
         self.pbar.set_text(text + percent)
 
     def download_complete(self):
-        if self.pbar.get_text() != "Canceled":
+        if self.pbar.get_text() != "Paused":
             self.all_done("Complete")
 
-    def cancel(self,w):
-        self.all_done("Canceled")
+    def do_pause(self,w):
+        self.all_done("Paused")
 
     def all_done(self, strMessage):
         if self.downloader:
             self.downloader.stop_all()
         self.downloader = None
         self.processing = False
-        self.b_cancel.set_sensitive(False)
+        self.b_pause.set_sensitive(False)
         self.b_download.set_sensitive(True)
         self.b_open.set_sensitive(True)
         self.update_pbar(strMessage, 0, 1)
