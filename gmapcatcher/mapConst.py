@@ -11,12 +11,12 @@ VERSION = "0.7.5.0"
 VERSION_NAME = ""
 WEB_ADDRESS = "http://code.google.com/p/gmapcatcher/"
 # add real names here! :-)
-AUTHORS = ["\"pi3orama\"", "Helder Sepulveda", "Maxim Razin", 
+AUTHORS = ["\"pi3orama\"", "Helder Sepulveda", "Maxim Razin",
            "Mark Benjamin", "\"standa31415\"", "\"strombom\"",
            "\"sirknottalot\"", "\"kevlo\"", "\"mrducat\"",
-           "\"bthipavo\"", "\"tatlicioglu\"", 
+           "\"bthipavo\"", "\"tatlicioglu\"",
            "\"ahmeterdincyilmaz\"", "\"serkan.cm\"",
-           "\"hk_tmp\""]
+           "\"hk_tmp\"", "Tomas Penicka"]
 
 GOOGLE = 0
 OSM = 1
@@ -27,9 +27,16 @@ OPENCYCLEMAP = 5
 GOOGLE_MAKER = 6
 VIRTUAL_EARTH = 7
 YANDEX = 8
+SEZNAM = 9
+SEZNAM_HIKING = 10
+SEZNAM_CYCLO = 11
+SEZNAM_HIST = 12
+
 MAP_SERVERS = ["Google", "OpenStreetMap", "CloudMade", "Yahoo",
                "InformationFreeway", "OpenCycleMap", "Google Map Maker",
-               "Virtual Earth", "Yandex"]
+               "Virtual Earth", "Yandex",
+               "Seznam", "Seznam Turistická", "Seznam Cyklo", "Seznam Historická",
+               ]
 
 LAYER_MAP = 0
 LAYER_SATELLITE = 1
@@ -45,7 +52,7 @@ LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles", "hyb_tiles"]
 # name of the layer service is created as: serviceName + layerName
 FIRST_LAYER_ID = 0
 MAP_SERVICES = [
-    {"ID": LAYER_MAP,       "TextID": "gmap",  "serviceName":MAP_SERVERS[GOOGLE], 
+    {"ID": LAYER_MAP,       "TextID": "gmap",  "serviceName":MAP_SERVERS[GOOGLE],
             "layerDir": "tiles",     "layerName": LAYER_NAMES[LAYER_MAP] },
     {"ID": LAYER_SATELLITE, "TextID": "gsat",  "serviceName":MAP_SERVERS[GOOGLE],
             "layerDir": "sat_tiles", "layerName": LAYER_NAMES[LAYER_SATELLITE] },
@@ -53,21 +60,21 @@ MAP_SERVICES = [
             "layerDir": "ter_tiles", "layerName": LAYER_NAMES[LAYER_TERRAIN] },
     {"ID": LAYER_HYBRID,    "TextID": "ghyb",  "serviceName":MAP_SERVERS[GOOGLE],
             "layerDir": "hyb_tiles", "layerName": LAYER_NAMES[LAYER_HYBRID]},
-			
+
     {"ID": LAYER_MAP,       "TextID": "ymap",  "serviceName":MAP_SERVERS[YAHOO],
             "layerDir": "yahoomap", "layerName": LAYER_NAMES[LAYER_MAP] },
     {"ID": LAYER_SATELLITE, "TextID": "yter",  "serviceName":MAP_SERVERS[YAHOO],
             "layerDir": "yahooter", "layerName": LAYER_NAMES[LAYER_SATELLITE] },
     {"ID": LAYER_HYBRID,    "TextID": "yhyb",  "serviceName":MAP_SERVERS[YAHOO],
             "layerDir": "yahoohyb", "layerName": LAYER_NAMES[LAYER_HYBRID] },
-			
+
     {"ID": LAYER_MAP,       "TextID": "vemap", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
             "layerDir": "vemap",    "layerName": LAYER_NAMES[LAYER_MAP] },
     {"ID": LAYER_SATELLITE, "TextID": "vesat", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
             "layerDir": "vesat",    "layerName": LAYER_NAMES[LAYER_SATELLITE] },
     {"ID": LAYER_TERRAIN,   "TextID": "veter", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
             "layerDir": "veter",    "layerName": LAYER_NAMES[LAYER_TERRAIN] },
-			
+
     {"ID": LAYER_MAP,       "TextID": "osmmap", "serviceName":MAP_SERVERS[OSM],
             "layerDir": "osmTiles", "layerName": ""},
     {"ID": LAYER_MAP,       "TextID": "cmmap",  "serviceName":MAP_SERVERS[CLOUDMADE],
@@ -79,9 +86,45 @@ MAP_SERVICES = [
     {"ID": LAYER_MAP,       "TextID": "gmmmap", "serviceName":MAP_SERVERS[GOOGLE_MAKER],
             "layerDir": "gmmTiles", "layerName": "" },
     {"ID": LAYER_MAP,       "TextID": "yandexmap", "serviceName":MAP_SERVERS[YANDEX],
-            "layerDir": "yandexTiles", "layerName": "" }            
+            "layerDir": "yandexTiles", "layerName": "" },
+    #Seznam.cz base
+    {"ID": LAYER_MAP, "TextID": "seznam_base", "serviceName": MAP_SERVERS[SEZNAM],
+            "layerDir": "seznambase", "layerName": "Mapa" },
+    {"ID": LAYER_SATELLITE, "TextID": "seznam_satellite", "serviceName":MAP_SERVERS[SEZNAM],
+            "layerDir": "seznamsat", "layerName": "Letecká" },
+    {"ID": LAYER_TERRAIN, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM],
+            "layerDir": "seznamter", "layerName": "Stínování" },
+    {"ID": LAYER_HYBRID, "TextID": "seznam_hybrid", "serviceName": MAP_SERVERS[SEZNAM],
+            "layerDir": "seznamhybrid", "layerName": "Popisy" },
+    #Seznam.cz hiking
+    # it seems that hybrid layers work only with satelitte maps, that's why the map seznam_hiking
+    # is marked as satellite - I want to combine it with layer seznam_hiking_routes
+    {"ID": LAYER_SATELLITE, "TextID": "seznam_hiking", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
+            "layerDir": "seznamhiking", "layerName": "Mapa" },
+    {"ID": LAYER_TERRAIN, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
+            "layerDir": "seznamter", "layerName": "Stínování" },
+    {"ID": LAYER_HYBRID, "TextID": "seznam_hiking_routes", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
+            "layerDir": "seznamhikingroutes", "layerName": "Trasy" },
+    #Seznam.cz cyclo
+    # it seems that hybrid layers work only with satelitte maps, that's why the map seznam_cyclo
+    # is marked as satellite - I want to combine it with layer seznam_cyclo_routes
+    {"ID": LAYER_SATELLITE, "TextID": "seznam_cyclo", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
+            "layerDir": "seznamcyclo", "layerName": "Mapa" },
+    {"ID": LAYER_TERRAIN, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
+            "layerDir": "seznamter", "layerName": "Stínování" },
+    {"ID": LAYER_HYBRID, "TextID": "seznam_cyclo_routes", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
+            "layerDir": "seznamcycloroutes", "layerName": "Trasy" },
+    #Seznam.cz historical
+    # it seems that hybrid layers work only with satelitte maps, that's why the map seznam_hist
+    # is marked as satellite - I want to combine it with layer seznam_hybrid
+    {"ID": LAYER_SATELLITE, "TextID": "seznam_hist", "serviceName": MAP_SERVERS[SEZNAM_HIST],
+            "layerDir": "seznamhist", "layerName": "Mapa" },
+    {"ID": LAYER_TERRAIN, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_HIST],
+            "layerDir": "seznamter", "layerName": "Stínování" },
+    {"ID": LAYER_HYBRID, "TextID": "seznam_hybrid", "serviceName": MAP_SERVERS[SEZNAM_HIST],
+            "layerDir": "seznamhybrid", "layerName": "Popisy" },
 ]
-HYB_SAT_LAYER_OFFSETS = {"Google": 2, "Yahoo": 1}
+HYB_SAT_LAYER_OFFSETS = {"Google": 2, "Yahoo": 1, MAP_SERVERS[SEZNAM]: 2, MAP_SERVERS[SEZNAM_HIKING]: 2, MAP_SERVERS[SEZNAM_CYCLO]: 2, MAP_SERVERS[SEZNAM_HIST]: 2}
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
 NO_GPS = ["Yahoo"]
 NON_ONEDIR_COMBO_INDICES = {}
@@ -113,7 +156,7 @@ EXPORT_MAP = 6
 ADD_MARKER = 7
 MOUSE_LOCATION = 9
 GPS_LOCATION = 10
-DA_MENU = ["Zoom In", "Zoom Out", "Center map here", "Reset", 
+DA_MENU = ["Zoom In", "Zoom Out", "Center map here", "Reset",
         "", "Batch Download", "Export Map", "Add Marker",
         "", "Copy Location", "Copy GPS"]
 
@@ -137,7 +180,7 @@ GPS_MARKER = 1
 GPS_CENTER = 2
 GPS_ON_SCREEN = 3
 GPS_TIMEOUT = 4
-GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center", 
+GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center",
              "GPS on Screen", "GPS Timeout"]
 
 # default distance - fraction of deg - for gps track increment
