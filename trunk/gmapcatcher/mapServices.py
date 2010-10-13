@@ -19,6 +19,7 @@ import mapServers.openCycleMap as openCycleMap
 import mapServers.googleMapMaker as googleMapMaker
 import mapServers.virtualEarth as virtualEarth
 import mapServers.yandex as yandex
+import mapServers.seznam as seznam
 
 from threading import Timer
 
@@ -99,6 +100,14 @@ class MapServ:
                     return googleMapMaker.get_url(self.mt_counter, coord)
                 elif conf.map_service == MAP_SERVERS[YANDEX] and (layer == LAYER_MAP):
                     return yandex.get_url(self.mt_counter, coord)
+                elif conf.map_service == MAP_SERVERS[SEZNAM]:
+                    return seznam.get_url_base(self.mt_counter, coord, layer)
+                elif conf.map_service == MAP_SERVERS[SEZNAM_HIKING]:
+                    return seznam.get_url_hiking(self.mt_counter, coord, layer)
+                elif conf.map_service == MAP_SERVERS[SEZNAM_CYCLO]:
+                    return seznam.get_url_cyclo(self.mt_counter, coord, layer)
+                elif conf.map_service == MAP_SERVERS[SEZNAM_HIST]:
+                    return seznam.get_url_hist(self.mt_counter, coord, layer)
                 else:
                     return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
 
@@ -116,6 +125,14 @@ class MapServ:
                 return openCycleMap.get_url(self.mt_counter, coord)
             elif (MAP_SERVICES[layer]["TextID"] == "gmmmap"):
                 return googleMapMaker.get_url(self.mt_counter, coord)
+            elif (MAP_SERVICES[layer]["TextID"] in ["seznam_base", "seznam_satellite", "seznam_terrain", "seznam_hybrid"]):
+                return seznam.get_url_base(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
+            elif (MAP_SERVICES[layer]["TextID"] in ["seznam_hiking", "seznam_terrain", "seznam_hiking_routes"]):
+                return seznam.get_url_hiking(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
+            elif (MAP_SERVICES[layer]["TextID"] in ["seznam_cyclo", "seznam_terrain", "seznam_cyclo_routes"]):
+                return seznam.get_url_cyclo(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
+            elif (MAP_SERVICES[layer]["TextID"] in ["seznam_hist", "seznam_terrain", "seznam_hybrid"]):
+                return seznam.get_url_hist(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
             else:
                 return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
 
