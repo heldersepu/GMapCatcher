@@ -56,16 +56,19 @@ def write_file(strInfo, filePath, fileData):
     file.close()
 
 ## Append the location (strData) to given file (filePath)
-def append_file(strInfo, filePath, strData, strName):
+def append_file(strInfo, filePath, strData, strName, extraTag=False):
     try:
         file = open(filePath, "a")
     except Exception:
         print 'Error! Can NOT write file:'
         print '  ' + filePath
         return
-
-    file.write(strInfo + '="%s"\tlat="%s"\tlng="%s"\tzoom="%i"\n' %
-              (strName, strData[0], strData[1], strData[2]+2))
+    if extraTag:
+        file.write(strInfo + '="%s"\tlat="%s"\tlng="%s"\tzoom="%i"\t%s\n' %
+                  (strName, strData[0], strData[1], strData[2]+2, extraTag))
+    else:
+        file.write(strInfo + '="%s"\tlat="%s"\tlng="%s"\tzoom="%i"\n' %
+                  (strName, strData[0], strData[1], strData[2]+2))
     file.close()
 
 ## Writes a new gtkrc file with the given theme

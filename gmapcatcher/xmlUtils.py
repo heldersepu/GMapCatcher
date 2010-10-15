@@ -1,7 +1,8 @@
 from __future__ import with_statement
 from mapUtils import altitude_to_zoom
+from mapServers.googleMaps import search_location
 
-def kml_to_markers(strFileName, marker):
+def kml_to_markers(strFileName, marker, lookup=False):
     from xml.dom.minidom import parseString
 
     def getText(nodelist):
@@ -28,6 +29,10 @@ def kml_to_markers(strFileName, marker):
             pass
         else:
             strName = getText(NameElement.childNodes)
+            if lookup:
+                location, coord = googleMaps.search_location(location)
+                if (location[:6] != "error="):
+                    strName += " - " + location
             Coord = getText(CoordElement.childNodes).split(',')
             if len(Coord) >= 2:
                 if len(Coord) >= 3:
