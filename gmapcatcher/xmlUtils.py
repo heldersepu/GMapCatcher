@@ -30,7 +30,7 @@ def kml_to_markers(strFileName, marker, lookup=False):
         else:
             strName = getText(NameElement.childNodes)
             if lookup:
-                location, coord = googleMaps.search_location(location)
+                location, coord = search_location(location)
                 if (location[:6] != "error="):
                     strName += " - " + location
             Coord = getText(CoordElement.childNodes).split(',')
