@@ -28,18 +28,14 @@ def kml_to_markers(strFileName, marker, lookup=False):
         except:
             pass
         else:
-            strName = getText(NameElement.childNodes)
-            if lookup:
-                location, coord = search_location(location)
-                if (location[:6] != "error="):
-                    strName += " - " + location
             Coord = getText(CoordElement.childNodes).split(',')
             if len(Coord) >= 2:
-                if len(Coord) >= 3:
-                    zoom = altitude_to_zoom(Coord[2])
-                else:
-                    zoom = 10
-                marker.append_marker((Coord[1], Coord[0], zoom), strName)
+                strName = getText(NameElement.childNodes)
+                if lookup:
+                    location, c = search_location(Coord[1] + ' ' + Coord[0])
+                    if (location[:6] != "error="):
+                        strName += " - " + location
+                marker.append_marker((Coord[1], Coord[0], 10), strName, lookup)
                 marker.refresh()
     dom.unlink()
 
