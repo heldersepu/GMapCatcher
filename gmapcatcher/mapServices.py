@@ -8,6 +8,7 @@ if IS_GTK:
 import sys
 import fileUtils
 import tilesRepoFactory
+import mapUtils
 import openanything
 
 import mapServers.googleMaps as googleMaps
@@ -71,6 +72,8 @@ class MapServ:
 
     def search_location(self, location):
         location, coord = googleMaps.search_location(location)
+        location = mapUtils.html_decode(location)
+#        print "searched", location
         if (location[:6] != "error="):
             self.locations[location] = coord
             self.write_locations()

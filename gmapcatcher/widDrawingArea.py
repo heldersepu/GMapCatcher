@@ -255,7 +255,10 @@ class DrawingArea(gtk.DrawingArea):
             pixDim = marker.get_pixDim(zl)
             # Draw the selected location
             if (entry_name in locations.keys()):
-                coord = locations[entry_name]
+#                print "name", entry_name
+#                print "keys", locations.keys()
+                coord = locations.get(unicode(entry_name))
+#                print "coord", coord
                 screen_coord = self.coord_to_screen(coord[0], coord[1], zl)
                 if screen_coord:
                     img = marker.get_marker_pixbuf(zl, 'marker1.png')

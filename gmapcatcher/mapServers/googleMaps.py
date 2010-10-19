@@ -84,6 +84,8 @@ def set_zoom(intZoom):
 def search_location(location):
     print 'downloading the following location:', location
     try:
+#        print 'url http://maps.google.com/maps?q=' + \
+#               urllib.quote_plus(location)
         oa = openanything.fetch( 'http://maps.google.com/maps?q=' +
             urllib.quote_plus(location) )
     except Exception:
@@ -93,7 +95,16 @@ def search_location(location):
 
     match = 0
     html = oa['data']
+#    print html
     if html.find('We could not understand the location') < 0:
+        encpa = 'charset[ ]?= ?([^ ]+)'
+        p = re.compile(encpa, re.IGNORECASE)
+        match = p.search(html)
+        if match:
+            encoding = match.group(1)
+#            print "encoding", encoding
+        else:
+            encoding = "ASCII"
         # List of patterns to look for the location name
         paList = ['laddr:"([^"]+)"',
                   'daddr:"([^"]+)"']
@@ -130,7 +141,9 @@ def search_location(location):
             m2 = p.search(html)
             if m2:
                 zoom = set_zoom(MAP_MAX_ZOOM_LEVEL - int(m2.group(1)))
-        location = unicode(location, errors='ignore')
+#        print "location from html", location
+        location = unicode(location, encoding, errors='ignore')
+#        print "unicode", location
         return location, (float(match.group('lat')), float(match.group('lng')), int(zoom))
     else:
         return 'error=Unable to get latitude and longitude of %s ' % location
