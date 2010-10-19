@@ -5,6 +5,8 @@
 import math
 from mapConst import *
 from time import gmtime, strftime
+from htmlentitydefs import name2codepoint
+import re
 
 def tiles_on_level(zoom_level):
     return 1<<(MAP_MAX_ZOOM_LEVEL-int(zoom_level))
@@ -137,3 +139,20 @@ def altitude_to_zoom(altitude):
     else:
         zoom = int(math.log(int(altitude))/math.log(2))
     return min(max(zoom, MAP_MIN_ZOOM_LEVEL + 2), MAP_MAX_ZOOM_LEVEL)
+    
+def subs_entity(match):
+    entity = match.group(3)
+    if match.group(1) == "#":
+        if match.group(2) == '':
+            return unichr(int(entity))
+        elif match.group(2) == 'x':
+            return unichr(int('0x' + entity, 16))
+    else:
+        codepoint = name2codepoint.get(entity, "")
+        if codepoint != "":
+            return unichr(codepoint)
+    return match.group()
+
+def html_decode(string):
+    entity_re = re.compile("&(#?)(x?)(\d{1,5}|\w{1,8});")
+    return entity_re.subn(subs_entity, string)[0]

@@ -103,6 +103,7 @@ class MainWindow(gtk.Window):
     ## Search for the location in the Entry box
     def confirm_clicked(self, button):
         location = self.entry.get_text()
+#        print "typed", location
         if (0 == len(location)):
             error_msg(self, "Need location")
             self.entry.grab_focus()
@@ -142,7 +143,7 @@ class MainWindow(gtk.Window):
                 self.entry.set_text(location)
                 self.set_completion()
                 locations = self.ctx_map.get_locations()
-            coord = locations[location]
+            coord = locations[unicode(location)]
             print "%s at %f, %f" % (location, coord[0], coord[1])
 
         self.drawing_area.center = mapUtils.coord_to_tile(coord)
