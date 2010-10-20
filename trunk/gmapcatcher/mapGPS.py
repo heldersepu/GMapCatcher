@@ -20,7 +20,7 @@ class GPS:
         self.location = None
         self.gps_callback = gps_callback
         self.pixbuf = self.get_marker_pixbuf()
-        self.update_rate = update_rate
+        self.update_rate = float(update_rate)
 
         try:
             # Open binding to GPS daemon
