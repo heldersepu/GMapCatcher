@@ -13,6 +13,7 @@ import gmapcatcher.mapTools as mapTools
 import gmapcatcher.mapPixbuf as mapPixbuf
 import signal
 import gobject
+import sys
 import re
 import math
 import time
@@ -1036,9 +1037,8 @@ class MainWindow(gtk.Window):
             return legal_warning(self, self.conf.map_service, "gps integration")
         return True
 
-
-    def __init__(self, parent=None):
-        self.conf = MapConf()
+    def __init__(self, parent=None, config_path=None):
+        self.conf = MapConf(config_path)
         self.crossPixbuf = mapPixbuf.cross()
         self.dlpixbuf = mapPixbuf.downloading()
         self.marker = MyMarkers(self.conf.init_path)
@@ -1123,12 +1123,18 @@ class MainWindow(gtk.Window):
         if self.conf.auto_refresh > 0:
             gobject.timeout_add(self.conf.auto_refresh, self.refresh)
 
-def main():
-    MainWindow()
+def main(conf_path):
+    MainWindow(config_path=conf_path)
     gtk.main()
 
 if __name__ == "__main__":
-    main()
+    conf_path = None
+    for arg in sys.argv:
+        arg = arg.lower()
+        if arg.startswith('--config-path='):
+            conf_path = arg[14:]
+    
+    main(conf_path)
     pid = os.getpid()
     # send ourselves sigquit, particularly necessary in posix as
     # download threads may be holding system resources - python
