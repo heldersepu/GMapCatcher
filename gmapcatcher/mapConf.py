@@ -20,8 +20,9 @@ class MapConf():
 
     ## Initialise all variables.
     #  If the file does not exit it will be created
-    def __init__(self):
-        configpath = self.get_configpath()
+    def __init__(self, configpath=None):
+        if configpath is None:
+            configpath = self.get_configpath()
         self.read(configpath)
         if not os.path.exists(configpath):
             self.write(configpath)
@@ -136,7 +137,6 @@ class MapConf():
         self.auto_refresh = read_config('auto_refresh', 0, int)
         ## Amount of days used when user selects the Force Update
         self.force_update_days = read_config('force_update_days', 1, int)
-
 
     ## Write the configuration to the default file
     def save(self):
