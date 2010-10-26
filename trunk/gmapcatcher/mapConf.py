@@ -10,6 +10,8 @@ from mapUtils import str_to_tuple
 
 ## Class used to read and save the configuration values
 class MapConf():
+    config_path = None
+    
     ## Returns the Path to the configuration file
     def get_configpath(self):
         # the config file must be found at DEFAULT_PATH
@@ -22,13 +24,15 @@ class MapConf():
     #  If the file does not exit it will be created
     def __init__(self, configpath=None):
         if configpath is None:
-            configpath = self.get_configpath()
-        self.read(configpath)
-        if not os.path.exists(configpath):
-            self.write(configpath)
+            self.config_path = self.get_configpath()
+        else:
+            self.config_path = configpath
+        self.read()
+        if not os.path.exists(self.config_path):
+            self.write()
 
     ## Write the configuration to the given file
-    def write(self, configpath):
+    def write(self):
         config = ConfigParser.RawConfigParser()
         config.add_section(SECTION_INIT)
         if self.init_path:
@@ -60,11 +64,11 @@ class MapConf():
         config.set(SECTION_INIT, "auto_refresh", self.auto_refresh)
         config.set(SECTION_INIT, "force_update_days", self.force_update_days)
 
-        configfile = open(configpath, 'wb')
+        configfile = open(self.config_path, 'wb')
         config.write(configfile)
 
     ## Reads the configuration from a given file
-    def read(self, configpath):
+    def read(self):
         def read_config(keyOption, defaultValue, castFunction):
             try:
                 strValue = config.get(SECTION_INIT, keyOption)
@@ -73,7 +77,7 @@ class MapConf():
                 return defaultValue
 
         config = ConfigParser.RawConfigParser()
-        config.read(configpath)
+        config.read(self.config_path)
 
         ## Initial window width, default is 550
         self.init_width = read_config('width', 550, int)
@@ -140,5 +144,4 @@ class MapConf():
 
     ## Write the configuration to the default file
     def save(self):
-        configpath = self.get_configpath()
-        self.write(configpath)
+        self.write()
