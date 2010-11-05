@@ -2,6 +2,8 @@
 # All the update related logic
 
 import os
+import logging
+log = logging.getLogger(__name__)
 from mapConst import *
 if IS_GTK:
     import gtk

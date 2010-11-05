@@ -3,6 +3,8 @@
 # Read and write to the configuration file
 
 import os
+import logging
+log = logging.getLogger(__name__)
 import ConfigParser
 import fileUtils
 from mapConst import *

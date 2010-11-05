@@ -1,4 +1,6 @@
 import urllib2, urlparse
+import logging
+log = logging.getLogger(__name__)
 
 def fetch(url):
     result = {}

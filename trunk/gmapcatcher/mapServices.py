@@ -6,6 +6,8 @@ if IS_GTK:
     import gtk
     from gobject import TYPE_STRING
 import sys
+import logging
+log = logging.getLogger(__name__)
 import fileUtils
 import tilesRepoFactory
 import mapUtils

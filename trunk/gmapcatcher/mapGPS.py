@@ -8,6 +8,8 @@ except ImportError:
     available = False
 
 import os
+import logging
+log = logging.getLogger(__name__)
 import mapConst
 import mapPixbuf
 from threading import Event, Thread

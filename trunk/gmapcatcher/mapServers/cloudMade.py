@@ -1,6 +1,9 @@
 ## @package gmapcatcher.mapServers.cloudMade
 # All the interaction with CloudMade.com
 
+import logging
+log = logging.getLogger(__name__)
+
 from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 
 API_KEY = "333d990d389d5e65a7714dd738b2fc77"

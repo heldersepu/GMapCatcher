@@ -8,6 +8,8 @@ if not IS_GTK:
     raise Exception('gtk module', __file__)
 
 import gtk
+import logging
+log = logging.getLogger(__name__)
 import fileUtils
 
 ## This widget allows the user to modify the locations and markers

@@ -3,6 +3,8 @@
 # All the interaction with mapy.cz (mapy.seznam.cz)
 
 import sys
+import logging
+log = logging.getLogger(__name__)
 from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 """
 A bit of theory:
