@@ -21,8 +21,8 @@ AUTHORS = ["\"pi3orama\"", "Helder Sepulveda", "Maxim Razin",
            "\"hk_tmp\"", "Tomas Penicka"]
 
 #same as previous:
-LOGGING_LEVEL=logging.WARN
-LOGGING_FORMAT="%(message)s"
+LOGGING_LEVEL=logging.INFO
+LOGGING_FORMAT="%(asctime)s - %(levelname)s - %(message)s"
 # devel logging
 #LOGGING_LEVEL=logging.INFO
 #LOGGING_FORMAT="%(asctime)s - %(levelname)s - %(thread)d - %(module)s:%(lineno)d - %(message)s"
