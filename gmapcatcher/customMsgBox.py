@@ -9,6 +9,8 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import atk
+import logging
+log = logging.getLogger(__name__)
 
 
 ## Message used to display errors

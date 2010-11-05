@@ -1,6 +1,8 @@
 ## @package gmapcatcher.mapArgs
 # Parsing of the array of arguments
 
+import logging
+log = logging.getLogger(__name__)
 from mapConst import *
 
 class MapArgs():

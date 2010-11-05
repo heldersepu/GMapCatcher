@@ -1,6 +1,8 @@
 ## @package gmapcatcher.mapServers.informationFreeway
 # All the interaction with InformationFreeway.org
 
+import logging
+log = logging.getLogger(__name__)
 from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 
 ## Returns a template URL for the informationFreeway

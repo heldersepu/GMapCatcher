@@ -16,6 +16,8 @@
 
 
 import os
+import logging
+log = logging.getLogger(__name__)
 import lrucache
 import mapPixbuf
 import fileUtils

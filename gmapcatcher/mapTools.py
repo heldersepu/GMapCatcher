@@ -9,6 +9,8 @@ if not IS_GTK:
 import pygtk
 pygtk.require('2.0')
 import gtk
+import logging
+log = logging.getLogger(__name__)
 import widTreeView
 import widMySettings
 import widChangeTheme

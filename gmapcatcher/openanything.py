@@ -12,6 +12,8 @@ __copyright__ = 'Copyright (c) 2004 Mark Pilgrim'
 __license__ = 'Python'
 
 import urllib2, urlparse, gzip, httplib, mimetypes
+import logging
+log = logging.getLogger(__name__)
 from StringIO import StringIO
 from mapConst import *
 #from django.template.defaultfilters import urlencode

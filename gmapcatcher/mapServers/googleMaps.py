@@ -4,6 +4,8 @@
 
 import re
 import urllib
+import logging
+log = logging.getLogger(__name__)
 import gmapcatcher.openanything as openanything
 from gmapcatcher.mapConst import *
 

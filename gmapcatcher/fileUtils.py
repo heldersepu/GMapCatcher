@@ -4,6 +4,8 @@
 import os
 import re
 from time import time
+import logging
+log = logging.getLogger(__name__)
 
 ## Return all the locations from a given file (filePath)
 def read_file(strInfo, filePath):

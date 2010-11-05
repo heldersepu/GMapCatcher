@@ -29,6 +29,7 @@ import fileUtils
 import sqlite3
 import threading
 import logging
+log = logging.getLogger(__name__)
 import traceback
 
 from threading import Lock, Thread

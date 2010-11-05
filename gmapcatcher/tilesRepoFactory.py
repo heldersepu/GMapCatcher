@@ -3,6 +3,8 @@
 # Place to set the correct repository
 
 import sys
+import logging
+log = logging.getLogger(__name__)
 import mapConst
 import tilesRepoFS
 import tilesRepoMGMaps

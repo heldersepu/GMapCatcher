@@ -2,6 +2,8 @@
 # Read and Write the locations of the Markers
 
 import os
+import logging
+log = logging.getLogger(__name__)
 import fileUtils
 import mapPixbuf
 from mapConst import *

@@ -17,6 +17,8 @@ import sys
 import re
 import math
 import time
+import logging
+log = logging.getLogger(__name__)
 
 from gmapcatcher.mapConst import *
 from gmapcatcher.gtkThread import *
@@ -1128,6 +1130,9 @@ def main(conf_path):
     gtk.main()
 
 if __name__ == "__main__":
+    logging.basicConfig( level=LOGGING_LEVEL, format=LOGGING_FORMAT )
+    log.info("Starting gmapcatcher.")
+    
     conf_path = None
     for arg in sys.argv:
         arg = arg.lower()

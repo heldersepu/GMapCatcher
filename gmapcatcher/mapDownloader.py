@@ -13,6 +13,8 @@ import mapUtils
 from mapConst import *
 from math import floor,ceil
 from time import sleep, clock
+import logging
+log = logging.getLogger(__name__)
 
 ternary = lambda a,b,c: (b,c)[not a]
 

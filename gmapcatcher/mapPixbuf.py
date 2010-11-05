@@ -7,6 +7,8 @@ from mapConst import *
 if IS_GTK:
     import gtk
 from os.path import join, dirname, abspath, exists, isfile
+import logging
+log = logging.getLogger(__name__)
 
 ## Absolute Path to the images directory
 if 'library.zip' in __file__:

@@ -6,6 +6,8 @@ if not IS_GTK:
     raise Exception('gtk module', __file__)
 
 import sys
+import logging
+log = logging.getLogger(__name__)
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject
