@@ -4,8 +4,6 @@
 
 import gtk
 import gobject
-import logging
-log = logging.getLogger(__name__)
 import mapPixbuf
 from mapConst import *
 from inputValidation import allow_only_numbers

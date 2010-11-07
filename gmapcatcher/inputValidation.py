@@ -1,9 +1,6 @@
 ## @package gmapcatcher.inputValidation
 # Validation of all the user input.
 
-import logging
-log = logging.getLogger(__name__)
-
 ## Validate the text on all the "input" widgets
 def allow_only_numbers(entry, text, length, position, max, isInt=True):
     # generate what the new text will be

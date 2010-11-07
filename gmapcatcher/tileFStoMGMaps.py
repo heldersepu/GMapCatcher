@@ -4,8 +4,6 @@
 
 import re
 import os
-import logging
-log = logging.getLogger(__name__)
 import shutil
 import tilesRepoFS
 from mapConst import *

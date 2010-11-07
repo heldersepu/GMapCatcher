@@ -7,8 +7,6 @@ from mapConst import *
 from time import gmtime, strftime
 from htmlentitydefs import name2codepoint
 import re
-import logging
-log = logging.getLogger(__name__)
 
 def tiles_on_level(zoom_level):
     return 1<<(MAP_MAX_ZOOM_LEVEL-int(zoom_level))

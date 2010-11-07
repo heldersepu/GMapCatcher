@@ -12,8 +12,6 @@
 #     - load_pixbuf()
 # - module is finalized from MapServ.finish() method
 
-import logging
-log = logging.getLogger(__name__)
 
 class NotImplementedException(Exception):
     pass

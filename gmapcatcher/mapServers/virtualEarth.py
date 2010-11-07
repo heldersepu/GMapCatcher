@@ -2,8 +2,6 @@
 # All the interaction with maps.live.com
 
 #from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
-import logging
-log = logging.getLogger(__name__)
 
 ## Returns a template URL for the virtualEarth
 def layer_url_template(layer):

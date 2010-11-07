@@ -1,8 +1,6 @@
 ## @package gmapcatcher.mapServers.yandex
 # All the interaction with http://maps.yandex.ru
 
-import logging
-log = logging.getLogger(__name__)
 from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 
 ## Returns a template URL for the yandex
