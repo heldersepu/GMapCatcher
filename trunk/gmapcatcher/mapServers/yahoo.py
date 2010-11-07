@@ -1,8 +1,6 @@
 ## @package gmapcatcher.mapServers.yahoo
 # All the interaction with yahoo.com
 
-import logging
-log = logging.getLogger(__name__)
 from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL, LAYER_MAP, LAYER_SATELLITE, LAYER_HYBRID
 
 ## Returns a template URL for the Yahoo mas

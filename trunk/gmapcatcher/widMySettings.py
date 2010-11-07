@@ -9,8 +9,6 @@ if not IS_GTK:
 
 import os
 import gtk
-import logging
-log = logging.getLogger(__name__)
 from customWidgets import SpinBtn, myFrame, lbl, FolderChooser
 
 

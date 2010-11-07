@@ -2,8 +2,6 @@
 # All the interaction with Google Map Maker
 
 import re
-import logging
-log = logging.getLogger(__name__)
 import gmapcatcher.openanything as openanything
 
 known_layers = {}

@@ -5,8 +5,6 @@
 from changeableConst import *
 import os
 IS_GTK = os.environ.get("MAPS_GTK", "False") == "True"
-import logging
-log = logging.getLogger(__name__)
 
 NAME = "GMapCatcher"
 VERSION = "0.7.5.0"
@@ -19,13 +17,6 @@ AUTHORS = ["\"pi3orama\"", "Helder Sepulveda", "Maxim Razin",
            "\"bthipavo\"", "\"tatlicioglu\"",
            "\"ahmeterdincyilmaz\"", "\"serkan.cm\"",
            "\"hk_tmp\"", "Tomas Penicka"]
-
-#same as previous:
-LOGGING_LEVEL=logging.INFO
-LOGGING_FORMAT="%(asctime)s - %(levelname)s - %(message)s"
-# devel logging
-#LOGGING_LEVEL=logging.INFO
-#LOGGING_FORMAT="%(asctime)s - %(levelname)s - %(thread)d - %(module)s:%(lineno)d - %(message)s"
 
 GOOGLE = 0
 OSM = 1

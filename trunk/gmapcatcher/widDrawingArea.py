@@ -9,8 +9,6 @@ if os.environ.get('MAPS_GTK', 'False') == 'False':
 import gtk
 import pango
 import math
-import logging
-log = logging.getLogger(__name__)
 import mapUtils
 from mapConst import *
 

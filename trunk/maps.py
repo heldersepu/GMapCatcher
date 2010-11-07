@@ -17,8 +17,6 @@ import sys
 import re
 import math
 import time
-import logging
-log = logging.getLogger(__name__)
 
 from gmapcatcher.mapConst import *
 from gmapcatcher.gtkThread import *
@@ -124,8 +122,7 @@ class MainWindow(gtk.Window):
             longitude = 0
             latitude = -100
         if -180 <= longitude <= 180 and -90 <= latitude <= 90:
-            #print latitude, longitude
-            log.info( "%f %f" % (latitude, longitude) )
+            print latitude, longitude
             coord = (latitude, longitude, self.get_zoom())
         else:
             locations = self.ctx_map.get_locations()
@@ -148,8 +145,7 @@ class MainWindow(gtk.Window):
                 self.set_completion()
                 locations = self.ctx_map.get_locations()
             coord = locations[unicode(location)]
-            #print "%s at %f, %f" % (location, coord[0], coord[1])
-            log.info( "%s at %f, %f" % (location, coord[0], coord[1]) )
+            print "%s at %f, %f" % (location, coord[0], coord[1])
 
         self.drawing_area.center = mapUtils.coord_to_tile(coord)
         self.scale.set_value(coord[2])
@@ -1021,8 +1017,7 @@ class MainWindow(gtk.Window):
             try:
                 self.conf.save()
             except Exception:
-                #print "could not save all of the most recent config settings"
-                log.error("could not save all of the most recent config settings")
+                print "could not save all of the most recent config settings"
         return False
 
     def enable_gps(self):
@@ -1133,9 +1128,6 @@ def main(conf_path):
     gtk.main()
 
 if __name__ == "__main__":
-    logging.basicConfig( level=LOGGING_LEVEL, format=LOGGING_FORMAT )
-    log.info("Starting %s version %s." % (NAME, VERSION) )
-    
     conf_path = None
     for arg in sys.argv:
         arg = arg.lower()

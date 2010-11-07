@@ -1,6 +1,4 @@
 from __future__ import with_statement
-import logging
-log = logging.getLogger(__name__)
 from mapUtils import altitude_to_zoom
 from mapServers.googleMaps import search_location
 

@@ -33,8 +33,6 @@ discarded. [1]_
 
 from __future__ import generators
 import time
-import logging
-log = logging.getLogger(__name__)
 from heapq import heappush, heappop, heapify
 
 __version__ = "0.2"

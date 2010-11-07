@@ -4,8 +4,6 @@
 # gps.py -- Python interface to GPSD.
 #
 import time, calendar, math, socket, sys, select
-import logging
-log = logging.getLogger(__name__)
 
 api_major_version = 3   # bumped on incompatible changes
 api_minor_version = 1   # bumped on compatible changes
