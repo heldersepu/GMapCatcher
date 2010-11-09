@@ -1,0 +1,17 @@
+#summary Developers conventions
+#labels Conventions
+
+= Developers conventions =
+
+Developers conventions used in GMapCatcher.
+
+In the file should be rules used by developers. Python coding conventions, standards as well as desired behavior is described in the file. If ones want to make change in behavior of the application and it is described in the file, the change should be discussed before it is implemented to the application.
+
+= Python conventions =
+... todo ...
+
+= Behavior =
+... todo ... 
+
+=== logging ===
+... todo ...
