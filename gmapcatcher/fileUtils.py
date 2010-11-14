@@ -13,6 +13,8 @@ def read_file(strInfo, filePath):
         q = re.compile('.*zoom="([^"]+)".*')
         file = open(filePath, "r")
         for line in file:
+            # the file should be in UTF-8, so decoding is needed
+            line = line.decode("UTF-8") 
             if (line[0] != '#'):
                 m = p.search(line)
                 if m:
@@ -51,6 +53,9 @@ def write_file(strInfo, filePath, fileData):
          ("Paris, France", 48.856667, 2.350987, 5)) + "#\n" )
 
     for l in sorted(fileData.keys()):
+    	# The method 'write' takes an unicode string here and acording to python manual
+    	# it translates it automatically to string buffer accroding to system defaults.
+    	# Probably all systems translate unicode to UTF-8
         file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
                   (l, fileData[l][0], fileData[l][1], fileData[l][2]))
     file.close()

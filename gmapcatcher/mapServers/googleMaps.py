@@ -143,6 +143,13 @@ def search_location(location):
                 zoom = set_zoom(MAP_MAX_ZOOM_LEVEL - int(m2.group(1)))
 #        print "location from html", location
         location = unicode(location, encoding, errors='ignore')
+        # Replace bad characters with the proper ones.
+        # It would be better to use 'translate' instead of multiple 'replace' here,
+        # but it didn't work for me (some problem with unicode strings).
+        location = location.replace(u"\u008A", u"\u0160") #Š = S caron
+        location = location.replace(u"\u008E", u"\u017D") #Ž = Z caron
+        location = location.replace(u"\u009A", u"\u0161") #š = s caron
+        location = location.replace(u"\u009E", u"\u017E") #ž = z caron
 #        print "unicode", location
         return location, (float(match.group('lat')), float(match.group('lng')), int(zoom))
     else:
