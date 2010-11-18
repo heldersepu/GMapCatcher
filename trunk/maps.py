@@ -11,12 +11,15 @@ import gmapcatcher.mapGPS as mapGPS
 import gmapcatcher.mapUtils as mapUtils
 import gmapcatcher.mapTools as mapTools
 import gmapcatcher.mapPixbuf as mapPixbuf
+import gmapcatcher.mapLogging as mapLogging
 import signal
 import gobject
 import sys
 import re
 import math
 import time
+import logging
+log = logging.getLogger()
 
 from gmapcatcher.mapConst import *
 from gmapcatcher.gtkThread import *
@@ -122,7 +125,8 @@ class MainWindow(gtk.Window):
             longitude = 0
             latitude = -100
         if -180 <= longitude <= 180 and -90 <= latitude <= 90:
-            print latitude, longitude
+            #print latitude, longitude
+            log.info( "%f %f" % (latitude, longitude) )
             coord = (latitude, longitude, self.get_zoom())
         else:
             locations = self.ctx_map.get_locations()
@@ -145,7 +149,8 @@ class MainWindow(gtk.Window):
                 self.set_completion()
                 locations = self.ctx_map.get_locations()
             coord = locations[unicode(location)]
-            print "%s at %f, %f" % (location, coord[0], coord[1])
+            #print "%s at %f, %f" % (location, coord[0], coord[1])
+            log.info( "%s at %f, %f" % (location, coord[0], coord[1]) )
 
         self.drawing_area.center = mapUtils.coord_to_tile(coord)
         self.scale.set_value(coord[2])
@@ -1017,7 +1022,8 @@ class MainWindow(gtk.Window):
             try:
                 self.conf.save()
             except Exception:
-                print "could not save all of the most recent config settings"
+                #print "could not save all of the most recent config settings"
+                log.error("could not save all of the most recent config settings")
         return False
 
     def enable_gps(self):
@@ -1123,18 +1129,26 @@ class MainWindow(gtk.Window):
         if self.conf.auto_refresh > 0:
             gobject.timeout_add(self.conf.auto_refresh, self.refresh)
 
-def main(conf_path):
+
+def main(conf_path, logging_path):
+    mapLogging.init_logging( logging_path )
+    log.info("Starting %s version %s." % (NAME, VERSION) )
     MainWindow(config_path=conf_path)
     gtk.main()
 
 if __name__ == "__main__":
     conf_path = None
+    logging_path = None
     for arg in sys.argv:
         arg = arg.lower()
         if arg.startswith('--config-path='):
             conf_path = arg[14:]
+            continue
+        if arg.startswith('--logging-path='):
+            logging_path = arg[len('--logging-path='):]
+            continue
     
-    main(conf_path)
+    main(conf_path, logging_path)
     pid = os.getpid()
     # send ourselves sigquit, particularly necessary in posix as
     # download threads may be holding system resources - python
