@@ -5,6 +5,7 @@
 from changeableConst import *
 import os
 IS_GTK = os.environ.get("MAPS_GTK", "False") == "True"
+import logging
 
 NAME = "GMapCatcher"
 VERSION = "0.7.5.0"
@@ -193,3 +194,22 @@ TILES_PATH = ".googlemaps"
 DEFAULT_PATH = USER_PATH + "/" + TILES_PATH
 
 LANGUAGES = ["en", "zh"]
+
+
+
+LOGGING_STDOUT = True
+LOGGING_STDOUT_LEVEL_ABOVE = logging.INFO
+LOGGING_STDOUT_LEVEL_BELOW = logging.ERROR
+LOGGING_STDOUT_FORMAT = "%(message)s"
+
+LOGGING_STDERR = True
+LOGGING_STDERR_LEVEL_ABOVE = logging.ERROR
+LOGGING_STDERR_FORMAT = "%(message)s"
+
+LOGGING_FILE = False
+LOGGING_FILE_LEVEL_ABOVE = logging.INFO
+LOGGING_FILE_FORMAT = "%(asctime)s - %(levelname)s - %(thread)d - %(module)s:%(lineno)d - %(message)s"
+LOGGING_FILE_NAME = "maps.log"
+LOGGING_FILE_MODE = "w"
+
+
