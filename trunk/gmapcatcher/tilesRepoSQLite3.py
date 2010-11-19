@@ -197,7 +197,7 @@ class SQLite3Thread(Thread):
 class SQLite3Funcs():
 
     def __init__(self, url):
-        log.debug("Starting SQLite3Thread")
+        log.debug("Starting SQLite3Thread with url '%s'" % (str(url), ) )
 
         self.sql_thread = None
 
@@ -219,8 +219,9 @@ class SQLite3Funcs():
 
     def restart_thread(self, url):
 
+        log.debug("Restarting thread with url '%s'" % (str(url), ) )
         if self.sql_thread is not None:
-            if not self.sql_thread.isAlive():
+            if self.sql_thread.isAlive():
                 log.debug("SQLite3Funcs finish started")
                 self.sql_thread.finish_thread()
                 log.debug("SQLite3Funcs joining SQLite3Thread...")
