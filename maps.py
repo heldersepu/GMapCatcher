@@ -504,6 +504,9 @@ class MainWindow(gtk.Window):
         da.add_events(gtk.gdk.POINTER_MOTION_MASK)
         da.connect('motion-notify-event', self.da_motion)
 
+        da.add_events(gtk.gdk.BUTTON_PRESS_MASK)
+        da.connect('button-press-event', self.da_button_press)
+
         menu = gtk_menu(DA_MENU, self.menu_item_response)
         da.connect_object("event", self.da_click_events, menu)
 
@@ -706,6 +709,25 @@ class MainWindow(gtk.Window):
             coord = self.pointer_to_world_coord((event.x, event.y))
             self.status_bar.push(self.status_bar_id, "Latitude=%.6f Longitude=%.6f" %
                                 (coord[0], coord[1]))
+
+    def da_button_press(self, w, event):
+        if not (log.cur_level <= logging.DEBUG and log.cur_level > 0):
+            return
+            
+        # if we have set debug level for logging, display coordinates of selected tile in window
+        if (event.button == 1):
+            coord_x = ((w.center[0][0]) * TILES_WIDTH + w.center[1][0] - w.allocation.width/2 + event.x)
+            coord_y = ((w.center[0][1]) * TILES_HEIGHT + w.center[1][1] - w.allocation.height/2 + event.y)
+
+            tile = [ [0,0], [0,0] ]
+            tile[0][0] = coord_x/TILES_WIDTH
+            tile[0][1] = coord_y/TILES_HEIGHT
+            tile[1][0] = int(round(100*(coord_x%TILES_WIDTH)/256))
+            tile[1][1] = int(round(100*(coord_y%TILES_HEIGHT)/256))
+
+            coords = mapUtils.tile_to_coord(tile, self.get_zoom())
+            
+            log.debug( "Selected tile: [%d.%d, %d.%d] - lat/lon: [%s,%s]" % (tile[0][0],tile[1][0],tile[0][1],tile[1][1], coords[0], coords[1] ) )
 
     def view_credits(self, menuitem):
         w = OurCredits()
