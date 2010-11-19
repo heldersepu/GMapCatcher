@@ -114,8 +114,8 @@ def init_logging( loggingpath = None ):
     logging is using command line. If LOGGING_FILE_NAME is used, optional commandline parameter
     overrides LOGGING_FILE_NAME. 
     """
-    cur_level = logging.ERROR
-    log.setLevel( cur_level )
+    log.cur_level = logging.ERROR
+    log.setLevel( log.cur_level )
 
     if LOGGING_STDOUT:
         hsout = None
@@ -126,9 +126,9 @@ def init_logging( loggingpath = None ):
             hsout.addFilter( FilterSevereOut(name=None, severity=LOGGING_STDOUT_LEVEL_BELOW) )
             log.addHandler(hsout)
             
-            if( LOGGING_STDOUT_LEVEL_ABOVE_OR_EQUAL < cur_level ):
-                cur_level = LOGGING_STDOUT_LEVEL_ABOVE_OR_EQUAL
-                log.setLevel(cur_level)
+            if( LOGGING_STDOUT_LEVEL_ABOVE_OR_EQUAL < log.cur_level ):
+                log.cur_level = LOGGING_STDOUT_LEVEL_ABOVE_OR_EQUAL
+                log.setLevel(log.cur_level)
             log.info("Logging to stdout is set.")
         except Exception, ex:
             if hsout is not None:
@@ -144,9 +144,9 @@ def init_logging( loggingpath = None ):
             hserr.setLevel( LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL )
             log.addHandler(hserr)
             
-            if( LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL < cur_level ):
-                cur_level = LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL
-                log.setLevel(cur_level)
+            if( LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL < log.cur_level ):
+                log.cur_level = LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL
+                log.setLevel(log.cur_level)
             log.info("Logging to stderror is set.")
         except Exception, ex:
             if hserr is not None:
@@ -166,9 +166,9 @@ def init_logging( loggingpath = None ):
             hf.setFormatter( logging.Formatter(LOGGING_FILE_FORMAT) )
             hf.setLevel( LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL )
             log.addHandler(hf)
-            if( LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL < cur_level ):
-                cur_level = LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL
-                log.setLevel(cur_level)
+            if( LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL < log.cur_level ):
+                log.cur_level = LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL
+                log.setLevel(log.cur_level)
             log.info("Logging to file is set to "+str(filename)+".")
         except Exception, ex:
             # we have error while logging to file, remove handler and continue
