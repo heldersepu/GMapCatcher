@@ -58,8 +58,10 @@ Use grep from gnuwin32 for windows (http://gnuwin32.sourceforge.net/packages/gre
 import sys
 import logging
 from traceback import print_exc
+from mapConst import DEFAULT_PATH
 log = logging.getLogger()
 import fileUtils
+
 
 LOGGING_STDOUT = True
 LOGGING_STDOUT_LEVEL_ABOVE_OR_EQUAL = logging.INFO
@@ -77,10 +79,6 @@ LOGGING_FILE_FORMAT = "%(asctime)s - %(levelname)s - %(thread)d - %(module)s:%(l
 # if set to none, it's possible to override using command line parameter '--logging-path' 
 LOGGING_FILE_NAME = None
 LOGGING_FILE_MODE = "w"
-
-
-class LoggingFilenameNotSetError(Exception):
-    pass
 
 
 class FilterSevereOut( logging.Filter ):
@@ -103,13 +101,11 @@ class FilterSevereOut( logging.Filter ):
 ## Returns the Path to the logging file
 def get_loggingpath( loggingpath = None ):
     if loggingpath is None:
-        if LOGGING_FILE_NAME is None:
-            raise LoggingFilenameNotSetError("LOGGING_FILE_NAME is None")
-        # the config file must be found at DEFAULT_PATH
-        loggingpath = os.path.expanduser(DEFAULT_PATH)
-        fileUtils.check_dir(loggingpath)
-        loggingpath = os.path.join(loggingpath, LOGGING_FILE_NAME)
-
+        if LOGGING_FILE_NAME is not None:            
+            # the config file must be found at DEFAULT_PATH
+            loggingpath = os.path.expanduser(DEFAULT_PATH)
+            fileUtils.check_dir(loggingpath)
+            loggingpath = os.path.join(loggingpath, LOGGING_FILE_NAME)
         return loggingpath
     else:
         return loggingpath
@@ -164,10 +160,8 @@ def init_logging( loggingpath = None ):
             log.exception(ex)
 
     if LOGGING_FILE:
-        try:
-            filename = get_loggingpath(loggingpath)
-        except LoggingFilenameNotSetError, ex:
-            log.debug("LOGGING_FILE_NAME is not set.")
+        filename = get_loggingpath(loggingpath)
+        if filename is None:
             return
 
         hf = None
