@@ -194,24 +194,3 @@ TILES_PATH = ".googlemaps"
 DEFAULT_PATH = USER_PATH + "/" + TILES_PATH
 
 LANGUAGES = ["en", "zh"]
-
-
-
-LOGGING_STDOUT = True
-LOGGING_STDOUT_LEVEL_ABOVE_OR_EQUAL = logging.INFO
-LOGGING_STDOUT_LEVEL_BELOW = logging.ERROR
-LOGGING_STDOUT_FORMAT = "%(message)s"
-
-LOGGING_STDERR = True
-LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL = logging.ERROR
-LOGGING_STDERR_FORMAT = "%(message)s"
-
-LOGGING_FILE = True
-LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL = logging.DEBUG
-LOGGING_FILE_FORMAT = "%(asctime)s - %(levelname)s - %(thread)d - %(module)s:%(lineno)d - %(message)s"
-#LOGGING_FILE_NAME = "maps.log"
-# if set to none, it's possible to override using command line parameter '--logging-path' 
-LOGGING_FILE_NAME = None
-LOGGING_FILE_MODE = "w"
-
-
