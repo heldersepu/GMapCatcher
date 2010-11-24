@@ -107,7 +107,6 @@ class MainWindow(gtk.Window):
     ## Search for the location in the Entry box
     def confirm_clicked(self, button):
         location = self.entry.get_text()
-#        print "typed", location
         if (0 == len(location)):
             error_msg(self, "Need location")
             self.entry.grab_focus()
@@ -125,7 +124,6 @@ class MainWindow(gtk.Window):
             longitude = 0
             latitude = -100
         if -180 <= longitude <= 180 and -90 <= latitude <= 90:
-            #print latitude, longitude
             log.info( "%f %f" % (latitude, longitude) )
             coord = (latitude, longitude, self.get_zoom())
         else:
@@ -149,7 +147,6 @@ class MainWindow(gtk.Window):
                 self.set_completion()
                 locations = self.ctx_map.get_locations()
             coord = locations[unicode(location)]
-            #print "%s at %f, %f" % (location, coord[0], coord[1])
             log.info( "%s at %f, %f" % (location, coord[0], coord[1]) )
 
         self.drawing_area.center = mapUtils.coord_to_tile(coord)
@@ -762,8 +759,6 @@ class MainWindow(gtk.Window):
         self.drawing_area.repaint()
 
     def expose_cb(self, drawing_area, event):
-
-        # print "expose_cb"
         online = not self.cb_offline.get_active() and not self.hide_dlfeedback
         self.hide_dlfeedback = False
         force_update = self.cb_forceupdate.get_active()
@@ -1044,7 +1039,6 @@ class MainWindow(gtk.Window):
             try:
                 self.conf.save()
             except Exception:
-                #print "could not save all of the most recent config settings"
                 log.error("could not save all of the most recent config settings")
         return False
 
