@@ -123,24 +123,7 @@ def init_logging( loggingpath = None ):
     log.cur_level = logging.ERROR
     log.setLevel( log.cur_level )
 
-    if LOGGING_STDERR:
-        hserr = None
-        try:
-            hserr = logging.StreamHandler( sys.stderr )
-            hserr.setFormatter( logging.Formatter( LOGGING_STDERR_FORMAT ) )
-            hserr.setLevel( LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL )
-            log.addHandler(hserr)
-
-            if( LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL < log.cur_level ):
-                log.cur_level = LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL
-                log.setLevel(log.cur_level)
-            log.info("Logging to stderror is set.")
-        except Exception, ex:
-            if hserr is not None:
-                log.removeHandler(hserr)
-            log.exception(ex)
-    
-    elif LOGGING_STDOUT:
+    if LOGGING_STDOUT:
         hsout = None
         try:
             hsout = logging.StreamHandler( sys.stdout )
@@ -158,6 +141,23 @@ def init_logging( loggingpath = None ):
                 log.removeHandler(hsout)
             print_exc()
 
+
+    if LOGGING_STDERR:
+        hserr = None
+        try:
+            hserr = logging.StreamHandler( sys.stderr )
+            hserr.setFormatter( logging.Formatter( LOGGING_STDERR_FORMAT ) )
+            hserr.setLevel( LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL )
+            log.addHandler(hserr)
+
+            if( LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL < log.cur_level ):
+                log.cur_level = LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL
+                log.setLevel(log.cur_level)
+            log.info("Logging to stderror is set.")
+        except Exception, ex:
+            if hserr is not None:
+                log.removeHandler(hserr)
+            log.exception(ex)
 
     if LOGGING_FILE:
         filename = get_loggingpath(loggingpath)
