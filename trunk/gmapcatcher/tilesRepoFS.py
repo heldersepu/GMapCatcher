@@ -28,15 +28,17 @@ from tilesRepo import TilesRepository
 
 class TilesRepositoryFS(TilesRepository):
 
-    def __init__(self, MapServ_inst):
-        self.configpath = MapServ_inst.configpath
+    def __init__(self, MapServ_inst, configpath):
+        TilesRepository.__init__(self, MapServ_inst, configpath)
+        self.configpath = configpath
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
         self.lock = Lock()
         self.missingPixbuf = mapPixbuf.missing()
 
     def finish(self):
-        pass
+        # last command in finish
+        TilesRepository.finish(self)
 
     ## Sets new repository path to be used for storing tiles
     def set_repository_path(self, newpath):
@@ -97,6 +99,25 @@ class TilesRepositoryFS(TilesRepository):
         except Exception, excInst:
             print excInst
         return False
+
+
+    def get_plain_tile(self, coord, layer):
+        if not self.is_tile_in_local_repos(coord, layer):
+            raise tileNotInRepository( str( (coord,layer) ) )
+        
+        filename = self.coord_to_path(coord, layer)
+        thefile = open(filename, 'rb')
+        ret = thefile.read()
+        thefile.close()
+        return ret
+
+    def store_plain_tile(self, coord, layer, tiledata):
+        filename = self.coord_to_path_checkdirs(coord, layer);
+        file = open( filename, 'wb' )
+        file.write( tiledata )
+        file.close()
+        
+
 
     ## Return the absolute path to a tile
     #  only check path
