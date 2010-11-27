@@ -146,16 +146,17 @@ def search_location(location):
         
         print encoding
         # following translations should be processed only if encoding is iso-8859-1.
-        # when http headers will be solved move it to 'if encoding.upeer() == "ISO-8859-1":' 
+        # when http headers will be solved move it to 'if encoding.upper() == "ISO-8859-1":' 
             
         # Replace bad characters with the proper ones.
         # It would be better to use 'translate' instead of multiple 'replace' here,
         # but it didn't work for me (some problem with unicode strings).
         
-        # characters defined in ISO-8859-1: http://en.wikipedia.org/wiki/ISO/IEC_8859-1 (Unicode: 0x31)
-        # to be complete we should to translate missing chats 7f(127) - 9f(159) (Unicode: 0x29)
+        # characters defined in ISO-8859-1: http://www.fileformat.info/info/charset/ISO-8859-1/list.htm
+        # to be complete we should to translate missing chars 7f(127) - 9f(159)
         # and maybe some others? I don't think so.
         
+        # location = location.replace(u"\u007F", u"\u007F") # DELETE (U+007F) ->  (Unicode: 0x7F)
         location = location.replace(u"\u0080", u"\u20AC") # <control> (U+0080) -> € (Unicode: 0x20AC)
         # location = location.replace(u"\u0081", u"\uFFFD") # <control> (U+0081) -> � (Unicode: 0xFFFD)
         location = location.replace(u"\u0082", u"\u201A") # BREAK PERMITTED HERE (U+0082) -> ‚ (Unicode: 0x201A)
