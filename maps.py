@@ -26,6 +26,7 @@ from gmapcatcher.gtkThread import *
 from gmapcatcher.mapConf import MapConf
 from gmapcatcher.mapMark import MyMarkers
 from gmapcatcher.DLWindow import DLWindow
+from gmapcatcher.EXWindow import EXWindow
 from gmapcatcher.mapUpdate import CheckForUpdates
 from gmapcatcher.mapServices import MapServ
 from gmapcatcher.customMsgBox import error_msg
@@ -188,6 +189,21 @@ class MainWindow(gtk.Window):
                     NON_ONEDIR_COMBO_INDICES[self.conf.map_service][newlayer]
         self.drawing_area.repaint()
 
+    def on_cb_operations_changed(self, cb_operations):
+        """combo box dispatches operation and returns to default position - Operations - 1st item"""
+
+        active = cb_operations.get_active()
+        if active == 0:
+            return
+        
+        if active == 1:
+            self.download_clicked(cb_operations)
+        elif active == 2:
+            self.export_clicked(cb_operations)
+        
+        cb_operations.set_active(0)
+
+
     def download_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
         if (pointer is None):
@@ -203,6 +219,24 @@ class MainWindow(gtk.Window):
                         self.layer, self.conf
                     )
         dlw.show()
+
+    def export_clicked(self, w, pointer=None):
+        rect = self.drawing_area.get_allocation()
+        if (pointer is None):
+            tile = self.drawing_area.center
+        else:
+            tile = mapUtils.pointer_to_tile(
+                rect, pointer, self.drawing_area.center, self.get_zoom()
+            )
+
+        coord = mapUtils.tile_to_coord(tile, self.get_zoom())
+        km_px = mapUtils.km_per_pixel(coord)
+        
+        exw = EXWindow(self.ctx_map, coord, km_px*rect.width, km_px*rect.height,
+                        self.layer, self.conf
+                    )
+        exw.show()
+        
 
     def visual_download(self):
         force_update = self.cb_forceupdate.get_active()
@@ -393,10 +427,21 @@ class MainWindow(gtk.Window):
             cmb_gps.connect('changed',self.gps_changed)
             bbox.pack_start(cmb_gps, False, False, 0)
 
-        gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
-        button = gtk.Button(stock=gtk.STOCK_HARDDISK)
-        button.connect('clicked', self.download_clicked)
-        bbox.pack_start(button, False, False, 5)
+        
+
+        #gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
+        #button = gtk.Button(stock=gtk.STOCK_HARDDISK)
+        #button.connect('clicked', self.download_clicked)
+        #bbox.pack_start(button, False, False, 5)
+        
+        cb_operations = gtk.combo_box_new_text()
+        cb_operations.append_text("Operations")
+        cb_operations.append_text("Download")
+        cb_operations.append_text("Export")
+        cb_operations.set_active(0)
+        cb_operations.connect('changed', self.on_cb_operations_changed)
+        bbox.pack_start(cb_operations, False, False, 5)
+        
 
         self.cmb_layer_container = gtk.HBox()
         self.layer_combo()

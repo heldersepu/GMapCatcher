@@ -8,48 +8,78 @@ import tilesRepoFS
 import tilesRepoMGMaps
 import tilesRepoSQLite3
 
+import logging
+log = logging.getLogger()
 
-_repository_inst = None
-_repository_path = None
-_repository_type = None
+
+# list of instantiated repositories
+
+repositories = []
+
+class repositoryNotCreatedError(Exception):
+    pass
 
 # creates new repository with given path and type
 # public static
 def get_tile_repository(mapservice, configpath, tilerepostype):
-    global _repository_inst
-    global _repository_path
-    global _repository_type
 
+    repos = pick_repository_from_list(configpath, tilerepostype)
+    
+    if repos is None:
+        log.debug( "Creating new tiles repository: " + configpath + " for type: " + str(tilerepostype) )
+        repos = create_repos_inst(mapservice, configpath, tilerepostype)
+        append_repository_to_list(repos, configpath, tilerepostype)
 
-    if _repository_path == configpath and _repository_type == tilerepostype and _repository_inst is not None:
-        return _repository_inst
+    return repos 
+    
 
-    if _repository_inst is not None:
-        if _repository_type == tilerepostype:
-            _repository_path = configpath
-            print "Setting new repository path: " + configpath + " for type: " + str(tilerepostype)
-            _repository_inst.set_repository_path(configpath)
-            return _repository_inst
-        _repository_inst.finish()
-        _repository_inst = None
+def append_repository_to_list( repos, configpath, tilerepostype ):
+    global repositories
+    repos_entry = { "repos": repos, "configpath": configpath, "type": tilerepostype }
+    log.debug("Appending repository to list: %s, %s" % (str(configpath), str(tilerepostype) ))
+    repositories.append( repos_entry )
+    return True 
 
-    _repository_type = tilerepostype
-    create_repos_inst(mapservice, tilerepostype)
-    _repository_path = configpath
+def pick_repository_from_list( configpath, tilerepostype ):
+    """returns instance of repository from list or None"""
+    global repositories
 
-    return _repository_inst
+    found_repos = None
+    idx = 0
+    for rep in repositories[:]:
+        if rep["repos"].is_finished():
+            log.debug( "Deleting finished repository from list for: %s, %s" % (str(rep["configpath"]), str(rep["type"]) ) )
+            del repositories[idx]
+            # we are removing repository, so what was rep[idx+2] before deleting rep[idx], is rep[idx+1] after deleting. 
+            idx = idx - 1 
+        
+        else:
+            if rep["configpath"] == configpath and rep["type"] == tilerepostype:
+                log.debug("Retrieving instance of repository from list for: %s, %s" % (str(configpath), str(tilerepostype) ) )
+                found_repos = rep["repos"]
+                # we don't exit here, because we want to walk over all repository entries in list
+                # to remove finished
+        
+        idx = idx + 1
+    
+    log.debug("Getting repository from list: %s" % (str(found_repos), ) )
+    return found_repos 
+
 
 # private static
-def create_repos_inst(mapservice, repo_type):
-    global _repository_inst
-
+def create_repos_inst(mapservice, configpath, repo_type):
     if repo_type == mapConst.REPOS_TYPE_SQLITE3:
-        _repository_inst = tilesRepoSQLite3.TilesRepositorySQLite3(mapservice)
+        repository_inst = tilesRepoSQLite3.TilesRepositorySQLite3(mapservice, configpath)
     
     elif repo_type == mapConst.REPOS_TYPE_MGMAPS:
-        _repository_inst = tilesRepoMGMaps.TilesRepositoryMGMaps(mapservice)
+        repository_inst = tilesRepoMGMaps.TilesRepositoryMGMaps(mapservice, configpath)
     
     else: # repo_type == mapConst.REPOS_TYPE_FILES
-        _repository_inst = tilesRepoFS.TilesRepositoryFS(mapservice)
+        repository_inst = tilesRepoFS.TilesRepositoryFS(mapservice, configpath)
+
+    if repository_inst is None:
+        raise repositoryNotCreatedError(str( (configpath, repo_type) ))
+    
+    return repository_inst
 
 

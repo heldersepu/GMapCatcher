@@ -6,6 +6,9 @@ if IS_GTK:
     import gtk
     from gobject import TYPE_STRING
 import sys
+import logging
+log = logging.getLogger()
+
 import fileUtils
 import tilesRepoFactory
 import mapUtils
@@ -50,6 +53,11 @@ class MapServ:
 
         if tilerepostype is None:
             tilerepostype = DEFAULT_REPOS_TYPE
+
+        if self.tile_repository is not None:
+            self.tile_repository.finish()
+            self.tile_repository = None
+
         self.tile_repository = tilesRepoFactory.get_tile_repository(self, configpath, tilerepostype)
 
     def __init__(self, configpath=None, tilerepostype=None):
@@ -84,7 +92,8 @@ class MapServ:
     def get_url_from_coord(self, coord, layer, conf):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
-        print
+        # do I really need this empty line? I commented it out. (standa31415)
+        #print 
         try:
             if not conf.oneDirPerMap:
                 if conf.map_service == MAP_SERVERS[VIRTUAL_EARTH] and (layer != LAYER_TERRAIN):
@@ -147,7 +156,8 @@ class MapServ:
         href = self.get_url_from_coord(coord, layer, conf)
         if href:
             try:
-                print 'downloading:', href
+                #print 'downloading:', href
+                log.info( 'downloading: ' + str(href) )
                 oa = openanything.fetch(href)
                 if oa['status']==200:
                     return oa['data']
