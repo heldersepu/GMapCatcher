@@ -7,7 +7,7 @@ import logging
 log = logging.getLogger()
 import threading 
 import time
-import glib
+import gobject
 
 import mapUtils
 import tilesRepo
@@ -115,7 +115,7 @@ class TilesTransfer(threading.Thread):
         if overwrite is true, overwrite existing tiles in destination repository
         """
 
-        glib.idle_add( self.callback_update, "Computing tiles..." )
+        gobject.idle_add( self.callback_update, "Computing tiles..." )
         num_all_tiles = self.count_all_tiles()
 
         update_time = time.time()
@@ -158,7 +158,7 @@ class TilesTransfer(threading.Thread):
                         percent = int((tiles_count / (1.0 * num_all_tiles)) * 100)
                         text = "Processed %d%% (%d of %d tiles)" % (percent, tiles_count, num_all_tiles )
                         log.debug(text)
-                        glib.idle_add( self.callback_update, text, percent )
+                        gobject.idle_add( self.callback_update, text, percent )
                         update_time = time.time()
                     
                 ty = ty + 1
@@ -166,7 +166,7 @@ class TilesTransfer(threading.Thread):
             zoom = zoom - 1
 
         self.log_stats(num_all_tiles, tiles_count, tiles_written_count)
-        glib.idle_add( self.callback_finish, "All %d tiles processed." % (num_all_tiles, ) )
+        gobject.idle_add( self.callback_finish, "All %d tiles processed." % (num_all_tiles, ) )
 
 
     def log_stats(self, all_tiles, checked_tiles, written_tiles ):
