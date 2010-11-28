@@ -2,15 +2,15 @@
 :: Make the installer using NSIS
 
 :: Tested with:
-::  python-2.6.5.msi
-::  gtk2-runtime-2.22.0-2010-10-21-ash.exe
-::  gtk2-themes-2009-09-07-ash.exe
+::  python-2.6.2.msi
+::  gtk2-runtime-2.14.7-2009-01-13-ash.exe
+::  gtk2-themes-2008-10-22-ash.exe
 ::  py2exe-0.6.9.win32-py2.6.exe
-::  pycairo-1.8.10.win32-py2.6.exe
-::  pygobject-2.26.0.win32-py2.6.exe
-::  pygtk-2.22.0.win32-py2.6.exe
-::  nsis-2.46-setup.exe
-::  nsis-AccessControl.zip
+::  pycairo-1.4.12-2.win32-py2.6.exe
+::  pygobject-2.14.2-2.win32-py2.6.exe
+::  pygtk-2.12.1-3.win32-py2.6.exe
+::  nsis-2.45-setup.exe
+::  AccessControl.zip
 
 
 @COLOR 02

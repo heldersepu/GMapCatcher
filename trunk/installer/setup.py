@@ -41,7 +41,7 @@ else:
         options = {
             'py2exe': {
                 'packages':'encodings',
-                'includes': 'cairo, pango, pangocairo, atk, gobject, gio',
+                'includes': 'cairo, pango, pangocairo, atk, gobject',
             }
         },
         data_files = ['changelog', 'README']
