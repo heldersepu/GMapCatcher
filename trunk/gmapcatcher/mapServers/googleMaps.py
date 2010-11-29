@@ -87,7 +87,7 @@ def search_location(location):
 #        print 'url http://maps.google.com/maps?q=' + \
 #               urllib.quote_plus(location)
         oa = openanything.fetch( 'http://maps.google.com/maps?q=' +
-            urllib.quote_plus(location) )
+            urllib.quote_plus(location), agent = "Mozilla/5.0" )
     except Exception:
         return 'error=Can not connect to http://maps.google.com', None
     if oa['status']!=200:
@@ -144,53 +144,53 @@ def search_location(location):
 #        print "location from html", location
         location = unicode(location, encoding, errors='ignore')
         
-        print encoding
-        # following translations should be processed only if encoding is iso-8859-1.
-        # when http headers will be solved move it to 'if encoding.upper() == "ISO-8859-1":' 
+#        print encoding
+        if encoding.upper() == "ISO-8859-1":
+        	location = _fix_iso_8859_1_issues(location)
             
-        # Replace bad characters with the proper ones.
-        # It would be better to use 'translate' instead of multiple 'replace' here,
-        # but it didn't work for me (some problem with unicode strings).
-        
-        # characters defined in ISO-8859-1: http://www.fileformat.info/info/charset/ISO-8859-1/list.htm
-        # to be complete we should to translate missing chars 7f(127) - 9f(159)
-        # and maybe some others? I don't think so.
-        
-        # location = location.replace(u"\u007F", u"\u007F") # DELETE (U+007F) ->  (Unicode: 0x7F)
-        location = location.replace(u"\u0080", u"\u20AC") # <control> (U+0080) -> € (Unicode: 0x20AC)
-        # location = location.replace(u"\u0081", u"\uFFFD") # <control> (U+0081) -> � (Unicode: 0xFFFD)
-        location = location.replace(u"\u0082", u"\u201A") # BREAK PERMITTED HERE (U+0082) -> ‚ (Unicode: 0x201A)
-        location = location.replace(u"\u0083", u"\u0192") # NO BREAK HERE (U+0083) -> ƒ (Unicode: 0x192)
-        location = location.replace(u"\u0084", u"\u201E") # <control> (U+0084) -> „ (Unicode: 0x201E)
-        location = location.replace(u"\u0085", u"\u2026") # NEXT LINE (NEL) (U+0085) -> … (Unicode: 0x2026)
-        location = location.replace(u"\u0086", u"\u2020") # START OF SELECTED AREA (U+0086) -> † (Unicode: 0x2020)
-        location = location.replace(u"\u0087", u"\u2021") # END OF SELECTED AREA (U+0087) -> ‡ (Unicode: 0x2021)
-        location = location.replace(u"\u0088", u"\u02C6") # CHARACTER TABULATION SET (U+0088) -> ˆ (Unicode: 0x2C6)
-        location = location.replace(u"\u0089", u"\u2030") # CHARACTER TABULATION WITH JUSTIFICATION (U+0089) -> ‰ (Unicode: 0x2030)
-        location = location.replace(u"\u008A", u"\u0160") # LINE TABULATION SET (U+008A) -> Š (Unicode: 0x160)
-        location = location.replace(u"\u008B", u"\u2039") # PARTIAL LINE FORWARD (U+008B) -> ‹ (Unicode: 0x2039)
-        location = location.replace(u"\u008C", u"\u0152") # PARTIAL LINE BACKWARD (U+008C) -> Œ (Unicode: 0x152)
-        # location = location.replace(u"\u008D", u"\uFFFD") # REVERSE LINE FEED (U+008D) -> � (Unicode: 0xFFFD)
-        location = location.replace(u"\u008E", u"\u017D") # SINGLE SHIFT TWO (U+008E) -> Ž (Unicode: 0x17D)
-        # location = location.replace(u"\u008F", u"\uFFFD") # SINGLE SHIFT THREE (U+008F) -> � (Unicode: 0xFFFD)
-        # location = location.replace(u"\u0090", u"\uFFFD") # DEVICE CONTROL STRING (U+0090) -> � (Unicode: 0xFFFD)
-        location = location.replace(u"\u0091", u"\u2018") # PRIVATE USE ONE (U+0091) -> ‘ (Unicode: 0x2018)
-        location = location.replace(u"\u0092", u"\u2019") # PRIVATE USE TWO (U+0092) -> ’ (Unicode: 0x2019)
-        location = location.replace(u"\u0093", u"\u201C") # SET TRANSMIT STATE (U+0093) -> “ (Unicode: 0x201C)
-        location = location.replace(u"\u0094", u"\u201D") # CANCEL CHARACTER (U+0094) -> ” (Unicode: 0x201D)
-        location = location.replace(u"\u0095", u"\u2022") # MESSAGE WAITING (U+0095) -> • (Unicode: 0x2022)
-        location = location.replace(u"\u0096", u"\u2013") # START OF GUARDED AREA (U+0096) -> – (Unicode: 0x2013)
-        location = location.replace(u"\u0097", u"\u2014") # END OF GUARDED AREA (U+0097) -> — (Unicode: 0x2014)
-        location = location.replace(u"\u0098", u"\u02DC") # START OF STRING (U+0098) -> ˜ (Unicode: 0x2DC)
-        location = location.replace(u"\u0099", u"\u2122") # <control> (U+0099) -> ™ (Unicode: 0x2122)
-        location = location.replace(u"\u009A", u"\u0161") # SINGLE CHARACTER INTRODUCER (U+009A) -> š (Unicode: 0x161)
-        location = location.replace(u"\u009B", u"\u203A") # CONTROL SEQUENCE INTRODUCER (U+009B) -> › (Unicode: 0x203A)
-        location = location.replace(u"\u009C", u"\u0153") # STRING TERMINATOR (U+009C) -> œ (Unicode: 0x153)
-        # location = location.replace(u"\u009D", u"\uFFFD") # OPERATING SYSTEM COMMAND (U+009D) -> � (Unicode: 0xFFFD)
-        location = location.replace(u"\u009E", u"\u017E") # PRIVACY MESSAGE (U+009E) -> ž (Unicode: 0x17E)
-        location = location.replace(u"\u009F", u"\u0178") # APPLICATION PROGRAM COMMAND (U+009F) -> Ÿ (Unicode: 0x178)
 
 #        print "unicode", location
         return location, (float(match.group('lat')), float(match.group('lng')), int(zoom))
     else:
         return 'error=Unable to get latitude and longitude of %s ' % location
+
+def _fix_iso_8859_1_issues(location):
+    # characters defined in ISO-8859-1: http://www.fileformat.info/info/charset/ISO-8859-1/list.htm
+    # to be complete we should translate missing chars 7f(127) - 9f(159)
+    # and maybe some others? I don't think so.
+    translationTable = {
+		    # 0x7F: 0x007F, # DELETE (U+007F) ->  (Unicode: 0x7F)
+		    0x80: 0x20AC, # <control> (U+0080) -> € (Unicode: 0x20AC)
+		    # 0x81: 0xFFFD, # <control> (U+0081) -> � (Unicode: 0xFFFD)
+		    0x82: 0x201A, # BREAK PERMITTED HERE (U+0082) -> ‚ (Unicode: 0x201A)
+		    0x83: 0x0192, # NO BREAK HERE (U+0083) -> ƒ (Unicode: 0x192)
+		    0x84: 0x201E, # <control> (U+0084) -> „ (Unicode: 0x201E)
+		    0x85: 0x2026, # NEXT LINE (NEL) (U+0085) -> … (Unicode: 0x2026)
+		    0x86: 0x2020, # START OF SELECTED AREA (U+0086) -> † (Unicode: 0x2020)
+		    0x87: 0x2021, # END OF SELECTED AREA (U+0087) -> ‡ (Unicode: 0x2021)
+		    0x88: 0x02C6, # CHARACTER TABULATION SET (U+0088) -> ˆ (Unicode: 0x2C6)
+		    0x89: 0x2030, # CHARACTER TABULATION WITH JUSTIFICATION (U+0089) -> ‰ (Unicode: 0x2030)
+		    0x8A: 0x0160, # LINE TABULATION SET (U+008A) -> Š (Unicode: 0x160)
+		    0x8B: 0x2039, # PARTIAL LINE FORWARD (U+008B) -> ‹ (Unicode: 0x2039)
+		    0x8C: 0x0152, # PARTIAL LINE BACKWARD (U+008C) -> Œ (Unicode: 0x152)
+		    # 0x8D: 0xFFFD, # REVERSE LINE FEED (U+008D) -> � (Unicode: 0xFFFD)
+		    0x8E: 0x017D, # SINGLE SHIFT TWO (U+008E) -> Ž (Unicode: 0x17D)
+		    # 0x8F: 0xFFFD, # SINGLE SHIFT THREE (U+008F) -> � (Unicode: 0xFFFD)
+		    # 0x90: 0xFFFD, # DEVICE CONTROL STRING (U+0090) -> � (Unicode: 0xFFFD)
+		    0x91: 0x2018, # PRIVATE USE ONE (U+0091) -> ‘ (Unicode: 0x2018)
+		    0x92: 0x2019, # PRIVATE USE TWO (U+0092) -> ’ (Unicode: 0x2019)
+		    0x93: 0x201C, # SET TRANSMIT STATE (U+0093) -> “ (Unicode: 0x201C)
+		    0x94: 0x201D, # CANCEL CHARACTER (U+0094) -> ” (Unicode: 0x201D)
+		    0x95: 0x2022, # MESSAGE WAITING (U+0095) -> • (Unicode: 0x2022)
+		    0x96: 0x2013, # START OF GUARDED AREA (U+0096) -> – (Unicode: 0x2013)
+		    0x97: 0x2014, # END OF GUARDED AREA (U+0097) -> — (Unicode: 0x2014)
+		    0x98: 0x02DC, # START OF STRING (U+0098) -> ˜ (Unicode: 0x2DC)
+		    0x99: 0x2122, # <control> (U+0099) -> ™ (Unicode: 0x2122)
+		    0x9A: 0x0161, # SINGLE CHARACTER INTRODUCER (U+009A) -> š (Unicode: 0x161)
+		    0x9B: 0x203A, # CONTROL SEQUENCE INTRODUCER (U+009B) -> › (Unicode: 0x203A)
+		    0x9C: 0x0153, # STRING TERMINATOR (U+009C) -> œ (Unicode: 0x153)
+		    # 0x9D: 0xFFFD, # OPERATING SYSTEM COMMAND (U+009D) -> � (Unicode: 0xFFFD)
+		    0x9E: 0x017E, # PRIVACY MESSAGE (U+009E) -> ž (Unicode: 0x17E)
+		    0x9F: 0x0178, # APPLICATION PROGRAM COMMAND (U+009F) -> Ÿ (Unicode: 0x178)
+    	}
+    return location.translate(translationTable)
