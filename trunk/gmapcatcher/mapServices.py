@@ -121,7 +121,7 @@ class MapServ:
                 elif conf.map_service == MAP_SERVERS[SEZNAM_HIST]:
                     return seznam.get_url_hist(self.mt_counter, coord, layer)
                 else:
-                    return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
+                    return googleMaps.get_url(self.mt_counter, coord, layer, conf)
 
             if (MAP_SERVICES[layer]["TextID"] in ["veter", "vemap", "vesat"]):
                 return virtualEarth.get_url(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
@@ -146,7 +146,7 @@ class MapServ:
             elif (MAP_SERVICES[layer]["TextID"] in ["seznam_hist", "seznam_terrain", "seznam_hybrid"]):
                 return seznam.get_url_hist(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
             else:
-                return googleMaps.get_url(self.mt_counter, coord, layer, conf.language)
+                return googleMaps.get_url(self.mt_counter, coord, layer, conf)
 
         except KeyError:
             raise MapServException("Invalid layer ID: " + str(layer) )
