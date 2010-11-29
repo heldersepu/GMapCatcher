@@ -2,14 +2,15 @@
 :: Make the installer using NSIS
 
 :: Tested with:
-::  python-2.6.2.msi
-::  gtk2-runtime-2.14.7-2009-01-13-ash.exe
-::  gtk2-themes-2008-10-22-ash.exe
-::  py2exe-0.6.9.win32-py2.6.exe
-::  pycairo-1.4.12-2.win32-py2.6.exe
-::  pygobject-2.14.2-2.win32-py2.6.exe
-::  pygtk-2.12.1-3.win32-py2.6.exe
-::  nsis-2.45-setup.exe
+::  python-2.7.msi
+::  gtk2-runtime-2.22.0-2010-10-21-ash.exe
+::  gtk2-themes-2009-09-07-ash.exe
+::  PIL-1.1.7.win32-py2.7.exe
+::  py2exe-0.6.9.win32-py2.7.exe
+::  pycairo-1.8.10.win32-py2.7.exe
+::  pygobject-2.26.0.win32-py2.7.exe
+::  pygtk-2.22.0.win32-py2.7.exe
+::  nsis-2.46-setup.exe
 ::  AccessControl.zip
 
 
@@ -24,7 +25,7 @@
 @RD build /s /q
 
 :: Launch the PYTHON setup
-%SystemDrive%\PYTHON26\PYTHON.EXE setup.py py2exe
+%SystemDrive%\PYTHON27\PYTHON.EXE setup.py py2exe
 
 :: Few seconds delay to show dependencies
 @COLOR F0
