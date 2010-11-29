@@ -10,7 +10,7 @@ from gmapcatcher.mapConst import *
 known_layers = {}
 
 ## Returns a template URL for the GoogleMaps
-def layer_url_template(layer, language):
+def layer_url_template(layer, conf):
     if layer not in known_layers:
         map_server_query = {"gmap":"m", "ghyb":"h", "gsat":"k", "gter":"p"}
 
@@ -22,12 +22,12 @@ def layer_url_template(layer, language):
             return None
         html = oa['data']
 
-        known_layers[layer] = parse_start_page(layer, html, language)
+        known_layers[layer] = parse_start_page(layer, html, conf)
     return known_layers[layer]
 
 ## Returns the URL to the GoogleMaps tile
-def get_url(counter, coord, layer, language):
-    template = layer_url_template(layer, language)
+def get_url(counter, coord, layer, conf):
+    template = layer_url_template(layer, conf)
     if template:
         return template % (counter, coord[0], coord[1], 17 - coord[2])
 
@@ -42,8 +42,8 @@ def json_dumps(string):
 ## Parse maps.google.com/maps.
 #  the return value is a url pattern like this:
 #  http://mt%d.google.com/vt/lyrs=t@110&hl=en&x=%i&y=%i&z=%i
-def parse_start_page(layer, html, language):
-    end_str = '&hl=' + language + '&x=%i&y=%i&z=%i'   
+def parse_start_page(layer, html, conf):
+    end_str = '&src=' + conf.google_src + '&hl=' + conf.language + '&x=%i&y=%i&z=%i'   
 
     # we first check the existence of the baseUrl in insertTiles
     hybrid = ''

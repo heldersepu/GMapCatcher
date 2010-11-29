@@ -45,7 +45,7 @@ class MapConf():
         config.set(SECTION_INIT, 'gps_update_rate', self.gps_update_rate)
         config.set(SECTION_INIT, 'show_cross', self.show_cross)
         config.set(SECTION_INIT, 'max_gps_zoom', self.max_gps_zoom)
-        config.set(SECTION_INIT, "gps_increment", self.gps_increment)
+        config.set(SECTION_INIT, 'gps_increment', self.gps_increment)
         config.set(SECTION_INIT, 'map_service', self.map_service)
         config.set(SECTION_INIT, 'version_url', self.version_url)
         config.set(SECTION_INIT, 'check_for_updates', self.check_for_updates)
@@ -60,9 +60,10 @@ class MapConf():
         config.set(SECTION_INIT, 'save_vlocation', self.save_vlocation)
         config.set(SECTION_INIT, 'save_width', self.save_width)
         config.set(SECTION_INIT, 'save_height', self.save_height)
-        config.set(SECTION_INIT, "scale_visible", self.scale_visible)
-        config.set(SECTION_INIT, "auto_refresh", self.auto_refresh)
-        config.set(SECTION_INIT, "force_update_days", self.force_update_days)
+        config.set(SECTION_INIT, 'scale_visible', self.scale_visible)
+        config.set(SECTION_INIT, 'auto_refresh', self.auto_refresh)
+        config.set(SECTION_INIT, 'force_update_days', self.force_update_days)
+        config.set(SECTION_INIT, 'google_src', self.google_src)
 
         configfile = open(self.config_path, 'wb')
         config.write(configfile)
@@ -141,6 +142,8 @@ class MapConf():
         self.auto_refresh = read_config('auto_refresh', 0, int)
         ## Amount of days used when user selects the Force Update
         self.force_update_days = read_config('force_update_days', 1, int)
+        ## Part of the URL that is used to get the google tiles
+        self.google_src = read_config('google_src', '', str)
 
     ## Write the configuration to the default file
     def save(self):
