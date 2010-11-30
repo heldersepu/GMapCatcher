@@ -199,5 +199,5 @@ STARTS_WITH = 0
 ENDS_WITH = 1
 CONTAINS = 2
 REGULAR_EXPRESSION = 3
-ENTRY_SUB_MENU = ['Starts With', 'Ends With', 'Contains',
-        'Regular Expression']
+ENTRY_SUB_MENU = ['Starts With...', 'Ends With...', 
+        'Contains...', 'Regular Expression...']
