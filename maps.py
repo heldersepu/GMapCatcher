@@ -94,6 +94,18 @@ class MainWindow(gtk.Window):
              event.keyval in [65293, 32]:
             self.menu_tools(None, TOOLS_MENU[0])
 
+    ## Match function for the auto-completion
+    def match_func(self, completion, key, iter):
+        model = completion.get_model()
+        key = key.lower()
+        text = model.get_value(iter, 0).lower()
+        if self.conf.match_func == 'startswith':
+            return text.startswith(key)
+        elif self.conf.match_func == 'endswith':
+            return text.endswith(key)
+        else:
+            return (text.find(key) != -1)
+
     ## Set the auto-completion for the entry box
     def set_completion(self):
         completion = gtk.EntryCompletion()
@@ -101,7 +113,7 @@ class MainWindow(gtk.Window):
         self.entry.set_completion(completion)
         completion.set_model(self.ctx_map.completion_model())
         completion.set_text_column(0)
-        self.completion = completion
+        completion.set_match_func(self.match_func)
         # Populate the dropdownlist
         self.combo.set_model(self.ctx_map.completion_model(SEPARATOR))
 
@@ -195,12 +207,12 @@ class MainWindow(gtk.Window):
         active = cb_operations.get_active()
         if active == 0:
             return
-        
+
         if active == 1:
             self.download_clicked(cb_operations)
         elif active == 2:
             self.export_clicked(cb_operations)
-        
+
         cb_operations.set_active(0)
 
 
@@ -231,12 +243,12 @@ class MainWindow(gtk.Window):
 
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         km_px = mapUtils.km_per_pixel(coord)
-        
+
         exw = EXWindow(self.ctx_map, coord, km_px*rect.width, km_px*rect.height,
                         self.layer, self.conf
                     )
         exw.show()
-        
+
 
     def visual_download(self):
         force_update = self.cb_forceupdate.get_active()
@@ -265,7 +277,7 @@ class MainWindow(gtk.Window):
     def gps_callback(self, coord, mode):
         zl = self.get_zoom()
         self.current_gps = coord
-        tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))        
+        tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
 
         # Save the GPS coordinates
         l = len(self.save_gps)
@@ -277,7 +289,7 @@ class MainWindow(gtk.Window):
                 self.save_gps.append(coord)
         else:
             self.save_gps.append(coord)
-            
+
         # The map should be centered around a new GPS location
         if mode == GPS_CENTER or self.reCenter_gps:
             self.reCenter_gps = False
@@ -304,14 +316,14 @@ class MainWindow(gtk.Window):
                             self.drawing_area.da_jump(4, zl, True)
             else:
                 self.drawing_area.center = tile
-        # GPS update timeout, recenter GPS only after 3 sec idle 
+        # GPS update timeout, recenter GPS only after 3 sec idle
         elif mode == GPS_TIMEOUT:
             if (time.time() - self.gps_idle_time) > 3:
                 self.drawing_area.center = tile
 
         self.drawing_area.repaint()
 
-        # Update the status bar with the GPS Coordinates 
+        # Update the status bar with the GPS Coordinates
         if self.conf.status_location == STATUS_GPS:
             self.status_bar.pop(self.status_bar_id)
             self.status_bar.push(self.status_bar_id,
@@ -322,9 +334,9 @@ class MainWindow(gtk.Window):
         l = len(self.save_gps)
         h = self.save_gps[l - 1][0] - self.save_gps[l - 2][0]
         v = self.save_gps[l - 1][1] - self.save_gps[l - 2][1]
-        return ternary(h != 0, math.atan(v/h), ternary(v > 0, math.pi / 2.0, 
+        return ternary(h != 0, math.atan(v/h), ternary(v > 0, math.pi / 2.0,
                 ternary(v < 0, -1 * math.pi / 2.0, False)))
-        
+
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
         combo = gtk.combo_box_entry_new_text()
@@ -427,13 +439,13 @@ class MainWindow(gtk.Window):
             cmb_gps.connect('changed',self.gps_changed)
             bbox.pack_start(cmb_gps, False, False, 0)
 
-        
+
 
         #gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
         #button = gtk.Button(stock=gtk.STOCK_HARDDISK)
         #button.connect('clicked', self.download_clicked)
         #bbox.pack_start(button, False, False, 5)
-        
+
         cb_operations = gtk.combo_box_new_text()
         cb_operations.append_text("Operations")
         cb_operations.append_text("Download")
@@ -441,7 +453,7 @@ class MainWindow(gtk.Window):
         cb_operations.set_active(0)
         cb_operations.connect('changed', self.on_cb_operations_changed)
         bbox.pack_start(cb_operations, False, False, 5)
-        
+
 
         self.cmb_layer_container = gtk.HBox()
         self.layer_combo()
@@ -755,7 +767,7 @@ class MainWindow(gtk.Window):
     def da_button_press(self, w, event):
         if not (log.cur_level <= logging.DEBUG and log.cur_level > 0):
             return
-            
+
         # if we have set debug level for logging, display coordinates of selected tile in window
         if (event.button == 1):
             coord_x = ((w.center[0][0]) * TILES_WIDTH + w.center[1][0] - w.allocation.width/2 + event.x)
@@ -768,7 +780,7 @@ class MainWindow(gtk.Window):
             tile[1][1] = int(round(100*(coord_y%TILES_HEIGHT)/256))
 
             coords = mapUtils.tile_to_coord(tile, self.get_zoom())
-            
+
             log.debug( "Selected tile: [%d.%d, %d.%d] - lat/lon: [%s,%s]" % (tile[0][0],tile[1][0],tile[0][1],tile[1][1], coords[0], coords[1] ) )
 
     def view_credits(self, menuitem):
@@ -1208,7 +1220,7 @@ if __name__ == "__main__":
         if arg.startswith('--logging-path='):
             logging_path = arg[len('--logging-path='):]
             continue
-    
+
     main(conf_path, logging_path)
     pid = os.getpid()
     # send ourselves sigquit, particularly necessary in posix as

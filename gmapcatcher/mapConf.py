@@ -64,6 +64,7 @@ class MapConf():
         config.set(SECTION_INIT, 'auto_refresh', self.auto_refresh)
         config.set(SECTION_INIT, 'force_update_days', self.force_update_days)
         config.set(SECTION_INIT, 'google_src', self.google_src)
+        config.set(SECTION_INIT, 'match_func', self.match_func)
 
         configfile = open(self.config_path, 'wb')
         config.write(configfile)
@@ -144,6 +145,8 @@ class MapConf():
         self.force_update_days = read_config('force_update_days', 1, int)
         ## Part of the URL that is used to get the google tiles
         self.google_src = read_config('google_src', '', str)
+        ## The match function to be used in the auto-completion of the entry 
+        self.match_func = read_config('match_func', 'startswith', str)
 
     ## Write the configuration to the default file
     def save(self):
