@@ -84,8 +84,27 @@ class MainWindow(gtk.Window):
     def key_press_combo(self, w, event):
         if event.keyval in [65362, 65364]:
             self.combo_popup()
-            return True
-
+            return True    
+    
+    ## Add a new item to the menu of the EntryBox
+    def populate_popup(self, w, menu):
+        def menuitem_response(w, string):
+            self.conf.match_func = string
+        subMenu = gtk.Menu()
+        for item in ['Starts With...', 'Ends With...', 'Contains...']:
+            iMenuItem = gtk.RadioMenuItem(None, item)
+            strNew = item.lower().replace(' ', '')[:-3]
+            iMenuItem.set_active(strNew == self.conf.match_func)
+            iMenuItem.connect("activate", menuitem_response, strNew)
+            subMenu.append(iMenuItem)
+        
+        menuItem = gtk.MenuItem()
+        menu.append(menuItem)
+        menuItem = gtk.MenuItem('Auto-Completion Method')
+        menuItem.set_submenu(subMenu)
+        menu.append(menuItem)
+        menu.show_all()
+        
     ## Handles the events in the Tools buttons
     def tools_button_event(self, w, event):
         if event.type == gtk.gdk.BUTTON_PRESS:
@@ -352,6 +371,7 @@ class MainWindow(gtk.Window):
         entry.connect("copy-clipboard", self.clean_entry)
         entry.connect("paste-clipboard", self.clean_entry)
         entry.connect("move-cursor", self.clean_entry)
+        entry.connect("populate-popup", self.populate_popup)
         # Launch the default_entry on the focus out
         entry.connect("focus-out-event", self.default_entry)
         self.entry = entry
