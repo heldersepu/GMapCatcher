@@ -84,27 +84,26 @@ class MainWindow(gtk.Window):
     def key_press_combo(self, w, event):
         if event.keyval in [65362, 65364]:
             self.combo_popup()
-            return True    
-    
+            return True
+
     ## Add a new item to the menu of the EntryBox
     def populate_popup(self, w, menu):
         def menuitem_response(w, string):
             self.conf.match_func = string
         subMenu = gtk.Menu()
-        for item in ['Starts With...', 'Ends With...', 'Contains...']:
+        for item in ENTRY_SUB_MENU:
             iMenuItem = gtk.RadioMenuItem(None, item)
-            strNew = item.lower().replace(' ', '')[:-3]
-            iMenuItem.set_active(strNew == self.conf.match_func)
-            iMenuItem.connect("activate", menuitem_response, strNew)
+            iMenuItem.set_active(item == self.conf.match_func)
+            iMenuItem.connect("activate", menuitem_response, item)
             subMenu.append(iMenuItem)
-        
+
         menuItem = gtk.MenuItem()
         menu.append(menuItem)
         menuItem = gtk.MenuItem('Auto-Completion Method')
         menuItem.set_submenu(subMenu)
         menu.append(menuItem)
         menu.show_all()
-        
+
     ## Handles the events in the Tools buttons
     def tools_button_event(self, w, event):
         if event.type == gtk.gdk.BUTTON_PRESS:
@@ -118,10 +117,13 @@ class MainWindow(gtk.Window):
         model = completion.get_model()
         key = key.lower()
         text = model.get_value(iter, 0).lower()
-        if self.conf.match_func == 'startswith':
+        if self.conf.match_func == ENTRY_SUB_MENU[ STARTS_WITH ]:
             return text.startswith(key)
-        elif self.conf.match_func == 'endswith':
+        elif self.conf.match_func == ENTRY_SUB_MENU[ ENDS_WITH ]:
             return text.endswith(key)
+        elif self.conf.match_func == ENTRY_SUB_MENU[ REGULAR_EXPRESSION ]:
+            p = re.compile(key, re.IGNORECASE)
+            return (p.search(text) is not None)
         else:
             return (text.find(key) != -1)
 

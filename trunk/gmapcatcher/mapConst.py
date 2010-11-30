@@ -194,3 +194,10 @@ TILES_PATH = ".googlemaps"
 DEFAULT_PATH = USER_PATH + "/" + TILES_PATH
 
 LANGUAGES = ["en", "zh"]
+
+STARTS_WITH = 0
+ENDS_WITH = 1
+CONTAINS = 2
+REGULAR_EXPRESSION = 3
+ENTRY_SUB_MENU = ['Starts With', 'Ends With', 'Contains',
+        'Regular Expression']
