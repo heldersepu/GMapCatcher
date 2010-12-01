@@ -146,7 +146,7 @@ class MapConf():
         ## Part of the URL that is used to get the google tiles
         self.google_src = read_config('google_src', '', str)
         ## The match function to be used in the auto-completion of the entry 
-        self.match_func = read_config('match_func', 'startswith', str)
+        self.match_func = read_config('match_func', ENTRY_SUB_MENU[0], str)
 
     ## Write the configuration to the default file
     def save(self):
