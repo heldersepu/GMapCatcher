@@ -57,7 +57,7 @@ def write_file(strInfo, filePath, fileData):
 
     for l in sorted(fileData.keys()):
     	# The method 'write' takes an unicode string here and acording to python manual
-    	# it translates it automatically to string buffer accroding to system defaults.
+    	# it translates it automatically to string buffer acording to system defaults.
     	# Probably all systems translate unicode to UTF-8
         file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
                   (l, fileData[l][0], fileData[l][1], fileData[l][2]))
@@ -137,7 +137,7 @@ def del_file(filename):
         pass
 
 ## Remove file if is older than given time
-#  (24h * 3600s) = 86400s
+#  (24h * 3600s/h) = 86400s
 def delete_old(filename, intDays):
     if os.path.isfile(filename):
         if (int(time() - os.path.getmtime(filename)) > (86400 * intDays)):
