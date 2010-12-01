@@ -19,8 +19,7 @@ class DrawingArea(gtk.DrawingArea):
     center = ((0,0),(128,128))
     draging_start = (0, 0)
 
-    def __init__(self, scale):
-        self.scale = scale
+    def __init__(self):
         super(DrawingArea, self).__init__()
 
         self.visualdl_gc = False

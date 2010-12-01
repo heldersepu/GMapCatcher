@@ -569,7 +569,7 @@ class MainWindow(gtk.Window):
         return scale
 
     def __create_right_paned(self):
-        da = DrawingArea(self.scale)
+        da = DrawingArea()
         self.drawing_area = da
         da.connect("expose-event", self.expose_cb)
 
