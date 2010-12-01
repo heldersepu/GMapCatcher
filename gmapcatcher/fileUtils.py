@@ -13,18 +13,21 @@ def read_file(strInfo, filePath):
         q = re.compile('.*zoom="([^"]+)".*')
         file = open(filePath, "r")
         for line in file:
-            # the file should be in UTF-8, so decoding is needed
-            line = line.decode("UTF-8") 
-            if (line[0] != '#'):
-                m = p.search(line)
-                if m:
-                    zoom = 10
-                    z = q.search(line)
-                    if z:
-                        zoom = int(z.group(1))
-                    fileData[m.group(1)] = (float(m.group(2)),
-                                            float(m.group(3)),
-                                            zoom)
+            try:
+                # the file should be in UTF-8, so decoding is needed
+                line = line.decode("UTF-8") 
+                if (line[0] != '#'):
+                    m = p.search(line)
+                    if m:
+                        zoom = 10
+                        z = q.search(line)
+                        if z:
+                            zoom = int(z.group(1))
+                        fileData[m.group(1)] = (float(m.group(2)),
+                                                float(m.group(3)),
+                                                zoom)
+            except:
+                pass
         file.close()
         return fileData
     else:
