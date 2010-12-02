@@ -43,12 +43,12 @@ def json_dumps(string):
 #  the return value is a url pattern like this:
 #  http://mt%d.google.com/vt/lyrs=t@110&hl=en&x=%i&y=%i&z=%i
 def parse_start_page(layer, html, conf):
-    end_str = '&src=' + conf.google_src + '&hl=' + conf.language + '&x=%i&y=%i&z=%i'   
+    end_str = '&src=' + conf.google_src + '&hl=' + conf.language + '&x=%i&y=%i&z=%i'
 
     # we first check the existence of the baseUrl in insertTiles
     hybrid = ''
     if layer == LAYER_HYBRID:
-        hybrid = 'Hybrid'    
+        hybrid = 'Hybrid'
     uPattern = 'insertTiles.e."inlineTiles' + hybrid + '.*zoom,."(.*?)",'
     p = re.compile(uPattern)
     match = p.search(html)
@@ -84,8 +84,6 @@ def set_zoom(intZoom):
 def search_location(location):
     print 'downloading the following location:', location
     try:
-#        print 'url http://maps.google.com/maps?q=' + \
-#               urllib.quote_plus(location)
         oa = openanything.fetch( 'http://maps.google.com/maps?q=' +
             urllib.quote_plus(location), agent = "Mozilla/5.0" )
     except Exception:
@@ -95,14 +93,14 @@ def search_location(location):
 
     match = 0
     html = oa['data']
-#    print html
-    if html.find('We could not understand the location') < 0:
+
+    if html.find('We could not understand the location') < 0 and \
+       html.find('Did you mean:') < 0:
         encpa = 'charset[ ]?= ?([^ ]+)"'
         p = re.compile(encpa, re.IGNORECASE)
         match = p.search(html)
         if match:
             encoding = match.group(1)
-#            print "encoding", encoding
         else:
             encoding = "ASCII"
         # List of patterns to look for the location name
@@ -141,15 +139,9 @@ def search_location(location):
             m2 = p.search(html)
             if m2:
                 zoom = set_zoom(MAP_MAX_ZOOM_LEVEL - int(m2.group(1)))
-#        print "location from html", location
         location = unicode(location, encoding, errors='ignore')
-        
-#        print encoding
         if encoding.upper() == "ISO-8859-1":
         	location = _fix_iso_8859_1_issues(location)
-            
-
-#        print "unicode", location
         return location, (float(match.group('lat')), float(match.group('lng')), int(zoom))
     else:
         return 'error=Unable to get latitude and longitude of %s ' % location
