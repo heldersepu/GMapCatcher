@@ -44,7 +44,6 @@ class MainWindow(gtk.Window):
     myPointer = None
     reCenter_gps = False
     showMarkers = True
-    key_down = None
     tPoint = {}
     gps_idle_time = time.time()
 
@@ -758,12 +757,12 @@ class MainWindow(gtk.Window):
                 self.myPointer = (event.x, event.y)
                 w.popup(None, None, None, event.button, event.time)
             # Ctrl + Click adds a marker
-            elif (self.key_down == 65507):
+            elif (event.state & gtk.gdk.CONTROL_MASK):
                 self.add_marker((event.x, event.y))
         # Double-Click event Zoom In or Out
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
             # Alt + 2Click Zoom Out
-            if (self.key_down == 65513):
+            if (event.state & gtk.gdk.MOD1_MASK):
                 self.do_zoom(self.get_zoom() + 1, True, (event.x, event.y))
             # 2Click Zoom In
             else:
@@ -1022,14 +1021,8 @@ class MainWindow(gtk.Window):
         elif keyval in [72, 104]:
             self.cmb_layer.set_active(LAYER_HYBRID)
 
-
-    ## Handles the Key release
-    def key_release_event(self, w, event):
-        self.key_down = None
-
     ## Handles the Key pressing
     def key_press_event(self, w, event):
-        self.key_down = event.keyval
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
@@ -1174,7 +1167,6 @@ class MainWindow(gtk.Window):
             self.connect("destroy", lambda *w: gtk.main_quit())
 
         self.connect('key-press-event', self.key_press_event)
-        self.connect('key-release-event', self.key_release_event)
         self.connect('delete-event', self.on_delete)
 
         self.top_panel = self.__create_top_paned()
