@@ -852,25 +852,17 @@ class MainWindow(gtk.Window):
         self.draw_overlay()
 
     def scroll_cb(self, widget, event):
-        xyPointer = self.drawing_area.get_pointer()
         dlbool = self.visual_dlconfig.get("active", False)
-        ctrlmask = (event.state & gtk.gdk.CONTROL_MASK) != 0
-        shiftmask = (event.state & gtk.gdk.SHIFT_MASK) != 0
+        intVal = 1 if (event.direction == gtk.gdk.SCROLL_UP) else -1
         sz, zl = 0, 0
-        if (event.direction == gtk.gdk.SCROLL_UP):
-            if dlbool and ctrlmask:
-                zl = 1
-            elif dlbool and shiftmask:
-                sz = 1
-            else:
-                self.do_zoom(self.get_zoom() - 1, dPointer=xyPointer)
+        if dlbool and (event.state & gtk.gdk.CONTROL_MASK):
+            zl = intVal
+        elif dlbool and (event.state & gtk.gdk.SHIFT_MASK):
+            sz = intVal
         else:
-            if dlbool and ctrlmask:
-                zl = -1
-            elif dlbool and shiftmask:
-                sz = -1
-            else:
-                self.do_zoom(self.get_zoom() + 1, dPointer=xyPointer)
+            xyPointer = self.drawing_area.get_pointer()
+            self.do_zoom(self.get_zoom() + intVal, dPointer=xyPointer)
+ 
         self.visual_dlconfig["zl"] = self.visual_dlconfig.get('zl', -2) + zl
         self.visual_dlconfig['sz'] = self.visual_dlconfig.get('sz', 4) - sz
         if self.visual_dlconfig.get('zl', -2) > -1:
