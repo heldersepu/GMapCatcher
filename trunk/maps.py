@@ -269,23 +269,23 @@ class MainWindow(gtk.Window):
                     )
         exw.show()
 
-
     def visual_download(self):
-        force_update = self.cb_forceupdate.get_active()
-        confzl = self.visual_dlconfig.get('zl', -2)
-        thezl = self.get_zoom()
-        sz = self.visual_dlconfig.get('sz', 4)
-        rect = self.drawing_area.get_allocation()
+        if self.visual_dlconfig.get('active', False):
+            force_update = self.cb_forceupdate.get_active()
+            confzl = self.visual_dlconfig.get('zl', -2)
+            thezl = self.get_zoom()
+            sz = self.visual_dlconfig.get('sz', 4)
+            rect = self.drawing_area.get_allocation()
 
-        coord = mapUtils.tile_to_coord(self.drawing_area.center, thezl)
-        km_px = mapUtils.km_per_pixel(coord)
+            coord = mapUtils.tile_to_coord(self.drawing_area.center, thezl)
+            km_px = mapUtils.km_per_pixel(coord)
 
-        self.visual_dlconfig['downloader'].bulk_download(
-                    coord, (thezl - 1, thezl + confzl),
-                    km_px * rect.width / sz, km_px * rect.height / sz,
-                    self.layer, gui_callback(self.visualdl_cb),
-                    self.visualdl_update, force_update, self.conf)
-        self.visualdl_update()
+            self.visual_dlconfig['downloader'].bulk_download(
+                        coord, (thezl - 1, thezl + confzl),
+                        km_px * rect.width / sz, km_px * rect.height / sz,
+                        self.layer, gui_callback(self.visualdl_cb),
+                        self.visualdl_update, force_update, self.conf)
+            self.visualdl_update()
 
     def check_bulk_down(self):
         if self.conf.map_service in NO_BULK_DOWN:
@@ -770,11 +770,10 @@ class MainWindow(gtk.Window):
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
-        if (event.get_state() & gtk.gdk.BUTTON1_MASK) != 0:
+        if (event.state & gtk.gdk.BUTTON1_MASK):
             self.gps_idle_time = time.time()
             self.drawing_area.da_move(event.x, event.y, self.get_zoom())
-            if (event.get_state() & gtk.gdk.SHIFT_MASK) != 0 and \
-                        self.visual_dlconfig.get('active', False):
+            if (event.state & gtk.gdk.SHIFT_MASK):
                 self.visual_download()
             self.update_export()
 
@@ -862,7 +861,7 @@ class MainWindow(gtk.Window):
         else:
             xyPointer = self.drawing_area.get_pointer()
             self.do_zoom(self.get_zoom() + intVal, dPointer=xyPointer)
- 
+
         self.visual_dlconfig["zl"] = self.visual_dlconfig.get('zl', -2) + zl
         self.visual_dlconfig['sz'] = self.visual_dlconfig.get('sz', 4) - sz
         if self.visual_dlconfig.get('zl', -2) > -1:
