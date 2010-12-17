@@ -16,16 +16,17 @@ mConf = mapConf.MapConf()
 ctx_map = MapServ(mConf.init_path, mConf.repository_type)
 downloader = None
 
-def do_nothing(*args, **kwargs):
-    pass
+def dl_callback(*args, **kwargs):
+    if not args[0]:
+        sys.stdout.write('\b=*')    
 
 def download(lat, lng, lat_range, lng_range, max_zl, min_zl, layer):
     for zl in range(max_zl, min_zl - 1, -1):
-        print "Downloading zl %d" % zl
+        sys.stdout.write("\nDownloading zl %d \t" % zl)
         downloader.query_region_around_location(
             lat, lng,
             lat_range*2, lng_range*2, zl,
-            layer, do_nothing,
+            layer, dl_callback,
             conf=mConf
         )
         downloader.wait_all()
@@ -68,6 +69,6 @@ if __name__ == "__main__":
         download(args.lat, args.lng, args.lat_range, args.lng_range,
                  args.max_zl, args.min_zl, args.layer)
     finally:
-        print "Waiting..."
+        print "\nDownload Complete!"
         downloader.stop_all()
 
