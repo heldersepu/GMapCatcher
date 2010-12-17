@@ -9,6 +9,7 @@ import sys
 import logging
 log = logging.getLogger()
 
+import os
 import fileUtils
 import tilesRepoFactory
 import mapUtils
@@ -93,7 +94,7 @@ class MapServ:
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
         # do I really need this empty line? I commented it out. (standa31415)
-        #print 
+        #print
         try:
             if not conf.oneDirPerMap:
                 if conf.map_service == MAP_SERVERS[VIRTUAL_EARTH] and (layer != LAYER_TERRAIN):
@@ -229,4 +230,13 @@ class MapServ:
             for str in sorted(self.locations.keys()):
                 iter = store.append()
                 store.set(iter, 0, str + strAppend)
+            if strAppend=='' and os.path.exists('poi.db'):
+                import sqlite3
+                dbconn = sqlite3.connect('poi.db')
+                dbcursor = dbconn.cursor()
+                dbcursor.execute("SELECT location FROM locations")
+                for row in dbcursor:
+                    iter = store.append()
+                    store.set(iter, 0, row[0])
+
         return store
