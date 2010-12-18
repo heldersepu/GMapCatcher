@@ -133,6 +133,7 @@ class MainWindow(gtk.Window):
         self.entry.set_completion(completion)
         completion.set_model(self.ctx_map.completion_model())
         completion.set_text_column(0)
+        completion.set_minimum_key_length(3)
         completion.set_match_func(self.match_func)
         # Populate the dropdownlist
         self.combo.set_model(self.ctx_map.completion_model(SEPARATOR))
