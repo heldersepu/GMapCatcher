@@ -81,6 +81,7 @@ class DLWindow(gtk.Window):
             hbbox.set_border_width(10)
             hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
 
+            gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
             self.b_download = gtk.Button(stock=gtk.STOCK_HARDDISK)
             self.b_download.connect('clicked', self.run, conf.init_path, conf.repository_type, strFolder)
             hbbox.pack_start(self.b_download)
