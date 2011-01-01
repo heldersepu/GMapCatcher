@@ -11,13 +11,6 @@ NAME = "GMapCatcher"
 VERSION = "0.7.5.3"
 VERSION_NAME = ""
 WEB_ADDRESS = "http://code.google.com/p/gmapcatcher/"
-# add real names here! :-)
-AUTHORS = ["\"pi3orama\"", "Helder Sepulveda", "Maxim Razin",
-           "Mark Benjamin", "\"standa31415\"", "\"strombom\"",
-           "\"sirknottalot\"", "\"kevlo\"", "\"mrducat\"",
-           "\"bthipavo\"", "\"tatlicioglu\"",
-           "\"ahmeterdincyilmaz\"", "\"serkan.cm\"",
-           "\"hk_tmp\"", "Tomas Penicka"]
 
 GOOGLE = 0
 OSM = 1

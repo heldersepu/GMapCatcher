@@ -8,9 +8,19 @@ import gtk
 
 class OurCredits(gtk.AboutDialog):
     def __init__(self):
+        # add real names here! :-)
+        AUTHORS = ["Nan Wang", "Helder Sepulveda", "Maxim Razin",
+                   "Mark Benjamin", "Standa Mitrega", "Johan Strombom",
+                   "Alex Knott", "Kevin Lo", "Becky Thipavong", "Tomas Penicka"]  
+        DOCUMENTERS = ["Hans Kochsmeier", "F Engelbrecht"]
+                   
         gtk.AboutDialog.__init__(self)
         self.set_name(NAME)
         self.set_version(VERSION)
+        self.set_website(WEB_ADDRESS)
+        self.set_authors(AUTHORS)
+        self.set_documenters(DOCUMENTERS)
+        self.set_program_name(NAME)
         self.set_copyright("© 2008-2010 the gmapcatcher team")
         self.set_license("""                    GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
@@ -352,8 +362,4 @@ consider it more useful to permit linking proprietary applications with the
 library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.
 """)
-        self.set_website(WEB_ADDRESS)
-        self.set_authors(AUTHORS)
-        self.set_documenters(AUTHORS)
-        self.set_program_name(NAME)
         self.run()
