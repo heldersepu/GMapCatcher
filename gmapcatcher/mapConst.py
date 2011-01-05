@@ -39,83 +39,85 @@ LAYER_HYBRID = 3
 LAYER_NAMES = ["Map", "Satellite", "Terrain", "Hybrid"]
 LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles", "hyb_tiles"]
 
-#element of the array "ID" is constant and is associated with the layer. Never change it.
-# order in the comboBox is given by the order of the lines.
-#If wants to change the order - move lines, but don't change "ID".
 #If layers are added / removed - change the decision making in mapServices.get_url_from_coord()
 # name of the layer service is created as: serviceName + layerName
+
+# ID should be renamed to "layerType", its no longer an ID (after update from end of april 2010)
+# IDM stands for numerical ID of map (used previously by ID), used as map ID in sqlite3 repository
+# same as "layerDir" for filesystem repos types.
+
 FIRST_LAYER_ID = 0
 MAP_SERVICES = [
-    {"ID": LAYER_MAP,       "TextID": "gmap",  "serviceName":MAP_SERVERS[GOOGLE],
+    {"ID": LAYER_MAP, "IDM": 0, "TextID": "gmap",  "serviceName":MAP_SERVERS[GOOGLE],
             "layerDir": "tiles",     "layerName": LAYER_NAMES[LAYER_MAP] },
-    {"ID": LAYER_SATELLITE, "TextID": "gsat",  "serviceName":MAP_SERVERS[GOOGLE],
+    {"ID": LAYER_SATELLITE, "IDM": 1, "TextID": "gsat",  "serviceName":MAP_SERVERS[GOOGLE],
             "layerDir": "sat_tiles", "layerName": LAYER_NAMES[LAYER_SATELLITE] },
-    {"ID": LAYER_TERRAIN,   "TextID": "gter",  "serviceName":MAP_SERVERS[GOOGLE],
+    {"ID": LAYER_TERRAIN, "IDM": 2, "TextID": "gter",  "serviceName":MAP_SERVERS[GOOGLE],
             "layerDir": "ter_tiles", "layerName": LAYER_NAMES[LAYER_TERRAIN] },
-    {"ID": LAYER_HYBRID,    "TextID": "ghyb",  "serviceName":MAP_SERVERS[GOOGLE],
+    {"ID": LAYER_HYBRID, "IDM": 3, "TextID": "ghyb",  "serviceName":MAP_SERVERS[GOOGLE],
             "layerDir": "hyb_tiles", "layerName": LAYER_NAMES[LAYER_HYBRID]},
 
-    {"ID": LAYER_MAP,       "TextID": "ymap",  "serviceName":MAP_SERVERS[YAHOO],
+    {"ID": LAYER_MAP, "IDM": 4, "TextID": "ymap",  "serviceName":MAP_SERVERS[YAHOO],
             "layerDir": "yahoomap", "layerName": LAYER_NAMES[LAYER_MAP] },
-    {"ID": LAYER_SATELLITE, "TextID": "yter",  "serviceName":MAP_SERVERS[YAHOO],
+    {"ID": LAYER_SATELLITE, "IDM": 5, "TextID": "yter",  "serviceName":MAP_SERVERS[YAHOO],
             "layerDir": "yahooter", "layerName": LAYER_NAMES[LAYER_SATELLITE] },
-    {"ID": LAYER_HYBRID,    "TextID": "yhyb",  "serviceName":MAP_SERVERS[YAHOO],
+    {"ID": LAYER_HYBRID, "IDM": 6, "TextID": "yhyb",  "serviceName":MAP_SERVERS[YAHOO],
             "layerDir": "yahoohyb", "layerName": LAYER_NAMES[LAYER_HYBRID] },
 
-    {"ID": LAYER_MAP,       "TextID": "vemap", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
+    {"ID": LAYER_MAP, "IDM": 7, "TextID": "vemap", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
             "layerDir": "vemap",    "layerName": LAYER_NAMES[LAYER_MAP] },
-    {"ID": LAYER_SATELLITE, "TextID": "vesat", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
+    {"ID": LAYER_SATELLITE, "IDM": 8, "TextID": "vesat", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
             "layerDir": "vesat",    "layerName": LAYER_NAMES[LAYER_SATELLITE] },
-    {"ID": LAYER_TERRAIN,   "TextID": "veter", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
+    {"ID": LAYER_TERRAIN, "IDM": 9, "TextID": "veter", "serviceName":MAP_SERVERS[VIRTUAL_EARTH],
             "layerDir": "veter",    "layerName": LAYER_NAMES[LAYER_TERRAIN] },
 
-    {"ID": LAYER_MAP,       "TextID": "osmmap", "serviceName":MAP_SERVERS[OSM],
+    {"ID": LAYER_MAP, "IDM": 10, "TextID": "osmmap", "serviceName":MAP_SERVERS[OSM],
             "layerDir": "osmTiles", "layerName": ""},
-    {"ID": LAYER_MAP,       "TextID": "cmmap",  "serviceName":MAP_SERVERS[CLOUDMADE],
+    {"ID": LAYER_MAP, "IDM": 11, "TextID": "cmmap",  "serviceName":MAP_SERVERS[CLOUDMADE],
             "layerDir": "cloudmadeTiles", "layerName": "" },
-    {"ID": LAYER_MAP,       "TextID": "ifwmap", "serviceName":MAP_SERVERS[INFO_FREEWAY],
+    {"ID": LAYER_MAP, "IDM": 12, "TextID": "ifwmap", "serviceName":MAP_SERVERS[INFO_FREEWAY],
             "layerDir": "ifwTiles", "layerName": "" },
-    {"ID": LAYER_MAP,       "TextID": "ocmmap", "serviceName":MAP_SERVERS[OPENCYCLEMAP],
+    {"ID": LAYER_MAP, "IDM": 13, "TextID": "ocmmap", "serviceName":MAP_SERVERS[OPENCYCLEMAP],
             "layerDir": "ocmTiles", "layerName": ""},
-    {"ID": LAYER_MAP,       "TextID": "gmmmap", "serviceName":MAP_SERVERS[GOOGLE_MAKER],
+    {"ID": LAYER_MAP, "IDM": 14, "TextID": "gmmmap", "serviceName":MAP_SERVERS[GOOGLE_MAKER],
             "layerDir": "gmmTiles", "layerName": "" },
-    {"ID": LAYER_MAP,       "TextID": "yandexmap", "serviceName":MAP_SERVERS[YANDEX],
+    {"ID": LAYER_MAP, "IDM": 15, "TextID": "yandexmap", "serviceName":MAP_SERVERS[YANDEX],
             "layerDir": "yandexTiles", "layerName": "" },
     #Seznam.cz base
-    {"ID": LAYER_MAP, "TextID": "seznam_base", "serviceName": MAP_SERVERS[SEZNAM],
+    {"ID": LAYER_MAP, "IDM": 16, "TextID": "seznam_base", "serviceName": MAP_SERVERS[SEZNAM],
             "layerDir": "seznambase", "layerName": "Mapa" },
-    {"ID": LAYER_SATELLITE, "TextID": "seznam_satellite", "serviceName":MAP_SERVERS[SEZNAM],
+    {"ID": LAYER_SATELLITE, "IDM": 17, "TextID": "seznam_satellite", "serviceName":MAP_SERVERS[SEZNAM],
             "layerDir": "seznamsat", "layerName": "Letecká" },
-    {"ID": LAYER_TERRAIN, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM],
+    {"ID": LAYER_TERRAIN, "IDM": 18, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM],
             "layerDir": "seznamter", "layerName": "Stínování" },
-    {"ID": LAYER_HYBRID, "TextID": "seznam_hybrid", "serviceName": MAP_SERVERS[SEZNAM],
+    {"ID": LAYER_HYBRID, "IDM": 19, "TextID": "seznam_hybrid", "serviceName": MAP_SERVERS[SEZNAM],
             "layerDir": "seznamhybrid", "layerName": "Popisy" },
     #Seznam.cz hiking
     # it seems that hybrid layers work only with satelitte maps, that's why the map seznam_hiking
     # is marked as satellite - I want to combine it with layer seznam_hiking_routes
-    {"ID": LAYER_SATELLITE, "TextID": "seznam_hiking", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
+    {"ID": LAYER_SATELLITE, "IDM": 20, "TextID": "seznam_hiking", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
             "layerDir": "seznamhiking", "layerName": "Mapa" },
-    {"ID": LAYER_TERRAIN, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
+    {"ID": LAYER_TERRAIN, "IDM": 21, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
             "layerDir": "seznamter", "layerName": "Stínování" },
-    {"ID": LAYER_HYBRID, "TextID": "seznam_hiking_routes", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
+    {"ID": LAYER_HYBRID, "IDM": 22, "TextID": "seznam_hiking_routes", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
             "layerDir": "seznamhikingroutes", "layerName": "Trasy" },
     #Seznam.cz cyclo
     # it seems that hybrid layers work only with satelitte maps, that's why the map seznam_cyclo
     # is marked as satellite - I want to combine it with layer seznam_cyclo_routes
-    {"ID": LAYER_SATELLITE, "TextID": "seznam_cyclo", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
+    {"ID": LAYER_SATELLITE, "IDM": 23, "TextID": "seznam_cyclo", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
             "layerDir": "seznamcyclo", "layerName": "Mapa" },
-    {"ID": LAYER_TERRAIN, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
+    {"ID": LAYER_TERRAIN, "IDM": 24, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
             "layerDir": "seznamter", "layerName": "Stínování" },
-    {"ID": LAYER_HYBRID, "TextID": "seznam_cyclo_routes", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
+    {"ID": LAYER_HYBRID, "IDM": 25, "TextID": "seznam_cyclo_routes", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
             "layerDir": "seznamcycloroutes", "layerName": "Trasy" },
     #Seznam.cz historical
     # it seems that hybrid layers work only with satelitte maps, that's why the map seznam_hist
     # is marked as satellite - I want to combine it with layer seznam_hybrid
-    {"ID": LAYER_SATELLITE, "TextID": "seznam_hist", "serviceName": MAP_SERVERS[SEZNAM_HIST],
+    {"ID": LAYER_SATELLITE, "IDM": 26, "TextID": "seznam_hist", "serviceName": MAP_SERVERS[SEZNAM_HIST],
             "layerDir": "seznamhist", "layerName": "Mapa" },
-    {"ID": LAYER_TERRAIN, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_HIST],
+    {"ID": LAYER_TERRAIN, "IDM": 27, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_HIST],
             "layerDir": "seznamter", "layerName": "Stínování" },
-    {"ID": LAYER_HYBRID, "TextID": "seznam_hybrid", "serviceName": MAP_SERVERS[SEZNAM_HIST],
+    {"ID": LAYER_HYBRID, "IDM": 28, "TextID": "seznam_hybrid", "serviceName": MAP_SERVERS[SEZNAM_HIST],
             "layerDir": "seznamhybrid", "layerName": "Popisy" },
 ]
 HYB_SAT_LAYER_OFFSETS = {"Google": 2, "Yahoo": 1, MAP_SERVERS[SEZNAM]: 2, MAP_SERVERS[SEZNAM_HIKING]: 2, MAP_SERVERS[SEZNAM_CYCLO]: 2, MAP_SERVERS[SEZNAM_HIST]: 2}
