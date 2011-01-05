@@ -331,7 +331,7 @@ class TilesRepositorySQLite3(TilesRepository):
             pixbuf = self.tile_cache[filename]
         else:
             #
-            dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["ID"], coord[2], (coord[0],coord[1]) )
+            dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0],coord[1]) )
             if dbrow is None:
                 pixbuf = self.missingPixbuf
             else:
@@ -376,7 +376,7 @@ class TilesRepositorySQLite3(TilesRepository):
         filename = self.coord_to_path(coord, layer)
         if filename in self.tile_cache:
             return True
-        dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["ID"], coord[2], (coord[0],coord[1]) )
+        dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0],coord[1]) )
         if dbrow is None:
             return False
         else:
@@ -416,7 +416,7 @@ class TilesRepositorySQLite3(TilesRepository):
             log.debug("Tile '%s' is retrieved from cache." % (filename,))
             return True
 
-        dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["ID"], coord[2], (coord[0],coord[1]) )
+        dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0],coord[1]) )
         if dbrow is not None:
             try:
                 self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[5])
@@ -432,12 +432,12 @@ class TilesRepositorySQLite3(TilesRepository):
         # donwload data
         try:
             oa_data = self.mapServ_inst.get_tile_from_coord(coord, layer, conf)
-            log.debug("Storing tile into DB: %i, %i, xy: %i, %i" % (MAP_SERVICES[layer]["ID"], coord[2], coord[0], coord[1]) )
+            log.debug("Storing tile into DB: %i, %i, xy: %i, %i" % (MAP_SERVICES[layer]["IDM"], coord[2], coord[0], coord[1]) )
             try:
                 self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[SQL_IDX_IMG])
             except:
                 pass
-            self.sqlite3func.store_tile( MAP_SERVICES[layer]["ID"], coord[2], (coord[0], coord[1]), int( time.time() ), oa_data )
+            self.sqlite3func.store_tile( MAP_SERVICES[layer]["IDM"], coord[2], (coord[0], coord[1]), int( time.time() ), oa_data )
             return True
 
         except KeyboardInterrupt:
@@ -449,7 +449,7 @@ class TilesRepositorySQLite3(TilesRepository):
 
 
     def get_plain_tile(self, coord, layer):
-        dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["ID"], coord[2], (coord[0],coord[1]) )
+        dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0],coord[1]) )
         if dbrow is not None:
             return dbrow[5]
         raise tileNotInRepository( str( (coord,layer) ) )
@@ -457,8 +457,8 @@ class TilesRepositorySQLite3(TilesRepository):
 
     def store_plain_tile(self, coord, layer, tiledata):
         if self.is_tile_in_local_repos(coord, layer):
-            self.sqlite3func.delete_tile(MAP_SERVICES[layer]["ID"], coord[2], (coord[0], coord[1]) )
-        self.sqlite3func.store_tile( MAP_SERVICES[layer]["ID"], coord[2], (coord[0], coord[1]), int( time.time() ), tiledata )
+            self.sqlite3func.delete_tile(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0], coord[1]) )
+        self.sqlite3func.store_tile( MAP_SERVICES[layer]["IDM"], coord[2], (coord[0], coord[1]), int( time.time() ), tiledata )
     
     
 
