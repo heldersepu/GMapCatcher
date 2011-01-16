@@ -97,7 +97,7 @@ MAP_SERVICES = [
     # is marked as satellite - I want to combine it with layer seznam_hiking_routes
     {"ID": LAYER_SATELLITE, "IDM": 20, "TextID": "seznam_hiking", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
             "layerDir": "seznamhiking", "layerName": "Mapa" },
-    {"ID": LAYER_TERRAIN, "IDM": 21, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
+    {"ID": LAYER_TERRAIN, "IDM": 18, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
             "layerDir": "seznamter", "layerName": "Stínování" },
     {"ID": LAYER_HYBRID, "IDM": 22, "TextID": "seznam_hiking_routes", "serviceName": MAP_SERVERS[SEZNAM_HIKING],
             "layerDir": "seznamhikingroutes", "layerName": "Trasy" },
@@ -106,7 +106,7 @@ MAP_SERVICES = [
     # is marked as satellite - I want to combine it with layer seznam_cyclo_routes
     {"ID": LAYER_SATELLITE, "IDM": 23, "TextID": "seznam_cyclo", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
             "layerDir": "seznamcyclo", "layerName": "Mapa" },
-    {"ID": LAYER_TERRAIN, "IDM": 24, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
+    {"ID": LAYER_TERRAIN, "IDM": 18, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
             "layerDir": "seznamter", "layerName": "Stínování" },
     {"ID": LAYER_HYBRID, "IDM": 25, "TextID": "seznam_cyclo_routes", "serviceName": MAP_SERVERS[SEZNAM_CYCLO],
             "layerDir": "seznamcycloroutes", "layerName": "Trasy" },
@@ -115,7 +115,7 @@ MAP_SERVICES = [
     # is marked as satellite - I want to combine it with layer seznam_hybrid
     {"ID": LAYER_SATELLITE, "IDM": 26, "TextID": "seznam_hist", "serviceName": MAP_SERVERS[SEZNAM_HIST],
             "layerDir": "seznamhist", "layerName": "Mapa" },
-    {"ID": LAYER_TERRAIN, "IDM": 27, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_HIST],
+    {"ID": LAYER_TERRAIN, "IDM": 18, "TextID": "seznam_terrain", "serviceName": MAP_SERVERS[SEZNAM_HIST],
             "layerDir": "seznamter", "layerName": "Stínování" },
     {"ID": LAYER_HYBRID, "IDM": 28, "TextID": "seznam_hybrid", "serviceName": MAP_SERVERS[SEZNAM_HIST],
             "layerDir": "seznamhybrid", "layerName": "Popisy" },
