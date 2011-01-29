@@ -347,7 +347,10 @@ class TilesRepositorySQLite3(TilesRepository):
 
     # PUBLIC
     def remove_old_tile(self, coord, layer, filename=None, intSeconds=86400):
-        dbrow = self.sqlite3func.get_tile_row(type, coord[2], (coord[0],coord[1]) )
+        """not used anymore?! don't know about it. But repoFS and repoMGMaps got rid of this
+        methods.
+        """
+        dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0],coord[1]) )
 
         # TODO: should be OK, but test properly
         if dbrow[SQL_IDX_TSTAMP] >= (int( time.time() ) - intSeconds):
@@ -359,7 +362,7 @@ class TilesRepositorySQLite3(TilesRepository):
                 pass
             return False
 
-        dbres = self.sqlite3func.delete_tile(type, coord[2], (coord[0],coord[1]) )
+        dbres = self.sqlite3func.delete_tile(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0],coord[1]) )
         a = dbres
         try:
             if filename is None:
@@ -406,24 +409,28 @@ class TilesRepositorySQLite3(TilesRepository):
         # remove tile only when online
         filename = self.coord_to_path(coord, layer)
         if (force_update and online):
-            self.remove_old_tile(coord, layer, filename)
+            # force update = delete tile from repository and download new version
+            #self.remove_old_tile(coord, layer, filename)
+            dbres = self.sqlite3func.delete_tile(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0],coord[1]) )
             # if in remove_old_tile tile_cache is populated if tile is not too old
             if filename in self.tile_cache:
                 del self.tile_cache[ filename ]
                 log.debug("Tile '%s' is deleted from cache." % (filename,))
 
-        if filename in self.tile_cache:
-            log.debug("Tile '%s' is retrieved from cache." % (filename,))
-            return True
-
-        dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0],coord[1]) )
-        if dbrow is not None:
-            try:
-                self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[5])
-                log.debug("Tile '%s' is stored to cache." % (filename,))
-            except:
-                pass
-            return True
+        else:
+            # we don't have to download tile from internet
+            if filename in self.tile_cache:
+                log.debug("Tile '%s' is retrieved from cache." % (filename,))
+                return True
+    
+            dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0],coord[1]) )
+            if dbrow is not None:
+                try:
+                    self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[5])
+                    log.debug("Tile '%s' is stored to cache." % (filename,))
+                except:
+                    pass
+                return True
 
         if not online:
             return False
