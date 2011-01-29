@@ -6,14 +6,6 @@
 # - constructor requires MapServ instance, because method
 #  'get_tile_from_coord' is provided in the MapServ
 #
-# - this module is not used directly. It is used via MapServ() methods:
-#    def finish(self):
-#    def load_pixbuf(self, coord, layer, force_update):
-#    def do_export(self, tcoord, layer, online, mapServ, styleID, size):
-#    def remove_old_tile(self, coord, layer, filename=None, interval=86400):
-#    def is_tile_in_local_repos(self, coord, layer):
-#    def set_repository_path(self, newpath):
-# - module is finalized from MapServ.finish() method
 
 
 import os
