@@ -97,7 +97,7 @@ class TilesRepositoryFS(TilesRepository):
     def get_plain_tile(self, coord, layer):
         if not self.is_tile_in_local_repos(coord, layer):
             raise tileNotInRepository( str( (coord,layer) ) )
-        
+
         filename = self.coord_to_path(coord, layer)
         thefile = open(filename, 'rb')
         ret = thefile.read()
@@ -109,7 +109,7 @@ class TilesRepositoryFS(TilesRepository):
         file = open( filename, 'wb' )
         file.write( tiledata )
         file.close()
-        
+
 
 
     ## Return the absolute path to a tile
