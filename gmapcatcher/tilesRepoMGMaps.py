@@ -27,7 +27,7 @@ class TilesRepositoryMGMaps(TilesRepository):
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
         self.lock = Lock()
-        self.missingPixbuf = mapPixbuf.missing()        
+        self.missingPixbuf = mapPixbuf.missing()
 
     def finish(self):
         # last command in finish
@@ -98,14 +98,14 @@ class TilesRepositoryMGMaps(TilesRepository):
     def get_plain_tile(self, coord, layer):
         if not self.is_tile_in_local_repos(coord, layer):
             raise tileNotInRepository( str( (coord,layer) ) )
-        
+
         filename = self.coord_to_path(coord, layer)
         thefile = open(filename, 'rb')
         ret = thefile.read()
         thefile.close()
         return ret
 
-    
+
     def store_plain_tile(self, coord, layer, tiledata):
         filename = self.coord_to_path_checkdirs(coord, layer);
         file = open( filename, 'wb' )
@@ -115,8 +115,8 @@ class TilesRepositoryMGMaps(TilesRepository):
 
     ## Calculate the hash
     def calc_v2_hash(self, x, y, hash_size=97):
-        return str((x * 256 + y) % hash_size)            
-        
+        return str((x * 256 + y) % hash_size)
+
     ## Return the absolute path to a tile
     #  only check path
     #  tile_coord = (tile_X, tile_Y, zoom_level)
@@ -124,7 +124,7 @@ class TilesRepositoryMGMaps(TilesRepository):
     #  \MGMapsCache\YahooMap_1\63\1_1.mgm
     def coord_to_path(self, tile_coord, layer):
         return os.path.join(
-            self.configpath,            
+            self.configpath,
             "Yahoo" + MAP_SERVICES[layer]["layerName"][:3] + \
             "_" + str(MAP_MAX_ZOOM_LEVEL - tile_coord[2]),
             self.calc_v2_hash(tile_coord[0], tile_coord[1]),
@@ -136,7 +136,7 @@ class TilesRepositoryMGMaps(TilesRepository):
         self.lock.acquire()
         path = fileUtils.check_dir(self.configpath)
         path = fileUtils.check_dir(
-            path, 
+            path,
             "Yahoo" + MAP_SERVICES[layer]["layerName"][:3] + \
             "_" + str(MAP_MAX_ZOOM_LEVEL - tile_coord[2])
         )

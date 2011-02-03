@@ -75,7 +75,7 @@ class SQLite3Thread(Thread):
         if not os.path.isdir(url_dir):
             log.debug("Creating directories for %s" % (self.dburl, ) )
             os.makedirs(url_dir)
-            
+
         log.debug("Initializing instance %s" % (self.dburl, ) )
 
 
@@ -222,7 +222,7 @@ class SQLite3Funcs():
 
     def restart_thread(self, url_dir, url_filename):
         url = os.path.join(url_dir, url_filename)
-        
+
         log.debug("Restarting thread with url '%s'" % (str(url), ) )
         if self.sql_thread is not None:
             if self.sql_thread.isAlive():
@@ -414,7 +414,7 @@ class TilesRepositorySQLite3(TilesRepository):
             if filename in self.tile_cache:
                 log.debug("Tile '%s' is retrieved from cache." % (filename,))
                 return True
-    
+
             dbrow = self.sqlite3func.get_tile_row(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0],coord[1]) )
             if dbrow is not None:
                 try:
@@ -458,8 +458,8 @@ class TilesRepositorySQLite3(TilesRepository):
         if self.is_tile_in_local_repos(coord, layer):
             self.sqlite3func.delete_tile(MAP_SERVICES[layer]["IDM"], coord[2], (coord[0], coord[1]) )
         self.sqlite3func.store_tile( MAP_SERVICES[layer]["IDM"], coord[2], (coord[0], coord[1]), int( time.time() ), tiledata )
-    
-    
+
+
 
     ## Return the absolute path to a tile
     #  only check path

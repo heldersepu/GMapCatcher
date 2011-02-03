@@ -24,7 +24,7 @@ class TilesRepository:
         self.finished = False
         self.configpath = configpath
         log.debug( "Init tiles repository: %s, %s" % (str(self.__class__.__name__), str(self.configpath) ) )
-        
+
 
     def finish(self):
         self.finished = True
@@ -38,7 +38,7 @@ class TilesRepository:
 
     def get_plain_tile(self, coord, layer):
         raise NotImplementedException()
-    
+
     def store_plain_tile(self, coord, layer, tiledata):
         raise NotImplementedException()
 
