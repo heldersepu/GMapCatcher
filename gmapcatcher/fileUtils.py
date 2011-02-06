@@ -15,7 +15,7 @@ def read_file(strInfo, filePath):
         for line in file:
             try:
                 # the file should be in UTF-8, so decoding is needed
-                line = line.decode("UTF-8") 
+                line = line.decode("UTF-8")
                 if (line[0] != '#'):
                     m = p.search(line)
                     if m:
@@ -136,14 +136,20 @@ def del_file(filename):
     except:
         pass
 
-## Remove file if is older than given time
+## Check if the file is older than given time
 #  (24h * 3600s/h) = 86400s
-def delete_old(filename, intDays):
+def is_old(filename, intDays):
     if os.path.isfile(filename):
         if (int(time() - os.path.getmtime(filename)) > (86400 * intDays)):
-            try:
-                os.remove(filename)
-                return True
-            except:
-                pass
+            return True
+    return False
+
+## Remove file if is older than given time
+def delete_old(filename, intDays):
+    if is_old(filename, intDays):
+        try:
+            os.remove(filename)
+            return True
+        except:
+            pass
     return False
