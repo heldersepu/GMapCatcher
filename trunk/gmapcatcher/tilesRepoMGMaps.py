@@ -68,7 +68,9 @@ class TilesRepositoryMGMaps(TilesRepository):
                         online, force_update, conf):
         filename = self.coord_to_path(coord, layer)
         # remove tile only when online
-        remove_tile = (force_update and online)
+        remove_tile = False
+        if (force_update and online):
+            remove_tile = fileUtils.is_old(filename, conf.force_update_days)
 
         if os.path.isfile(filename) and not remove_tile:
             return True
