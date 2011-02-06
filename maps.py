@@ -745,7 +745,7 @@ class MainWindow(gtk.Window):
         self.ctx_map.do_export(
             self.tPoint, self.expZoom.get_value_as_int(), self.layer,
             not self.cb_offline.get_active(), self.conf,
-            (self.sbWidth.get_value(), self.sbHeight.get_value()),
+            (self.sbWidth.get_value_as_int(), self.sbHeight.get_value_as_int()),
             gui_callback(self.export_done)
         )
 
