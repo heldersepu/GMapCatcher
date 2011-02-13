@@ -109,8 +109,8 @@ class MapConf():
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int)
         ## default increment for gps track saving
         self.gps_increment = read_config('gps_increment', GPS_INCREMENT, int)
-        ## Map service to get images, default is Google
-        self.map_service = read_config('map_service', MAP_SERVERS[GOOGLE], str)
+        ## Map service to get images, default is Yahoo
+        self.map_service = read_config('map_service', MAP_SERVERS[YAHOO], str)
         ## URL with the latest version used for the notification updates.
         self.version_url = read_config('version_url',
             'http://gmapcatcher.googlecode.com/svn/wiki/version.wiki', str)

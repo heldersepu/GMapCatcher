@@ -94,10 +94,10 @@ class ChangeTheme():
         hbox.pack_start(lbl("Select your favorite map service: "))
         self.cmb_service = gtk.combo_box_new_text()
         intActive = 0
-        for intPos in range(len(MAP_SERVERS)):
+        for intPos in range(1, len(MAP_SERVERS)):
             self.cmb_service.append_text(MAP_SERVERS[intPos])
             if MAP_SERVERS[intPos] == map_service:
-                intActive = intPos
+                intActive = intPos - 1
         self.cmb_service.set_active(intActive)
         hbox.pack_start(self.cmb_service)
         vbox.pack_start(hbox)
