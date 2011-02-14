@@ -34,7 +34,7 @@ class ChangeTheme():
         memtype = conf.oneDirPerMap
         memscale = conf.scale_visible
         conf.oneDirPerMap = int(self.cb_oneDirPerMap.get_active())
-        conf.map_service = MAP_SERVERS[self.cmb_service.get_active()]
+        conf.map_service = MAP_SERVERS[self.cmb_service.get_active()+1]
         conf.scale_visible = self.cb_view_scale.get_active()
         conf.save()
         if memservice != conf.map_service or memtype != conf.oneDirPerMap:
