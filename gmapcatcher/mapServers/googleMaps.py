@@ -45,24 +45,15 @@ def json_dumps(string):
 def parse_start_page(layer, html, conf):
     end_str = '&src=' + conf.google_src + '&hl=' + conf.language + '&x=%i&y=%i&z=%i'
 
-    # we first check the existence of the baseUrl in insertTiles
     hybrid = ''
     if layer == LAYER_HYBRID:
         hybrid = 'Hybrid'
-    uPattern = 'insertTiles.e."inlineTiles' + hybrid + '.*zoom,."(.*?)",'
-    p = re.compile(uPattern)
-    match = p.search(html)
-    if match:
-        baseUrl = json_dumps(match.group(1))
-        baseUrl = baseUrl.replace('&hl=en&', '', 1)
-        baseUrl = baseUrl.replace('0.', '%d.', 1)
-        baseUrl = baseUrl.replace('"', '')
-        return baseUrl + end_str
 
-    # List of patterns add more as needed
-    paList = ['http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v=([a-z0-9.]+)&',
-              'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]lyrs=([a-z@0-9.]+)&',
-              'http://([a-z]{2,3})[0-9].google.com/([a-z]+)[?/]v\\\\x3d([a-z0-9.]+)\\\\x26']
+    # List of patterns add more as needed    
+    paList = [
+        '<div id=inlineTiles' + hybrid + ' dir=ltr>' +
+        '<img src="http://([a-z]{2,3})[0-9].google.com/(.+?)&'
+    ]
     for srtPattern in paList:
         p = re.compile(srtPattern)
         match = p.search(html)
@@ -71,7 +62,7 @@ def parse_start_page(layer, html, conf):
         print "Cannot parse result"
         return None
 
-    return 'http://%s%%d.google.com/%s/v=%s' % tuple(match.groups()) + end_str
+    return 'http://%s%%d.google.com/%s' % tuple(match.groups()) + end_str
 
 
 def set_zoom(intZoom):
