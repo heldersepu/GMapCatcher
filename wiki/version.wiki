@@ -1,1 +1,1 @@
-0.7.5.0	http://gmapcatcher.googlecode.com/files/GMapCatcher-0.7.5.0.exe
+0.7.6.0	http://gmapcatcher.googlecode.com/files/GMapCatcher-0.7.5.0.exe
