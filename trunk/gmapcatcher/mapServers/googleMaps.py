@@ -95,7 +95,9 @@ def search_location(location):
         else:
             encoding = "ASCII"
         # List of patterns to look for the location name
-        paList = ['laddr:"([^"]+)"',
+        paList = ["laddr:'([^']+)'",
+                  "daddr:'([^']+)'",  
+                  'laddr:"([^"]+)"',
                   'daddr:"([^"]+)"']
         for srtPattern in paList:
             p = re.compile(srtPattern)
