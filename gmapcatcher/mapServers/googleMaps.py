@@ -46,7 +46,7 @@ def parse_start_page(layer, html, conf):
     end_str = '&src=' + conf.google_src + '&hl=' + conf.language + '&x=%i&y=%i&z=%i'
 
     hybrid = ''
-    if layer == LAYER_HYBRID:
+    if layer == LAYER_HYB:
         hybrid = 'Hybrid'
 
     # List of patterns add more as needed    

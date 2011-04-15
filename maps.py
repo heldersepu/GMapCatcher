@@ -887,9 +887,9 @@ class MainWindow(gtk.Window):
             if self.downloading <= 0:
                 self.hide_dlfeedback = True
                 self.drawing_area.repaint()
-        hybridsat = (self.layer == LAYER_HYBRID and layer == LAYER_SATELLITE) or \
-                (MAP_SERVICES[self.layer]['ID'] == LAYER_HYBRID and \
-                MAP_SERVICES[layer]['ID'] == LAYER_SATELLITE)
+        hybridsat = (self.layer == LAYER_HYB and layer == LAYER_SAT) or \
+                (MAP_SERVICES[self.layer]['ID'] == LAYER_HYB and \
+                MAP_SERVICES[layer]['ID'] == LAYER_SAT)
         if (self.layer == layer or hybridsat) and self.get_zoom() == tile_coord[2]:
             da = self.drawing_area
             rect = da.get_allocation()
@@ -897,7 +897,7 @@ class MainWindow(gtk.Window):
             if xy:
                 # here we keep a list of all foreground tiles that turn up
                 # when there is no corresponding background tile yet
-                if layer == LAYER_HYBRID:
+                if layer == LAYER_HYB:
                     if tile_coord not in self.background:
                         self.foreground.append(tile_coord)
                     else:
@@ -912,7 +912,7 @@ class MainWindow(gtk.Window):
                 force_update = self.cb_forceupdate.get_active()
                 img = self.ctx_map.load_pixbuf(tile_coord, layer, force_update)
                 if hybridsat:
-                    img2 = self.ctx_map.load_pixbuf(tile_coord, LAYER_HYBRID,
+                    img2 = self.ctx_map.load_pixbuf(tile_coord, LAYER_HYB,
                                                     force_update)
                 for x,y in xy:
                     da.window.draw_pixbuf(gc, img, 0, 0, x, y,
@@ -1011,11 +1011,11 @@ class MainWindow(gtk.Window):
         if keyval in [77, 109]:
             self.cmb_layer.set_active(LAYER_MAP)
         elif keyval in [83, 115]:
-            self.cmb_layer.set_active(LAYER_SATELLITE)
+            self.cmb_layer.set_active(LAYER_SAT)
         elif keyval in [84, 116]:
-            self.cmb_layer.set_active(LAYER_TERRAIN)
+            self.cmb_layer.set_active(LAYER_TER)
         elif keyval in [72, 104]:
-            self.cmb_layer.set_active(LAYER_HYBRID)
+            self.cmb_layer.set_active(LAYER_HYB)
 
     ## Handles the Key pressing
     def key_press_event(self, w, event):
@@ -1096,7 +1096,7 @@ class MainWindow(gtk.Window):
         gtk.gdk.threads_leave()
         if self.conf.save_at_close:
             # this accounts for when the oneDirPerMap setting has recently changed
-            if self.conf.oneDirPerMap or self.layer <= LAYER_HYBRID:
+            if self.conf.oneDirPerMap or self.layer <= LAYER_HYB:
                 self.conf.save_layer = self.layer
             else:
                 self.conf.save_layer = MAP_SERVICES[self.layer]['ID']
