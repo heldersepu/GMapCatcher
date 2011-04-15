@@ -97,13 +97,13 @@ class MapServ:
         #print
         try:
             if not conf.oneDirPerMap:
-                if conf.map_service == MAP_SERVERS[VIRTUAL_EARTH] and (layer != LAYER_TERRAIN):
+                if conf.map_service == MAP_SERVERS[VIRTUAL_EARTH] and (layer != LAYER_TER):
                     return virtualEarth.get_url(self.mt_counter, coord, layer)
                 elif conf.map_service == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
                     return openStreetMaps.get_url(self.mt_counter, coord)
                 elif conf.map_service == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
                     return cloudMade.get_url(self.mt_counter, coord, conf.cloudMade_styleID)
-                elif conf.map_service == MAP_SERVERS[YAHOO] and (layer != LAYER_TERRAIN):
+                elif conf.map_service == MAP_SERVERS[YAHOO] and (layer != LAYER_TER):
                     return yahoo.get_url(self.mt_counter, coord, layer)
                 elif conf.map_service == MAP_SERVERS[INFO_FREEWAY] and (layer == LAYER_MAP):
                     return informationFreeway.get_url(self.mt_counter, coord)
