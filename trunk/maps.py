@@ -429,9 +429,13 @@ class MainWindow(gtk.Window):
                     if kv['serviceName'] == self.conf.map_service and kv['ID'] == w:
                         self.cmb_layer.append_text(LAYER_NAMES[w])
         if (not self.conf.oneDirPerMap):
-            self.cmb_layer.set_active(
+            if self.layer in NON_ONEDIR_COMBO_INDICES[self.conf.map_service]:
+                self.cmb_layer.set_active(
                     NON_ONEDIR_COMBO_INDICES[self.conf.map_service]
                     .index(self.layer))
+            else:
+                self.cmb_layer.set_active(0)
+                self.layer_changed(self.cmb_layer)
         else:
             self.cmb_layer.set_active(self.layer)
         self.cmb_layer.connect('changed',self.layer_changed)
