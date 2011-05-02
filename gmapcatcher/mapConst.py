@@ -8,7 +8,7 @@ IS_GTK = os.environ.get("MAPS_GTK", "False") == "True"
 import logging
 
 NAME = "GMapCatcher"
-VERSION = "0.7.6.0"
+VERSION = "0.7.6.1"
 VERSION_NAME = ""
 WEB_ADDRESS = "http://code.google.com/p/gmapcatcher/"
 
