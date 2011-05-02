@@ -1,3 +1,7 @@
+May 1 2011    H.S    <HelderSepu@gmail.com>
+    * 0.7.6.1 - At revision: 1138
+    * Fix issue wi the search (Issue 264)
+	
 March 28 2011    H.S    <HelderSepu@gmail.com>
     * 0.7.6.0 - At revision: 1130
     * Upgrade windows to use Python 2.7
