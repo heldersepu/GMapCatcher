@@ -857,7 +857,7 @@ class MainWindow(gtk.Window):
 
     def scroll_cb(self, widget, event):
         dlbool = self.visual_dlconfig.get("active", False)
-        intVal = 1 if (event.direction == gtk.gdk.SCROLL_UP) else -1
+        intVal = 1 if (event.direction != gtk.gdk.SCROLL_UP) else -1
         sz, zl = 0, 0
         if dlbool and (event.state & gtk.gdk.CONTROL_MASK):
             zl = intVal
