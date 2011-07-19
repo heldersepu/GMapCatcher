@@ -3,7 +3,7 @@
 
 = Introduction =
 
- Here you can find a list of all Tested Operating Systems, where gmapcatcher is working properly.
+ Here is a list of all Tested Operating Systems, where GMapCatcher is working properly.
 
 
 = Details =
