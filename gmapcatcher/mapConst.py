@@ -186,7 +186,7 @@ GPS_INCREMENT = 0.001
 SECTION_INIT  = 'init'
 R_EARTH = 6371.
 USER_PATH = "~"
-TILES_PATH = ".googlemaps"
+TILES_PATH = ".googlemaps" # We need a better name
 DEFAULT_PATH = USER_PATH + "/" + TILES_PATH
 
 LANGUAGES = ["en", "zh"]
