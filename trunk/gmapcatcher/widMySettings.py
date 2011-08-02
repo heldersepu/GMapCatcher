@@ -91,8 +91,7 @@ class MySettings():
 
             def set_folder(button):
                 self.cmb_repos_type.set_active(REPOS_TYPE_FILES)
-                self.entry_custom_path.set_text(
-                    os.path.join(os.path.expanduser(USER_PATH), TILES_PATH))
+                self.entry_custom_path.set_text(DEFAULT_PATH)
 
             vbox = gtk.VBox(False, 5)
             vbox.set_border_width(5)

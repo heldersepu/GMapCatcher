@@ -91,7 +91,7 @@ class MapConf():
         self.init_center = read_config('center', ((1,0),(9,200)), str_to_tuple)
 
         ## Directory path to the map images, default is "userProfile" folder
-        self.init_path = os.path.join(os.path.expanduser(USER_PATH), TILES_PATH)
+        self.init_path = DEFAULT_PATH
         strPath = read_config('path', self.init_path, str)
         if not strPath.strip().lower() in ['none', '']:
             strPath = fileUtils.check_dir(strPath)
