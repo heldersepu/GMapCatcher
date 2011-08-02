@@ -185,9 +185,11 @@ GPS_INCREMENT = 0.001
 
 SECTION_INIT  = 'init'
 R_EARTH = 6371.
-USER_PATH = "~"
-TILES_PATH = ".googlemaps" # We need a better name
-DEFAULT_PATH = USER_PATH + "/" + TILES_PATH
+
+USER_PATH = os.path.expanduser("~")
+DEFAULT_PATH = os.path.join(USER_PATH, ".googlemaps")
+if not os.path.isdir(DEFAULT_PATH):
+    DEFAULT_PATH = os.path.join(USER_PATH, ".GMapCatcher")
 
 LANGUAGES = ["en", "zh"]
 
@@ -195,5 +197,5 @@ STARTS_WITH = 0
 ENDS_WITH = 1
 CONTAINS = 2
 REGULAR_EXPRESSION = 3
-ENTRY_SUB_MENU = ['Starts With...', 'Ends With...', 
+ENTRY_SUB_MENU = ['Starts With...', 'Ends With...',
         'Contains...', 'Regular Expression...']
