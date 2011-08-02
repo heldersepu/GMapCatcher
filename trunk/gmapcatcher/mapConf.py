@@ -15,7 +15,7 @@ class MapConf():
     ## Returns the Path to the configuration file
     def get_configpath(self):
         # the config file must be found at DEFAULT_PATH
-        configpath = os.path.expanduser(DEFAULT_PATH)
+        configpath = DEFAULT_PATH
         fileUtils.check_dir(configpath)
         configpath = os.path.join(configpath, 'gmapcatcher.conf')
         return configpath
