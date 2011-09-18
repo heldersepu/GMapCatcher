@@ -174,6 +174,22 @@ class DrawingArea(gtk.DrawingArea):
             gc, screen_coord[0], screen_coord[1]
         )
 
+
+    ## Draws a line for ruler
+    def draw_line(self, gc, from_coord, to_coord, zl):
+        screen_coord = self.coord_to_screen(from_coord[0], from_coord[1], zl)
+        screen_coord1 = self.coord_to_screen(to_coord[0], to_coord[1], zl)
+        self.window.draw_line(gc, int(screen_coord[0]), int(screen_coord[1]), int(screen_coord1[0]), int(screen_coord1[1]))
+    ## Draws a circle as starting point for ruler
+    def draw_stpt(self, mcoord, zl):
+        radius = 5
+        gc = self.scale_gc
+        screen_coord = self.coord_to_screen(mcoord[0], mcoord[1], zl)
+        self.window.draw_arc(
+            gc, True, screen_coord[0] - radius, screen_coord[1] - radius,
+            radius * 2, radius * 2, 0, 360*64
+        )
+
     ## Draws an image
     def draw_image(self, screen_coord, img, width, height):
         self.window.draw_pixbuf(
@@ -220,6 +236,14 @@ class DrawingArea(gtk.DrawingArea):
                 self.draw_circle(screen_coord, gc)
             else:
                 self.draw_image(screen_coord, img, pixDim, pixDim)
+
+                # Display the Marker Name
+                self.pangolayout = self.create_pango_layout("")
+                markup_str="<span foreground=\"#ff8600\" background=\"#ffffff\" size=\"smaller\" style=\"italic\" weight=\"ultrabold\">" + marker_name + "</span>"
+                (attrs, text_str, tmp) = pango.parse_markup(markup_str)
+                self.pangolayout.set_attributes(attrs)
+                self.pangolayout.set_text(text_str)
+                self.window.draw_layout(self.style.black_gc, screen_coord[0], screen_coord[1], self.pangolayout)
 
     ## Draw the second layer of elements
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
