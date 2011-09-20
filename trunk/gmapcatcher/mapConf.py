@@ -11,7 +11,7 @@ from mapUtils import str_to_tuple
 ## Class used to read and save the configuration values
 class MapConf():
     config_path = None
-    
+
     ## Returns the Path to the configuration file
     def get_configpath(self):
         # the config file must be found at DEFAULT_PATH
@@ -65,6 +65,7 @@ class MapConf():
         config.set(SECTION_INIT, 'force_update_days', self.force_update_days)
         config.set(SECTION_INIT, 'google_src', self.google_src)
         config.set(SECTION_INIT, 'match_func', self.match_func)
+        config.set(SECTION_INIT, 'show_marker_name', self.show_marker_name)
 
         configfile = open(self.config_path, 'wb')
         config.write(configfile)
@@ -145,8 +146,10 @@ class MapConf():
         self.force_update_days = read_config('force_update_days', 1, int)
         ## Part of the URL that is used to get the google tiles
         self.google_src = read_config('google_src', '', str)
-        ## The match function to be used in the auto-completion of the entry 
+        ## The match function to be used in the auto-completion of the entry
         self.match_func = read_config('match_func', ENTRY_SUB_MENU[0], str)
+        ## Show the name/description of the marker in the map
+        self.show_marker_name = read_config('show_marker_name', False, bool)
 
     ## Write the configuration to the default file
     def save(self):
