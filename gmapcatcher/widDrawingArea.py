@@ -217,7 +217,7 @@ class DrawingArea(gtk.DrawingArea):
                 arrowtop[1] + 7 * math.sin(direction - 3 * math.pi / 4.0))
 
     ## Draws the marker
-    def draw_marker(self, mcoord, zl, img, pixDim, marker_name):
+    def draw_marker(self, conf, mcoord, zl, img, pixDim, marker_name):
         screen_coord = self.coord_to_screen(mcoord[0], mcoord[1], zl)
         if screen_coord:
             gc = self.scale_gc
@@ -236,14 +236,19 @@ class DrawingArea(gtk.DrawingArea):
                 self.draw_circle(screen_coord, gc)
             else:
                 self.draw_image(screen_coord, img, pixDim, pixDim)
+                if conf.show_marker_name:
+                    self.draw_string(screen_coord, marker_name)
 
-                # Display the Marker Name
-                self.pangolayout = self.create_pango_layout("")
-                markup_str="<span foreground=\"#ff8600\" background=\"#ffffff\" size=\"smaller\" style=\"italic\" weight=\"ultrabold\">" + marker_name + "</span>"
-                (attrs, text_str, tmp) = pango.parse_markup(markup_str)
-                self.pangolayout.set_attributes(attrs)
-                self.pangolayout.set_text(text_str)
-                self.window.draw_layout(self.style.black_gc, screen_coord[0], screen_coord[1], self.pangolayout)
+    ## Draw some text in the map
+    def draw_string(self, sc, strText):
+        pangolayout = self.create_pango_layout("")
+        (attrs, text_str, tmp) = pango.parse_markup(
+            "<span foreground=\"#ff8600\" background=\"#ffffff\" size=\"smaller\" " +
+            "style=\"italic\" weight=\"ultrabold\">" + strText + "</span>"
+        )
+        pangolayout.set_attributes(attrs)
+        pangolayout.set_text(text_str)
+        self.window.draw_layout(self.style.black_gc, sc[0], sc[1], pangolayout)
 
     ## Draw the second layer of elements
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
@@ -294,7 +299,7 @@ class DrawingArea(gtk.DrawingArea):
             for string in marker.positions.keys():
                 mpos = marker.positions[string]
                 if (zl <= mpos[2]) and (mpos[0],mpos[1]) != (coord[0],coord[1]):
-                    self.draw_marker(mpos, zl, img, pixDim, string)
+                    self.draw_marker(conf, mpos, zl, img, pixDim, string)
 
         # Draw GPS position
         if gps:
