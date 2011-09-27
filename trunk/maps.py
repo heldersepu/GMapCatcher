@@ -848,8 +848,8 @@ class MainWindow(gtk.Window):
 
         if (self.conf.status_location == STATUS_MOUSE or
            (self.conf.status_location == STATUS_GPS and not mapGPS.available)):
-            self.status_bar.pop(self.status_bar_id)
             coord = self.pointer_to_world_coord((event.x, event.y))
+            self.status_bar.pop(self.status_bar_id)
                         
             self.from_coord=(event.x, event.y)
             if (self.Ruler):
