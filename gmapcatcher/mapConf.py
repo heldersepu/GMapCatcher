@@ -54,18 +54,18 @@ class MapConf():
         config.set(SECTION_INIT, 'language', self.language)
         config.set(SECTION_INIT, 'oneDirPerMap', self.oneDirPerMap)
         config.set(SECTION_INIT, 'status_location', self.status_location)
-        config.set(SECTION_INIT, 'save_at_close', self.save_at_close)
+        config.set(SECTION_INIT, 'save_at_close', int(self.save_at_close))
         config.set(SECTION_INIT, 'save_layer', self.save_layer)
         config.set(SECTION_INIT, 'save_hlocation', self.save_hlocation)
         config.set(SECTION_INIT, 'save_vlocation', self.save_vlocation)
         config.set(SECTION_INIT, 'save_width', self.save_width)
         config.set(SECTION_INIT, 'save_height', self.save_height)
-        config.set(SECTION_INIT, 'scale_visible', self.scale_visible)
+        config.set(SECTION_INIT, 'scale_visible', int(self.scale_visible))
         config.set(SECTION_INIT, 'auto_refresh', self.auto_refresh)
         config.set(SECTION_INIT, 'force_update_days', self.force_update_days)
         config.set(SECTION_INIT, 'google_src', self.google_src)
         config.set(SECTION_INIT, 'match_func', self.match_func)
-        config.set(SECTION_INIT, 'show_marker_name', self.show_marker_name)
+        config.set(SECTION_INIT, 'show_marker_name', int(self.show_marker_name))
 
         configfile = open(self.config_path, 'wb')
         config.write(configfile)
@@ -128,7 +128,7 @@ class MapConf():
         ## status setting, default is STATUS_NONE
         self.status_location = read_config('status_location', 0, int)
         ## save width/height/layer/location at close, default is SAVE_AT_CLOSE
-        self.save_at_close = read_config('save_at_close', True, bool)
+        self.save_at_close = read_config('save_at_close', 1, int)
         ## layer when saved at close
         self.save_layer = read_config('save_layer', LAYER_MAP, int)
         ## location when saved at close
@@ -139,7 +139,7 @@ class MapConf():
         ## height when saved at close
         self.save_height = read_config('save_height', 450, int)
         ## should scale be visible
-        self.scale_visible = read_config('scale_visible', True, int)
+        self.scale_visible = read_config('scale_visible', 1, int)
         ## auto-refresh frequency in miliseconds
         self.auto_refresh = read_config('auto_refresh', 0, int)
         ## Amount of days used when user selects the Force Update
@@ -149,7 +149,8 @@ class MapConf():
         ## The match function to be used in the auto-completion of the entry
         self.match_func = read_config('match_func', ENTRY_SUB_MENU[0], str)
         ## Show the name/description of the marker in the map
-        self.show_marker_name = read_config('show_marker_name', False, bool)
+        self.show_marker_name = read_config('show_marker_name', 0, int)
+        print 
 
     ## Write the configuration to the default file
     def save(self):
