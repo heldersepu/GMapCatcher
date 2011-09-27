@@ -268,7 +268,7 @@ class DrawingArea(gtk.DrawingArea):
         self.window.draw_layout(gc, x, y, pl)
     # Show Marker Name                
     def sh_ml(self, sh_m_name):
-        self.show_marker_name = sh_m_name
+        self.disp_marker_name = sh_m_name
 
     ## Draw the second layer of elements
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
