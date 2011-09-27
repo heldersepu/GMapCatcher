@@ -18,7 +18,9 @@ ternary = lambda a,b,c : (b,c)[not a]
 class DrawingArea(gtk.DrawingArea):
     center = ((0,0),(128,128))
     draging_start = (0, 0)
-
+    disp_marker_name = False
+    pangolayout = False
+    
     def __init__(self):
         super(DrawingArea, self).__init__()
 
@@ -174,12 +176,17 @@ class DrawingArea(gtk.DrawingArea):
             gc, screen_coord[0], screen_coord[1]
         )
 
-
     ## Draws a line for ruler
-    def draw_line(self, gc, from_coord, to_coord, zl):
-        screen_coord = self.coord_to_screen(from_coord[0], from_coord[1], zl)
-        screen_coord1 = self.coord_to_screen(to_coord[0], to_coord[1], zl)
-        self.window.draw_line(gc, int(screen_coord[0]), int(screen_coord[1]), int(screen_coord1[0]), int(screen_coord1[1]))
+    def draw_line(self, gc, from_coordx, from_coordy, to_coordx, to_coordy, dist_str, zl):
+        screen_coord = self.coord_to_screen(from_coordx, from_coordy, zl)
+        screen_coord1 = self.coord_to_screen(to_coordx, to_coordy, zl)
+        x = int(screen_coord1[0])
+        y = int(screen_coord1[1])
+        self.window.draw_line(gc, int(screen_coord[0]), int(screen_coord[1]), x, y)
+        self.pangolayout = self.create_pango_layout("")
+        self.pangolayout.set_text(dist_str)
+        self.wr_pltxt(gc,x,y,self.pangolayout)(self, gc, from_coord, to_coord, zl):
+        
     ## Draws a circle as starting point for ruler
     def draw_stpt(self, mcoord, zl):
         radius = 5
@@ -236,25 +243,39 @@ class DrawingArea(gtk.DrawingArea):
                 self.draw_circle(screen_coord, gc)
             else:
                 self.draw_image(screen_coord, img, pixDim, pixDim)
-                if conf.show_marker_name:
-                    self.draw_string(screen_coord, marker_name)
-
-    ## Draw some text in the map
-    def draw_string(self, sc, strText):
-        pangolayout = self.create_pango_layout("")
-        (attrs, text_str, tmp) = pango.parse_markup(
-            "<span foreground=\"#ff8600\" background=\"#ffffff\" size=\"smaller\" " +
-            "style=\"italic\" weight=\"ultrabold\">" + strText + "</span>"
-        )
-        pangolayout.set_attributes(attrs)
-        pangolayout.set_text(text_str)
-        self.window.draw_layout(self.style.black_gc, sc[0], sc[1], pangolayout)
+                #if conf.show_marker_name:
+                if self.disp_marker_name:
+                    # Display the Marker Name
+                    gco = self.window.new_gc()
+                    gco.set_rgb_fg_color(gtk.gdk.color_parse("#00CCCC"))
+                    
+                    self.pangolayout = self.create_pango_layout("")
+                    self.pangolayout.set_text(marker_name)
+                    self.wr_pltxt(gco, screen_coord[0], screen_coord[1], self.pangolayout)
+    # Show the text
+    def wr_pltxt(self,gc,x,y,pl):
+        gc1 = self.window.new_gc()
+        gc1.line_width=2
+        gc1.set_rgb_fg_color(gtk.gdk.color_parse("#000000"))
+        self.window.draw_layout(gc1, x - 1, y - 1, pl)
+        self.window.draw_layout(gc1, x, y - 1, pl)
+        self.window.draw_layout(gc1, x + 1, y - 1, pl)
+        self.window.draw_layout(gc1, x + 1, y, pl)
+        self.window.draw_layout(gc1, x + 1, y + 1, pl)
+        self.window.draw_layout(gc1, x, y + 1, pl)
+        self.window.draw_layout(gc1, x - 1, y + 1, pl)
+        self.window.draw_layout(gc1, x - 1, y, pl)
+        self.window.draw_layout(gc, x, y, pl)
+    # Show Marker Name                
+    def sh_ml(self, sh_m_name):
+        self.show_marker_name = sh_m_name
 
     ## Draw the second layer of elements
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
                     downloading=False, visual_dlconfig = {},
                     marker=None, locations={}, entry_name="",
-                    showMarkers=False, gps=None, gps_direction=False):
+                    showMarkers=False, gps=None, gps_direction=False,
+                    segment_no=0, ruler_coordx={}, ruler_coordy={}, ruler_coordz={}):
         self.set_scale_gc()
         self.set_visualdl_gc()
         rect = self.get_allocation()
@@ -301,6 +322,29 @@ class DrawingArea(gtk.DrawingArea):
                 if (zl <= mpos[2]) and (mpos[0],mpos[1]) != (coord[0],coord[1]):
                     self.draw_marker(conf, mpos, zl, img, pixDim, string)
 
+        # Draw the Ruler lines
+        if (segment_no > 1):
+            x = 0
+            y = 1
+            gc = self.style.black_gc
+            gc.line_width=2
+            while True: # Draw lines then Text
+                if (x % 4 == 0):
+                    gc.set_rgb_fg_color(gtk.gdk.color_parse("#FF0000"))
+                elif (x % 4 == 1):
+                    gc.set_rgb_fg_color(gtk.gdk.color_parse("#00FF00"))
+                elif (x % 4 == 2):
+                    gc.set_rgb_fg_color(gtk.gdk.color_parse("#0000FF"))
+                else:
+                    gc.set_rgb_fg_color(gtk.gdk.color_parse("#FFFF00"))
+
+                dist_str = "%0.3f km" % ruler_coordz[y]
+                self.draw_line(gc, ruler_coordx[x], ruler_coordy[x], ruler_coordx[y], ruler_coordy[y], dist_str, zl)
+      
+                x = x + 1
+                y = y + 1
+                if x == segment_no : break
+                
         # Draw GPS position
         if gps:
             location = gps.get_location()
