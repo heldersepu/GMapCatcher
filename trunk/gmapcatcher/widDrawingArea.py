@@ -185,7 +185,7 @@ class DrawingArea(gtk.DrawingArea):
         self.window.draw_line(gc, int(screen_coord[0]), int(screen_coord[1]), x, y)
         self.pangolayout = self.create_pango_layout("")
         self.pangolayout.set_text(dist_str)
-        self.wr_pltxt(gc,x,y,self.pangolayout)(self, gc, from_coord, to_coord, zl):
+        self.wr_pltxt(gc,x,y,self.pangolayout)
         
     ## Draws a circle as starting point for ruler
     def draw_stpt(self, mcoord, zl):
