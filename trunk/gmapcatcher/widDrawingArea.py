@@ -338,8 +338,11 @@ class DrawingArea(gtk.DrawingArea):
                 else:
                     gc.set_rgb_fg_color(gtk.gdk.color_parse("#FFFF00"))
 
-                dist_str = "%0.3f km" % ruler_coordz[y]
-                self.draw_line(gc, ruler_coordx[x], ruler_coordy[x], ruler_coordx[y], ruler_coordy[y], dist_str, zl)
+                try : 
+                    dist_str = "%0.3f km" % ruler_coordz[y]
+                    self.draw_line(gc, ruler_coordx[x], ruler_coordy[x], ruler_coordx[y], ruler_coordy[y], dist_str, zl)
+                except:
+                    dist_str = ""
       
                 x = x + 1
                 y = y + 1
