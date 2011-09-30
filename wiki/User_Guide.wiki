@@ -108,7 +108,7 @@ All values in the tab Settings describe display properties when starting the pro
 == General ==
 || *Shortcut Key* || *Description* ||
 ||  F1            ||  Open help page ||
-||  F2            ||  Export map to image ||
+||  F2            ||  [http://code.google.com/p/gmapcatcher/wiki/User_Guide#Export_map_to_image Export map to image] ||
 ||  F4            ||  Import markers from KML file ||
 ||  F5            ||  Refresh ||
 ||  F6            ||  Hide/Show the visual path download zone ||
