@@ -93,7 +93,7 @@ http://gmapcatcher.googlecode.com/svn/wiki/visual_download.png
   One main function of the tool is to allow you to download close-up maps along a path; it gives feedback of the number of tiles downloaded/requested while downloading
 
 == Export map to image ==
-
+http://gmapcatcher.googlecode.com/svn/wiki/exportMap.PNG
 
 = Tools menu =
 == Settings ==
