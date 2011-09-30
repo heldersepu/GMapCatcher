@@ -1,8 +1,6 @@
 #labels Featured
 <font size="5">*User guide for GMapCatcher 0.7*</font>
-
 <font size="5">*Table of contents*</font> 
-
 <wiki:toc max_depth="3" />
 
 = Overview =
@@ -93,6 +91,9 @@ http://gmapcatcher.googlecode.com/svn/wiki/visual_download.png
   When you *Shift+drag* the map, then the area included in the visual download zone is queued for download, from the zoom level below the current view zoom level, to the visual download's minimum zoom level as set
   
   One main function of the tool is to allow you to download close-up maps along a path; it gives feedback of the number of tiles downloaded/requested while downloading
+
+== Export map to image ==
+
 
 = Tools menu =
 == Settings ==
