@@ -1272,8 +1272,16 @@ class MainWindow(gtk.Window):
     def gps_warning(self):
         if mapGPS.available and self.conf.map_service in NO_GPS:
             return legal_warning(self, self.conf.map_service, "gps integration")
-        return True
-
+        return True    
+    
+    def pane_notify(self, pane, gparamspec, intPos):
+        if gparamspec.name == 'position':
+            panePos = pane.get_property('position')
+            if (panePos < intPos-2):
+                pane.set_position(0)            
+            elif (panePos > intPos+2):
+                pane.set_position(intPos+2)  
+    
     def __init__(self, parent=None, config_path=None):
         self.conf = MapConf(config_path)
         self.crossPixbuf = mapPixbuf.cross()
@@ -1322,7 +1330,8 @@ class MainWindow(gtk.Window):
             self.set_icon(ico)
 
         hpaned = gtk.HPaned()
-        hpaned.pack1(self.left_panel, False, False)
+        hpaned.connect("notify", self.pane_notify, 30)
+        hpaned.pack1(self.left_panel, False, True)
         hpaned.pack2(self.__create_right_paned(), True, True)
 
         inner_vp = gtk.VPaned()
@@ -1330,7 +1339,8 @@ class MainWindow(gtk.Window):
         inner_vp.pack2(self.export_panel, False, False)
 
         vpaned = gtk.VPaned()
-        vpaned.pack1(self.top_panel, False, False)
+        vpaned.connect("notify", self.pane_notify, 89)        
+        vpaned.pack1(self.top_panel, False, True)
         vpaned.pack2(inner_vp)
 
         vbox = gtk.VBox(False, 0)
