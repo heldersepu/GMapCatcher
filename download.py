@@ -23,7 +23,7 @@ def dl_callback(*args, **kwargs):
         sys.stdout.write('\b=*')    
 
 def download(lat, lng, lat_range, lng_range, max_zl, min_zl, layer):
-    for zl in range(maz_zl, min_zl - 1, -1):
+    for zl in range(max_zl, min_zl - 1, -1):
         sys.stdout.write("\nDownloading zl %d \t" % zl)
         downloader.query_region_around_location(
             lat, lng,
