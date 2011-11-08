@@ -206,6 +206,13 @@ class MapDownloader:
                           top_left[0][1], bottom_right[0][1],
                           zoom, *args, **kwargs)
 
+    # @return number of tiles queued for download
+    def query_coordpath(self, coords, zoom, arround, *args, **kwargs):
+        ret = 0
+        for (x,y) in mapUtils.tilepath_bulk(mapUtils.coords_to_tilepath(coords, zoom), arround):
+            ret += self.query_tile((x, y, zoom), *args, **kwargs)
+        return ret
+
     def bulk_download(self, coord, zoomlevels, kmx, kmy, layer, tile_callback,
                       completion_callback, force_update=False, conf=None,
                       nodups=True):
