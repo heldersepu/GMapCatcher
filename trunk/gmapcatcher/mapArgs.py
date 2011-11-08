@@ -12,6 +12,7 @@ class MapArgs():
     lat = None
     lng = None
     location = None
+    gpx = None
     layer = LAYER_MAP
     width = 0
     height = 0
@@ -24,6 +25,7 @@ class MapArgs():
         print '  --location=   location to download'
         print '  --latitude=   Latitude of the location '
         print '  --longitude=  Longitude of the location'
+        print '  --gpx=        GPX file with a path'
         print ' '
         print '  --map         Retrieve map images (default)'
         print '  --satellite   Retrieve satellite images'
@@ -65,6 +67,8 @@ class MapArgs():
                         self.lng = float(arg[12:])
                     elif arg.startswith('--latitude='):
                         self.lat = float(arg[11:])
+                    elif arg.startswith('--gpx='):
+                        self.gpx = arg[6:]
                     elif arg.startswith('--latrange='):
                         self.lat_range = float(arg[11:])
                     elif arg.startswith('--lngrange='):

@@ -52,6 +52,52 @@ def tile_to_coord(tile, zoom):
     lat = 180.0/math.pi * math.asin(e)
     return lat, lon, zoom
 
+## Convert a list (iterable) of coords (lat,lon) into a set of tiles
+def coords_to_tilepath(coords, zoom):
+    res = set()
+    ltile = None
+    for lat,lon in coords:
+        tile = coord_to_tile((lat, lon, zoom))
+        if ltile == None:
+            res.add(tile[0])
+        elif ltile[0] == tile[0]:
+            pass
+        else:
+            a = ltile[0]
+            b = tile[0]
+            ### Adds the tile path in between
+            if a[0] == b[0]:
+                for p in range(min(a[1],b[1]), max(a[1],b[1])+1):
+                    res.add((a[0],p))
+            elif a[1] == b[1]:
+                for p in range(min(a[0],b[0]), max(a[0],b[0])+1):
+                    res.add((p,a[1]))
+            else:
+                d0 = b[0] - a[0]
+                d1 = b[1] - a[1]
+                if abs(d0) > abs(d1): # Horizontal scan
+                    for p in range(d0+1):
+                        res.add((a[0]+p,int(a[1]+float(d1*p)/float(d0)-0.5)))
+                        res.add((a[0]+p,int(a[1]+float(d1*p)/float(d0)+0.5)))
+                else:
+                    for p in range(d1+1):
+                        res.add((int(a[0]+float(d0*p)/float(d1)-0.5), a[1]+p))
+                        res.add((int(a[0]+float(d0*p)/float(d1)+0.5), a[1]+p))
+            res.add(tile[0])
+            #print tile
+        ltile = tile
+    print len(res)
+    return res
+
+def tilepath_bulk(tiles, size):
+    res = set()
+    for x,y in tiles:
+        for dx in range(-size, size+1):
+            for dy in range(-size, size+1):
+                res.add((x+dx,y+dy))
+    return res
+
+
 ## Find scale of the picture in km per pixel
 def km_per_pixel(coord):
     world_tiles = tiles_on_level(coord[2])
