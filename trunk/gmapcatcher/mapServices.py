@@ -6,6 +6,8 @@ if IS_GTK:
     import gtk
     from gobject import TYPE_STRING
 import sys
+import cStringIO
+import StringIO
 import logging
 log = logging.getLogger()
 
@@ -28,7 +30,7 @@ import mapServers.seznam as seznam
 
 from threading import Timer
 
-
+Image = None
 
 class MapServException(Exception):
     pass
@@ -209,7 +211,7 @@ class MapServ:
             return fileName
         except Exception, inst:
             return str(inst)
-
+    
     ## Export tiles to one big map
     def do_export(self, tPoint, zoom, layer, online, conf, size, callback):
         def exportThread():
@@ -219,6 +221,53 @@ class MapServ:
             callback(None, fileName)
         self.exThread = Timer(0, exportThread)
         self.exThread.start()
+
+    ## Combine tiles (or part of them) in a big PIL image
+    def do_combine_subtile(self, zoom, layer, online, conf, filename, start, size=(1,1), crop_start=(0,0), crop_size=(None, None)):
+        stx,sty = start
+        w,h = size
+        crx,cry = crop_start
+        crw,crh = crop_size
+        
+        # Test import PIL
+        global Image
+        if not Image:
+            try:
+                from PIL import Image
+            except Exception, inst:
+                return str(inst)
+        
+        # Fix cropping to have at most one tile cropped
+        d = crx/TILES_WIDTH
+        stx += d ; w -= d; crx -= d*TILES_WIDTH
+        
+        d = cry/TILES_HEIGHT
+        sty += d ; h -= d; cry -= d*TILES_HEIGHT
+        
+        if crw == None: crw = w*TILES_WIDTH - crx
+        else: w = (crx+crw+TILES_WIDTH-1) / TILES_WIDTH
+        if crh == None: crh = h*TILES_HEIGHT - cry
+        else: h = (cry+crh+TILES_HEIGHT-1) / TILES_HEIGHT
+        
+        img = Image.new("RGB", (crw, crh), (255,255,255))
+
+        for x in range(stx, stx+w):
+            for y in range(sty, sty+h):
+                if self.get_tile((x,y,zoom), layer, online, False, conf):
+                    pb = self.load_pixbuf((x,y,zoom), layer, False)
+                    tilef = StringIO.StringIO()
+                    tilef.write(pb)
+                    tilef.seek(0)
+                    tileimg = Image.open(tilef)
+
+                    px = (x-stx)*TILES_WIDTH - crx
+                    py = (y-sty)*TILES_HEIGHT - cry
+                    
+                    img.paste(tileimg, (px,py))
+                    del pb, tilef
+        img.load()
+        img.save(filename, 'PNG')
+        return filename
 
 
     def load_pixbuf(self, coord, layer, force_update):

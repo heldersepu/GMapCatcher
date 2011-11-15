@@ -378,6 +378,8 @@ class TilesRepositorySQLite3(TilesRepository):
             return True
 
     def create_pixbuf_from_data(self, data):
+        # Default result to the "data" buffer
+        pixbuf = data
         try:
             if os.environ.get('MAPS_GTK', 'False') == 'True':
                 loader = gtk.gdk.PixbufLoader()
