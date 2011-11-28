@@ -7,8 +7,6 @@
 import sys
 import gmapcatcher.mapConf as mapConf
 
-from lxml import etree
-
 from gmapcatcher.mapUtils import *
 from gmapcatcher.mapArgs import MapArgs
 from gmapcatcher.mapServices import MapServ
@@ -41,6 +39,7 @@ def download_coordpath(gpxfile, max_zl, min_zl, layer, arround=2):
         downloader.wait_all()
 
 def load_gpx_coords(gpxfile):
+    from lxml import etree
     tree = etree.parse(gpxfile)
     root = tree.getroot()
     xmlns = root.nsmap[None]
