@@ -7,7 +7,7 @@ OpenLayers.Util.onImageLoadError = function() {
 
 OpenLayers.Layer.OSM.Map = OpenLayers.Class(OpenLayers.Layer.OSM, {
     initialize: function(name, options) {
-        var url = ["http://127.0.0.1/tiles/${z}/0/${x}/0/${y}.png"];
+        var url = ["http://127.0.0.1/tiles/${z}/${x}/${y}.png"];
         options = OpenLayers.Util.extend({
             numZoomLevels: 19, buffer: 0, transitionEffect: "resize"
         }, options);
