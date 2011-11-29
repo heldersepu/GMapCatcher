@@ -19,7 +19,7 @@ class DrawingArea(gtk.DrawingArea):
     center = ((0,0),(128,128))
     draging_start = (0, 0)
     pangolayout = False
-    
+
     def __init__(self):
         super(DrawingArea, self).__init__()
 
@@ -185,7 +185,7 @@ class DrawingArea(gtk.DrawingArea):
         self.pangolayout = self.create_pango_layout("")
         self.pangolayout.set_text(dist_str)
         self.wr_pltxt(gc,x,y,self.pangolayout)
-        
+
     ## Draws a circle as starting point for ruler
     def draw_stpt(self, mcoord, zl):
         radius = 5
@@ -203,7 +203,7 @@ class DrawingArea(gtk.DrawingArea):
             screen_coord[0] - width/2, screen_coord[1] - height/2,
             width, height
         )
-        
+
     def draw_arrow(self, screen_coord, direction):
         self.set_arrow_gc()
         cos = math.cos(direction)
@@ -217,7 +217,7 @@ class DrawingArea(gtk.DrawingArea):
                 arrowtop[0], arrowtop[1],
                 arrowtop[0] + 7 * math.cos(direction + 3 * math.pi / 4.0),
                 arrowtop[1] + 7 * math.sin(direction + 3 * math.pi / 4.0))
-        self.window.draw_line(self.arrow_gc, 
+        self.window.draw_line(self.arrow_gc,
                 arrowtop[0], arrowtop[1],
                 arrowtop[0] + 7 * math.cos(direction - 3 * math.pi / 4.0),
                 arrowtop[1] + 7 * math.sin(direction - 3 * math.pi / 4.0))
@@ -246,10 +246,10 @@ class DrawingArea(gtk.DrawingArea):
                     # Display the Marker Name
                     gco = self.window.new_gc()
                     gco.set_rgb_fg_color(gtk.gdk.color_parse("#00CCCC"))
-                    
+
                     self.pangolayout = self.create_pango_layout("")
                     self.pangolayout.set_text(marker_name)
-                    self.wr_pltxt(gco, screen_coord[0], screen_coord[1], self.pangolayout)    
+                    self.wr_pltxt(gco, screen_coord[0], screen_coord[1], self.pangolayout)
 
     ## Show the text
     def wr_pltxt(self,gc,x,y,pl):
@@ -331,16 +331,16 @@ class DrawingArea(gtk.DrawingArea):
                 else:
                     gc.set_rgb_fg_color(gtk.gdk.color_parse("#FFFF00"))
 
-                try : 
+                try :
                     dist_str = "%0.3f km" % ruler_coordz[y]
                     self.draw_line(gc, ruler_coordx[x], ruler_coordy[x], ruler_coordx[y], ruler_coordy[y], dist_str, zl)
                 except:
                     dist_str = ""
-      
+
                 x = x + 1
                 y = y + 1
                 if x == segment_no : break
-                
+
         # Draw GPS position
         if gps:
             location = gps.get_location()

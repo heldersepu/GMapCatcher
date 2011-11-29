@@ -20,8 +20,6 @@ import fileUtils
 
 import sqlite3
 import threading
-import logging
-log = logging.getLogger()
 import traceback
 
 from threading import Lock, Thread
@@ -73,20 +71,13 @@ class SQLite3Thread(Thread):
         self.respcond = threading.Condition(self.resplock)
 
         if not os.path.isdir(url_dir):
-            log.debug("Creating directories for %s" % (self.dburl, ) )
             os.makedirs(url_dir)
 
-        log.debug("Initializing instance %s" % (self.dburl, ) )
-
-
     def run(self):
-
-        log.debug("Starting method run for %s" % (self.dburl,) )
         while True:
             self.event.wait()
 
             if self.finish_flag:
-                log.debug("SQLite3Thread leaving method run")
                 if not self.dbconn is None:
                     self.dbconn.close()
                 self.event.clear()
@@ -107,7 +98,6 @@ class SQLite3Thread(Thread):
 
 
     def finish_thread(self):
-        log.debug("Setting finish flag for %s" % (self.dburl, ))
         self.finish_flag = True
         self.event.set()
 
@@ -131,7 +121,6 @@ class SQLite3Thread(Thread):
     def dbconnection(self):
         if self.dbconn is None:
             #print "D:sqlite3.connect( url ): " + str(thread.get_ident())
-            log.debug("Connecting to db: " + self.dburl)
             createTable = False
             if(not os.path.isfile(self.dburl)):
                 createTable = True
@@ -153,14 +142,12 @@ class SQLite3Thread(Thread):
             qry = "SELECT  x,y,zoom,layer, tstamp, img FROM tiles WHERE zoom=%i AND x=%i AND y=%i AND layer=%i" % (zoom_level, coord[0], coord[1], layer)
         else:
             qry = "SELECT  x,y,zoom,layer, tstamp, img FROM tiles WHERE zoom=%i AND x=%i AND y=%i AND layer=%i AND tstamp<%i" % (zoom_level, coord[0], coord[1], layer, olderthan)
-        log.debug("Executing query for %s: %s" % (self.dburl, qry))
         dbcursor = self.dbcoursor()
         dbcursor.execute( qry )
         self.sql_response = dbcursor.fetchone()
 
     def store_tile(self, layer, zoom_level, coord, tstamp, data):
         qry = "INSERT INTO tiles (x,y,zoom,layer,tstamp,img)  VALUES(%i,%i,%i,%i,%i,%s)" % (coord[0], coord[1],zoom_level,layer,tstamp,"img")
-        log.debug("Executing query for %s: %s" % (self.dburl, qry))
         try:
             dbcursor = self.dbcoursor()
             dbcursor.execute( "INSERT INTO tiles (x,y,zoom,layer,tstamp,img)  VALUES(?,?,?,?,?,?)", (coord[0], coord[1],zoom_level,layer,tstamp,sqlite3.Binary(data)) )
@@ -172,13 +159,12 @@ class SQLite3Thread(Thread):
             #    - in such case missing tiles are again scheduled for donwload
             # ToDo: - solution: maintain queue tiles scheduled for download
             ei = sys.exc_info()
-            log.error( traceback.format_exception(ei[0], ei[1], ei[2]) )
+            print traceback.format_exception(ei[0], ei[1], ei[2])
             #print "Debug: " + str(sys.exc_info()[0]) + str(sys.exc_info()[1]) + str(sys.exc_info()[2])
             #pass
 
     def delete_tile(self, layer, zoom_level, coord):
         qry = "DELETE FROM tiles WHERE zoom=%i AND x=%i AND y=%i AND layer=%i" % (zoom_level, coord[0], coord[1], layer)
-        log.debug("Executing query for %s: %s" % (self.dburl, qry))
         dbcursor = self.dbcoursor()
         dbcursor.execute( qry )
         self.dbconnection().commit()
@@ -196,11 +182,8 @@ class SQLite3Thread(Thread):
 class SQLite3Funcs():
 
     def __init__(self, url_dir, url_filename):
-
         self.url = os.path.join(url_dir, url_filename)
         self.sql_thread = None
-
-        log.debug("Starting SQLite3Thread with url '%s'" % (self.url, ) )
 
         if self.sql_thread is None:
             self.sql_thread = SQLite3Thread( url_dir, url_filename )
@@ -212,25 +195,17 @@ class SQLite3Funcs():
     def finish(self):
         if self.sql_thread is None:
             return
-        log.debug("SQLite3Funcs finish started for %s" % (self.url,) )
         self.sql_thread.finish_thread()
-        log.debug("SQLite3Funcs joining SQLite3Thread for %s..." % (self.url,) )
         self.sql_thread.join()
-        log.debug("SQLite3Funcs joined for %s" % (self.url,))
         self.sql_thread = None
 
 
     def restart_thread(self, url_dir, url_filename):
         url = os.path.join(url_dir, url_filename)
-
-        log.debug("Restarting thread with url '%s'" % (str(url), ) )
         if self.sql_thread is not None:
             if self.sql_thread.isAlive():
-                log.debug("SQLite3Funcs finish started for %s" % (self.url,) )
                 self.sql_thread.finish_thread()
-                log.debug("SQLite3Funcs joining SQLite3Thread for %s..." % (self.url,) )
                 self.sql_thread.join()
-                log.debug("SQLite3Funcs joined for %s" % (self.url,))
                 self.sql_thread = None
 
         self.sql_thread = SQLite3Thread( url_dir, url_filename )
@@ -319,7 +294,6 @@ class TilesRepositorySQLite3(TilesRepository):
     def load_pixbuf(self, coord, layer, force_update):
         filename = self.coord_to_path(coord, layer)
         if (not force_update) and (filename in self.tile_cache):
-            log.debug("Tile '%s' is retrieved from cache." % (filename,))
             pixbuf = self.tile_cache[filename]
         else:
             #
@@ -330,7 +304,6 @@ class TilesRepositorySQLite3(TilesRepository):
                 try:
                     pixbuf = self.create_pixbuf_from_data(dbrow[SQL_IDX_IMG])
                     self.tile_cache[filename] = pixbuf
-                    log.debug("Tile '%s' is stored in cache." % (filename,))
                 except:
                     pixbuf = self.missingPixbuf
 
@@ -391,7 +364,6 @@ class TilesRepositorySQLite3(TilesRepository):
         except:
             #print traceback.format_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
             ei = sys.exc_info()
-            log.error( traceback.format_exception(ei[0], ei[1], ei[2]) )
             raise
         return pixbuf
 
@@ -409,19 +381,16 @@ class TilesRepositorySQLite3(TilesRepository):
             # if in remove_old_tile tile_cache is populated if tile is not too old
             if filename in self.tile_cache:
                 del self.tile_cache[ filename ]
-                log.debug("Tile '%s' is deleted from cache." % (filename,))
 
         else:
             # we don't have to download tile from internet
             if filename in self.tile_cache:
-                log.debug("Tile '%s' is retrieved from cache." % (filename,))
                 return True
 
             dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0],coord[1]) )
             if dbrow is not None:
                 try:
                     self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[5])
-                    log.debug("Tile '%s' is stored to cache." % (filename,))
                 except:
                     pass
                 return True
@@ -433,7 +402,6 @@ class TilesRepositorySQLite3(TilesRepository):
         # donwload data
         try:
             oa_data = self.mapServ_inst.get_tile_from_coord(coord, layer, conf)
-            log.debug("Storing tile into DB: %i, %i, xy: %i, %i" % (layer, coord[2], coord[0], coord[1]) )
             try:
                 self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[SQL_IDX_IMG])
             except:
@@ -445,7 +413,7 @@ class TilesRepositorySQLite3(TilesRepository):
             raise
         except:
             ei = sys.exc_info()
-            log.warning('\tdownload failed -' + str(traceback.format_exception(ei[0], ei[1], ei[2], None)) )
+            print '\tdownload failed -' + str(traceback.format_exception(ei[0], ei[1], ei[2], None))
         return False
 
 

@@ -12,8 +12,6 @@
 #     - load_pixbuf()
 # - module is finalized from MapServ.finish() method
 
-import logging
-log = logging.getLogger()
 
 class NotImplementedException(Exception):
     pass
@@ -23,12 +21,9 @@ class TilesRepository:
     def __init__(self, MapServ_inst, configpath):
         self.finished = False
         self.configpath = configpath
-        log.debug( "Init tiles repository: %s, %s" % (str(self.__class__.__name__), str(self.configpath) ) )
-
 
     def finish(self):
         self.finished = True
-        log.debug( "Finishing tiles repository: %s, %s" % (str(self.__class__.__name__), str(self.configpath) ) )
 
     def is_finished(self):
         return self.finished

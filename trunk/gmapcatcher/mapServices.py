@@ -8,8 +8,6 @@ if IS_GTK:
 import sys
 import cStringIO
 import StringIO
-import logging
-log = logging.getLogger()
 
 import os
 import fileUtils
@@ -159,8 +157,7 @@ class MapServ:
         href = self.get_url_from_coord(coord, layer, conf)
         if href:
             try:
-                #print 'downloading:', href
-                log.info( 'downloading: ' + str(href) )
+                print 'downloading:', href
                 oa = openanything.fetch(href)
                 if oa['status']==200:
                     return oa['data']
@@ -211,7 +208,7 @@ class MapServ:
             return fileName
         except Exception, inst:
             return str(inst)
-    
+
     ## Export tiles to one big map
     def do_export(self, tPoint, zoom, layer, online, conf, size, callback):
         def exportThread():
@@ -228,7 +225,7 @@ class MapServ:
         w,h = size
         crx,cry = crop_start
         crw,crh = crop_size
-        
+
         # Test import PIL
         global Image
         if not Image:
@@ -236,19 +233,19 @@ class MapServ:
                 from PIL import Image
             except Exception, inst:
                 return str(inst)
-        
+
         # Fix cropping to have at most one tile cropped
         d = crx/TILES_WIDTH
         stx += d ; w -= d; crx -= d*TILES_WIDTH
-        
+
         d = cry/TILES_HEIGHT
         sty += d ; h -= d; cry -= d*TILES_HEIGHT
-        
+
         if crw == None: crw = w*TILES_WIDTH - crx
         else: w = (crx+crw+TILES_WIDTH-1) / TILES_WIDTH
         if crh == None: crh = h*TILES_HEIGHT - cry
         else: h = (cry+crh+TILES_HEIGHT-1) / TILES_HEIGHT
-        
+
         img = Image.new("RGB", (crw, crh), (255,255,255))
 
         for x in range(stx, stx+w):
@@ -262,7 +259,7 @@ class MapServ:
 
                     px = (x-stx)*TILES_WIDTH - crx
                     py = (y-sty)*TILES_HEIGHT - cry
-                    
+
                     img.paste(tileimg, (px,py))
                     del pb, tilef
         img.load()
