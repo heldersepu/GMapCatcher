@@ -18,7 +18,6 @@ ternary = lambda a,b,c : (b,c)[not a]
 class DrawingArea(gtk.DrawingArea):
     center = ((0,0),(128,128))
     draging_start = (0, 0)
-    disp_marker_name = False
     pangolayout = False
     
     def __init__(self):
@@ -243,16 +242,16 @@ class DrawingArea(gtk.DrawingArea):
                 self.draw_circle(screen_coord, gc)
             else:
                 self.draw_image(screen_coord, img, pixDim, pixDim)
-                #if conf.show_marker_name:
-                if self.disp_marker_name:
+                if conf.show_marker_name:
                     # Display the Marker Name
                     gco = self.window.new_gc()
                     gco.set_rgb_fg_color(gtk.gdk.color_parse("#00CCCC"))
                     
                     self.pangolayout = self.create_pango_layout("")
                     self.pangolayout.set_text(marker_name)
-                    self.wr_pltxt(gco, screen_coord[0], screen_coord[1], self.pangolayout)
-    # Show the text
+                    self.wr_pltxt(gco, screen_coord[0], screen_coord[1], self.pangolayout)    
+
+    ## Show the text
     def wr_pltxt(self,gc,x,y,pl):
         gc1 = self.window.new_gc()
         gc1.line_width=2
@@ -266,9 +265,6 @@ class DrawingArea(gtk.DrawingArea):
         self.window.draw_layout(gc1, x - 1, y + 1, pl)
         self.window.draw_layout(gc1, x - 1, y, pl)
         self.window.draw_layout(gc, x, y, pl)
-    # Show Marker Name                
-    def sh_ml(self, sh_m_name):
-        self.disp_marker_name = sh_m_name
 
     ## Draw the second layer of elements
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
@@ -304,10 +300,7 @@ class DrawingArea(gtk.DrawingArea):
             pixDim = marker.get_pixDim(zl)
             # Draw the selected location
             if (entry_name in locations.keys()):
-#                print "name", entry_name
-#                print "keys", locations.keys()
                 coord = locations.get(unicode(entry_name))
-#                print "coord", coord
                 screen_coord = self.coord_to_screen(coord[0], coord[1], zl)
                 if screen_coord:
                     img = marker.get_marker_pixbuf(zl, 'marker1.png')

@@ -56,7 +56,6 @@ class MainWindow(gtk.Window):
     from_coord = {}
     segment_no = -1
     total_dist = 0.00
-    disp_marker_name = False
     
     ## Get the zoom level from the scale
     def get_zoom(self):
@@ -1146,11 +1145,6 @@ class MainWindow(gtk.Window):
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
-        # L = 76,108
-        if event.keyval in [76, 108]: # Show/hide marker label
-            self.disp_marker_name = not self.disp_marker_name
-            self.drawing_area.sh_ml(self.disp_marker_name)
-            self.drawing_area.repaint()
         # Q = 113,81 W = 87,119
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [113, 81, 87, 119]:
             self.on_delete()
