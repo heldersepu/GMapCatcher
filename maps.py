@@ -11,15 +11,12 @@ import gmapcatcher.mapGPS as mapGPS
 import gmapcatcher.mapUtils as mapUtils
 import gmapcatcher.mapTools as mapTools
 import gmapcatcher.mapPixbuf as mapPixbuf
-import gmapcatcher.mapLogging as mapLogging
 import signal
 import gobject
 import sys
 import re
 import math
 import time
-import logging
-log = logging.getLogger()
 
 from gmapcatcher.mapConst import *
 from gmapcatcher.gtkThread import *
@@ -46,7 +43,7 @@ class MainWindow(gtk.Window):
     showMarkers = True
     tPoint = {}
     gps_idle_time = time.time()
-    
+
     # Variables for Ruler - F7 to activate/deactivate
     Ruler = 0
     ruler_coordx = {}
@@ -56,7 +53,7 @@ class MainWindow(gtk.Window):
     from_coord = {}
     segment_no = -1
     total_dist = 0.00
-    
+
     ## Get the zoom level from the scale
     def get_zoom(self):
         return int(self.scale.get_value())
@@ -168,7 +165,6 @@ class MainWindow(gtk.Window):
             longitude = 0
             latitude = -100
         if -180 <= longitude <= 180 and -90 <= latitude <= 90:
-            log.info( "%f %f" % (latitude, longitude) )
             coord = (latitude, longitude, self.get_zoom())
         else:
             locations = self.ctx_map.get_locations()
@@ -191,7 +187,6 @@ class MainWindow(gtk.Window):
                 self.set_completion()
                 locations = self.ctx_map.get_locations()
             coord = locations[unicode(location)]
-            log.info( "%s at %f, %f" % (location, coord[0], coord[1]) )
 
         self.drawing_area.center = mapUtils.coord_to_tile(coord)
         self.scale.set_value(coord[2])
@@ -594,9 +589,6 @@ class MainWindow(gtk.Window):
         da.add_events(gtk.gdk.POINTER_MOTION_MASK)
         da.connect('motion-notify-event', self.da_motion)
 
-        da.add_events(gtk.gdk.BUTTON_PRESS_MASK)
-        da.connect('button-press-event', self.da_button_press)
-
         menu = gtk_menu(DA_MENU, self.menu_item_response)
         da.connect_object("event", self.da_click_events, menu)
 
@@ -769,7 +761,7 @@ class MainWindow(gtk.Window):
         if (event.type == gtk.gdk.BUTTON_PRESS):
             if (not self.Ruler):    ## Check if Ruler is active
                 self.segment_no = -1
-                
+
             # Right-Click event shows the popUp menu
             if (event.button != 1):
                 self.myPointer = (event.x, event.y)
@@ -784,7 +776,7 @@ class MainWindow(gtk.Window):
                 y = self.from_coord[1]
                 zl = self.get_zoom()
 
-                if (self.segment_no == -1): # First Click 
+                if (self.segment_no == -1): # First Click
                     self.ruler_coordx[0] = x # Latiude
                     self.ruler_coordy[0] = y # Longitude
                     self.ruler_coordzl[0] = zl   # Zoom Level
@@ -804,7 +796,7 @@ class MainWindow(gtk.Window):
                         x = screen_coord1[0] - screen_coord2[0]
                     else:
                         x = screen_coord2[0] - screen_coord1[0]
-                        
+
                     if (screen_coord1[1] > screen_coord2[1]):
                         y = screen_coord1[1] - screen_coord2[1]
                     else:
@@ -815,7 +807,7 @@ class MainWindow(gtk.Window):
 
                     self.ruler_coordz[sn] = z # Distance from last point
                     self.draw_overlay()
-                    
+
                     self.total_dist = self.total_dist + z
                     if (z > 10):
                         self.status_bar.push(self.status_bar_id, "Segment Distance = %.4f km, Total distance = %.4f km" % (z, (self.total_dist + z)))
@@ -824,7 +816,7 @@ class MainWindow(gtk.Window):
 
                 # increament incl. so=0
                 self.segment_no = self.segment_no + 1
-                
+
         # Double-Click event Zoom In or Out
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
             # Alt + 2Click Zoom Out
@@ -849,35 +841,35 @@ class MainWindow(gtk.Window):
            (self.conf.status_location == STATUS_GPS and not mapGPS.available)):
             coord = self.pointer_to_world_coord((event.x, event.y))
             self.status_bar.pop(self.status_bar_id)
-                        
+
             self.from_coord=(event.x, event.y)
             if (self.Ruler):
                 da=self.drawing_area
                 sn = self.segment_no
-                so = self.segment_no - 1 
+                so = self.segment_no - 1
                 zl = self.get_zoom()
                 gc = da.style.black_gc
-                
+
                 if (self.segment_no == -1): # Before First Click
                     self.status_bar.push(self.status_bar_id, "Ruler Mode - Click for Starting Point")
                     gc.line_width=2
                     gc.set_rgb_fg_color(gtk.gdk.color_parse("#FF0000"))
-                
+
                 if (self.segment_no >= 0): # After the First Click
                     self.ruler_coordx[sn]=coord[0]
                     self.ruler_coordy[sn]=coord[1]
                     self.ruler_coordzl[sn]=zl
                     self.ruler_coordz[sn]=0.00
-                    
+
                 if (self.segment_no > 0): # Mouse-motion: There is a line to draw
                     x = coord[0]
                     y = coord[1]
-                    
+
                     rect = self.drawing_area.get_allocation()
                     self.scale.set_value(coord[2])
                     cursor = gtk.gdk.Cursor(gtk.gdk.PENCIL)
                     da.window.set_cursor(cursor)
-                                        
+
                     # Mouse motion: Needs repaint to remove temp lines.
                     da.repaint()
                     # Drawing area->draw line takes world coord
@@ -889,7 +881,7 @@ class MainWindow(gtk.Window):
                         x = screen_coord1[0] - screen_coord2[0]
                     else:
                         x = screen_coord2[0] - screen_coord1[0]
-                        
+
                     if (screen_coord1[1] > screen_coord2[1]):
                         y = screen_coord1[1] - screen_coord2[1]
                     else:
@@ -899,36 +891,16 @@ class MainWindow(gtk.Window):
                     km = mapUtils.km_per_pixel((0, 0, zl))
                     z = z * km
 
-                    self.ruler_coordz[sn] = z 
-                    
+                    self.ruler_coordz[sn] = z
+
                     if (z > 10):
                         self.status_bar.push(self.status_bar_id, "New Segment Distance = %.4f km, Total distance = %.4f km" % (z, self.total_dist))
                     else:
-                        self.status_bar.push(self.status_bar_id, "New Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), self.total_dist))            
+                        self.status_bar.push(self.status_bar_id, "New Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), self.total_dist))
             else:
                 self.status_bar.push(self.status_bar_id, "Latitude=%.6f Longitude=%.6f" %
                                 (coord[0], coord[1]))
                 self.drawing_area.da_set_cursor() ## Reset HAND1 cursor
-            
-
-    def da_button_press(self, w, event):
-        if not (log.cur_level <= logging.DEBUG and log.cur_level > 0):
-            return
-
-        # if we have set debug level for logging, display coordinates of selected tile in window
-        if (event.button == 1):
-            coord_x = ((w.center[0][0]) * TILES_WIDTH + w.center[1][0] - w.allocation.width/2 + event.x)
-            coord_y = ((w.center[0][1]) * TILES_HEIGHT + w.center[1][1] - w.allocation.height/2 + event.y)
-
-            tile = [ [0,0], [0,0] ]
-            tile[0][0] = coord_x/TILES_WIDTH
-            tile[0][1] = coord_y/TILES_HEIGHT
-            tile[1][0] = int(round(100*(coord_x%TILES_WIDTH)/256))
-            tile[1][1] = int(round(100*(coord_y%TILES_HEIGHT)/256))
-
-            coords = mapUtils.tile_to_coord(tile, self.get_zoom())
-
-            log.debug( "Selected tile: [%d.%d, %d.%d] - lat/lon: [%s,%s]" % (tile[0][0],tile[1][0],tile[0][1],tile[1][1], coords[0], coords[1] ) )
 
     def view_credits(self, menuitem):
         w = OurCredits()
@@ -1196,7 +1168,7 @@ class MainWindow(gtk.Window):
                  self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
                  self.segment_no = -1 # Segment Number
                  self.drawing_area.repaint() # Remove ruler lines
-                 self.drawing_area.da_set_cursor()                
+                 self.drawing_area.da_set_cursor()
         # F8 = 65477
         elif event.keyval == 65477:
             self.showMarkers = not self.showMarkers
@@ -1245,10 +1217,7 @@ class MainWindow(gtk.Window):
             self.conf.save_height = sz[1]
             self.conf.save_hlocation = location[0]
             self.conf.save_vlocation = location[1]
-            try:
-                self.conf.save()
-            except Exception:
-                log.error("could not save all of the most recent config settings")
+            self.conf.save()
         return False
 
     def enable_gps(self):
@@ -1266,16 +1235,16 @@ class MainWindow(gtk.Window):
     def gps_warning(self):
         if mapGPS.available and self.conf.map_service in NO_GPS:
             return legal_warning(self, self.conf.map_service, "gps integration")
-        return True    
-    
+        return True
+
     def pane_notify(self, pane, gparamspec, intPos):
         if gparamspec.name == 'position':
             panePos = pane.get_property('position')
             if (panePos < intPos-2):
-                pane.set_position(0)            
+                pane.set_position(0)
             elif (panePos > intPos+2):
-                pane.set_position(intPos+2)  
-    
+                pane.set_position(intPos+2)
+
     def __init__(self, parent=None, config_path=None):
         self.conf = MapConf(config_path)
         self.crossPixbuf = mapPixbuf.cross()
@@ -1333,7 +1302,7 @@ class MainWindow(gtk.Window):
         inner_vp.pack2(self.export_panel, False, False)
 
         vpaned = gtk.VPaned()
-        vpaned.connect("notify", self.pane_notify, 89)        
+        vpaned.connect("notify", self.pane_notify, 89)
         vpaned.pack1(self.top_panel, False, True)
         vpaned.pack2(inner_vp)
 
@@ -1364,25 +1333,19 @@ class MainWindow(gtk.Window):
             gobject.timeout_add(self.conf.auto_refresh, self.refresh)
 
 
-def main(conf_path, logging_path):
-    mapLogging.init_logging( logging_path )
-    log.info("Starting %s version %s." % (NAME, VERSION) )
+def main(conf_path):
     MainWindow(config_path=conf_path)
     gtk.main()
 
 if __name__ == "__main__":
     conf_path = None
-    logging_path = None
     for arg in sys.argv:
         arg = arg.lower()
         if arg.startswith('--config-path='):
             conf_path = arg[14:]
             continue
-        if arg.startswith('--logging-path='):
-            logging_path = arg[len('--logging-path='):]
-            continue
 
-    main(conf_path, logging_path)
+    main(conf_path)
     pid = os.getpid()
     # send ourselves sigquit, particularly necessary in posix as
     # download threads may be holding system resources - python

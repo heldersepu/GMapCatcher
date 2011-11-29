@@ -76,7 +76,7 @@ LOGGING_FILE = True
 LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL = logging.DEBUG
 LOGGING_FILE_FORMAT = "%(asctime)s - %(levelname)s - %(thread)d - %(module)s:%(lineno)d - %(message)s"
 #LOGGING_FILE_NAME = "maps.log"
-# if set to none, it's possible to override using command line parameter '--logging-path' 
+# if set to none, it's possible to override using command line parameter '--logging-path'
 LOGGING_FILE_NAME = None
 LOGGING_FILE_MODE = "w"
 
@@ -101,7 +101,7 @@ class FilterSevereOut( logging.Filter ):
 ## Returns the Path to the logging file
 def get_loggingpath( loggingpath = None ):
     if loggingpath is None:
-        if LOGGING_FILE_NAME is not None:            
+        if LOGGING_FILE_NAME is not None:
             # the config file must be found at DEFAULT_PATH
             loggingpath = os.path.expanduser(DEFAULT_PATH)
             fileUtils.check_dir(loggingpath)
