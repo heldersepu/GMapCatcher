@@ -20,7 +20,7 @@ def get_coord_from_name(filename):
                    int(g[3])*1024 + int(g[4]), \
                    int(g[0])
 
-## Copy a file in GMapCatcher format to OSM format
+## Rename a file in GMapCatcher format to OSM format
 def convert_file(file, dirDestination):
     coord = get_coord_from_name(file)
     if coord:
