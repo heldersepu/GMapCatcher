@@ -16,11 +16,11 @@ function mapInit(divName, lat, lon, zoom) {
 	b = 20037508.34
 	map = new OpenLayers.Map(divName, {
 		controls:[
-				new OpenLayers.Control.Navigation(),
-				new OpenLayers.Control.PanZoomBar(),
-				new OpenLayers.Control.LayerSwitcher()],
-			maxExtent: new OpenLayers.Bounds(-b, -b, b, b),
-			maxResolution: 156543.0399, numZoomLevels: 19, units: 'm',
+			new OpenLayers.Control.Navigation(),
+			new OpenLayers.Control.PanZoomBar(),
+			new OpenLayers.Control.LayerSwitcher()],
+		maxExtent: new OpenLayers.Bounds(-b, -b, b, b),
+		maxResolution: 156543.0399, numZoomLevels: 19, units: 'm',
 		projection: new OpenLayers.Projection("EPSG:900913"),
 		displayProjection: new OpenLayers.Projection("EPSG:4326")
 	} );
