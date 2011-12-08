@@ -1,10 +1,7 @@
 OpenLayers.Util.OSM = {};
-OpenLayers.Util.OSM.MISSING_TILE_URL = "http://ipmia.dyndns.org/img/404.png";
+OpenLayers.Util.OSM.TILE_404 = "http://ipmia.dyndns.org/img/404.png";
 OpenLayers.Util.OSM.originalOnImageLoadError = OpenLayers.Util.onImageLoadError;
-OpenLayers.Util.onImageLoadError = function() {
-	this.src = OpenLayers.Util.OSM.MISSING_TILE_URL;
-};
-
+OpenLayers.Util.onImageLoadError = function() {this.src = OpenLayers.Util.OSM.TILE_404;};
 OpenLayers.Layer.OSM.Map = OpenLayers.Class(OpenLayers.Layer.OSM, {
 	initialize: function(name, folder, opt) {
 		var url = ["http://ipmia.dyndns.org/" + folder + "/${z}/${x}/${y}.png"];
@@ -14,13 +11,14 @@ OpenLayers.Layer.OSM.Map = OpenLayers.Class(OpenLayers.Layer.OSM, {
 	}, CLASS_NAME: "OpenLayers.Layer.OSM.Map"
 });
 
+// Initialization of the map
 function mapInit(divName, lat, lon, zoom) {
 	b = 20037508.34
 	map = new OpenLayers.Map(divName, {
 		controls:[
 				new OpenLayers.Control.Navigation(),
-                new OpenLayers.Control.PanZoomBar(),
-                new OpenLayers.Control.LayerSwitcher()],
+				new OpenLayers.Control.PanZoomBar(),
+				new OpenLayers.Control.LayerSwitcher()],
 			maxExtent: new OpenLayers.Bounds(-b, -b, b, b),
 			maxResolution: 156543.0399, numZoomLevels: 19, units: 'm',
 		projection: new OpenLayers.Projection("EPSG:900913"),
