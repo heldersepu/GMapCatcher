@@ -6,20 +6,12 @@ OpenLayers.Util.onImageLoadError = function() {
 };
 
 OpenLayers.Layer.OSM.Map = OpenLayers.Class(OpenLayers.Layer.OSM, {
-	initialize: function(name, opt) {
-		var url = ["http://ipmia.dyndns.org/tiles/${z}/${x}/${y}.png"];
+	initialize: function(name, folder, opt) {
+		var url = ["http://ipmia.dyndns.org/" + folder + "/${z}/${x}/${y}.png"];
 		opt = OpenLayers.Util.extend({numZoomLevels:19, buffer:0, transitionEffect: "resize"}, opt);
 		var newArg = [name, url, opt];
 		OpenLayers.Layer.OSM.prototype.initialize.apply(this, newArg);
 	}, CLASS_NAME: "OpenLayers.Layer.OSM.Map"
-});
-OpenLayers.Layer.OSM.Ter = OpenLayers.Class(OpenLayers.Layer.OSM, {
-	initialize: function(name, opt) {
-		var url = ["http://ipmia.dyndns.org/ter_tiles/${z}/${x}/${y}.png"];
-		opt = OpenLayers.Util.extend({numZoomLevels:19, buffer:0, transitionEffect: "resize"}, opt);
-		var newArg = [name, url, opt];
-		OpenLayers.Layer.OSM.prototype.initialize.apply(this, newArg);
-	}, CLASS_NAME: "OpenLayers.Layer.OSM.Ter"
 });
 
 function mapInit(divName, lat, lon, zoom) {
@@ -40,9 +32,9 @@ function mapInit(divName, lat, lon, zoom) {
 
 // Define the map layers
 function addMap_Layers() {
-	layerMap = new OpenLayers.Layer.OSM.Map("my Map");
+	layerMap = new OpenLayers.Layer.OSM.Map("my Map", "tiles");
 	map.addLayer(layerMap);
-	layerTer = new OpenLayers.Layer.OSM.Ter("my Ter");
+	layerTer = new OpenLayers.Layer.OSM.Map("my Ter", "ter_tiles");
 	map.addLayer(layerTer);
 }
 
