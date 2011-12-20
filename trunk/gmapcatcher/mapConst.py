@@ -159,7 +159,8 @@ DA_MENU = ["Zoom In", "Zoom Out", "Center map here", "Reset",
 REPOS_TYPE_FILES = 0
 REPOS_TYPE_SQLITE3 = 1
 REPOS_TYPE_MGMAPS = 2
-REPOS_TYPE = ["Files", "SQLite3", "MGMaps"]
+REPOS_TYPE_OSM = 3
+REPOS_TYPE = ["Files", "SQLite3", "MGMaps", "OSM"]
 DEFAULT_REPOS_TYPE = 0
 SQLITE3_REPOSITORY_FILE = "tilerepository.db"
 
@@ -190,7 +191,7 @@ DEFAULT_PATH = os.path.join(USER_PATH, ".googlemaps")
 if not os.path.isdir(DEFAULT_PATH):
     DEFAULT_PATH = os.path.join(USER_PATH, ".GMapCatcher")
 
-LANGUAGES = ["en", "zh"]
+LANGUAGES = ["en", "es" ,"zh"]
 
 STARTS_WITH = 0
 ENDS_WITH = 1

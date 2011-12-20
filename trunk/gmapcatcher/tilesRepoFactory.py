@@ -7,7 +7,7 @@ import mapConst
 import tilesRepoFS
 import tilesRepoMGMaps
 import tilesRepoSQLite3
-
+import tilesRepoOSM
 
 # list of instantiated repositories
 repositories = []
@@ -64,6 +64,9 @@ def create_repos_inst(mapservice, configpath, repo_type):
 
     elif repo_type == mapConst.REPOS_TYPE_MGMAPS:
         repository_inst = tilesRepoMGMaps.TilesRepositoryMGMaps(mapservice, configpath)
+
+    elif repo_type == mapConst.REPOS_TYPE_OSM:
+        repository_inst = tilesRepoOSM.TilesRepositoryOSM(mapservice, configpath)
 
     else: # repo_type == mapConst.REPOS_TYPE_FILES
         repository_inst = tilesRepoFS.TilesRepositoryFS(mapservice, configpath)
