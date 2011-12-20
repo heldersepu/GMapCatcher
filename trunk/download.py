@@ -11,6 +11,7 @@ from gmapcatcher.mapUtils import *
 from gmapcatcher.mapArgs import MapArgs
 from gmapcatcher.mapServices import MapServ
 from gmapcatcher.mapDownloader import MapDownloader
+from gmapcatcher.xmlUtils import load_gpx_coords
 
 mConf = mapConf.MapConf()
 ctx_map = MapServ(mConf.init_path, mConf.repository_type)
@@ -37,19 +38,6 @@ def download_coordpath(gpxfile, max_zl, min_zl, layer, arround=2):
         sys.stdout.write("\nDownloading zl %d \t" % zl)
         downloader.query_coordpath(coords, zl, arround, layer, dl_callback, conf=mConf) 
         downloader.wait_all()
-
-def load_gpx_coords(gpxfile):
-    from lxml import etree
-    tree = etree.parse(gpxfile)
-    root = tree.getroot()
-    xmlns = root.nsmap[None]
-
-    coords = []
-    for track in root.iter('{%s}trk' % xmlns):
-        print 'Track found.'
-        for pt in track.iter('{%s}trkpt' % xmlns):
-            coords.append((float(pt.get('lat')), float(pt.get('lon'))))
-    return coords
 
 if __name__ == "__main__":
     args = MapArgs(sys.argv)

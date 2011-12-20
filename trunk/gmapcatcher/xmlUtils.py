@@ -39,3 +39,26 @@ def kml_to_markers(strFileName, marker, lookup=False):
                 marker.refresh()
     dom.unlink()
 
+def load_gpx_coords(gpxfile):
+    from xml.dom.minidom import parseString
+    
+    try:
+        with open(gpxfile) as f:
+            fileString = unicode(f.read(), errors='ignore')
+        dom = parseString(fileString)
+        waypoints = dom.getElementsByTagName("wpt")
+    except Exception, excInst:
+        return excInst
+
+    coords = []
+    for element in waypoints:
+        try:
+            elem_lat = float(element.getAttribute('lat'))
+            elem_lon = float(element.getAttribute('lon'))
+        except:
+            pass
+        else:
+            coords.append((elem_lat, elem_lon))
+    dom.unlink()
+    
+    return coords

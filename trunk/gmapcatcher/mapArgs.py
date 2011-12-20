@@ -52,6 +52,7 @@ class MapArgs():
         if len(arrArgs) > 1:
             for arg in arrArgs[1:]:
                 if arg.startswith('--'):
+                    oarg = arg # Argument with the original case
                     arg = arg.lower()
                     if arg.startswith('--max-zoom-level='):
                         self.max_zl = int(arg[17:])
@@ -68,7 +69,7 @@ class MapArgs():
                     elif arg.startswith('--latitude='):
                         self.lat = float(arg[11:])
                     elif arg.startswith('--gpx='):
-                        self.gpx = arg[6:]
+                        self.gpx = oarg[6:]
                     elif arg.startswith('--latrange='):
                         self.lat_range = float(arg[11:])
                     elif arg.startswith('--lngrange='):
