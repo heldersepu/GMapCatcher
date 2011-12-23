@@ -3,9 +3,6 @@
 # The tools widget, items are displayed in multiple tabs.
 
 from mapConst import *
-if not IS_GTK:
-    raise Exception('gtk module', __file__)
-
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -13,7 +10,6 @@ import widTreeView
 import widMySettings
 import widChangeTheme
 import widMyGPS
-
 
 
 class MapTools():

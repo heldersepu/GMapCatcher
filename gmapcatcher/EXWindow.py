@@ -3,9 +3,6 @@
 # Widget that allows Export of entire locations to new tiles repository
 
 from mapConst import *
-if not IS_GTK:
-    raise Exception('gtk module', __file__)
-
 import pygtk
 pygtk.require('2.0')
 import gtk

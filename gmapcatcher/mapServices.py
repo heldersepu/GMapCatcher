@@ -2,9 +2,8 @@
 # All the interaction with the map services
 
 from mapConst import *
-if IS_GTK:
-    import gtk
-    from gobject import TYPE_STRING
+import gtk
+from gobject import TYPE_STRING
 import sys
 import cStringIO
 import StringIO
@@ -271,18 +270,16 @@ class MapServ:
         return self.tile_repository.load_pixbuf(coord, layer, force_update)
 
     def completion_model(self, strAppend=''):
-        if IS_GTK:
-            store = gtk.ListStore(TYPE_STRING)
-            for str in sorted(self.locations.keys()):
+        store = gtk.ListStore(TYPE_STRING)
+        for str in sorted(self.locations.keys()):
+            iter = store.append()
+            store.set(iter, 0, str + strAppend)
+        if strAppend=='' and os.path.exists('poi.db'):
+            import sqlite3
+            dbconn = sqlite3.connect('poi.db')
+            dbcursor = dbconn.cursor()
+            dbcursor.execute("SELECT location FROM locations")
+            for row in dbcursor:
                 iter = store.append()
-                store.set(iter, 0, str + strAppend)
-            if strAppend=='' and os.path.exists('poi.db'):
-                import sqlite3
-                dbconn = sqlite3.connect('poi.db')
-                dbcursor = dbconn.cursor()
-                dbcursor.execute("SELECT location FROM locations")
-                for row in dbcursor:
-                    iter = store.append()
-                    store.set(iter, 0, row[0])
-
+                store.set(iter, 0, row[0])
         return store

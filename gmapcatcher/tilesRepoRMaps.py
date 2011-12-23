@@ -10,8 +10,7 @@
 
 
 import os
-if os.environ.get('MAPS_GTK', 'False') == 'True':
-    import gtk
+import gtk
 import sys
 import time
 
@@ -384,13 +383,10 @@ class TilesRepositoryRMaps(TilesRepository):
         # Default result to the "data" buffer
         pixbuf = data
         try:
-            if os.environ.get('MAPS_GTK', 'False') == 'True':
-                loader = gtk.gdk.PixbufLoader()
-                loader.write( data )
-                loader.close()
-
-                pixbuf = loader.get_pixbuf()
-
+            loader = gtk.gdk.PixbufLoader()
+            loader.write( data )
+            loader.close()
+            pixbuf = loader.get_pixbuf()
         except:
             #print traceback.format_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
             ei = sys.exc_info()

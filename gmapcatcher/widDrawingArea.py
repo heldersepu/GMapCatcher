@@ -2,10 +2,6 @@
 ## @package gmapcatcher.widDrawingArea
 # DrawingArea widget used to display the map
 
-import os
-if os.environ.get('MAPS_GTK', 'False') == 'False':
-    raise Exception('gtk module', __file__)
-
 import gtk
 import pango
 import math

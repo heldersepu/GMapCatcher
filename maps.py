@@ -5,8 +5,6 @@
 # This is the Main Window
 
 import os
-os.environ["MAPS_GTK"] = "True"
-
 import gmapcatcher.mapGPS as mapGPS
 import gmapcatcher.mapUtils as mapUtils
 import gmapcatcher.mapTools as mapTools
