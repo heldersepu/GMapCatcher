@@ -1,5 +1,5 @@
 !define PRODUCT_NAME "GMapCatcher"
-!define PRODUCT_VERSION "0.7.6.2"
+!define PRODUCT_VERSION "0.7.6.3"
 !define PRODUCT_WEB_SITE "http://code.google.com/p/gmapcatcher/"
 !include nsDialogs.nsh
 
@@ -121,8 +121,6 @@ FunctionEnd
 Section "${PRODUCT_NAME} (required)"
     SetAutoClose true
     SectionIn RO
-
-    ; Set output path to the installation directory.
     SetOutPath $INSTDIR
 
     ; Put files here
@@ -141,27 +139,31 @@ Section "${PRODUCT_NAME} (required)"
     ; Change the permissions of the install directory
     AccessControl::GrantOnFile "$INSTDIR" "(BU)" "FullAccess"
 
-    ; Move the ".googlemaps" folder to the %UserProfile% (if it does not already exist)
-    ; Change the permissions of the ".googlemaps" folder
-    IfFileExists "$PROFILE\.googlemaps\*.*" +3 0
-        Rename "$INSTDIR\.googlemaps\*.*" "$PROFILE\.googlemaps"
-        AccessControl::GrantOnFile "$PROFILE\.googlemaps" "(BU)" "FullAccess"
+    ; Move the ".GMapCatcher" folder to the %UserProfile% (if it does not already exist)
+    ; Change the permissions of the ".GMapCatcher" folder
+    IfFileExists "$PROFILE\.googlemaps\gmapcatcher.conf" 0 +4
+        DetailPrint "Renaming .googlemaps to .GMapCatcher"
+        Rename "$PROFILE\.googlemaps\gmapcatcher.conf" "$PROFILE\.googlemaps\gmapcatcher.conf.old"
+        Rename "$PROFILE\.googlemaps\*.*" "$PROFILE\.GMapCatcher"
 
-    CopyFiles /SILENT "$INSTDIR\.googlemaps\*.*" "$PROFILE\.googlemaps" 1024
+    IfFileExists "$PROFILE\.GMapCatcher\*.*" +3 0
+        Rename "$INSTDIR\.GMapCatcher\*.*" "$PROFILE\.GMapCatcher"
+        AccessControl::GrantOnFile "$PROFILE\.GMapCatcher" "(BU)" "FullAccess"
+
+    CopyFiles /SILENT "$INSTDIR\.GMapCatcher\*.*" "$PROFILE\.GMapCatcher" 1024
 
     ; Check if VC++ 2008 runtimes are already installed:
     ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}" "DisplayName"
     ; If VC++ 2008 runtimes are not installed execute in Quiet mode
     StrCmp $0 "Microsoft Visual C++ 2008 Redistributable - x86 9.0.21022" +2 0
         ExecWait '"$INSTDIR\vcredist_x86.exe" /q'
-
 SectionEnd
 
 ; Optional Shortcuts sections (can be disabled by the user)
 Section "Start Menu Shortcuts"
     CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe" 
-    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\uninstall.exe" 
+    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe"
+    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\uninstall.exe"
     ; Create a shortcut to the project Homepage
     WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
     CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
@@ -190,5 +192,4 @@ Section "Uninstall"
     ; Delete Shortcuts
     Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
     Delete "$QUICKLAUNCH\${PRODUCT_NAME}.lnk"
-
 SectionEnd

@@ -6,7 +6,7 @@ from changeableConst import *
 import os
 
 NAME = "GMapCatcher"
-VERSION = "0.7.6.2"
+VERSION = "0.7.6.3"
 VERSION_NAME = ""
 WEB_ADDRESS = "http://code.google.com/p/gmapcatcher/"
 
@@ -188,9 +188,7 @@ SECTION_INIT  = 'init'
 R_EARTH = 6371.
 
 USER_PATH = os.path.expanduser("~")
-DEFAULT_PATH = os.path.join(USER_PATH, ".googlemaps")
-if not os.path.isdir(DEFAULT_PATH):
-    DEFAULT_PATH = os.path.join(USER_PATH, ".GMapCatcher")
+DEFAULT_PATH = os.path.join(USER_PATH, ".GMapCatcher")
 
 LANGUAGES = ["en", "es" ,"zh"]
 
