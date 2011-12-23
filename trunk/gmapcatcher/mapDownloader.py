@@ -138,7 +138,7 @@ class MapDownloader:
             ret += self.query_tile(coord, LAYER_SAT, callback,
                     online, force_update, conf)
         elif MAP_SERVICES[layer]['ID'] == LAYER_HYB:
-            ret += self.query_tile(coord, layer - 
+            ret += self.query_tile(coord, layer -
                     HYB_SAT_LAYER_OFFSETS[MAP_SERVICES[layer]['serviceName']],
                     callback, online, force_update, conf)
         #print "query_tile(",coord,layer,callback,online,force_update,")"
@@ -238,7 +238,7 @@ class MapDownloader:
         dThread.start()
 
 class MapQueue:
-    
+
     def __init__(self, iterable=None, maxlen=0):
         self.stack = []
         self.maxlen = maxlen
@@ -308,7 +308,7 @@ class MapQueue:
 
     def get_nowait(self):
         return self.get(False)
-   
+
     def put(self, item):
         self.mainlock.acquire()
         try :
@@ -324,4 +324,4 @@ class MapQueue:
         finally:
             self.innerlock.release()
         return ret
-         
+

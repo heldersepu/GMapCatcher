@@ -62,16 +62,16 @@ def mapPDF(pdffile, zoom, layer=2, coords=None, coord_center=None, coord_range=N
     # Check de parámetros
     pgsz = (PAGESIZE[0] - 2*MARGIN[0] - SOLAPE[0], PAGESIZE[1] - 2*MARGIN[1] - SOLAPE[1])
     pixels_sz = None
-    
+
     if isinstance(pages, int):
         pages = (pages, pages)
-    
+
     if zoom != None and pixel_center == None and coord_range != None:
         pixel_center = deg2pix(coord_center[0], coord_center[1], zoom)
-    
+
     if dpi != None and pages != None and pixel_range == None:
         pixel_range = (int(pgsz[0] * dpi * pages[0] /2), int(pgsz[1] * dpi * pages[1] /2))
-    
+
     if zoom != None:
         if coords != None:
             # Pixels en función de las coordenadas y el zoom
@@ -86,7 +86,7 @@ def mapPDF(pdffile, zoom, layer=2, coords=None, coord_center=None, coord_range=N
                 a = deg2pix(coord_center[0], coord_center[1], zoom)
                 pixels = ((a[0]-pixel_range[0], a[1]-pixel_range[1]), (a[0]+pixel_range[0], a[1]+pixel_range[1]))
                 pixels_sz = (2*pixel_range[0], 2*pixel_range[1])
-    
+
     if pixels == None or pixels_sz == None:
         print "You must provide more information to define the map, comeon!"
         d = locals()
@@ -119,9 +119,9 @@ def mapPDF(pdffile, zoom, layer=2, coords=None, coord_center=None, coord_range=N
     pdf.setTitle('%s - zoom %d' % (title, zoom))
     #pdf.setFontSize(size=5)
     pdf.setStrokeColorRGB(0.2,0.5,0.3)
-    
+
     print 'Generating pages, dpi=%.2f, pages=%dx%d, pagesize=%dx%d' % (dpi, pages[0], pages[1], pgw, pgh)
-    
+
     flist = []
     for px in range(pages[0]):
         for py in range(pages[1]):

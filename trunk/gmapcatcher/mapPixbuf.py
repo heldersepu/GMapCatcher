@@ -15,7 +15,7 @@ else:
 
 if not isfile(join(_prefix, 'missing.png')):
     _prefix = '/usr/share/pixmaps/gmapcatcher'
-    
+
 def ico():
     pix_ico = False
     try:
@@ -63,19 +63,19 @@ def getImage(filename, intWidth=56, intHeight=56):
                 ('\255\0\0\127' * wCo + '\0\0\255\127' *
                 wMe + '\255\0\0\127' * wCo) * hCo +
                 ('\0\0\255\127' * intWidth) * hMe +
-                ('\255\0\0\127' * wCo + '\0\0\255\127' * 
+                ('\255\0\0\127' * wCo + '\0\0\255\127' *
                 wMe + '\255\0\0\127' * wCo) * hCo,
                 gtk.gdk.COLORSPACE_RGB, True, 8, intWidth, intHeight,
                 intHeight * 4)
     return pix_buf
-    
+
 def image_data_fs(filename):
     return gtk.gdk.pixbuf_new_from_file(filename)
 
 def image_data_direct(name):
     if name == "missing":
         return gtk.gdk.pixbuf_new_from_data(
-                ('\0\0\0' + '\255\255\255' * 3) * (TILES_WIDTH / 4) + 
+                ('\0\0\0' + '\255\255\255' * 3) * (TILES_WIDTH / 4) +
                 (('\0\0\0' + '\255\255\255' * (TILES_WIDTH - 1)) +
                 ('\255\255\255' * 3 * TILES_WIDTH)) * (TILES_HEIGHT / 4),
                 gtk.gdk.COLORSPACE_RGB, False, 8,

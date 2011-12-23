@@ -8,9 +8,9 @@ class OurCredits(gtk.AboutDialog):
         # add real names here! :-)
         AUTHORS = ["Nan Wang", "Helder Sepulveda", "Maxim Razin",
                    "Mark Benjamin", "Standa Mitrega", "Johan Strombom",
-                   "Alex Knott", "Kevin Lo", "Becky Thipavong", "Tomas Penicka"]  
+                   "Alex Knott", "Kevin Lo", "Becky Thipavong", "Tomas Penicka"]
         DOCUMENTERS = ["Hans Kochsmeier", "F Engelbrecht"]
-                   
+
         gtk.AboutDialog.__init__(self)
         self.set_name(NAME)
         self.set_version(VERSION)

@@ -49,7 +49,7 @@ def parse_start_page(layer, html, conf):
     if layer == LAYER_HYB:
         hybrid = 'Hybrid'
 
-    # List of patterns add more as needed    
+    # List of patterns add more as needed
     paList = [
         '<div id=inlineTiles' + hybrid + ' dir=ltr>' +
         '<img src="http://([a-z]{2,3})[0-9].google.com/(.+?)&'
@@ -96,7 +96,7 @@ def search_location(location):
             encoding = "ASCII"
         # List of patterns to look for the location name
         paList = ["laddr:'([^']+)'",
-                  "daddr:'([^']+)'",  
+                  "daddr:'([^']+)'",
                   'laddr:"([^"]+)"',
                   'daddr:"([^"]+)"']
         for srtPattern in paList:

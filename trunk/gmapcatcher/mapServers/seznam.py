@@ -7,7 +7,7 @@ from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 """
 A bit of theory:
 Mapy.cz is a web service which provides very detailed coverage of Czech republic
-and an average coverage of Europe. It is provided by company seznam.cz and 
+and an average coverage of Europe. It is provided by company seznam.cz and
 is available on address mapy.cz or mapy.seznam.cz
 ('mapy' means maps, so I will use plural when talking about mapy.cz)
 ---------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ Internal.y = ( int(round(UTM.y)) - 1300000) * 32
 
 The ratio 32 is probably used to allow for fine resolution of the internal (integer)
 coordinates (1/32 meter).
-The origin of the offsets is not known to me. I guess that it is connected with fact 
+The origin of the offsets is not known to me. I guess that it is connected with fact
 that the internal coordinates are always 7 digit hexadecimal number (and not less).
 
 The zone in UTM coordinates is hardwired to 33 (where Czech republic lies), it is not
@@ -145,10 +145,10 @@ def get_url_internal(counter, coord, layername):
     y_max = 1 << (zoom  + 1) #maximum value which should occur in this zoom level
     #~ x_max = 1 << (zoom  + 1) #maximum value which should occur in this zoom level
     x = int(  ( coord[0] - offsets_x[zoom]    ) << (28 - zoom ))
-    #in computation of y, there is additional term -1, which helps to keep the center 
+    #in computation of y, there is additional term -1, which helps to keep the center
     #in the center when zooming. It is connected with fact that e.g. Google coordinate refers to the
     #upper left corner of the tile, while in mapy.cz is lower left corner
-    y = int( (y_max - coord[1] - offsets_y[zoom] - 1) << (28 - zoom )) # 
+    y = int( (y_max - coord[1] - offsets_y[zoom] - 1) << (28 - zoom )) #
     return layer_url_template(layername) % (
             counter + 1, zoom, x, y
         )
