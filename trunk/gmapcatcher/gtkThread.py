@@ -1,10 +1,6 @@
 ## @package gmapcatcher.gtkThread
 # ---
 
-from mapConst import IS_GTK
-if not IS_GTK:
-    raise Exception('gtk module', __file__)
-
 import sys
 import pygtk
 pygtk.require('2.0')

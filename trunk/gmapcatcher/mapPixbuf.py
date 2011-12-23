@@ -4,8 +4,7 @@
 #
 
 from mapConst import *
-if IS_GTK:
-    import gtk
+import gtk
 from os.path import join, dirname, abspath, exists, isfile
 
 ## Absolute Path to the images directory
@@ -53,56 +52,45 @@ def getImage(filename, intWidth=56, intHeight=56):
     try:
         if not exists(filename):
             filename = join(_prefix, filename)
-        if IS_GTK:
-            pix_buf = gtk.gdk.pixbuf_new_from_file_at_size(
-                    filename, intWidth, intHeight)
+        pix_buf = gtk.gdk.pixbuf_new_from_file_at_size(
+                filename, intWidth, intHeight)
     except Exception:
         wCo = int(intWidth / 3)
         wMe = intWidth - 2 * wCo
         hCo = int(intHeight / 3)
         hMe = intHeight - 2 * wCo
-        if IS_GTK:
-            pix_buf = gtk.gdk.pixbuf_new_from_data(
-                    ('\255\0\0\127' * wCo + '\0\0\255\127' *
-                    wMe + '\255\0\0\127' * wCo) * hCo +
-                    ('\0\0\255\127' * intWidth) * hMe +
-                    ('\255\0\0\127' * wCo + '\0\0\255\127' * 
-                    wMe + '\255\0\0\127' * wCo) * hCo,
-                    gtk.gdk.COLORSPACE_RGB, True, 8, intWidth, intHeight,
-                    intHeight * 4)
+        pix_buf = gtk.gdk.pixbuf_new_from_data(
+                ('\255\0\0\127' * wCo + '\0\0\255\127' *
+                wMe + '\255\0\0\127' * wCo) * hCo +
+                ('\0\0\255\127' * intWidth) * hMe +
+                ('\255\0\0\127' * wCo + '\0\0\255\127' * 
+                wMe + '\255\0\0\127' * wCo) * hCo,
+                gtk.gdk.COLORSPACE_RGB, True, 8, intWidth, intHeight,
+                intHeight * 4)
     return pix_buf
     
 def image_data_fs(filename):
-    if IS_GTK:
-        return gtk.gdk.pixbuf_new_from_file(filename)
-    else:
-        thefile = open(filename, 'rb')
-        ret = thefile.read()
-        thefile.close()
-        return ret
+    return gtk.gdk.pixbuf_new_from_file(filename)
 
 def image_data_direct(name):
-    if IS_GTK:
-        if name == "missing":
-            return gtk.gdk.pixbuf_new_from_data(
-                    ('\0\0\0' + '\255\255\255' * 3) * (TILES_WIDTH / 4) + 
-                    (('\0\0\0' + '\255\255\255' * (TILES_WIDTH - 1)) +
-                    ('\255\255\255' * 3 * TILES_WIDTH)) * (TILES_HEIGHT / 4),
-                    gtk.gdk.COLORSPACE_RGB, False, 8,
-                    TILES_WIDTH, TILES_HEIGHT, TILES_HEIGHT * 3)
-        elif name == "cross":
-            return gtk.gdk.pixbuf_new_from_data(
-                    ('\0\0\0\0' * 5 + '\0\0\255\350' * 2 + '\0\0\0\0' * 5)
-                    * 5 + ('\0\0\255\350' * 12) * 2 +
-                    ('\0\0\0\0' * 5 + '\0\0\255\350' * 2 + '\0\0\0\0' * 5)
-                    * 5,
-                    gtk.gdk.COLORSPACE_RGB, True, 8, 12, 12, 12 * 4)
-        elif name == "downloading":
-            return gtk.gdk.pixbuf_new_from_data(
-                    '\0\255\0\127' * 150 * 38,
-                    gtk.gdk.COLORSPACE_RGB, True, 8, 150, 38, 150 * 4)
-        else:
-            raise Exception('image type not recognized')
+    if name == "missing":
+        return gtk.gdk.pixbuf_new_from_data(
+                ('\0\0\0' + '\255\255\255' * 3) * (TILES_WIDTH / 4) + 
+                (('\0\0\0' + '\255\255\255' * (TILES_WIDTH - 1)) +
+                ('\255\255\255' * 3 * TILES_WIDTH)) * (TILES_HEIGHT / 4),
+                gtk.gdk.COLORSPACE_RGB, False, 8,
+                TILES_WIDTH, TILES_HEIGHT, TILES_HEIGHT * 3)
+    elif name == "cross":
+        return gtk.gdk.pixbuf_new_from_data(
+                ('\0\0\0\0' * 5 + '\0\0\255\350' * 2 + '\0\0\0\0' * 5)
+                * 5 + ('\0\0\255\350' * 12) * 2 +
+                ('\0\0\0\0' * 5 + '\0\0\255\350' * 2 + '\0\0\0\0' * 5)
+                * 5,
+                gtk.gdk.COLORSPACE_RGB, True, 8, 12, 12, 12 * 4)
+    elif name == "downloading":
+        return gtk.gdk.pixbuf_new_from_data(
+                '\0\255\0\127' * 150 * 38,
+                gtk.gdk.COLORSPACE_RGB, True, 8, 150, 38, 150 * 4)
     else:
-        ## TODO needs implementation
-        return None
+        raise Exception('image type not recognized')
+

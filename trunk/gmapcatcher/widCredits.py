@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from mapConst import *
-if not IS_GTK:
-    raise Exception('gtk module', __file__)
-
 import gtk
 
 class OurCredits(gtk.AboutDialog):

@@ -4,9 +4,6 @@
 # Displayed inside a tab in MapTools.
 
 from mapConst import *
-if not IS_GTK:
-    raise Exception('gtk module', __file__)
-
 import gtk
 import fileUtils
 from customWidgets import myEntry, SpinBtn, myFrame, lbl

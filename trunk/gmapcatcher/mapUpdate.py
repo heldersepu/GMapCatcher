@@ -3,12 +3,10 @@
 
 import os
 from mapConst import *
-if IS_GTK:
-    import gtk
-    from customMsgBox import updateMsgBox
+import gtk
+from customMsgBox import updateMsgBox
 import openanything
 from threading import Timer
-
 
 
 ## Class used to get latest version info
@@ -51,17 +49,16 @@ class CheckForUpdates():
         self.myThread.cancel()
         if self.update:
             if self.update.latest_version > VERSION:
-                if IS_GTK:
-                    updateMsgBox(
-                            "Update detected! \n" +
-                            ("A new version of %s is available \n\n" % NAME) +
-                            ("Your version is %s \n" % VERSION ) +
-                            ("Current version is %s" % 
-                            self.update.latest_version),
-                            WEB_ADDRESS,
-                            self.update.latest_installer
-                    )
-                    gtk.main()
+                updateMsgBox(
+                        "Update detected! \n" +
+                        ("A new version of %s is available \n\n" % NAME) +
+                        ("Your version is %s \n" % VERSION ) +
+                        ("Current version is %s" % 
+                        self.update.latest_version),
+                        WEB_ADDRESS,
+                        self.update.latest_installer
+                )
+                gtk.main()
 
 if __name__ == "__main__":
     # Test some URLs
