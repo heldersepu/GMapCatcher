@@ -19,7 +19,7 @@ downloader = None
 
 def dl_callback(*args, **kwargs):
     if not args[0]:
-        sys.stdout.write('\b=*')    
+        sys.stdout.write('\b=*')
 
 def download(lat, lng, lat_range, lng_range, max_zl, min_zl, layer):
     for zl in range(max_zl, min_zl - 1, -1):
@@ -36,7 +36,7 @@ def download_coordpath(gpxfile, max_zl, min_zl, layer, arround=2):
     coords = load_gpx_coords(gpxfile)
     for zl in range(max_zl, min_zl - 1, -1):
         sys.stdout.write("\nDownloading zl %d \t" % zl)
-        downloader.query_coordpath(coords, zl, arround, layer, dl_callback, conf=mConf) 
+        downloader.query_coordpath(coords, zl, arround, layer, dl_callback, conf=mConf)
         downloader.wait_all()
 
 if __name__ == "__main__":

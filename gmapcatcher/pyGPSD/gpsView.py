@@ -176,7 +176,7 @@ class SkyView(gtk.DrawingArea):
         self.queue_draw()
 
 class AISView:
-    "Encapsulate store and view objects for watching AIS data." 
+    "Encapsulate store and view objects for watching AIS data."
     AIS_ENTRIES = 10
     DWELLTIME = 360
     def __init__(self, deg_type):
@@ -286,7 +286,7 @@ class AISView:
                 where = self.latlon(ais.lat, ais.lon)
                 self.store.prepend(
                     (ais.type, ais.name, "(%s navaid)" % ais.epfd, "", where, ais.aid_type))
-                    
+
 class Base:
     gpsfields = (
         # First column
@@ -311,7 +311,7 @@ class Base:
         self.conversions = unit_adjustments()
         self.saved_mode = -1
         self.ais_latch = False
-  
+
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_title("xgps")
         self.window.connect("delete_event", self.delete_event)
@@ -420,7 +420,7 @@ class Base:
             else:
                 colbase = 2
             label = gtk.Label(Base.gpsfields[i][0] + ": ")
-            # Wacky way to force right alignment 
+            # Wacky way to force right alignment
             label.set_alignment(xalign=1, yalign=0.5)
             datatable.attach(label, colbase, colbase+1, i % 7, i % 7 + 1)
             entry = gtk.Entry()
@@ -558,13 +558,13 @@ class Base:
     def update_gpsdata(self, tpv):
         "Update the GPS data fields."
         for (hook, widget) in Base.gpsfields:
-            if hook:	# Remove this guard when we have all hooks 
+            if hook:	# Remove this guard when we have all hooks
                 widget.set_text(hook(self, tpv))
 
     def update_skyview(self, data):
         "Update the satellite list and skyview."
         satellites = data.satellites
-        for (i, satellite) in enumerate(satellites): 
+        for (i, satellite) in enumerate(satellites):
             self.set_satlist_field(i, 0, satellite.PRN)
             self.set_satlist_field(i, 1, satellite.el)
             self.set_satlist_field(i, 2, satellite.az)
@@ -612,7 +612,7 @@ class Base:
                     self.ais_latch = True
                     self.uimanager.get_widget('/MenuBar/View/AIS').set_active(True)
                     self.aisbox.show()
-                    
+
         return True
 
     def handle_hangup(self, source, condition):

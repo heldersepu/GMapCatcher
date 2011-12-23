@@ -103,7 +103,7 @@ def km_per_pixel(coord):
     world_tiles = tiles_on_level(coord[2])
     return 2*math.pi*R_EARTH/world_tiles/TILES_WIDTH * math.cos(coord[0]*math.pi/180.0)
 
-## should return a tuple of (60 <= pixels <= 125, nice round number of m 
+## should return a tuple of (60 <= pixels <= 125, nice round number of m
 #                            [% 1000 = 0 when nice round number of km])
 def friendly_scale(zoomlevel):
     km = sig_figs(km_per_pixel((0, 0, zoomlevel)), 4)
@@ -185,7 +185,7 @@ def altitude_to_zoom(altitude):
     else:
         zoom = int(math.log(int(altitude))/math.log(2))
     return min(max(zoom, MAP_MIN_ZOOM_LEVEL + 2), MAP_MAX_ZOOM_LEVEL)
-    
+
 def subs_entity(match):
     entity = match.group(3)
     if match.group(1) == "#":

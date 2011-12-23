@@ -41,7 +41,7 @@ def convert_file(file, dirDestination):
     if coord:
         zoom = MAP_MAX_ZOOM_LEVEL - coord[2]
         d = os.path.join(
-            dirDestination, 
+            dirDestination,
             'YahooMap_' + str(zoom)
         )
         if not os.path.exists(d):
@@ -56,7 +56,7 @@ def convert_file(file, dirDestination):
         print destFile
 
 ## Do the conversion from the given source to the destination
-def do_conversion(dirSource, dirDestination):    
+def do_conversion(dirSource, dirDestination):
     if not os.path.exists(dirSource):
         print "Directory not found: \n" + dirSource
         return

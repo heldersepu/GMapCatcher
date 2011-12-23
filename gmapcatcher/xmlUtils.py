@@ -41,7 +41,7 @@ def kml_to_markers(strFileName, marker, lookup=False):
 
 def load_gpx_coords(gpxfile):
     from xml.dom.minidom import parseString
-    
+
     try:
         with open(gpxfile) as f:
             fileString = unicode(f.read(), errors='ignore')
@@ -60,5 +60,5 @@ def load_gpx_coords(gpxfile):
         else:
             coords.append((elem_lat, elem_lon))
     dom.unlink()
-    
+
     return coords

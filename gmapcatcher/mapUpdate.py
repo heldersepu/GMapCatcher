@@ -53,7 +53,7 @@ class CheckForUpdates():
                         "Update detected! \n" +
                         ("A new version of %s is available \n\n" % NAME) +
                         ("Your version is %s \n" % VERSION ) +
-                        ("Current version is %s" % 
+                        ("Current version is %s" %
                         self.update.latest_version),
                         WEB_ADDRESS,
                         self.update.latest_installer

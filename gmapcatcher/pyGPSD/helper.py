@@ -47,4 +47,3 @@ def deg_to_str(fmat, angle):
         return "%3d° %02d' %.3f\"" % (deg, mins, sec)
 
 
-    

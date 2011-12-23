@@ -73,7 +73,7 @@ class RMapsThread(Thread):
 
         self.url_dir = url_dir
         self.url_filenameformat = url_filenameformat
-        
+
         self.dbconns = []
         self.dbcurss = []
         self.dbzooms = []
@@ -145,26 +145,26 @@ class RMapsThread(Thread):
             self.dbconns.extend(None for i in range(len(self.dbconns), layer+1))
             self.dbcurss.extend(None for i in range(len(self.dbcurss), layer+1))
             self.dbzooms.extend(None for i in range(len(self.dbcurss), layer+1))
-        
+
         if self.dbconns[layer] is None:
             #print "D:sqlite3.connect( url ): " + str(thread.get_ident())
             createTable = False
-            
+
             dburl = os.path.join(self.url_dir, self.url_filenameformat % MAP_SERVICES[layer]['TextID'])
             if(not os.path.isfile(dburl)):
                 createTable = True
-            
+
             conn = sqlite3.connect( dburl )
             curs = conn.cursor()
-            
+
             self.dbconns[layer] = conn
             self.dbcurss[layer] = curs
-            
+
             if createTable:
                 #process create table
                 curs.executescript( SQL_DATABASE_DDL )
                 conn.commit()
-        
+
         return self.dbconns[layer]
 
     def dbcoursor(self, layer):

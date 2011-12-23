@@ -63,15 +63,15 @@ class MySettings():
                         gtk.CheckButton(" Save View Params ")
                 self.save_at_close_button.set_active(active_bool)
                 return self.save_at_close_button
-            status = myFrame(" Location Status ", 
+            status = myFrame(" Location Status ",
                             statuscombo(conf.status_location))
-            save = myFrame(" Close Settings ", 
+            save = myFrame(" Close Settings ",
                           save_checkbox(conf.save_at_close))
             hbox = gtk.HBox(False, 10)
             hbox.pack_start(save)
             hbox.pack_start(status)
             return hbox
-            
+
 
         def custom_path(conf):
             def repository_type_combo(repos_type_id):

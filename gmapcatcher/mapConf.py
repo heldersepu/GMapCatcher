@@ -150,7 +150,6 @@ class MapConf():
         self.match_func = read_config('match_func', ENTRY_SUB_MENU[0], str)
         ## Show the name/description of the marker in the map
         self.show_marker_name = read_config('show_marker_name', 0, int)
-        print 
 
     ## Write the configuration to the default file
     def save(self):

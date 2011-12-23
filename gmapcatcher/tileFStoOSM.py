@@ -35,7 +35,7 @@ def convert_file(file, dirDestination):
         os.rename(file, destFile)
 
 ## Do the conversion from the given source to the destination
-def do_conversion(dirSource):    
+def do_conversion(dirSource):
     if not os.path.exists(dirSource):
         print "Directory not found: \n" + dirSource
         return

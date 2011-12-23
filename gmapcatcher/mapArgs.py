@@ -34,8 +34,8 @@ class MapArgs():
         print ' '
         print '  --latrange=   Latitude Range to get    (default = %f)' % self.lat_range
         print '  --lngrange=   Longitude Range to get   (default = %f)' % self.lng_range
-        print '  --height=     Height in Km (will override latrange)'  
-        print '  --width=      Width in Km (will override lngrange)'   
+        print '  --height=     Height in Km (will override latrange)'
+        print '  --width=      Width in Km (will override lngrange)'
         print ' '
         print '  --max-zoom=   Maximum Zoom   (default = %d)' % self.max_zl
         print '  --min-zoom=   Minimum Zoom   (default = %d)' % self.min_zl
