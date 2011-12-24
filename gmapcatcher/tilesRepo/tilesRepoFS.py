@@ -1,4 +1,4 @@
-## @package gmapcatcher.tilesRepoFS
+## @package gmapcatcher.tilesRepo.tilesRepoFS
 # This modul provides filebased tile repository functions
 #
 # Usage:
@@ -9,13 +9,12 @@
 
 
 import os
-import lrucache
-import mapPixbuf
-import fileUtils
+import gmapcatcher.lrucache as lrucache
+import gmapcatcher.mapPixbuf as mapPixbuf
+import gmapcatcher.fileUtils as fileUtils
 
 from threading import Lock
-from mapConst import *
-
+from gmapcatcher.mapConst import *
 from tilesRepo import TilesRepository
 
 

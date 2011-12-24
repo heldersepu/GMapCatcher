@@ -1,4 +1,4 @@
-## @package gmapcatcher.tilesRepoRMaps
+## @package gmapcatcher.tilesRepo.tilesRepoRMaps
 # This module provides sqlite3 tile repository functions in the format
 # used by the RMaps android app.
 #
@@ -13,17 +13,15 @@ import os
 import gtk
 import sys
 import time
-
-import lrucache
-import mapPixbuf
-import fileUtils
-
 import sqlite3
 import threading
 import traceback
 
+import gmapcatcher.lrucache as lrucache
+import gmapcatcher.mapPixbuf as mapPixbuf
+import gmapcatcher.fileUtils as fileUtils
 from threading import Lock, Thread
-from mapConst import *
+from gmapcatcher.mapConst import *
 
 
 class tilesReposRMapsException(Exception):

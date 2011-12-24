@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.tileFStoOSM.py
+## @package gmapcatcher.tilesRepo.tileFStoOSM.py
 # A tool to convert GMapCatcher format to OSM
 
 import re
 import os
-from mapConst import *
+from gmapcatcher.mapConst import *
 
 ## Convert from GMapCatcher filename to coord
 #  file = C:\Users\Dog\.googlemaps\tiles\-1\74\541\96\982.png

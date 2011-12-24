@@ -1,18 +1,18 @@
 ## @package gmapcatcher.mapServices
 # All the interaction with the map services
 
-from mapConst import *
 import gtk
-from gobject import TYPE_STRING
 import sys
-import cStringIO
 import StringIO
+import cStringIO
+from mapConst import *
+from gobject import TYPE_STRING
 
 import os
-import fileUtils
-import tilesRepoFactory
 import mapUtils
+import fileUtils
 import openanything
+import tilesRepo.Factory as trFactory
 
 import mapServers.googleMaps as googleMaps
 import mapServers.openStreetMaps as openStreetMaps
@@ -58,7 +58,7 @@ class MapServ:
             self.tile_repository.finish()
             self.tile_repository = None
 
-        self.tile_repository = tilesRepoFactory.get_tile_repository(self, configpath, tilerepostype)
+        self.tile_repository = trFactory.get_tile_repository(self, configpath, tilerepostype)
 
     def __init__(self, configpath=None, tilerepostype=None):
         self.tile_repository = None
