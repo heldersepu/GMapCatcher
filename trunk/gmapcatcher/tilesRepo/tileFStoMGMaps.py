@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.tileFStoMGMaps.py
+## @package gmapcatcher.tilesRepo.tileFStoMGMaps.py
 # A tool to convert GMapCatcher format to MGMaps
 
 import re

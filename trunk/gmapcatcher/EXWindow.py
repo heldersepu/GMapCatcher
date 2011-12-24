@@ -12,7 +12,7 @@ from fileUtils import check_dir
 from mapDownloader import MapDownloader
 from customWidgets import *
 
-import tilesRepoFactory
+import tilesRepo.Factory as trFactory
 import mapTilesTransfer
 
 import mapPixbuf
@@ -205,7 +205,7 @@ class EXWindow(gtk.Window):
         self.b_stop.set_sensitive(True)
         self.b_export.set_sensitive(False)
 
-        self.drepos = tilesRepoFactory.get_tile_repository( self.mapServ, drepos_path, drepos_type )
+        self.drepos = trFactory.get_tile_repository( self.mapServ, drepos_path, drepos_type )
 
         lat = float(self.e_lat0.get_text())
         lng = float(self.e_lon0.get_text())

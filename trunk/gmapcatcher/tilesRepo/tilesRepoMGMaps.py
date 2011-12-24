@@ -1,7 +1,7 @@
-## @package gmapcatcher.tilesRepoMGMaps
+## @package gmapcatcher.tilesRepo.tilesRepoMGMaps
 # This modul provides filebased tile repository functions
 #
-# Usage:
+# Usage: 
 #
 # - constructor requires MapServ instance, because method
 #  'get_tile_from_coord' is provided in the MapServ
@@ -9,13 +9,12 @@
 
 
 import os
-import lrucache
-import mapPixbuf
-import fileUtils
+import gmapcatcher.lrucache as lrucache
+import gmapcatcher.mapPixbuf as mapPixbuf
+import gmapcatcher.fileUtils as fileUtils
 
 from threading import Lock
-from mapConst import *
-
+from gmapcatcher.mapConst import *
 from tilesRepo import TilesRepository
 
 
