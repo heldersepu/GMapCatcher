@@ -40,7 +40,7 @@ SQL_IDX_LAYER = 3
 SQL_IDX_TSTAMP = 4
 SQL_IDX_IMG = 5
 SQL_DATABASE_DDL = """
-CREATE TABLE IF NOT EXISTS "tiles"   (
+CREATE TABLE "tiles"   (
     "x" INTEGER NOT NULL ,
     "y" INTEGER NOT NULL ,
     "z" INTEGER NOT NULL ,
@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS "tiles"   (
 CREATE TABLE android_metadata (locale TEXT);
 CREATE INDEX IND on tiles (x,y,z,s);
 CREATE TABLE info(minzoom,maxzoom);
+INSERT INTO android_metadata (locale) VALUES ("en_EN");
 """
 
 
@@ -142,7 +143,7 @@ class RMapsThread(Thread):
         if len(self.dbconns) <= layer:
             self.dbconns.extend(None for i in range(len(self.dbconns), layer+1))
             self.dbcurss.extend(None for i in range(len(self.dbcurss), layer+1))
-            self.dbzooms.extend(None for i in range(len(self.dbcurss), layer+1))
+            self.dbzooms.extend(None for i in range(len(self.dbzooms), layer+1))
 
         if self.dbconns[layer] is None:
             #print "D:sqlite3.connect( url ): " + str(thread.get_ident())
@@ -162,12 +163,27 @@ class RMapsThread(Thread):
                 #process create table
                 curs.executescript( SQL_DATABASE_DDL )
                 conn.commit()
+            self.dbzooms[layer] = curs.execute("SELECT minzoom, maxzoom FROM info LIMIT 1").fetchone()
 
         return self.dbconns[layer]
 
     def dbcoursor(self, layer):
         self.dbconnection(layer)
         return self.dbcurss[layer]
+
+    def update_zoom(self, layer, zoom):
+        if self.dbzooms[layer]:
+            mn,mx = self.dbzooms[layer]
+            if zoom < mn: mn = zoom
+            if zoom > mx: mx = zoom
+            res = (int(mn),int(mx))
+            if res != self.dbzooms[layer]:
+                self.dbzooms[layer] = res
+                self.dbcoursor(layer).execute("UPDATE info SET minzoom = ? AND maxzoom = ?", res)
+        else:
+            res = (zoom, zoom)
+            self.dbzooms[layer] = res
+            self.dbcoursor(layer).execute("INSERT INTO info (minzoom, maxzoom) VALUES (?,?)", res)
 
     def get_tile_row(self, layer, zoom_level, coord, olderthan ):
         # olderthan is ignored in this format, sorry =/
@@ -180,6 +196,7 @@ class RMapsThread(Thread):
         try:
             dbcursor = self.dbcoursor(layer)
             dbcursor.execute( "INSERT INTO tiles (x,y,z,s,image)  VALUES(?,?,?,?,?)", (coord[0], coord[1], zoom_level, 0, sqlite3.Binary(data)) )
+            self.update_zoom(layer, zoom_level)
             self.dbconnection(layer).commit()
         except sqlite3.IntegrityError:
             # Known problem - one tile is downloaded more than once, when tile is:
