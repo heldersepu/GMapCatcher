@@ -14,8 +14,8 @@ class MapArgs():
     location = None
     gpx = None
     layer = LAYER_MAP
-    width = 0
-    height = 0
+    width = -1
+    height = -1
 
     def print_help(self):
         print ' '
@@ -34,8 +34,9 @@ class MapArgs():
         print ' '
         print '  --latrange=   Latitude Range to get    (default = %f)' % self.lat_range
         print '  --lngrange=   Longitude Range to get   (default = %f)' % self.lng_range
-        print '  --height=     Height in Km (will override latrange)'
-        print '  --width=      Width in Km (will override lngrange)'
+        print '  --height=     Height in Km (will override latrange)'  
+        print '  --width=      Width in Km (will override lngrange) for locations,'
+        print '                and width in "tiles" for GPX paths.'
         print ' '
         print '  --max-zoom=   Maximum Zoom   (default = %d)' % self.max_zl
         print '  --min-zoom=   Minimum Zoom   (default = %d)' % self.min_zl
@@ -47,6 +48,7 @@ class MapArgs():
         print '  download --location="Paris, France"'
         print '  download --min-zoom=13 --full-range'
         print '  download --latitude=37.979180 --longitude=23.716647'
+        print '  download --gpx=myfile.gpx --width=2'
 
     def __init__(self, arrArgs=()):
         if len(arrArgs) > 1:

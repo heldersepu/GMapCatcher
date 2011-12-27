@@ -59,10 +59,16 @@ if __name__ == "__main__":
         args.lat = coord[0]
         args.lng = coord[1]
 
-    if args.width > 0:
-        args.lng_range = km_to_lon(args.width, args.lat)
-    if args.height > 0:
-        args.lat_range = km_to_lat(args.height)
+    if args.gpx:
+        # GPX path mode
+        args.width = int(args.width)
+        if args.width < 0:
+            args.width = 2 # The default for GPX
+    else:
+        if args.width > 0:
+            args.lng_range = km_to_lon(args.width, args.lat)
+        if args.height > 0:
+            args.lat_range = km_to_lat(args.height)
 
     if (args.location is None):
         args.location = "somewhere"
@@ -73,13 +79,13 @@ if __name__ == "__main__":
                  args.lat_range, args.lng_range,
                  args.max_zl, args.min_zl)
     else:
-        print "Download path in %s, zoom level: %d to %d" % \
-                (args.gpx, args.max_zl, args.min_zl)
+        print "Download path in %s, zoom level: %d to %d, width=%d tiles" % \
+                (args.gpx, args.max_zl, args.min_zl, args.width)
 
     downloader = MapDownloader(ctx_map, args.nr_threads)
     try:
         if args.gpx != None:
-            download_coordpath(args.gpx, args.max_zl, args.min_zl, args.layer, arround=3)
+            download_coordpath(args.gpx, args.max_zl, args.min_zl, args.layer, arround=args.width)
         else:
             download(args.lat, args.lng, args.lat_range, args.lng_range,
                      args.max_zl, args.min_zl, args.layer)
