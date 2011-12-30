@@ -92,5 +92,6 @@ if __name__ == "__main__":
     finally:
         print "\nDownload Complete!"
         downloader.stop_all()
+        import signal ; os.kill(os.getpid(), signal.SIGTERM)
 
 

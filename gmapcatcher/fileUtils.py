@@ -60,7 +60,7 @@ def write_file(strInfo, filePath, fileData):
     	# it translates it automatically to string buffer acording to system defaults.
     	# Probably all systems translate unicode to UTF-8
         file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
-                  (l, fileData[l][0], fileData[l][1], fileData[l][2]))
+                  (l.encode('latin-1'), fileData[l][0], fileData[l][1], fileData[l][2]))
     file.close()
 
 ## Append the location (strData) to given file (filePath)
