@@ -251,16 +251,23 @@ class MapServ:
             for y in range(sty, sty+h):
                 if self.get_tile((x,y,zoom), layer, online, False, conf):
                     pb = self.load_pixbuf((x,y,zoom), layer, False)
-                    tilef = StringIO.StringIO()
-                    tilef.write(pb)
-                    tilef.seek(0)
-                    tileimg = Image.open(tilef)
+                    if isinstance(pb, str):
+                        # is an image encoded in a string file
+                        tilef = StringIO.StringIO()
+                        tilef.write(pb)
+                        tilef.seek(0)
+                        print repr(tilef.read())
+                        tileimg = Image.open(tilef)
+                    else:
+                        # is a real pixbuf
+                        width, height = pb.get_width(), pb.get_height()
+                        tileimg = Image.fromstring("RGB", (width,height), pb.get_pixels())
 
                     px = (x-stx)*TILES_WIDTH - crx
                     py = (y-sty)*TILES_HEIGHT - cry
 
                     img.paste(tileimg, (px,py))
-                    del pb, tilef
+                    del pb
         img.load()
         img.save(filename, 'PNG')
         return filename

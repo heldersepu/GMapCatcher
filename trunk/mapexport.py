@@ -10,6 +10,7 @@ from gmapcatcher.mapUtils import *
 from gmapcatcher.mapArgs import MapArgs
 from gmapcatcher.mapServices import MapServ
 from gmapcatcher.mapDownloader import MapDownloader
+from gmapcatcher.xmlUtils import load_gpx_coords
 
 mConf = mapConf.MapConf()
 ctx_map = MapServ(mConf.init_path, mConf.repository_type)
@@ -43,7 +44,7 @@ def coord2pixels(coords, zoom):
 #PAGESIZE = 11.69, 8.27
 PAGESIZE = tuple(x/72.0 for x in pagesizes.landscape(pagesizes.A4))
 MARGIN = 0.22, 0.27
-SOLAPE = 0.25, 0.25
+SOLAPE = 0.20, 0.20
 
 
 """
@@ -103,6 +104,8 @@ def mapPDF(pdffile, zoom, layer=2, coords=None, coord_center=None, coord_range=N
     pages = ( \
         int(math.ceil(float(pixels_sz[0]) / dpi / pgsz[0] - 0.1)), \
         int(math.ceil(float(pixels_sz[1]) / dpi / pgsz[1] - 0.1)))
+    print "pages needed: (%.2f,%.2f)" % ( float(pixels_sz[0]) / dpi / pgsz[0] - 0.1,  float(pixels_sz[1]) / dpi / pgsz[1] - 0.1)
+
 
     sz = ( \
         int(float(pages[0]) * dpi * pgsz[0]),
@@ -110,7 +113,15 @@ def mapPDF(pdffile, zoom, layer=2, coords=None, coord_center=None, coord_range=N
 
     dbzoom = 17 - zoom
     st,ed = pixels
-
+    
+    # Centers the image in the requested area:
+    dsp = ( \
+        (sz[0]-pixels_sz[0])/2,
+        (sz[1]-pixels_sz[1])/2
+    )
+    st = (st[0]-dsp[0], st[1]-dsp[1])
+    ed = (ed[0]-dsp[0], ed[1]-dsp[1])
+    
     # Generate the PDF
     pdf = canvas.Canvas(pdffile, pagesize=pagesizes.landscape(pagesizes.A4))
     pgw,pgh = int(round(dpi*(pgsz[0]+SOLAPE[0]))), int(round(dpi*(pgsz[1]+SOLAPE[1])))
@@ -144,24 +155,73 @@ def mapPDF(pdffile, zoom, layer=2, coords=None, coord_center=None, coord_range=N
     for f in flist: os.unlink(f)
     print pages
 
+def coordRange(coords):
+    xr,yr = None,None
+    for x,y in coords:
+        if xr == None: xr = (x,x)
+        else: xr = min(xr[0],x),max(xr[0],x)
+        
+        if yr == None: yr = (y,y)
+        else: yr = min(yr[0],y),max(yr[0],y)
+    return xr,yr
+
+def gpxRange(files):
+    if isinstance(files, str):
+        files = [files]
+    coordlist = []
+    for fn in files:
+        coordlist.append(load_gpx_coords(fn))
+    return itertools.chain(*coordlist)
+
 def main(layer):
     ### Examples
 
     # Export Paris in 160dpi, zoom=15 and in 2x3 landscape A4 pages. The width and height of the map is computed to fit this requirement.
     dpi = 160
-    mapPDF('paris_%d.pdf'%dpi, title="Paris, France", zoom=15, pages=(2, 3), coord_center=(48.856245, 2.347898), dpi=dpi, layer=layer)
+    #~ mapPDF('paris_%d.pdf'%dpi, title="Paris, France", zoom=15, pages=(2, 3), coord_center=(48.856245, 2.347898), dpi=dpi, layer=layer)
 
     # Export a given region of Paris with the given zoom=14, in 2x2 landscape A4 pages, adjusting the dpi to the needed value.
-    zoom = 14
-    mapPDF('paris_z%d.pdf'%zoom, title='Paris, France', zoom=zoom, pages=2, coord_center=(48.856245, 2.347898), coord_range=(0.028623, 0.084114), layer=layer)
+    zoom = 8
+    #~ mapPDF('paris_z%d.pdf'%zoom, title='Paris, France', zoom=zoom, pages=2, coord_center=(48.856245, 2.347898), coord_range=(0.028623, 0.084114), layer=layer)
 
+    zoom = 7
+    #~ mapPDF('euro_z%d_l%d.pdf'%(zoom,layer), title='Paris, France', zoom=zoom, pages=1, coords=((37.83, -4.45), (52.88, 23.94)), layer=layer)
+    zoom = 8
+    #~ mapPDF('euro_z%d_l%d.pdf'%(zoom,layer), title='Paris, France', zoom=zoom, pages=2, coords=((37.83, -4.45), (52.88, 23.94)), layer=layer)
+
+    path = '/home/deymo/progs/voyage/toprint/'
+    lst = [ \
+        #~ ('France-west', 'france-west', 10, 3, (44.598290, -0.8500), (48.283193, 2.050)),
+        #~ ('Paris, France', 'paris', 11, 3, (48.788319, 2.090836), (49.026838, 2.581100)),
+        #~ ('Spain', 'spain', 10, 3, (43.369119, -3.235474), (41.166249, 3.131104)),
+        #~ ('Belgium', 'belgium', 11, 3, (51.267071, 2.680664), (50.433017, 5.350342)),
+        #~ ('Germany', 'germany', 10, 3, (52.869130, 12.00), (47.783635, 17.55)),
+        #~ ('Hungary', 'hungary', 10, 3, (48.246626, 16.226807), (47.301585, 19.544678)),
+        #~ ('Serbia', 'serbia', 10, 3, (47.569114, 18.929443), (44.606113, 20.731201)),
+        #~ ('Macedonia', 'macedonia', 10, 3, (44.816916, 20.335693), (41.037931, 22.730713)),
+        ('Greece', 'greece', 11, 3, (37.9, 24.00), (40.76, 21.23)),
+        #~ ('', '', 10, 3, (), ()),
+        #~ ('', '', 10, 3, (), ()),
+        #~ ('', '', 10, 3, (), ()),
+        
+    ]
+    for title, fn, zoom, pages, coord1, coord2 in lst:
+        for layer in [0,]:
+            print '%s_z%d_l%d.pdf'%(path+fn,zoom,layer)
+            mapPDF('%s_z%d_l%d.pdf'%(path+fn,zoom,layer), title=title, zoom=zoom, dpi=175, coords=(coord1, coord2), layer=layer)
+    #~ print gpxRange(
 
 
 if __name__ == '__main__':
+    except_occ = False
     try:
         main(layer=2)
+    except:
+        except_occ = True
+        raise
 
     finally:
         # Sory for this rude thing, but the program doesn't stop by itself
-        import signal ; os.kill(os.getpid(), signal.SIGTERM)
+        if not except_occ:
+            import signal ; os.kill(os.getpid(), signal.SIGTERM)
 

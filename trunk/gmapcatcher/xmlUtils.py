@@ -47,11 +47,12 @@ def load_gpx_coords(gpxfile):
             fileString = unicode(f.read(), errors='ignore')
         dom = parseString(fileString)
         waypoints = dom.getElementsByTagName("wpt")
+        trkpt = dom.getElementsByTagName("trkpt")
     except Exception, excInst:
-        return excInst
+        raise
 
     coords = []
-    for element in waypoints:
+    for element in trkpt:
         try:
             elem_lat = float(element.getAttribute('lat'))
             elem_lon = float(element.getAttribute('lon'))
