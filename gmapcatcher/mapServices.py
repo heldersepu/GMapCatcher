@@ -101,7 +101,7 @@ class MapServ:
                 elif conf.map_service == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
                     return openStreetMaps.get_url(self.mt_counter, coord)
                 elif conf.map_service == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
-                    return cloudMade.get_url(self.mt_counter, coord, conf.cloudMade_styleID)
+                    return cloudMade.get_url(self.mt_counter, coord, conf)
                 elif conf.map_service == MAP_SERVERS[YAHOO] and (layer != LAYER_TER):
                     return yahoo.get_url(self.mt_counter, coord, layer)
                 elif conf.map_service == MAP_SERVERS[INFO_FREEWAY] and (layer == LAYER_MAP):
@@ -128,7 +128,7 @@ class MapServ:
             elif (MAP_SERVICES[layer]["TextID"] == "osmmap"):
                 return openStreetMaps.get_url(self.mt_counter, coord)
             elif (MAP_SERVICES[layer]["TextID"] == "cmmap"):
-                return cloudMade.get_url(self.mt_counter, coord, conf.cloudMade_styleID)
+                return cloudMade.get_url(self.mt_counter, coord, conf)
             elif (MAP_SERVICES[layer]["TextID"] in ["yter", "ymap", "yhyb"]):
                 return yahoo.get_url(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
             elif (MAP_SERVICES[layer]["TextID"] == "ifwmap"):
