@@ -143,3 +143,8 @@ All values in the tab Settings describe display properties when starting the pro
 == GPS related (only when GPS is enabled)==
 || *Shortcut Key* || *Description* ||
 ||  Space         ||  Re center GPS cursor ||
+
+
+= Config File =
+Details of all the keys in the config file here:
+http://gmapcatcher.googlecode.com/svn/doxygen/html/classgmapcatcher_1_1map_conf_1_1_map_conf.html#pub-attribs
