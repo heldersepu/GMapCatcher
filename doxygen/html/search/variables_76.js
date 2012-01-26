@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['v',['v',['../classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1tests_1_1velocity_test_case.html#aaf2fc8355faa4c2e4ebf87e085733f77',1,'gmapcatcher::pyGPSD::nmea::tests::velocityTestCase']]],
+  ['valid',['valid',['../classgmapcatcher_1_1gps_1_1gpsdata.html#a93a767057c477c6db6717483a8725599',1,'gmapcatcher::gps::gpsdata']]],
+  ['value',['value',['../classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1rfc2217_1_1_telnet_subnegotiation.html#aab3a80ef0095facf793e35e8f9d11db8',1,'gmapcatcher::pyGPSD::nmea::serial::rfc2217::TelnetSubnegotiation']]],
+  ['vdop',['vdop',['../classgmapcatcher_1_1gps_1_1gpsdata.html#a83cc8931bd235b2a013cc6af7da56097',1,'gmapcatcher::gps::gpsdata']]],
+  ['vdop_5fset',['VDOP_SET',['../namespacegmapcatcher_1_1gps.html#a5a4b24212a0d4549de92145e0a03d60a',1,'gmapcatcher::gps']]],
+  ['verbose',['verbose',['../classgmapcatcher_1_1gps_1_1gps.html#ab25aff06da554183a1378506e2ad14f7',1,'gmapcatcher::gps::gps']]],
+  ['verr_5fset',['VERR_SET',['../namespacegmapcatcher_1_1gps.html#ae73bad61d9113df310a87f8049058d46',1,'gmapcatcher::gps']]],
+  ['version',['version',['../namespacegmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1serialposix.html#a3584aac69918992ed984c6dd36b536ff',1,'gmapcatcher::pyGPSD::nmea::serial::serialposix.version()'],['../namespacegmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1setup.html#ab740639c2274257d12dbde02e83f6989',1,'gmapcatcher::pyGPSD::nmea::setup.version()'],['../namespacesetup.html#affa224d545b33f71274b30ba1c709657',1,'setup.version()'],['../namespacegmapcatcher_1_1map_const.html#ab4e0efe3e59ee0c471c6ff1f2d2b7521',1,'gmapcatcher::mapConst.VERSION()'],['../namespacegmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial.html#aa320b653896fbd9bdf18d80853f075a8',1,'gmapcatcher::pyGPSD::nmea::serial::VERSION()']]],
+  ['version_5fname',['VERSION_NAME',['../namespacegmapcatcher_1_1map_const.html#a9377df499bf77dc963d9253ac89e1a0f',1,'gmapcatcher::mapConst']]],
+  ['version_5furl',['version_url',['../classgmapcatcher_1_1map_conf_1_1_map_conf.html#aa360ccb25f5688c05e3dfb9d93e38a39',1,'gmapcatcher::mapConf::MapConf']]],
+  ['view',['view',['../classgmapcatcher_1_1py_g_p_s_d_1_1gps_view_1_1_a_i_s_view.html#a004d5cfe72a67e22c5588a986da28550',1,'gmapcatcher::pyGPSD::gpsView::AISView']]],
+  ['view_5fname_5fto_5fwidget',['view_name_to_widget',['../classgmapcatcher_1_1py_g_p_s_d_1_1gps_view_1_1_base.html#a261b26f0211d643629e830fa51779bc4',1,'gmapcatcher::pyGPSD::gpsView::Base']]],
+  ['virtual_5fearth',['VIRTUAL_EARTH',['../namespacegmapcatcher_1_1map_const.html#af14195390c4fc70ad1adc7b0abad4efa',1,'gmapcatcher::mapConst']]],
+  ['visual_5fdlconfig',['visual_dlconfig',['../classmaps_1_1_main_window.html#ab493cc2c2d73d1ab0b67deaf525a5465',1,'maps::MainWindow']]],
+  ['visual_5fdltool',['visual_dltool',['../classmaps_1_1_main_window.html#a28f6f81f535733898e5e712370eeff6e',1,'maps::MainWindow']]],
+  ['visualdl_5fgc',['visualdl_gc',['../classgmapcatcher_1_1wid_drawing_area_1_1_drawing_area.html#ab91d8cd02863de8568856acad97b333d',1,'gmapcatcher::widDrawingArea::DrawingArea']]],
+  ['visualdl_5flo',['visualdl_lo',['../classgmapcatcher_1_1wid_drawing_area_1_1_drawing_area.html#a8b4af44cc36ba50280cfe7092117be01',1,'gmapcatcher::widDrawingArea::DrawingArea']]]
+];
