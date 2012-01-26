@@ -51,6 +51,7 @@ class MapConf():
         config.set(SECTION_INIT, 'check_for_updates', self.check_for_updates)
         config.set(SECTION_INIT, 'gps_mode', self.gps_mode)
         config.set(SECTION_INIT, 'cloudmade_styleid', self.cloudMade_styleID)
+        config.set(SECTION_INIT, 'cloudmade_api', self.cloudMade_API)
         config.set(SECTION_INIT, 'language', self.language)
         config.set(SECTION_INIT, 'oneDirPerMap', self.oneDirPerMap)
         config.set(SECTION_INIT, 'status_location', self.status_location)
@@ -101,7 +102,6 @@ class MapConf():
 
         ## Repository type - filebased / sqlite3
         self.repository_type =  read_config('repository_type', 0, int)
-
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float)
         ## Show a small cross in the center of the map, default is False (0)
@@ -121,6 +121,8 @@ class MapConf():
         self.gps_mode = read_config('gps_mode', GPS_DISABLED, int)
         ## Initial style ID for the CloudMade maps
         self.cloudMade_styleID = read_config('cloudmade_styleid', 1, int)
+        ## cloudMade API key
+        self.cloudMade_API = read_config('cloudmade_api', '333d990d389d5e65a7714dd738b2fc77', str)
         ## language setting, default is 'en'
         self.language = read_config('language', 'en', str)
         ## oneDirPerMap setting, default is False
