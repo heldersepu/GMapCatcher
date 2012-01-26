@@ -1,0 +1,28 @@
+var classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial =
+[
+    [ "_reconfigurePort", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#ac4838d1217e760c2294deb1ccd1d8b14", null ],
+    [ "close", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a5ae2532c9e01ed5ce9129db8871d23f8", null ],
+    [ "flushInput", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#acd2f27bf63f9d7c16025ec7c69f9ac88", null ],
+    [ "flushOutput", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a7a19832b33a2d71c4fa4c191a1f184f1", null ],
+    [ "fromURL", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a6dff5150c1be071b0748e91f63648626", null ],
+    [ "getCD", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a5275739bc262a3ac7e8994f1f9d174d6", null ],
+    [ "getCTS", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a33779b17e376667168436dac6194f014", null ],
+    [ "getDSR", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#ace33d2a2162412eda4511a7e63fe01c9", null ],
+    [ "getRI", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a7a653184e3155a25714231bf145073b9", null ],
+    [ "inWaiting", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a96f472677344e84ac5728dad292a96b5", null ],
+    [ "makeDeviceName", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a2995a22f274f95526c85478d30ccf7f7", null ],
+    [ "open", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a50918e3c86498fed58e642d2fa1a9c82", null ],
+    [ "read", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#aa2b9cedd59e735f46947db712b957935", null ],
+    [ "sendBreak", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#abe2dedf97456d38ff3281bdb24d5713b", null ],
+    [ "setBreak", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a0fb63d1cf3f00c72286cd2a05eeb5021", null ],
+    [ "setDTR", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a526bcb3bad9d1ef072f8a15c5c3b8e3e", null ],
+    [ "setRTS", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#aa5379543b23058db840b3157802d4e46", null ],
+    [ "write", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a5a7286b9443d142056953a0d978c5729", null ],
+    [ "_isOpen", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a521baecceb88daf35bd093c7d46b5bb6", null ],
+    [ "BAUDRATES", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a8c0fe214ce0b0d6218a0ef9da1108bae", null ],
+    [ "buffer_lock", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#ac28790d7019378fad7dcde2a3e562d6f", null ],
+    [ "cts", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a7350ae01562a163329ec95288a7ef566", null ],
+    [ "dsr", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a44466b13b9dece51508e2565f78112c6", null ],
+    [ "logger", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a2d33e79b2e5dc2302039edfd05adb4eb", null ],
+    [ "loop_buffer", "classgmapcatcher_1_1py_g_p_s_d_1_1nmea_1_1serial_1_1loopback__connection_1_1_loopback_serial.html#a9fc559f086dc543027b9d2e039404772", null ]
+];
