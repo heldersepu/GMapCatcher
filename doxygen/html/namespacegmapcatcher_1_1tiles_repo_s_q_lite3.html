@@ -30,123 +30,13 @@
 <p>This modul provides sqlite3 tile repository functions.  
 <a href="#_details">More...</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
-<tr><td colspan="2"><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgmapcatcher_1_1tiles_repo_s_q_lite3_1_1tiles_repos_s_q_lite_exception.html">tilesReposSQLiteException</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgmapcatcher_1_1tiles_repo_s_q_lite3_1_1tiles_repos_s_q_lite_invalid_path_exception.html">tilesReposSQLiteInvalidPathException</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgmapcatcher_1_1tiles_repo_s_q_lite3_1_1_s_q_lite3_thread.html">SQLite3Thread</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgmapcatcher_1_1tiles_repo_s_q_lite3_1_1_s_q_lite3_funcs.html">SQLite3Funcs</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgmapcatcher_1_1tiles_repo_s_q_lite3_1_1_tiles_repository_s_q_lite3.html">TilesRepositorySQLite3</a></td></tr>
-<tr><td colspan="2"><h2>Variables</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#a8e2df085a6e23e93d129cc373611a042">SQL_IDX_X</a> = 0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#a276976098b605324a54f3361818ddf2a">SQL_IDX_Y</a> = 1</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#a6c693ad778ddd394680d08284b0ff18f">SQL_IDX_ZOOM</a> = 2</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#a0249a4bea24840dbdd56d6b819bf2f79">SQL_IDX_LAYER</a> = 3</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#abc7a41fd7abfb74550fa721476c1202e">SQL_IDX_TSTAMP</a> = 4</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#a5f4cfee02c226a60b3d721943b5ef3e4">SQL_IDX_IMG</a> = 5</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#af0e0d4efe9187f299d891b9866392d81">SQL_DATABASE_DDL</a> = &quot;CREATE TABLE tiles (x INTEGER, y INTEGER,zoom INTEGER,layer INTEGER, tstamp INTEGER, img BLOB, PRIMARY KEY(x,y,zoom,layer));&quot;</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>This modul provides sqlite3 tile repository functions. </p>
 <p>Usage:</p>
 <ul>
-<li>constructor requires MapServ instance, because method 'get_tile_from_coord' is provided in the MapServ</li>
+<li>constructor requires MapServ instance, because method 'get_tile_from_coord' is provided in the MapServ </li>
 </ul>
-<ul>
-<li>this module is not used directly. It is used via MapServ() methods: def finish(self): def load_pixbuf(self, coord, layer, force_update): def do_export(self, tcoord, layer, online, mapServ, styleID, size): def remove_old_tile(self, coord, layer, filename=None, interval=86400): def is_tile_in_local_repos(self, coord, layer): def set_repository_path(self, newpath):</li>
-<li>module is finalized from MapServ.finish() method </li>
-</ul>
-<hr/><h2>Variable Documentation</h2>
-<a class="anchor" id="af0e0d4efe9187f299d891b9866392d81"></a><!-- doxytag: member="gmapcatcher::tilesRepoSQLite3::SQL_DATABASE_DDL" ref="af0e0d4efe9187f299d891b9866392d81" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string <a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#af0e0d4efe9187f299d891b9866392d81">gmapcatcher::tilesRepoSQLite3.SQL_DATABASE_DDL</a> = &quot;CREATE TABLE tiles (x INTEGER, y INTEGER,zoom INTEGER,layer INTEGER, tstamp INTEGER, img BLOB, PRIMARY KEY(x,y,zoom,layer));&quot;</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a5f4cfee02c226a60b3d721943b5ef3e4"></a><!-- doxytag: member="gmapcatcher::tilesRepoSQLite3::SQL_IDX_IMG" ref="a5f4cfee02c226a60b3d721943b5ef3e4" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#a5f4cfee02c226a60b3d721943b5ef3e4">gmapcatcher::tilesRepoSQLite3.SQL_IDX_IMG</a> = 5</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a0249a4bea24840dbdd56d6b819bf2f79"></a><!-- doxytag: member="gmapcatcher::tilesRepoSQLite3::SQL_IDX_LAYER" ref="a0249a4bea24840dbdd56d6b819bf2f79" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#a0249a4bea24840dbdd56d6b819bf2f79">gmapcatcher::tilesRepoSQLite3.SQL_IDX_LAYER</a> = 3</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="abc7a41fd7abfb74550fa721476c1202e"></a><!-- doxytag: member="gmapcatcher::tilesRepoSQLite3::SQL_IDX_TSTAMP" ref="abc7a41fd7abfb74550fa721476c1202e" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#abc7a41fd7abfb74550fa721476c1202e">gmapcatcher::tilesRepoSQLite3.SQL_IDX_TSTAMP</a> = 4</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a8e2df085a6e23e93d129cc373611a042"></a><!-- doxytag: member="gmapcatcher::tilesRepoSQLite3::SQL_IDX_X" ref="a8e2df085a6e23e93d129cc373611a042" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#a8e2df085a6e23e93d129cc373611a042">gmapcatcher::tilesRepoSQLite3.SQL_IDX_X</a> = 0</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a276976098b605324a54f3361818ddf2a"></a><!-- doxytag: member="gmapcatcher::tilesRepoSQLite3::SQL_IDX_Y" ref="a276976098b605324a54f3361818ddf2a" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#a276976098b605324a54f3361818ddf2a">gmapcatcher::tilesRepoSQLite3.SQL_IDX_Y</a> = 1</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a6c693ad778ddd394680d08284b0ff18f"></a><!-- doxytag: member="gmapcatcher::tilesRepoSQLite3::SQL_IDX_ZOOM" ref="a6c693ad778ddd394680d08284b0ff18f" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="namespacegmapcatcher_1_1tiles_repo_s_q_lite3.html#a6c693ad778ddd394680d08284b0ff18f">gmapcatcher::tilesRepoSQLite3.SQL_IDX_ZOOM</a> = 2</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
 </div>
 <hr size="1"><address style="text-align: right;"><small>
 Generated by&nbsp;<a href="http://www.doxygen.org/index.html"><img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.6.0</small></address>

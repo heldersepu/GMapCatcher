@@ -29,8 +29,9 @@
 <a href="#_details">More...</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedownload.html#a6c7e90ae2fecde0a301e3c36e8e34786">do_nothing</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedownload.html#a9c9cc743dc7332f64adc1bce8afcb445">dl_callback</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedownload.html#a199fcd40171dc733a89870660fb7f738">download</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedownload.html#a1faa0c5c6b94d9df3d9b59441de9082f">download_coordpath</a></td></tr>
 <tr><td colspan="2"><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedownload.html#af5b7b24f238c0a00b229b0a2d549be33">mConf</a> = mapConf.MapConf()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedownload.html#aaa1a13bc0133034d3d08346cfa60a8f9">ctx_map</a> = <a class="el" href="classgmapcatcher_1_1map_services_1_1_map_serv.html">MapServ</a>(mConf.init_path, mConf.repository_type)</td></tr>
@@ -42,12 +43,12 @@
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Downloader tool without GUI. </p>
 <hr/><h2>Function Documentation</h2>
-<a class="anchor" id="a6c7e90ae2fecde0a301e3c36e8e34786"></a><!-- doxytag: member="download::do_nothing" ref="a6c7e90ae2fecde0a301e3c36e8e34786" args="" -->
+<a class="anchor" id="a9c9cc743dc7332f64adc1bce8afcb445"></a><!-- doxytag: member="download::dl_callback" ref="a9c9cc743dc7332f64adc1bce8afcb445" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">def download.do_nothing </td>
+          <td class="memname">def download.dl_callback </td>
           <td>(</td>
           <td class="paramtype">&nbsp;</td>
           <td class="paramname"> <em>args</em>, </td>
@@ -114,6 +115,51 @@
           <td></td>
           <td class="paramtype">&nbsp;</td>
           <td class="paramname"> <em>layer</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1faa0c5c6b94d9df3d9b59441de9082f"></a><!-- doxytag: member="download::download_coordpath" ref="a1faa0c5c6b94d9df3d9b59441de9082f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def download.download_coordpath </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>gpxfile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>max_zl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>min_zl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>arround</em> = <code>2</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>

@@ -47,8 +47,10 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Checks if a directory exist if not it will be created.  <a href="#acd93232f232fcf16ec2772901bed72fa"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1file_utils.html#a9f3f383d3d97ea4fd6f91628384b7a4c">del_file</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Deletes a given file.  <a href="#a9f3f383d3d97ea4fd6f91628384b7a4c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1file_utils.html#adceb74c14c012f6a6aadc58b3dbca03b">is_old</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check if the file is older than given time (24h * 3600s/h) = 86400s.  <a href="#adceb74c14c012f6a6aadc58b3dbca03b"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1file_utils.html#aa395ef356adca75610da129d1c5597a2">delete_old</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove file if is older than given time (24h * 3600s) = 86400s.  <a href="#aa395ef356adca75610da129d1c5597a2"></a><br/></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove file if is older than given time.  <a href="#aa395ef356adca75610da129d1c5597a2"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>A common location for all the File I/O Utilities. </p>
@@ -79,7 +81,13 @@
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>strName</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>strName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>extraTag</em> = <code>False</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -157,7 +165,7 @@
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>intSeconds</em> = <code>86400</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>intDays</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -168,7 +176,7 @@
 </div>
 <div class="memdoc">
 
-<p>Remove file if is older than given time (24h * 3600s) = 86400s. </p>
+<p>Remove file if is older than given time. </p>
 
 </div>
 </div>
@@ -188,6 +196,35 @@
 <div class="memdoc">
 
 <p>Returns all the available themes. </p>
+
+</div>
+</div>
+<a class="anchor" id="adceb74c14c012f6a6aadc58b3dbca03b"></a><!-- doxytag: member="gmapcatcher::fileUtils::is_old" ref="adceb74c14c012f6a6aadc58b3dbca03b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def gmapcatcher.fileUtils.is_old </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>intDays</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Check if the file is older than given time (24h * 3600s/h) = 86400s. </p>
 
 </div>
 </div>

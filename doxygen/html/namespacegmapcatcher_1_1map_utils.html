@@ -39,6 +39,9 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert from coord(lat, lng, zoom_level) to (tile, offset).  <a href="#a14a78e3a6cdef2031a39327aa2c57125"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1map_utils.html#a42650155f8ad3cb642e0099a1805927c">tile_to_coord</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert from ((tile, offset), zoom_level) to coord(lat, lon, zoom_level).  <a href="#a42650155f8ad3cb642e0099a1805927c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1map_utils.html#a40e523e59e0a8674950669e32320a6bc">coords_to_tilepath</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert a list (iterable) of coords (lat,lon) into a set of tiles.  <a href="#a40e523e59e0a8674950669e32320a6bc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1map_utils.html#a2bf6c05a51cc4dbd84311151d7b38a0b">tilepath_bulk</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1map_utils.html#a2354aa999dad1fcee185b62c390f1cdd">km_per_pixel</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Find scale of the picture in km per pixel.  <a href="#a2354aa999dad1fcee185b62c390f1cdd"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1map_utils.html#a96136c528ffe6c028a6e9454337462a6">friendly_scale</a></td></tr>
@@ -60,6 +63,8 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return Date &amp; Time.  <a href="#a4826a3fe040d48b8071db2d6a541a453"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1map_utils.html#a2570022bc158ab7d762d36b04db2866f">altitude_to_zoom</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert altitude (meters) to zoom.  <a href="#a2570022bc158ab7d762d36b04db2866f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1map_utils.html#ac9eff61d890e47e2f432f3d8c11c5ae9">subs_entity</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegmapcatcher_1_1map_utils.html#a1f3ed71c7453fa48368e78a057afc1e9">html_decode</a></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>A group of map utilities. </p>
@@ -104,6 +109,35 @@
 
 </div>
 </div>
+<a class="anchor" id="a40e523e59e0a8674950669e32320a6bc"></a><!-- doxytag: member="gmapcatcher::mapUtils::coords_to_tilepath" ref="a40e523e59e0a8674950669e32320a6bc" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def gmapcatcher.mapUtils.coords_to_tilepath </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>coords</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>zoom</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Convert a list (iterable) of coords (lat,lon) into a set of tiles. </p>
+
+</div>
+</div>
 <a class="anchor" id="a96136c528ffe6c028a6e9454337462a6"></a><!-- doxytag: member="gmapcatcher::mapUtils::friendly_scale" ref="a96136c528ffe6c028a6e9454337462a6" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -121,6 +155,24 @@
 <div class="memdoc">
 
 <p>should return a tuple of (60 &lt;= pixels &lt;= 125, nice round number of m [% 1000 = 0 when nice round number of km]) </p>
+
+</div>
+</div>
+<a class="anchor" id="a1f3ed71c7453fa48368e78a057afc1e9"></a><!-- doxytag: member="gmapcatcher::mapUtils::html_decode" ref="a1f3ed71c7453fa48368e78a057afc1e9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def gmapcatcher.mapUtils.html_decode </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>string</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
 </div>
 </div>
@@ -365,6 +417,24 @@
 
 </div>
 </div>
+<a class="anchor" id="ac9eff61d890e47e2f432f3d8c11c5ae9"></a><!-- doxytag: member="gmapcatcher::mapUtils::subs_entity" ref="ac9eff61d890e47e2f432f3d8c11c5ae9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def gmapcatcher.mapUtils.subs_entity </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>match</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a5befe0d69ad4c21181cc2f107e319f1c"></a><!-- doxytag: member="gmapcatcher::mapUtils::tile_adjust" ref="a5befe0d69ad4c21181cc2f107e319f1c" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -486,6 +556,33 @@
 <div class="memdoc">
 
 <p>Convert from ((tile, offset), zoom_level) to coord(lat, lon, zoom_level). </p>
+
+</div>
+</div>
+<a class="anchor" id="a2bf6c05a51cc4dbd84311151d7b38a0b"></a><!-- doxytag: member="gmapcatcher::mapUtils::tilepath_bulk" ref="a2bf6c05a51cc4dbd84311151d7b38a0b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def gmapcatcher.mapUtils.tilepath_bulk </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>tiles</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>size</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
 </div>
 </div>
