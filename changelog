@@ -1,6 +1,14 @@
+Feb 27 2012    H.S    <HelderSepu@gmail.com>
+    * 0.7.7.0 - At revision: 1225
+    * OpenCycleMap tiles server changed (Issue 308)
+    * Added OSM format (Issue 300)
+    * Download tiles from a GPX path (Issue 289)
+    * Import/Export maps (Issue 92)
+    * Change the ".googlemaps" folder to ".GMapCatcher" (Issue 276)
+
 May 1 2011    H.S    <HelderSepu@gmail.com>
     * 0.7.6.1 - At revision: 1138
-    * Fix issue wi the search (Issue 264)
+    * Fix issue with the search (Issue 264)
 	
 March 28 2011    H.S    <HelderSepu@gmail.com>
     * 0.7.6.0 - At revision: 1130
