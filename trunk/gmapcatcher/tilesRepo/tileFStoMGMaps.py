@@ -69,4 +69,4 @@ def do_conversion(dirSource, dirDestination):
             convert_file(os.path.join(root, name), dirDestination)
 
 
-do_conversion('C:\\Users\Dog\\.googlemaps\\yahoomap', 'C:\\MGMapsCache')
+do_conversion('C:\\Users\\Dog\\.googlemaps\\yahoomap', 'C:\\MGMapsCache')
