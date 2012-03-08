@@ -17,7 +17,6 @@
 @COLOR 02
 :: clean up before starting
 @DEL *.exe
-@COPY setup.* ..
 @CD ..
 @DEL *.exe
 @DEL *.pyc /s
@@ -27,11 +26,12 @@
 
 @ECHO.
 @ECHO.
-@ECHO  CLEANING COMPLETE!   READY TO START!
+@ECHO  CLEANING COMPLETE!   READY TO START?
 @ECHO.
 @PAUSE
 
 :: Launch the PYTHON setup
+@COPY installer\setup.* .
 %SystemDrive%\PYTHON27\PYTHON.EXE setup.py py2exe
 
 :: Few seconds delay to show dependencies
@@ -58,11 +58,13 @@ CALL %NSIS% setup.nsi
 
 :: clean up at the end
 @DEL *.pyc /s > NUL
-@CLS
+@DEL setup.* /q
+@RD build /s /q
+@RD dist /s /q
+
+@ECHO.
+@ECHO.
 @COLOR 0A
 @MOVE *.exe installer
 @ECHO.
 @PAUSE
-@DEL setup.* /q
-@RD build /s /q
-@RD dist /s /q
