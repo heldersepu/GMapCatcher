@@ -8,7 +8,7 @@ import time
 import gobject
 
 import mapUtils
-import tilesRepo
+from tilesRepo.tilesRepo import TilesRepository
 
 class InvalidInputParametersError(Exception):
     pass
@@ -25,9 +25,8 @@ class TilesTransfer(threading.Thread):
         region: (width, height) [km]
         layer: what layer to transfer
         """
+        
         threading.Thread.__init__(self)
-
-
         self.stop_lock = threading.Lock()
 
         # when set to True, thread should stop immediately
@@ -45,10 +44,10 @@ class TilesTransfer(threading.Thread):
         self.layer = layer
         self.overwrite_destination = overwrite_destination
 
-        if ( not isinstance( trepos_source, tilesRepo.TilesRepository ) ):
-            raise InvalidInputParametersError( "trepos_source is not subclass of tilesRepo.TilesRepository" )
-        if ( not isinstance( trepos_destination, tilesRepo.TilesRepository ) ):
-            raise InvalidInputParametersError( "trepos_destination is not subclass of tilesRepo.TilesRepository" )
+        if ( not isinstance( trepos_source, TilesRepository ) ):
+            raise InvalidInputParametersError( "trepos_source is not subclass of TilesRepository" )
+        if ( not isinstance( trepos_destination, TilesRepository ) ):
+            raise InvalidInputParametersError( "trepos_destination is not subclass of TilesRepository" )
         if self.zoom_max < self.zoom_min:
             raise InvalidInputParametersError("Zoom max (%d) is less than zoom min (%d)." % (self.zoom_max, self.zoom_min))
 
