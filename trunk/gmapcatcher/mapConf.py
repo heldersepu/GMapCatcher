@@ -67,6 +67,8 @@ class MapConf():
         config.set(SECTION_INIT, 'google_src', self.google_src)
         config.set(SECTION_INIT, 'match_func', self.match_func)
         config.set(SECTION_INIT, 'show_marker_name', int(self.show_marker_name))
+        config.set(SECTION_INIT, 'marker_font_color', self.marker_font_color)        
+        config.set(SECTION_INIT, 'marker_font_desc', self.marker_font_desc)        
 
         configfile = open(self.config_path, 'wb')
         config.write(configfile)
@@ -152,6 +154,11 @@ class MapConf():
         self.match_func = read_config('match_func', ENTRY_SUB_MENU[0], str)
         ## Show the name/description of the marker in the map
         self.show_marker_name = read_config('show_marker_name', 0, int)
+        ## The font color for the name of the marker
+        self.marker_font_color = read_config('marker_font_color', '#00CCCC', str)
+        ## The font Description for the marker "sans bold 12"
+        ## http://www.pygtk.org/docs/pygtk/class-pangofontdescription.html
+        self.marker_font_desc = read_config('marker_font_desc', 'normal', str)
 
     ## Write the configuration to the default file
     def save(self):
