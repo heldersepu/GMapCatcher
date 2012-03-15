@@ -14,7 +14,6 @@ ternary = lambda a,b,c : (b,c)[not a]
 class DrawingArea(gtk.DrawingArea):
     center = ((0,0),(128,128))
     draging_start = (0, 0)
-    pangolayout = False
 
     def __init__(self):
         super(DrawingArea, self).__init__()
@@ -178,9 +177,9 @@ class DrawingArea(gtk.DrawingArea):
         x = int(screen_coord1[0])
         y = int(screen_coord1[1])
         self.window.draw_line(gc, int(screen_coord[0]), int(screen_coord[1]), x, y)
-        self.pangolayout = self.create_pango_layout("")
-        self.pangolayout.set_text(dist_str)
-        self.wr_pltxt(gc,x,y,self.pangolayout)
+        pangolayout = self.create_pango_layout("")
+        pangolayout.set_text(dist_str)
+        self.wr_pltxt(gc,x,y,pangolayout)
 
     ## Draws a circle as starting point for ruler
     def draw_stpt(self, mcoord, zl):
@@ -241,11 +240,12 @@ class DrawingArea(gtk.DrawingArea):
                 if conf.show_marker_name:
                     # Display the Marker Name
                     gco = self.window.new_gc()
-                    gco.set_rgb_fg_color(gtk.gdk.color_parse("#00CCCC"))
+                    gco.set_rgb_fg_color(gtk.gdk.color_parse(conf.marker_font_color))
 
-                    self.pangolayout = self.create_pango_layout("")
-                    self.pangolayout.set_text(marker_name)
-                    self.wr_pltxt(gco, screen_coord[0], screen_coord[1], self.pangolayout)
+                    pangolayout = self.create_pango_layout(marker_name)
+                    pangolayout.set_font_description(
+                            pango.FontDescription(conf.marker_font_desc))
+                    self.wr_pltxt(gco, screen_coord[0], screen_coord[1], pangolayout)
 
     ## Show the text
     def wr_pltxt(self,gc,x,y,pl):
