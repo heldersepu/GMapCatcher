@@ -23,12 +23,14 @@ SEZNAM = 9
 SEZNAM_HIKING = 10
 SEZNAM_CYCLO = 11
 SEZNAM_HIST = 12
+STAMEN = 13
 
 MAP_SERVERS = [
     "Google", "OpenStreetMap", "CloudMade", "Yahoo",
     "InformationFreeway", "OpenCycleMap", "Google Map Maker",
     "Virtual Earth", "Yandex",
     "Seznam", "Seznam Turistická", "Seznam Cyklo", "Seznam Historická",
+    "Stamen",
 ]
 
 LAYER_MAP = 0
@@ -118,6 +120,13 @@ MAP_SERVICES = [
             "layerDir": "seznamter", "layerName": "Stínování" },
     {"ID": LAYER_HYB, "TextID": "seznam_hybrid", "serviceName": MAP_SERVERS[SEZNAM_HIST],
             "layerDir": "seznamhybrid", "layerName": "Popisy" },
+    # Stamen map
+    {"ID": LAYER_MAP, "TextID": "stamen_toner",  "serviceName":MAP_SERVERS[STAMEN],
+            "layerDir": "toner",     "layerName": "Toner" },
+    {"ID": LAYER_SAT, "TextID": "stamen_water",  "serviceName":MAP_SERVERS[STAMEN],
+            "layerDir": "watercolor", "layerName": "Watercolor" },
+    {"ID": LAYER_TER, "TextID": "stamen_terrain",  "serviceName":MAP_SERVERS[STAMEN],
+            "layerDir": "terrain", "layerName": "Terrain" },
 ]
 HYB_SAT_LAYER_OFFSETS = {"Google": 2, "Yahoo": 1, MAP_SERVERS[SEZNAM]: 2, MAP_SERVERS[SEZNAM_HIKING]: 2, MAP_SERVERS[SEZNAM_CYCLO]: 2, MAP_SERVERS[SEZNAM_HIST]: 2}
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
