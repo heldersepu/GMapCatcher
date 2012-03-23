@@ -24,6 +24,7 @@ import mapServers.googleMapMaker as googleMapMaker
 import mapServers.virtualEarth as virtualEarth
 import mapServers.yandex as yandex
 import mapServers.seznam as seznam
+import mapServers.stamenMaps as stamenMaps
 
 from threading import Timer
 
@@ -100,6 +101,8 @@ class MapServ:
                     return virtualEarth.get_url(self.mt_counter, coord, layer)
                 elif conf.map_service == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
                     return openStreetMaps.get_url(self.mt_counter, coord)
+                elif conf.map_service == MAP_SERVERS[STAMEN]:
+                    return openStreetMaps.get_url(self.mt_counter, layer, coord)
                 elif conf.map_service == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
                     return cloudMade.get_url(self.mt_counter, coord, conf)
                 elif conf.map_service == MAP_SERVERS[YAHOO] and (layer != LAYER_TER):
@@ -127,6 +130,8 @@ class MapServ:
                 return virtualEarth.get_url(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
             elif (MAP_SERVICES[layer]["TextID"] == "osmmap"):
                 return openStreetMaps.get_url(self.mt_counter, coord)
+            elif (MAP_SERVICES[layer]["TextID"] in ("stamen_toner", "stamen_water", "stamen_terrain")):
+                return stamenMaps.get_url(self.mt_counter, MAP_SERVICES[layer]["layerDir"], coord)
             elif (MAP_SERVICES[layer]["TextID"] == "cmmap"):
                 return cloudMade.get_url(self.mt_counter, coord, conf)
             elif (MAP_SERVICES[layer]["TextID"] in ["yter", "ymap", "yhyb"]):
