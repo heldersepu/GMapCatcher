@@ -3,6 +3,13 @@
 
 <wiki:toc max_depth="5" />
 
+==== GMapCatcher v0.7.7.1 ====
+Showing the new Right-Click Actions<br>
+http://gmapcatcher.googlecode.com/svn-history/r1234/wiki/font/1.png
+http://gmapcatcher.googlecode.com/svn-history/r1234/wiki/font/2.png
+http://gmapcatcher.googlecode.com/svn-history/r1234/wiki/font/3.png
+
+
 ==== GMapCatcher v0.6 ====
 Showing the new Right-Click Actions<br>
 http://gmapcatcher.googlecode.com/svn/wiki/gmapcatcher-0.6.png
