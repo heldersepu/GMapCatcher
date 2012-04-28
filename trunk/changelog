@@ -1,3 +1,10 @@
+April 28 2012    H.S    <HelderSepu@gmail.com>
+    * 0.7.7.2 - At revision: 1240
+    * Add measuring method to find the distance between two points (Issue 277)
+    * Add config option to set API for CloudMade maps (Issue 306)
+    * Fix error using draw_line (Issue 321)
+    * Add support for Stamen maps: http://maps.stamen.com
+    
 March 15 2012    H.S    <HelderSepu@gmail.com>
     * 0.7.7.1 - At revision: 1231
     * Add the ability to change the font/style/color of the marker
