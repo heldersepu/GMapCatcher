@@ -199,20 +199,23 @@ class DrawingArea(gtk.DrawingArea):
             width, height
         )
 
+    def w_draw_line(gc, x1, y1, x2, y2):
+        self.window.draw_line(gc, int(x1), int(y1), int(x2), int(y2))
+
     def draw_arrow(self, screen_coord, direction):
         self.set_arrow_gc()
         cos = math.cos(direction)
         sin = math.sin(direction)
         arrowtop = (screen_coord[0] + 12 * cos, screen_coord[1] + 12 * sin)
-        self.window.draw_line(self.arrow_gc,
+        self.w_draw_line(self.arrow_gc,
                 screen_coord[0] - 12 * cos,
                 screen_coord[1] - 12 * sin,
                 arrowtop[0], arrowtop[1])
-        self.window.draw_line(self.arrow_gc,
+        self.w_draw_line(self.arrow_gc,
                 arrowtop[0], arrowtop[1],
                 arrowtop[0] + 7 * math.cos(direction + 3 * math.pi / 4.0),
                 arrowtop[1] + 7 * math.sin(direction + 3 * math.pi / 4.0))
-        self.window.draw_line(self.arrow_gc,
+        self.w_draw_line(self.arrow_gc,
                 arrowtop[0], arrowtop[1],
                 arrowtop[0] + 7 * math.cos(direction - 3 * math.pi / 4.0),
                 arrowtop[1] + 7 * math.sin(direction - 3 * math.pi / 4.0))
