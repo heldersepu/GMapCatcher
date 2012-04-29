@@ -199,7 +199,7 @@ class DrawingArea(gtk.DrawingArea):
             width, height
         )
 
-    def w_draw_line(gc, x1, y1, x2, y2):
+    def w_draw_line(self, gc, x1, y1, x2, y2):
         self.window.draw_line(gc, int(x1), int(y1), int(x2), int(y2))
 
     def draw_arrow(self, screen_coord, direction):
