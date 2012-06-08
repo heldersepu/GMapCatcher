@@ -24,13 +24,14 @@ SEZNAM_HIKING = 10
 SEZNAM_CYCLO = 11
 SEZNAM_HIST = 12
 STAMEN = 13
+REFUGES = 14
 
 MAP_SERVERS = [
     "Google", "OpenStreetMap", "CloudMade", "Yahoo",
     "InformationFreeway", "OpenCycleMap", "Google Map Maker",
     "Virtual Earth", "Yandex",
     "Seznam", "Seznam Turistická", "Seznam Cyklo", "Seznam Historická",
-    "Stamen",
+    "Stamen", "Refuges Europe"
 ]
 
 LAYER_MAP = 0
@@ -127,8 +128,23 @@ MAP_SERVICES = [
             "layerDir": "watercolor", "layerName": "Watercolor" },
     {"ID": LAYER_TER, "TextID": "stamen_terrain",  "serviceName":MAP_SERVERS[STAMEN],
             "layerDir": "terrain", "layerName": "Terrain" },
+    # Refuges.info
+    {"ID": LAYER_MAP, "TextID": "refhyk",  "serviceName":MAP_SERVERS[REFUGES],
+            "layerDir": "hiking",     "layerName": "Combined" },
+    {"ID": LAYER_SAT, "TextID": "refter",  "serviceName":MAP_SERVERS[REFUGES],
+            "layerDir": "relief", "layerName": LAYER_NAMES[LAYER_TER] },
+    {"ID": LAYER_HYB, "TextID": "refonlyhyk",  "serviceName":MAP_SERVERS[REFUGES],
+            "layerDir": "hiking_without_contours", "layerName": LAYER_NAMES[LAYER_HYB]},
 ]
-HYB_SAT_LAYER_OFFSETS = {"Google": 2, "Yahoo": 1, MAP_SERVERS[SEZNAM]: 2, MAP_SERVERS[SEZNAM_HIKING]: 2, MAP_SERVERS[SEZNAM_CYCLO]: 2, MAP_SERVERS[SEZNAM_HIST]: 2}
+HYB_SAT_LAYER_OFFSETS = {
+    "Google": 2,
+    "Yahoo": 1,
+    MAP_SERVERS[SEZNAM]: 2,
+    MAP_SERVERS[SEZNAM_HIKING]: 2,
+    MAP_SERVERS[SEZNAM_CYCLO]: 2,
+    MAP_SERVERS[SEZNAM_HIST]: 2,
+    MAP_SERVERS[REFUGES]: 2
+}
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
 NO_GPS = ["Yahoo"]
 NON_ONEDIR_COMBO_INDICES = {}

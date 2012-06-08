@@ -1,4 +1,4 @@
-## @package gmapcatcher.mapServers.openStreetMaps
+## @package gmapcatcher.mapServers.stamenMaps
 # All the interaction with Stamen.com
 #
 # Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA
