@@ -44,6 +44,7 @@ if __name__ == "__main__":
 
     if (args.location is None) and (args.gpx is None) and ((args.lat is None) or (args.lng is None)):
         args.print_help()
+        import signal ; os.kill(os.getpid(), signal.SIGTERM)
         sys.exit(0)
 
     print "location = %s" % args.location
@@ -74,13 +75,14 @@ if __name__ == "__main__":
         args.location = "somewhere"
 
     if args.gpx is None:
-        print "Download %s (%f, %f), range (%f, %f), zoom level: %d to %d" % \
+        print "Download %s (%f, %f), range (%f, %f), mapsource: \"%s %s\", zoom level: %d to %d" % \
                 (args.location, args.lat, args.lng,
                  args.lat_range, args.lng_range,
+                 MAP_SERVICES[args.layer]['serviceName'], MAP_SERVICES[args.layer]['layerName'],
                  args.max_zl, args.min_zl)
     else:
-        print "Download path in %s, zoom level: %d to %d, width=%d tiles" % \
-                (args.gpx, args.max_zl, args.min_zl, args.width)
+        print "Download path in %s, mapsource: \"%s %s\", zoom level: %d to %d, width=%d tiles" % \
+                (args.gpx, MAP_SERVICES[args.layer]['serviceName'], MAP_SERVICES[args.layer]['layerName'], args.max_zl, args.min_zl, args.width)
 
     downloader = MapDownloader(ctx_map, args.nr_threads)
     try:
