@@ -454,7 +454,7 @@ class TilesRepositoryRMaps(TilesRepository):
             raise
         except:
             ei = sys.exc_info()
-            print '\tdownload failed -' + str(traceback.format_exception(ei[0], ei[1], ei[2], None))
+            print '\tdownload failed - ' + str(traceback.format_exception(ei[0], ei[1], ei[2], None))
         return False
 
 
