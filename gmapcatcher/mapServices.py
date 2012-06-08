@@ -25,6 +25,7 @@ import mapServers.virtualEarth as virtualEarth
 import mapServers.yandex as yandex
 import mapServers.seznam as seznam
 import mapServers.stamenMaps as stamenMaps
+import mapServers.refugesInfo as refugesInfo
 
 from threading import Timer
 
@@ -102,7 +103,9 @@ class MapServ:
                 elif conf.map_service == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
                     return openStreetMaps.get_url(self.mt_counter, coord)
                 elif conf.map_service == MAP_SERVERS[STAMEN]:
-                    return openStreetMaps.get_url(self.mt_counter, layer, coord)
+                    return stamenMaps.get_url(self.mt_counter, layer, coord)
+                elif conf.map_service == MAP_SERVERS[REFUGES]:
+                    return refugesInfo.get_url(self.mt_counter, layer, coord)
                 elif conf.map_service == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
                     return cloudMade.get_url(self.mt_counter, coord, conf)
                 elif conf.map_service == MAP_SERVERS[YAHOO] and (layer != LAYER_TER):
@@ -132,6 +135,8 @@ class MapServ:
                 return openStreetMaps.get_url(self.mt_counter, coord)
             elif (MAP_SERVICES[layer]["TextID"] in ("stamen_toner", "stamen_water", "stamen_terrain")):
                 return stamenMaps.get_url(self.mt_counter, MAP_SERVICES[layer]["layerDir"], coord)
+            elif (MAP_SERVICES[layer]["TextID"] in ("refhyk", "refter", "refonlyhyk")):
+                return refugesInfo.get_url(self.mt_counter, MAP_SERVICES[layer]["layerDir"], coord)
             elif (MAP_SERVICES[layer]["TextID"] == "cmmap"):
                 return cloudMade.get_url(self.mt_counter, coord, conf)
             elif (MAP_SERVICES[layer]["TextID"] in ["yter", "ymap", "yhyb"]):
@@ -166,7 +171,7 @@ class MapServ:
                 if oa['status']==200:
                     return oa['data']
                 else:
-                    raise RuntimeError, ("HTTP Reponse is: " + str(oa['status']),)
+                    raise RuntimeError, ("HTTP Reponse is: " + str(oa['status']) + ' in ' + str(href),)
             except:
                 raise
 
