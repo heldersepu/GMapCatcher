@@ -769,51 +769,7 @@ class MainWindow(gtk.Window):
                 self.add_marker((event.x, event.y))
             # Left-Click in Ruler Mode
             elif (event.button == 1 & self.Ruler):
-                self.from_coord=self.pointer_to_world_coord((event.x, event.y))
-                x = self.from_coord[0]
-                y = self.from_coord[1]
-                zl = self.get_zoom()
-
-                if (self.segment_no == -1): # First Click
-                    self.ruler_coordx[0] = x # Latiude
-                    self.ruler_coordy[0] = y # Longitude
-                    self.ruler_coordzl[0] = zl   # Zoom Level
-                    self.ruler_coordz[0] = 0.00 # Distance from last point
-                    self.segment_no = 0
-
-                if (self.segment_no > 0): # Calculation required only from 2nd -Click
-                    sn = self.segment_no
-                    so = self.segment_no - 1
-                    self.ruler_coordx[sn] = x # Latiude
-                    self.ruler_coordy[sn] = y # Longitude
-                    self.ruler_coordzl[sn] = zl   # Zoom Level
-                    screen_coord1 = self.drawing_area.coord_to_screen(self.ruler_coordx[so], self.ruler_coordy[so], self.ruler_coordzl[so])
-                    screen_coord2 = self.drawing_area.coord_to_screen(x, y, zl)
-
-                    if (screen_coord1[0] > screen_coord2[0]):
-                        x = screen_coord1[0] - screen_coord2[0]
-                    else:
-                        x = screen_coord2[0] - screen_coord1[0]
-
-                    if (screen_coord1[1] > screen_coord2[1]):
-                        y = screen_coord1[1] - screen_coord2[1]
-                    else:
-                        y = screen_coord2[1] - screen_coord1[1]
-                    z = math.sqrt(math.pow(x,2) + math.pow(y,2))
-                    km = mapUtils.km_per_pixel((0, 0, zl))
-                    z = z * km
-
-                    self.ruler_coordz[sn] = z # Distance from last point
-                    self.draw_overlay()
-
-                    self.total_dist = self.total_dist + z
-                    if (z > 10):
-                        self.status_bar.push(self.status_bar_id, "Segment Distance = %.4f km, Total distance = %.4f km" % (z, (self.total_dist + z)))
-                    else:
-                        self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), (self.total_dist + z)))
-
-                # increament incl. so=0
-                self.segment_no = self.segment_no + 1
+                self.add_segment(event)
 
         # Double-Click event Zoom In or Out
         elif (event.type == gtk.gdk._2BUTTON_PRESS):
@@ -823,6 +779,54 @@ class MainWindow(gtk.Window):
             # 2Click Zoom In
             else:
                 self.do_zoom(self.get_zoom() - 1, True, (event.x, event.y))
+
+    def add_segment(self, event):
+        self.from_coord=self.pointer_to_world_coord((event.x, event.y))
+        x = self.from_coord[0]
+        y = self.from_coord[1]
+        zl = self.get_zoom()
+
+        if (self.segment_no == -1): # First Click
+            self.ruler_coordx[0] = x # Latiude
+            self.ruler_coordy[0] = y # Longitude
+            self.ruler_coordzl[0] = zl   # Zoom Level
+            self.ruler_coordz[0] = 0.00 # Distance from last point
+            self.segment_no = 0
+
+        if (self.segment_no > 0): # Calculation required only from 2nd -Click
+            sn = self.segment_no
+            so = self.segment_no - 1
+            self.ruler_coordx[sn] = x # Latiude
+            self.ruler_coordy[sn] = y # Longitude
+            self.ruler_coordzl[sn] = zl   # Zoom Level
+            screen_coord1 = self.drawing_area.coord_to_screen(self.ruler_coordx[so], self.ruler_coordy[so], self.ruler_coordzl[so])
+            screen_coord2 = self.drawing_area.coord_to_screen(x, y, zl)
+            if screen_coord1 is None or screen_coord2 is None: return
+
+            if (screen_coord1[0] > screen_coord2[0]):
+                x = screen_coord1[0] - screen_coord2[0]
+            else:
+                x = screen_coord2[0] - screen_coord1[0]
+
+            if (screen_coord1[1] > screen_coord2[1]):
+                y = screen_coord1[1] - screen_coord2[1]
+            else:
+                y = screen_coord2[1] - screen_coord1[1]
+            z = math.sqrt(math.pow(x,2) + math.pow(y,2))
+            km = mapUtils.km_per_pixel((0, 0, zl))
+            z = z * km
+
+            self.ruler_coordz[sn] = z # Distance from last point
+            self.draw_overlay()
+
+            self.total_dist = self.total_dist + z
+            if (z > 10):
+                self.status_bar.push(self.status_bar_id, "Segment Distance = %.4f km, Total distance = %.4f km" % (z, (self.total_dist + z)))
+            else:
+                self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), (self.total_dist + z)))
+
+        # increament incl. so=0
+        self.segment_no = self.segment_no + 1
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
