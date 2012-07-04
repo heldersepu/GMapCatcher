@@ -7,6 +7,7 @@ import pango
 import math
 import mapUtils
 from mapConst import *
+from threading import Timer
 
 ternary = lambda a,b,c : (b,c)[not a]
 
@@ -14,6 +15,7 @@ ternary = lambda a,b,c : (b,c)[not a]
 class DrawingArea(gtk.DrawingArea):
     center = ((0,0),(128,128))
     draging_start = (0, 0)
+    myThread = None
 
     def __init__(self):
         super(DrawingArea, self).__init__()
@@ -270,7 +272,7 @@ class DrawingArea(gtk.DrawingArea):
                     downloading=False, visual_dlconfig = {},
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None, gps_direction=False,
-                    segment_no=0, ruler_coordx={}, ruler_coordy={}, ruler_coordz={}):
+                    segment_no=0, r_coordx={}, r_coordy={}, r_coordz={}):
         self.set_scale_gc()
         self.set_visualdl_gc()
         rect = self.get_allocation()
@@ -283,17 +285,7 @@ class DrawingArea(gtk.DrawingArea):
 
         # Draw scale
         if conf.scale_visible:
-            scaledata = mapUtils.friendly_scale(zl)
-            # some 'dirty' rounding seems necessary :-)
-            scaled = ternary(scaledata[1] % 10 == 9, scaledata[1] + 1, scaledata[1])
-            scaled -= ternary(scaled % 10000 == 1000, 1000, 0)
-            scalestr = ternary(scaled > 9000,
-                    str(scaled // 1000) + " km", str(scaled) + " m")
-            self.scale_lo.set_text(scalestr)
-            self.window.draw_line(self.scale_gc, 10, full[1] - 10, 10, full[1] - 15)
-            self.window.draw_line(self.scale_gc, 10, full[1] - 10, scaledata[0] + 10, full[1] - 10)
-            self.window.draw_line(self.scale_gc, scaledata[0] + 10, full[1] - 10, scaledata[0] + 10, full[1] - 15)
-            self.window.draw_layout(self.scale_gc, 15, full[1] - 25, self.scale_lo)
+            self.draw_scale(full, zl)
 
         if showMarkers:
             pixDim = marker.get_pixDim(zl)
@@ -308,37 +300,17 @@ class DrawingArea(gtk.DrawingArea):
                 coord = (None, None, None)
 
             # Draw the markers
-            img = marker.get_marker_pixbuf(zl)
-            for string in marker.positions.keys():
-                mpos = marker.positions[string]
-                if (zl <= mpos[2]) and (mpos[0],mpos[1]) != (coord[0],coord[1]):
-                    self.draw_marker(conf, mpos, zl, img, pixDim, string)
+            if len(marker.positions) < 1000 :
+                self.draw_markers(zl, marker, coord, conf, pixDim)
+            else:
+                if (self.myThread is not None):
+                    self.myThread.cancel()
+                self.myThread = Timer(0.5, self.draw_markers_thread, [zl, marker, coord, conf, pixDim])
+                self.myThread.start()
 
         # Draw the Ruler lines
         if (segment_no > 1):
-            x = 0
-            y = 1
-            gc = self.style.black_gc
-            gc.line_width=2
-            while True: # Draw lines then Text
-                if (x % 4 == 0):
-                    gc.set_rgb_fg_color(gtk.gdk.color_parse("#FF0000"))
-                elif (x % 4 == 1):
-                    gc.set_rgb_fg_color(gtk.gdk.color_parse("#00FF00"))
-                elif (x % 4 == 2):
-                    gc.set_rgb_fg_color(gtk.gdk.color_parse("#0000FF"))
-                else:
-                    gc.set_rgb_fg_color(gtk.gdk.color_parse("#FFFF00"))
-
-                try :
-                    dist_str = "%0.3f km" % ruler_coordz[y]
-                    self.draw_line(gc, ruler_coordx[x], ruler_coordy[x], ruler_coordx[y], ruler_coordy[y], dist_str, zl)
-                except:
-                    dist_str = ""
-
-                x = x + 1
-                y = y + 1
-                if x == segment_no : break
+            self.draw_ruler_lines(segment_no, r_coordx, r_coordy, r_coordz, zl)
 
         # Draw GPS position
         if gps:
@@ -356,9 +328,39 @@ class DrawingArea(gtk.DrawingArea):
         if downloading:
             self.window.draw_pixbuf(
                 self.style.black_gc, dlpixbuf, 0, 0, 0, 0, -1, -1)
+        
+        if (visual_dlconfig != {}):
+            self.draw_visual_dlconfig(visual_dlconfig, middle, full, zl)
 
+    def draw_markers(self, zl, marker, coord, conf, pixDim):
+        img = marker.get_marker_pixbuf(zl)
+        for string in marker.positions.keys():
+            mpos = marker.positions[string]
+            if (zl <= mpos[2]) and (mpos[0],mpos[1]) != (coord[0],coord[1]):
+                self.draw_marker(conf, mpos, zl, img, pixDim, string)
+        self.repaint()
+
+    def draw_markers_thread(self, *args):
+        try:
+            self.draw_markers(args[0], args[1], args[2], args[3], args[4])
+        except:
+            pass
+
+    def draw_scale(self, full, zl):
+        scaledata = mapUtils.friendly_scale(zl)
+        # some 'dirty' rounding seems necessary :-)
+        scaled = ternary(scaledata[1] % 10 == 9, scaledata[1] + 1, scaledata[1])
+        scaled -= ternary(scaled % 10000 == 1000, 1000, 0)
+        scalestr = ternary(scaled > 9000,
+                str(scaled // 1000) + " km", str(scaled) + " m")
+        self.scale_lo.set_text(scalestr)
+        self.window.draw_line(self.scale_gc, 10, full[1] - 10, 10, full[1] - 15)
+        self.window.draw_line(self.scale_gc, 10, full[1] - 10, scaledata[0] + 10, full[1] - 10)
+        self.window.draw_line(self.scale_gc, scaledata[0] + 10, full[1] - 10, scaledata[0] + 10, full[1] - 15)
+        self.window.draw_layout(self.scale_gc, 15, full[1] - 25, self.scale_lo)
+
+    def draw_visual_dlconfig(self, visual_dlconfig, middle, full, zl):
         sz = visual_dlconfig.get("sz", 4)
-
         # Draw a rectangle
         if visual_dlconfig.get("show_rectangle", False):
             width = visual_dlconfig.get("width_rect", 0)
@@ -370,7 +372,6 @@ class DrawingArea(gtk.DrawingArea):
                     visual_dlconfig.get("y_rect", 0),
                     width, height
                 )
-
         # Draw the download utility
         elif visual_dlconfig.get("active", False):
             thezl = str(zl + visual_dlconfig.get("zl", -2))
@@ -395,3 +396,18 @@ class DrawingArea(gtk.DrawingArea):
                     middle[0],
                     middle[1] + full[1] / (sz * 2) + ypos,
                     self.visualdl_lo)
+
+    def draw_ruler_lines(self, segment_no, rx, ry, rz, zl):
+        x = 0
+        gc = self.style.black_gc
+        gc.line_width=2
+        colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00"]
+        while True: # Draw lines then Text
+            gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[x % 4]))
+            try :
+                dist_str = "%0.3f km" % rz[x+1]
+                self.draw_line(gc, rx[x], ry[x], rx[x+1], ry[x+1], dist_str, zl)
+            except:
+                dist_str = ""
+            x = x + 1
+            if x == segment_no : break
