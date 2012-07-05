@@ -6,7 +6,7 @@ import re
 from time import time
 
 ## Return all the locations from a given file (filePath)
-def read_file(strInfo, filePath):
+def read_file(strInfo, filePath, maxLine=0):
     fileData = {}
     if os.path.exists(filePath):
         p = re.compile(strInfo + '="([^"]+)".*lat="([^"]+)".*lng="([^"]+)".*')
@@ -26,6 +26,9 @@ def read_file(strInfo, filePath):
                         fileData[m.group(1)] = (float(m.group(2)),
                                                 float(m.group(3)),
                                                 zoom)
+                if (maxLine > 0):
+                    if (len(fileData) > maxLine): 
+                        break
             except:
                 pass
         file.close()
