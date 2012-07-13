@@ -338,7 +338,6 @@ class DrawingArea(gtk.DrawingArea):
             mpos = marker.positions[string]
             if (zl <= mpos[2]) and (mpos[0],mpos[1]) != (coord[0],coord[1]):
                 self.draw_marker(conf, mpos, zl, img, pixDim, string)
-        self.repaint()
 
     def draw_markers_thread(self, *args):
         try:
