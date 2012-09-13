@@ -25,13 +25,14 @@ SEZNAM_CYCLO = 11
 SEZNAM_HIST = 12
 STAMEN = 13
 REFUGES = 14
+OPENSEAMAP = 15
 
 MAP_SERVERS = [
     "Google", "OpenStreetMap", "CloudMade", "Yahoo",
     "InformationFreeway", "OpenCycleMap", "Google Map Maker",
     "Virtual Earth", "Yandex",
     "Seznam", "Seznam Turistická", "Seznam Cyklo", "Seznam Historická",
-    "Stamen", "Refuges Europe"
+    "Stamen", "Refuges Europe", "OpenSeaMap"
 ]
 
 LAYER_MAP = 0
