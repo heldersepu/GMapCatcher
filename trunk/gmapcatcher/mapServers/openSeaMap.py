@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.mapServers.googleMaps
-# All the interaction with google.com
+## @package gmapcatcher.mapServers.openSeaMap
 
 from gmapcatcher.mapConst import *
-
-known_layers = {}
 
 
 ## Returns a template URL for the OpenSeaMap

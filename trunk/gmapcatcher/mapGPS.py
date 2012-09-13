@@ -77,13 +77,11 @@ class GPSUpdater(Thread):
 
     def run(self):
         try:
-            while True:
+            while not self.finished.is_set():
                 self.gps_session.next()
                 if time.time() - self.lastUpdate > self.interval:
                     self.function(self.gps_session.fix)
                     self.lastUpdate = time.time()
-                if self.finished.is_set():
-                    break
         except StopIteration:
             print "GPSD has terminated"
 

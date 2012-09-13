@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.mapServers.googleMaps
-# All the interaction with google.com
+## @package gmapcatcher.mapServers.eniro
 
 from gmapcatcher.mapConst import *
 
-known_layers = {}
 
-
-## Returns a template URL for the OpenSeaMap
+## Returns a template URL for the Eniro
 def layer_url_template(counter, layer, conf):
     if layer == LAYER_HYB:
         return 'http://ed-map-fi.wide.basefarm.net/ol_tiles/fi/chart/%i/%i/%i.png'
