@@ -26,13 +26,14 @@ SEZNAM_HIST = 12
 STAMEN = 13
 REFUGES = 14
 OPENSEAMAP = 15
+ENIRO = 16
 
 MAP_SERVERS = [
     "Google", "OpenStreetMap", "CloudMade", "Yahoo",
     "InformationFreeway", "OpenCycleMap", "Google Map Maker",
     "Virtual Earth", "Yandex",
     "Seznam", "Seznam Turistická", "Seznam Cyklo", "Seznam Historická",
-    "Stamen", "Refuges Europe", "OpenSeaMap"
+    "Stamen", "Refuges Europe", "OpenSeaMap", "Eniro"
 ]
 
 LAYER_MAP = 0
@@ -141,6 +142,11 @@ MAP_SERVICES = [
             "layerDir": "openseamap_map", "layerName": LAYER_NAMES[LAYER_MAP]},
     {"ID": LAYER_HYB, "TextID": "openseamap",  "serviceName":MAP_SERVERS[OPENSEAMAP],
             "layerDir": "openseamap_hybrid", "layerName": LAYER_NAMES[LAYER_HYB]},
+    # Eniro
+    {"ID": LAYER_MAP, "TextID": "eniro",  "serviceName":MAP_SERVERS[ENIRO],
+            "layerDir": "eniro_map", "layerName": LAYER_NAMES[LAYER_MAP]},
+    {"ID": LAYER_HYB, "TextID": "enirosea",  "serviceName":MAP_SERVERS[ENIRO],
+            "layerDir": "eniro_hybrid", "layerName": LAYER_NAMES[LAYER_HYB]},
 ]
 HYB_SAT_LAYER_OFFSETS = {
     "Google": 2,
@@ -150,7 +156,8 @@ HYB_SAT_LAYER_OFFSETS = {
     MAP_SERVERS[SEZNAM_CYCLO]: 2,
     MAP_SERVERS[SEZNAM_HIST]: 2,
     MAP_SERVERS[REFUGES]: 2,
-    MAP_SERVERS[OPENSEAMAP]: 2
+    MAP_SERVERS[OPENSEAMAP]: 2,
+    MAP_SERVERS[ENIRO]: 2
 }
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
 NO_GPS = ["Yahoo"]
