@@ -10,6 +10,7 @@ except ImportError:
 import mapConst
 import mapPixbuf
 from threading import Event, Thread
+import time
 
 
 class GPS:
@@ -71,12 +72,20 @@ class GPSUpdater(Thread):
         self.interval = interval
         self.function = function
         self.finished = Event()
+        self.event = Event()
+        self.lastUpdate = 0
 
     def run(self):
-        for report in self.gps_session:
-            self.function(self.gps_session.fix)
-            if self.finished.is_set():
-                break
+        try:
+            while True:
+                self.gps_session.next()
+                if time.time() - self.lastUpdate > self.interval:
+                    self.function(self.gps_session.fix)
+                    self.lastUpdate = time.time()
+                if self.finished.is_set():
+                    break
+        except StopIteration:
+            print "GPSD has terminated"
 
     def cancel(self):
         self.finished.set()
