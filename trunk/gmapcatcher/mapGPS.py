@@ -7,10 +7,10 @@ try:
 except ImportError:
     available = False
 
-import os
 import mapConst
 import mapPixbuf
 from threading import Event, Thread
+
 
 class GPS:
     def __init__(self, gps_callback, update_rate, gps_mode):
@@ -25,7 +25,8 @@ class GPS:
         try:
             # Open binding to GPS daemon
             self.gps_session = gps.gps()
-            self.gps_updater = GPSUpdater(self.update_rate, self.update)
+            self.gps_session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+            self.gps_updater = GPSUpdater(self.gps_session, self.update_rate, self.update)
             if gps_mode != mapConst.GPS_DISABLED:
                 self.set_mode(gps_mode)
         except:
@@ -40,7 +41,7 @@ class GPS:
         self.mode = mode
         self.gps_updater.cancel()
         if mode != mapConst.GPS_DISABLED:
-            self.gps_updater = GPSUpdater(self.update_rate, self.update)
+            self.gps_updater = GPSUpdater(self.gps_session, self.update_rate, self.update)
             self.gps_updater.start()
 
     ## Get GPS position
@@ -50,43 +51,32 @@ class GPS:
         return None
 
     ## Callback from the GPSUpdater
-    def update(self):
-        try:
-            available = True
-            # Make new reading from GPS device
-            self.gps_session.query('admosy')
-            fix = self.gps_session.fix
-            # Only continue when GPS position is fixed
-            if fix.mode > gps.MODE_NO_FIX and \
+    def update(self, fix):
+        if fix.mode > gps.MODE_NO_FIX and \
                 (fix.latitude is not None) and (fix.longitude is not None):
-                # Store location
-                self.location = (fix.latitude, fix.longitude)
-                self.gps_callback(self.location, self.mode)
+            # Store location
+            self.location = (fix.latitude, fix.longitude)
+            self.gps_callback(self.location, self.mode)
 
-        except Exception:
-           available = False
-
-	## Load GPS marker image
+    ## Load GPS marker image
     def get_marker_pixbuf(self):
         return mapPixbuf.getImage('marker_gps.png', 48, 48)
 
 
 ## Continuously updates GPS coordinates.
 class GPSUpdater(Thread):
-    def __init__(self, interval, function):
+    def __init__(self, gps_session, interval, function):
         Thread.__init__(self)
+        self.gps_session = gps_session
         self.interval = interval
         self.function = function
         self.finished = Event()
-        self.event = Event()
 
     def run(self):
-        while not self.finished.is_set():
-            self.event.wait(self.interval)
-            if not self.finished.is_set() and not self.event.is_set():
-                self.function()
+        for report in self.gps_session:
+            self.function(self.gps_session.fix)
+            if self.finished.is_set():
+                break
 
     def cancel(self):
         self.finished.set()
-        self.event.set()
-
