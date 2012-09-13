@@ -27,6 +27,7 @@ import mapServers.seznam as seznam
 import mapServers.stamenMaps as stamenMaps
 import mapServers.refugesInfo as refugesInfo
 import mapServers.openSeaMap as openSeaMap
+import mapServers.eniro as eniro
 
 from threading import Timer
 
@@ -129,6 +130,8 @@ class MapServ:
                     return seznam.get_url_hist(self.mt_counter, coord, layer)
                 elif conf.map_service == MAP_SERVERS[OPENSEAMAP]:
                     return openSeaMap.get_url(self.mt_counter, coord, layer, conf)
+                elif conf.map_service == MAP_SERVERS[ENIRO]:
+                    return eniro.get_url(self.mt_counter, coord, layer, conf)
                 else:
                     return googleMaps.get_url(self.mt_counter, coord, layer, conf)
 
@@ -160,6 +163,8 @@ class MapServ:
                 return seznam.get_url_hist(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
             elif (MAP_SERVICES[layer]["TextID"] == "openseamap"):
                 return openSeaMap.get_url(self.mt_counter, coord, layer, conf)
+            elif (MAP_SERVICES[layer]["TextID"] == "eniro"):
+                return eniro.get_url(self.mt_counter, coord, layer, conf)
             else:
                 return googleMaps.get_url(self.mt_counter, coord, layer, conf)
 
