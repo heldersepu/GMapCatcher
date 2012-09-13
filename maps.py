@@ -351,7 +351,7 @@ class MainWindow(gtk.Window):
         if self.conf.status_location == STATUS_GPS:
             self.status_bar.pop(self.status_bar_id)
             self.status_bar.push(self.status_bar_id,
-                                  "Latitude=" + coord[0] + " Longitude=" + coord[1])
+                                  "Latitude=" + str(coord[0]) + " Longitude=" + str(coord[1]))
     def gps_direction(self):
         if not self.gps or len(self.save_gps) < 2:
             return False
