@@ -26,6 +26,7 @@ import mapServers.yandex as yandex
 import mapServers.seznam as seznam
 import mapServers.stamenMaps as stamenMaps
 import mapServers.refugesInfo as refugesInfo
+import mapServers.openSeaMap as openSeaMap
 
 from threading import Timer
 
@@ -126,6 +127,8 @@ class MapServ:
                     return seznam.get_url_cyclo(self.mt_counter, coord, layer)
                 elif conf.map_service == MAP_SERVERS[SEZNAM_HIST]:
                     return seznam.get_url_hist(self.mt_counter, coord, layer)
+                elif conf.map_service == MAP_SERVERS[OPENSEAMAP]:
+                    return openSeaMap.get_url(self.mt_counter, coord, layer, conf)
                 else:
                     return googleMaps.get_url(self.mt_counter, coord, layer, conf)
 
@@ -155,6 +158,8 @@ class MapServ:
                 return seznam.get_url_cyclo(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
             elif (MAP_SERVICES[layer]["TextID"] in ["seznam_hist", "seznam_terrain", "seznam_hybrid"]):
                 return seznam.get_url_hist(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
+            elif (MAP_SERVICES[layer]["TextID"] == "openseamap"):
+                return openSeaMap.get_url(self.mt_counter, coord, layer, conf)
             else:
                 return googleMaps.get_url(self.mt_counter, coord, layer, conf)
 
