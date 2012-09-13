@@ -135,6 +135,11 @@ MAP_SERVICES = [
             "layerDir": "relief", "layerName": LAYER_NAMES[LAYER_TER] },
     {"ID": LAYER_HYB, "TextID": "refonlyhyk",  "serviceName":MAP_SERVERS[REFUGES],
             "layerDir": "hiking_without_contours", "layerName": LAYER_NAMES[LAYER_HYB]},
+    # OpenSeaMap
+    {"ID": LAYER_MAP, "TextID": "openstreetmap",  "serviceName":MAP_SERVERS[OPENSEAMAP],
+            "layerDir": "openseamap_map", "layerName": LAYER_NAMES[LAYER_MAP]},
+    {"ID": LAYER_HYB, "TextID": "openseamap",  "serviceName":MAP_SERVERS[OPENSEAMAP],
+            "layerDir": "openseamap_hybrid", "layerName": LAYER_NAMES[LAYER_HYB]},
 ]
 HYB_SAT_LAYER_OFFSETS = {
     "Google": 2,
@@ -143,7 +148,8 @@ HYB_SAT_LAYER_OFFSETS = {
     MAP_SERVERS[SEZNAM_HIKING]: 2,
     MAP_SERVERS[SEZNAM_CYCLO]: 2,
     MAP_SERVERS[SEZNAM_HIST]: 2,
-    MAP_SERVERS[REFUGES]: 2
+    MAP_SERVERS[REFUGES]: 2,
+    MAP_SERVERS[OPENSEAMAP]: 2
 }
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
 NO_GPS = ["Yahoo"]
