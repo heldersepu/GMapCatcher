@@ -298,60 +298,72 @@ class MainWindow(gtk.Window):
 
 
     ## Called when new coordinates are obtained from the GPS
-    def gps_callback(self, coord, mode):
+    def gps_callback(self, coord, mode, valid):
         zl = self.get_zoom()
         self.current_gps = coord
         tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
 
-        # Save the GPS coordinates
-        l = len(self.save_gps)
-        if l > 0:
-            mostrecentcoord = self.save_gps[l - 1]
-            if abs(mostrecentcoord[0] - coord[0]) > self.conf.gps_increment \
-                    or abs(mostrecentcoord[1] - coord[1]) >\
-                    self.conf.gps_increment:
-                self.save_gps.append(coord)
-        else:
-            self.save_gps.append(coord)
-
-        # The map should be centered around a new GPS location
-        if mode == GPS_CENTER or self.reCenter_gps:
-            self.reCenter_gps = False
-            self.drawing_area.center = tile
-        # The map should be moved only to keep GPS location on the screen
-        elif mode == GPS_ON_SCREEN:
-            rect = self.drawing_area.get_allocation()
-            xy = mapUtils.tile_coord_to_screen(
-                (tile[0][0], tile[0][1], zl), rect, self.drawing_area.center)
-            if xy:
-                for x,y in xy:
-                    x = x + tile[1][0]
-                    y = y + tile[1][1]
-                    if not(0 < x < rect.width) or not(0 < y < rect.height):
-                        self.drawing_area.center = tile
-                    else:
-                        if GPS_IMG_SIZE[0] > x:
-                            self.drawing_area.da_jump(1, zl, True)
-                        elif x > rect.width - GPS_IMG_SIZE[0]:
-                            self.drawing_area.da_jump(3, zl, True)
-                        elif GPS_IMG_SIZE[1] > y:
-                            self.drawing_area.da_jump(2, zl, True)
-                        elif y > rect.height - GPS_IMG_SIZE[1]:
-                            self.drawing_area.da_jump(4, zl, True)
+        if valid:
+            # Save the GPS coordinates
+            l = len(self.save_gps)
+            if l > 0:
+                mostrecentcoord = self.save_gps[l - 1]
+                if abs(mostrecentcoord[0] - coord[0]) > self.conf.gps_increment \
+                        or abs(mostrecentcoord[1] - coord[1]) >\
+                        self.conf.gps_increment:
+                    self.save_gps.append(coord)
             else:
-                self.drawing_area.center = tile
-        # GPS update timeout, recenter GPS only after 3 sec idle
-        elif mode == GPS_TIMEOUT:
-            if (time.time() - self.gps_idle_time) > 3:
-                self.drawing_area.center = tile
+                self.save_gps.append(coord)
 
-        self.drawing_area.repaint()
+            self.gps_valid = True
+            # The map should be centered around a new GPS location
+            if mode == GPS_CENTER or self.reCenter_gps:
+                self.reCenter_gps = False
+                self.drawing_area.center = tile
+            # The map should be moved only to keep GPS location on the screen
+            elif mode == GPS_ON_SCREEN:
+                rect = self.drawing_area.get_allocation()
+                xy = mapUtils.tile_coord_to_screen(
+                    (tile[0][0], tile[0][1], zl), rect, self.drawing_area.center)
+                if xy:
+                    for x,y in xy:
+                        x = x + tile[1][0]
+                        y = y + tile[1][1]
+                        if not(0 < x < rect.width) or not(0 < y < rect.height):
+                            self.drawing_area.center = tile
+                        else:
+                            if GPS_IMG_SIZE[0] > x:
+                                self.drawing_area.da_jump(1, zl, True)
+                            elif x > rect.width - GPS_IMG_SIZE[0]:
+                                self.drawing_area.da_jump(3, zl, True)
+                            elif GPS_IMG_SIZE[1] > y:
+                                self.drawing_area.da_jump(2, zl, True)
+                            elif y > rect.height - GPS_IMG_SIZE[1]:
+                                self.drawing_area.da_jump(4, zl, True)
+                else:
+                    self.drawing_area.center = tile
+            # GPS update timeout, recenter GPS only after 3 sec idle
+            elif mode == GPS_TIMEOUT:
+                if (time.time() - self.gps_idle_time) > 3:
+                    self.drawing_area.center = tile
 
-        # Update the status bar with the GPS Coordinates
-        if self.conf.status_location == STATUS_GPS:
-            self.status_bar.pop(self.status_bar_id)
-            self.status_bar.push(self.status_bar_id,
-                                  "Latitude=" + str(coord[0]) + " Longitude=" + str(coord[1]))
+            self.drawing_area.repaint()
+
+            # Update the status bar with the GPS Coordinates
+            if self.conf.status_location == STATUS_GPS:
+                self.status_bar.pop(self.status_bar_id)
+                self.status_bar.push(self.status_bar_id,
+                                      "Latitude: " + str(round(coord[0], 4)) + " Longitude: " + str(round(coord[1], 4)))
+        else:
+            if self.gps_valid:
+                # Need to create some kind of popup etc, if we start to get invalid data from gps...
+                print 'We started to get invalid data from GPS now...'
+            self.gps_valid = False
+            # Update the status bar with the GPS Coordinates
+            if self.conf.status_location == STATUS_GPS:
+                self.status_bar.pop(self.status_bar_id)
+                self.status_bar.push(self.status_bar_id, 'INVALID DATA FROM GPS')
+
     def gps_direction(self):
         if not self.gps or len(self.save_gps) < 2:
             return False
@@ -1223,11 +1235,11 @@ class MainWindow(gtk.Window):
         return False
 
     def enable_gps(self):
+        self.gps_valid = False
         if mapGPS.available:
             self.gps = mapGPS.GPS(
                 self.gps_callback,
-                self.conf.gps_update_rate,
-                self.conf.gps_mode
+                self.conf
             )
             if self.gps and not self.gps_warning():
                 self.gps = False

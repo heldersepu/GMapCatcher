@@ -46,6 +46,9 @@ class MapConf():
         config.set(SECTION_INIT, 'show_cross', self.show_cross)
         config.set(SECTION_INIT, 'max_gps_zoom', self.max_gps_zoom)
         config.set(SECTION_INIT, 'gps_increment', self.gps_increment)
+        config.set(SECTION_INIT, 'gps_type', self.gps_type)
+        config.set(SECTION_INIT, 'gps_serial_port', self.gps_serial_port)
+        config.set(SECTION_INIT, 'gps_serial_baudrate', self.gps_serial_baudrate)
         config.set(SECTION_INIT, 'map_service', self.map_service)
         config.set(SECTION_INIT, 'version_url', self.version_url)
         config.set(SECTION_INIT, 'check_for_updates', self.check_for_updates)
@@ -104,14 +107,10 @@ class MapConf():
 
         ## Repository type - filebased / sqlite3
         self.repository_type =  read_config('repository_type', 0, int)
-        ## How often is the GPS updated, default is 1 second
-        self.gps_update_rate = read_config('gps_update_rate', 1.0, float)
+        
         ## Show a small cross in the center of the map, default is False (0)
         self.show_cross = read_config('show_cross', 0, int)
-        ## Maximum zoom to show the GPS, default is 16
-        self.max_gps_zoom = read_config('max_gps_zoom', 16, int)
-        ## default increment for gps track saving
-        self.gps_increment = read_config('gps_increment', GPS_INCREMENT, int)
+
         ## Map service to get images, default is Yahoo
         self.map_service = read_config('map_service', MAP_SERVERS[YAHOO], str)
         ## URL with the latest version used for the notification updates.
@@ -121,6 +120,18 @@ class MapConf():
         self.check_for_updates = read_config('check_for_updates', 1, int)
         ## Initial GPS mode, default is GPS_DISABLED
         self.gps_mode = read_config('gps_mode', GPS_DISABLED, int)
+        ## How often is the GPS updated, default is 1 second
+        self.gps_update_rate = read_config('gps_update_rate', 1.0, float)
+        ## default increment for gps track saving
+        self.gps_increment = read_config('gps_increment', GPS_INCREMENT, int)
+        ## Maximum zoom to show the GPS, default is 16
+        self.max_gps_zoom = read_config('max_gps_zoom', 16, int)
+        ## GPS-type, GPSd (0) or serial (1), default is GPSd
+        self.gps_type = read_config('gps_type', 0, int)
+        ## GPS serial port, default is 'none'
+        self.gps_serial_port = read_config('gps_serial_port', 'none', str)
+        ## GPS serial baudrate, default is 9600
+        self.gps_serial_baudrate = read_config('gps_serial_baudrate', 9600, int)
         ## Initial style ID for the CloudMade maps
         self.cloudMade_styleID = read_config('cloudmade_styleid', 1, int)
         ## cloudMade API key
