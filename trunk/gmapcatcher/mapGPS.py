@@ -1,8 +1,12 @@
 ## @package gmapcatcher.mapGPS
 # GPS Support
 
-import gps
-import serialGPS
+available = True
+try:
+    import gps
+    import serialGPS
+except:
+    available = False
 import mapConst
 import mapPixbuf
 from threading import Event, Thread
@@ -11,7 +15,6 @@ from mapConst import MODE_NO_FIX
 
 TYPE_GPSD = 0
 TYPE_SERIAL = 1
-available = True
 
 
 class GPS:
@@ -27,6 +30,7 @@ class GPS:
         self.update_rate = float(conf.gps_update_rate)
         self.serial_port = conf.gps_serial_port
         self.baudrate = conf.gps_serial_baudrate
+        self.gps_updater = None
         if self.mode != mapConst.GPS_DISABLED:
             self.startGPS()
 
@@ -45,6 +49,7 @@ class GPS:
                 # No GPS connected
                 available = False
         elif self.type == TYPE_SERIAL:
+            print 'serial started'
             try:
                 self.gps_updater = GPSUpdater(self.type, self.update_rate, self.update, serial_port=self.serial_port, baudrate=self.baudrate)
                 if self.conf.gps_mode != mapConst.GPS_DISABLED:
@@ -54,14 +59,20 @@ class GPS:
                 available = False
 
     def stop_all(self):
-        self.gps_updater.cancel()
+        try:
+            self.gps_updater.cancel()
+        except:
+            pass
 
     ## Sets the behaviour of the GPS functionality
     def set_mode(self, mode):
         self.mode = mode
-        if mode == mapConst.GPS_DISABLED:
-            self.gps_updater.cancel()
-        elif not self.gps_updater.is_alive():
+        if self.gps_updater:
+            if mode == mapConst.GPS_DISABLED:
+                self.gps_updater.cancel()
+            elif not self.gps_updater.is_alive():
+                self.startGPS()
+        elif mode != mapConst.GPS_DISABLED:
             self.startGPS()
 
     ## Get GPS position

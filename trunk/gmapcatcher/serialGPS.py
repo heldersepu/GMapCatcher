@@ -73,7 +73,6 @@ class SerialGPS(Thread):
         self.available = False
         try:
             self.ser = serial.Serial(port=self.port, baudrate=self.baudrate, timeout=self.timeout)
-            self.ser.open()
             self.ser.flushInput()
             self.available = True
         except serial.SerialException:
