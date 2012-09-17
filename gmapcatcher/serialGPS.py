@@ -4,14 +4,7 @@ import serial
 from threading import Thread, Event
 from math import floor
 import platform
-
-
-STATUS_NO_FIX = 0
-STATUS_FIX = 1
-STATUS_DGPS_FIX = 2
-MODE_NO_FIX = 1
-MODE_2D = 2
-MODE_3D = 3
+from mapConst import MODE_NO_FIX
 
 
 def serialPortScan():
@@ -40,6 +33,7 @@ def serialPortScan():
 
 
 class gpsfix:
+    """ defines GPSd-compatible gpsfix -module """
     def __init__(self):
         self.mode = MODE_NO_FIX
         self.time = float()
@@ -65,6 +59,7 @@ class gpsfix:
 
 
 class SerialGPS(Thread):
+    """ Serial port GPS for GMapCatcher """
     def __init__(self, port='/dev/ttyS0', baudrate=9600, timeout=3):
         Thread.__init__(self)
         self.port = port
@@ -82,20 +77,24 @@ class SerialGPS(Thread):
             self.ser.flushInput()
             self.available = True
         except serial.SerialException:
+            self.ser = None
             self.fix.mode = MODE_NO_FIX
             self.available = False
             print "Unable to open port"
 
     def run(self):
         try:
-            while not self.__stop.is_set():
-                if self.ser:
-                    self.buf += self.ser.read(20)
-                    if '\n' in self.buf:
-                        lines = self.buf.split('\n')
-                        for line in lines[0:-1]:
-                            self.dataHandler(line)
-                        self.buf = lines[-1]
+            while not self.__stop.is_set():  # read buffer while stop is called
+                if self.ser:  # if the serial port connection exists...
+                    self.buf += self.ser.read(20)  # read 20 characters from port to buffer
+                    if '\n' in self.buf:  # if the buffer includes row change
+                        lines = self.buf.split('\n')  # split the buffer by lines
+                        for line in lines[0:-1]:  # and for the lines (except the last one, that is probably not complete)
+                            self.dataHandler(line)  # handle data
+                        self.buf = lines[-1]  # set the buffer to only include the last line
+                else:
+                    self.fix.mode == MODE_NO_FIX
+                    self.available = False
         except serial.SerialException:
             self.fix.mode = MODE_NO_FIX
             self.available = False
@@ -107,31 +106,32 @@ class SerialGPS(Thread):
         self.ser.close()
 
     def dataHandler(self, line):
+        """ data handler for NMEA-data
+            only handles $GPRMC, $GPGGA and $GPGSA currently
+            accepts only lines with correct amount of values """
         data = line.strip().split(',')
-        if data[0] == '$GPRMC':
+        if data[0] == '$GPRMC' and len(data) == 12:
             self.fix.time = float(data[1])
-            if data[4] == 'S':
+            if data[4] == 'S':  # if on the southern hemisphere, latitude is negative
                 try:
-                    latitude = -float(data[3])
+                    self.fix.latitude = -self.convertDegrees(float(data[3]))
                 except ValueError:
-                    latitude = 0.0
+                    self.fix.latitude = 0.0
             else:
                 try:
-                    latitude = float(data[3])
+                    self.fix.latitude = self.convertDegrees(float(data[3]))
                 except ValueError:
-                    latitude = 0.0
-            self.fix.latitude = float(int(floor(latitude / 100)) + (latitude / 100 - int(floor(latitude / 100))) / 60 * 100)
-            if data[6] == 'W':
+                    self.fix.latitude = 0.0
+            if data[6] == 'W':  # if on the western hemisphere, longitude is negative
                 try:
-                    longitude = -float(data[5])
+                    self.fix.longitude = -self.convertDegrees(float(data[5]))
                 except ValueError:
-                    longitude = 0.0
+                    self.fix.longitude = 0.0
             else:
                 try:
-                    longitude = float(data[5])
+                    self.fix.longitude = self.convertDegrees(float(data[5]))
                 except ValueError:
-                    longitude = 0.0
-            self.fix.longitude = float(int(floor(longitude / 100)) + (longitude / 100 - int(floor(longitude / 100))) / 60 * 100)
+                    self.fix.longitude = 0.0
             try:
                 self.fix.speed = float(data[7])
             except:
@@ -141,34 +141,34 @@ class SerialGPS(Thread):
             except:
                 self.fix.track = 0.0
 
-        elif data[0] == '$GPGGA':
+        elif data[0] == '$GPGGA' and len(data) == 15:
             self.fix.time = float(data[1])
-            if data[3] == 'S':
+            if data[3] == 'S':  # if on the southern hemisphere, latitude is negative
                 try:
-                    latitude = -float(data[2])
+                    self.fix.latitude = -self.convertDegrees(float(data[2]))
                 except ValueError:
-                    latitude = 0.0
+                    self.fix.latitude = 0.0
             else:
                 try:
-                    latitude = float(data[2])
+                    self.fix.latitude = self.convertDegrees(float(data[2]))
                 except ValueError:
-                    latitude = 0.0
-            self.fix.latitude = float(int(floor(latitude / 100)) + (latitude / 100 - int(floor(latitude / 100))) / 60 * 100)
-            if data[5] == 'W':
+                    self.fix.latitude = 0.0
+            if data[5] == 'W':  # if on the western hemisphere, longitude is negative
                 try:
-                    longitude = -float(data[4])
+                    self.fix.longitude = -self.convertDegrees(float(data[4]))
                 except ValueError:
-                    longitude = 0.0
+                    self.fix.longitude = 0.0
             else:
                 try:
-                    longitude = float(data[4])
+                    self.fix.longitude = self.convertDegrees(float(data[4]))
                 except ValueError:
-                    longitude = 0.0
-            self.fix.longitude = float(int(floor(longitude / 100)) + (longitude / 100 - int(floor(longitude / 100))) / 60 * 100)
+                    self.fix.longitude = 0.0
 
-        elif data[0] == '$GPGSA':
+        elif data[0] == '$GPGSA' and len(data) == 18:
             self.fix.mode = int(data[2])
 
+    def convertDegrees(self, degrees):
+        return float(int(floor(degrees / 100)) + (degrees / 100 - int(floor(degrees / 100))) / 60 * 100)
 
 if __name__ == '__main__':
     import time

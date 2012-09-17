@@ -7,13 +7,10 @@ import mapConst
 import mapPixbuf
 from threading import Event, Thread
 import time
+from mapConst import MODE_NO_FIX
 
 TYPE_GPSD = 0
 TYPE_SERIAL = 1
-MODE_NO_FIX = 1
-MODE_2D = 2
-MODE_3D = 3
-
 available = True
 
 
@@ -42,8 +39,8 @@ class GPS:
                 self.gps_session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
                 self.gps_updater = GPSUpdater(self.type, self.update_rate, self.update, gps_session=self.gps_session)
                 if self.conf.gps_mode != mapConst.GPS_DISABLED:
-                    self.set_mode(self.conf.gps_mode)
                     self.gps_updater.start()
+                    self.set_mode(self.conf.gps_mode)
             except:
                 # No GPS connected
                 available = False
@@ -51,8 +48,8 @@ class GPS:
             try:
                 self.gps_updater = GPSUpdater(self.type, self.update_rate, self.update, serial_port=self.serial_port, baudrate=self.baudrate)
                 if self.conf.gps_mode != mapConst.GPS_DISABLED:
-                    self.set_mode(self.conf.gps_mode)
                     self.gps_updater.start()
+                    self.set_mode(self.conf.gps_mode)
             except:
                 available = False
 
@@ -66,13 +63,6 @@ class GPS:
             self.gps_updater.cancel()
         elif not self.gps_updater.is_alive():
             self.startGPS()
-        # self.gps_updater.cancel()
-        # if mode != mapConst.GPS_DISABLED:
-        #     if self.type == TYPE_GPSD:
-        #         self.gps_updater = GPSUpdater(self.type, self.update_rate, self.update, gps_session=self.gps_session)
-        #     elif self.type == TYPE_SERIAL:
-        #         self.gps_updater = GPSUpdater(self.type, self.update_rate, self.update, serial_port=self.serial_port, baudrate=self.baudrate)
-        #     self.gps_updater.start()
 
     ## Get GPS position
     def get_location(self):
@@ -98,10 +88,10 @@ class GPS:
 
 ## Continuously updates GPS coordinates.
 class GPSUpdater(Thread):
-    def __init__(self, type, interval, function, gps_session=None, serial_port=None, baudrate=None):
+    def __init__(self, gps_type, interval, function, gps_session=None, serial_port=None, baudrate=None):
         global available
         Thread.__init__(self)
-        self.gps_type = type
+        self.gps_type = gps_type
         self.interval = interval
         self.function = function
 
@@ -126,13 +116,12 @@ class GPSUpdater(Thread):
                 available = False
                 print "GPSD has terminated"
         elif self.gps_type == TYPE_SERIAL and self.serial_port and self.baudrate:
-            print 'serial started'
             sergps = serialGPS.SerialGPS(self.serial_port, self.baudrate)
             sergps.start()
             while not self.finished.is_set():
+                time.sleep(self.interval)
                 available = sergps.available
                 self.function(sergps.fix)
-                time.sleep(self.interval)
             sergps.stop()
 
     def cancel(self):
