@@ -237,3 +237,7 @@ CONTAINS = 2
 REGULAR_EXPRESSION = 3
 ENTRY_SUB_MENU = ['Starts With...', 'Ends With...',
         'Contains...', 'Regular Expression...']
+
+MODE_NO_FIX = 1
+MODE_2D = 2
+MODE_3D = 3
