@@ -6,9 +6,11 @@ from math import floor
 import platform
 from mapConst import MODE_NO_FIX
 
+BAUDRATES = [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200]
 
+
+## Scans available serial ports (COMx on Windows, tty[AMA, S, USB], rfcomm on Linux)
 def serialPortScan():
-    """scans for available COM ports."""
     availableSerialPorts = []
     if platform.system() == 'Windows':
         for i in range(256):
@@ -22,7 +24,7 @@ def serialPortScan():
         return availableSerialPorts
     elif platform.system() == 'Linux':
         import os
-        typicalPorts = ['ttyAMA', 'ttyS', 'ttyUSB']
+        typicalPorts = ['ttyAMA', 'ttyS', 'ttyUSB', 'rfcomm']
         devs = os.listdir('/dev')
         for port in typicalPorts:
             for dev in devs:
@@ -32,8 +34,8 @@ def serialPortScan():
         return availableSerialPorts
 
 
+## GPSd-compatible gpsfix
 class gpsfix:
-    """ defines GPSd-compatible gpsfix -module """
     def __init__(self):
         self.mode = MODE_NO_FIX
         self.time = float()
@@ -53,13 +55,14 @@ class gpsfix:
     def printFix(self):
         print 'Mode: %i' % self.mode
         print 'Time: %f' % self.time
-        print 'Lat/Lon: %f %f' % (self.latitude, self.longitude)
+        print 'Lat/Lon: %.4f %.4f' % (self.latitude, self.longitude)
+        print 'Altitude: %.2f' % (self.altitude)
         print 'Speed KN/KM: %f %f' % (self.speed, self.speed * 1.852)
         print 'Heading: %f' % self.track
 
 
+## Serial port GPS -module for mapGPS.py
 class SerialGPS(Thread):
-    """ Serial port GPS for GMapCatcher """
     def __init__(self, port='/dev/ttyS0', baudrate=9600, timeout=3):
         Thread.__init__(self)
         self.port = port
@@ -104,10 +107,10 @@ class SerialGPS(Thread):
         self.join(5)
         self.ser.close()
 
+    ## Data handler for NMEA-data
+    # currently handles $GPRMC, $GPGGA and $GPGSA
+    # accepts only lines with correct amount of values
     def dataHandler(self, line):
-        """ data handler for NMEA-data
-            only handles $GPRMC, $GPGGA and $GPGSA currently
-            accepts only lines with correct amount of values """
         data = line.strip().split(',')
         if data[0] == '$GPRMC' and len(data) == 12:
             self.fix.time = float(data[1])
@@ -115,30 +118,30 @@ class SerialGPS(Thread):
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[3]))
                 except ValueError:
-                    self.fix.latitude = 0.0
+                    pass
             else:
                 try:
                     self.fix.latitude = self.convertDegrees(float(data[3]))
                 except ValueError:
-                    self.fix.latitude = 0.0
+                    pass
             if data[6] == 'W':  # if on the western hemisphere, longitude is negative
                 try:
                     self.fix.longitude = -self.convertDegrees(float(data[5]))
                 except ValueError:
-                    self.fix.longitude = 0.0
+                    pass
             else:
                 try:
                     self.fix.longitude = self.convertDegrees(float(data[5]))
                 except ValueError:
-                    self.fix.longitude = 0.0
+                    pass
             try:
                 self.fix.speed = float(data[7])
             except:
-                self.fix.speed = 0.0
+                pass
             try:
                 self.fix.track = float(data[8])
             except:
-                self.fix.track = 0.0
+                pass
 
         elif data[0] == '$GPGGA' and len(data) == 15:
             self.fix.time = float(data[1])
@@ -146,22 +149,26 @@ class SerialGPS(Thread):
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[2]))
                 except ValueError:
-                    self.fix.latitude = 0.0
+                    pass
             else:
                 try:
                     self.fix.latitude = self.convertDegrees(float(data[2]))
                 except ValueError:
-                    self.fix.latitude = 0.0
+                    pass
             if data[5] == 'W':  # if on the western hemisphere, longitude is negative
                 try:
                     self.fix.longitude = -self.convertDegrees(float(data[4]))
                 except ValueError:
-                    self.fix.longitude = 0.0
+                    pass
             else:
                 try:
                     self.fix.longitude = self.convertDegrees(float(data[4]))
                 except ValueError:
-                    self.fix.longitude = 0.0
+                    pass
+            try:
+                self.fix.altitude = float(data[9])
+            except ValueError:
+                pass
 
         elif data[0] == '$GPGSA' and len(data) == 18:
             self.fix.mode = int(data[2])
