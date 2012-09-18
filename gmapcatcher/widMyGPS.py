@@ -7,6 +7,7 @@ from mapConst import *
 import gtk
 import fileUtils
 from customWidgets import myEntry, SpinBtn, myFrame, lbl
+from serialGPS import serialPortScan, BAUDRATES
 
 ## This widget lets the user change GPS settings
 class MyGPS():
@@ -15,6 +16,9 @@ class MyGPS():
         conf.gps_update_rate = self.e_gps_updt_rate.get_text()
         conf.max_gps_zoom = self.s_gps_max_zoom.get_value_as_int()
         conf.gps_mode = self.cmb_gps_mode.get_active()
+        conf.gps_type = self.cmb_gps_type.get_active()
+        conf.gps_serial_port = self.cmb_gps_serial_port.get_active_text()
+        conf.gps_serial_baudrate = int(self.cmb_gps_baudrate.get_active_text())
         conf.save()
 
     def __action_buttons(self, conf):
@@ -66,6 +70,46 @@ class MyGPS():
         hbox.pack_start(self.cmb_gps_mode)
         return myFrame(" GPS Mode ", hbox)
 
+    ## ComboBox to change the GPS type
+    def gps_type_combo(self, gps_type):
+        hbox = gtk.HBox(False, 10)
+        hbox.pack_start(lbl("Select your GPS type: "))
+        self.cmb_gps_type = gtk.combo_box_new_text()
+        for strType in GPS_TYPES:
+            self.cmb_gps_type.append_text(strType)
+        self.cmb_gps_type.set_active(gps_type)
+        hbox.pack_start(self.cmb_gps_type)
+        return myFrame(" GPS Type ", hbox)
+
+    ## ComboBox to select serial port
+    def gps_serial_port_combo(self, serial_port):
+        hbox = gtk.HBox(False, 10)
+        hbox.pack_start(lbl("Select your serial port: "))
+        self.cmb_gps_serial_port = gtk.combo_box_new_text()
+        i = 0
+        for strPort in serialPortScan():
+            self.cmb_gps_serial_port.append_text(strPort)
+            if strPort == serial_port:
+                self.cmb_gps_serial_port.set_active(i)
+            i += 1
+        hbox.pack_start(self.cmb_gps_serial_port)
+        return myFrame(" Serial port ", hbox)
+
+    ## ComboBox to change the GPS serial baudrate
+    def gps_baudrate_combo(self, baudrate):
+        hbox = gtk.HBox(False, 10)
+        hbox.pack_start(lbl("Select your serial baudrate: "))
+        self.cmb_gps_baudrate = gtk.combo_box_new_text()
+        i = 0
+        for baud in BAUDRATES:
+            self.cmb_gps_baudrate.append_text(str(baud))
+            if baud == baudrate:
+                self.cmb_gps_baudrate.set_active(i)
+            i += 1
+        hbox.pack_start(self.cmb_gps_baudrate)
+        return myFrame(" Serial baudrate ", hbox)
+
+
     def key_press(self, widget, event, conf):
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
             # S = 83, 115
@@ -78,6 +122,9 @@ class MyGPS():
             vbox.pack_start(self.gps_updt_rate(conf.gps_update_rate))
             vbox.pack_start(self.gps_max_zoom(conf.max_gps_zoom))
             vbox.pack_start(self.gps_mode_combo(conf.gps_mode))
+            vbox.pack_start(self.gps_type_combo(conf.gps_type))
+            vbox.pack_start(self.gps_serial_port_combo(conf.gps_serial_port))
+            vbox.pack_start(self.gps_baudrate_combo(conf.gps_serial_baudrate))
             hbox = gtk.HBox(False, 10)
             hbox.set_border_width(20)
             hbox.pack_start(vbox)

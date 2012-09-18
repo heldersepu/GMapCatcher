@@ -219,7 +219,10 @@ GPS_ON_SCREEN = 3
 GPS_TIMEOUT = 4
 GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center",
              "GPS on Screen", "GPS Timeout"]
-
+GPS_TYPES = ["GPSd", "Serial"]
+MODE_NO_FIX = 1
+MODE_2D = 2
+MODE_3D = 3
 # default distance - fraction of deg - for gps track increment
 GPS_INCREMENT = 0.001
 
@@ -237,7 +240,3 @@ CONTAINS = 2
 REGULAR_EXPRESSION = 3
 ENTRY_SUB_MENU = ['Starts With...', 'Ends With...',
         'Contains...', 'Regular Expression...']
-
-MODE_NO_FIX = 1
-MODE_2D = 2
-MODE_3D = 3
