@@ -31,6 +31,7 @@ class GPS:
         self.serial_port = conf.gps_serial_port
         self.baudrate = conf.gps_serial_baudrate
         self.gps_updater = None
+        self.gps_fix = None
         if self.mode != mapConst.GPS_DISABLED:
             self.startGPS()
 
@@ -88,9 +89,11 @@ class GPS:
             # Store location
             self.location = (fix.latitude, fix.longitude)
             self.gps_callback(self.location, self.mode, True)
+            self.gps_fix = fix
         else:
             self.location = (fix.latitude, fix.longitude)
             self.gps_callback(self.location, self.mode, False)
+            self.gps_fix = fix
 
     ## Load GPS marker image
     def get_marker_pixbuf(self):
