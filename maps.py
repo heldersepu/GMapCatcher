@@ -41,7 +41,7 @@ class MainWindow(gtk.Window):
     showMarkers = True
     tPoint = {}
     gps_idle_time = time.time()
-
+    gps_invalid_visible = False
     # Variables for Ruler - F7 to activate/deactivate
     Ruler = 0
     ruler_coordx = {}
@@ -356,13 +356,26 @@ class MainWindow(gtk.Window):
                                       "Latitude: " + str(round(coord[0], 4)) + " Longitude: " + str(round(coord[1], 4)))
         else:
             if self.gps_valid:
-                # Need to create some kind of popup etc, if we start to get invalid data from gps...
-                print 'We started to get invalid data from GPS now...'
+                if not self.gps_invalid_visible:
+                    gps_invalid_messageBox = gtk.MessageDialog(
+                        parent         = None,
+                        flags          = gtk.DIALOG_DESTROY_WITH_PARENT,
+                        type           = gtk.MESSAGE_ERROR,
+                        buttons        = gtk.BUTTONS_OK,
+                        message_format = 'Invalid GPS data')
+                    gps_invalid_messageBox.set_title('Invalid GPS data')
+                    gps_invalid_messageBox.connect('response', lambda dialog, response: self.hide_gps_invalid_messageBox(dialog))
+                    gps_invalid_messageBox.show()
+                    self.gps_invalid_visible = True
             self.gps_valid = False
             # Update the status bar with the GPS Coordinates
             if self.conf.status_location == STATUS_GPS:
                 self.status_bar.pop(self.status_bar_id)
                 self.status_bar.push(self.status_bar_id, 'INVALID DATA FROM GPS')
+
+    def hide_gps_invalid_messageBox(self, dialog):
+        self.gps_invalid_visible = False
+        dialog.destroy()
 
     def gps_direction(self):
         if not self.gps or len(self.save_gps) < 2:
@@ -479,8 +492,6 @@ class MainWindow(gtk.Window):
             cmb_gps.set_active(self.conf.gps_mode)
             cmb_gps.connect('changed',self.gps_changed)
             bbox.pack_start(cmb_gps, False, False, 0)
-
-
 
         #gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
         #button = gtk.Button(stock=gtk.STOCK_HARDDISK)
