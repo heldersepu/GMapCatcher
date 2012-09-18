@@ -45,46 +45,46 @@ class MyGPS():
     ## Option to change the GPS update rate
     def gps_updt_rate(self, gps_update_rate):
         hbox = gtk.HBox(False, 10)
-        hbox.pack_start(lbl("Here you can change the GPS update rate: "))
+        hbox.pack_start(lbl("GPS update rate in seconds: "))
         self.e_gps_updt_rate = myEntry(str(gps_update_rate), 4, False)
         hbox.pack_start(self.e_gps_updt_rate)
-        return myFrame(" GPS Update Rate ", hbox)
+        return hbox
 
     ## Option to change the GPS max zoom
     def gps_max_zoom(self, max_gps_zoom):
         hbox = gtk.HBox(False, 10)
-        hbox.pack_start(lbl("Here you can set the maximum zoom for the GPS: "))
+        hbox.pack_start(lbl("Maximum zoom for GPS: "))
         self.s_gps_max_zoom = SpinBtn(max_gps_zoom,
                 MAP_MIN_ZOOM_LEVEL, MAP_MAX_ZOOM_LEVEL-1)
         hbox.pack_start(self.s_gps_max_zoom)
-        return myFrame(" GPS Max Zoom ", hbox)
+        return hbox
 
     ## ComboBox to change the GPS mode
     def gps_mode_combo(self, gps_mode):
         hbox = gtk.HBox(False, 10)
-        hbox.pack_start(lbl("Select your initial GPS mode: "))
+        hbox.pack_start(lbl("Initial GPS mode: "))
         self.cmb_gps_mode = gtk.combo_box_new_text()
         for strMode in GPS_NAMES:
             self.cmb_gps_mode.append_text(strMode)
         self.cmb_gps_mode.set_active(gps_mode)
         hbox.pack_start(self.cmb_gps_mode)
-        return myFrame(" GPS Mode ", hbox)
+        return hbox
 
     ## ComboBox to change the GPS type
     def gps_type_combo(self, gps_type):
         hbox = gtk.HBox(False, 10)
-        hbox.pack_start(lbl("Select your GPS type: "))
+        hbox.pack_start(lbl("GPS type: "))
         self.cmb_gps_type = gtk.combo_box_new_text()
         for strType in GPS_TYPES:
             self.cmb_gps_type.append_text(strType)
         self.cmb_gps_type.set_active(gps_type)
         hbox.pack_start(self.cmb_gps_type)
-        return myFrame(" GPS Type ", hbox)
+        return hbox
 
     ## ComboBox to select serial port
     def gps_serial_port_combo(self, serial_port):
         hbox = gtk.HBox(False, 10)
-        hbox.pack_start(lbl("Select your serial port: "))
+        hbox.pack_start(lbl("Serial port: "))
         self.cmb_gps_serial_port = gtk.combo_box_new_text()
         i = 0
         for strPort in serialPortScan():
@@ -93,12 +93,12 @@ class MyGPS():
                 self.cmb_gps_serial_port.set_active(i)
             i += 1
         hbox.pack_start(self.cmb_gps_serial_port)
-        return myFrame(" Serial port ", hbox)
+        return hbox
 
     ## ComboBox to change the GPS serial baudrate
     def gps_baudrate_combo(self, baudrate):
         hbox = gtk.HBox(False, 10)
-        hbox.pack_start(lbl("Select your serial baudrate: "))
+        hbox.pack_start(lbl("Serial port baudrate: "))
         self.cmb_gps_baudrate = gtk.combo_box_new_text()
         i = 0
         for baud in BAUDRATES:
@@ -107,7 +107,7 @@ class MyGPS():
                 self.cmb_gps_baudrate.set_active(i)
             i += 1
         hbox.pack_start(self.cmb_gps_baudrate)
-        return myFrame(" Serial baudrate ", hbox)
+        return hbox
 
 
     def key_press(self, widget, event, conf):
@@ -117,28 +117,29 @@ class MyGPS():
 
     ## Put all the GPS Widgets together
     def show(self, conf):
-        def inner_box():
-            vbox = gtk.VBox(False, 10)
-            vbox.pack_start(self.gps_updt_rate(conf.gps_update_rate))
-            vbox.pack_start(self.gps_max_zoom(conf.max_gps_zoom))
-            vbox.pack_start(self.gps_mode_combo(conf.gps_mode))
-            vbox.pack_start(self.gps_type_combo(conf.gps_type))
-            vbox.pack_start(self.gps_serial_port_combo(conf.gps_serial_port))
-            vbox.pack_start(self.gps_baudrate_combo(conf.gps_serial_baudrate))
-            hbox = gtk.HBox(False, 10)
-            hbox.set_border_width(20)
-            hbox.pack_start(vbox)
-            return hbox
+        def general_gps_box():
+            boxes = [self.gps_updt_rate(conf.gps_update_rate), self.gps_max_zoom(conf.max_gps_zoom), self.gps_mode_combo(conf.gps_mode), self.gps_type_combo(conf.gps_type)]
+            vbox = gtk.VBox(False, 5)
+            for box in boxes:
+                hbox = gtk.HBox(False, 10)
+                hbox.pack_start(box)
+                vbox.pack_start(hbox)
+            return myFrame(" GPS ", vbox)
+
+        def gps_serial_box():
+            boxes = [self.gps_serial_port_combo(conf.gps_serial_port), self.gps_baudrate_combo(conf.gps_serial_baudrate)]
+            vbox = gtk.VBox(False, 5)
+            for box in boxes:
+                hbox = gtk.HBox(False, 10)
+                hbox.pack_start(box)
+                vbox.pack_start(hbox)
+            return myFrame(" Serial ", vbox)
 
         vbox = gtk.VBox(False, 10)
         vbox.set_border_width(10)
-        hbox = gtk.HBox(False, 10)
-        hbox.pack_start(lbl("Select new theme and restart GMapCatcher."))
-        self.cmb_themes = gtk.combo_box_new_text()
 
-        hbox.pack_start(self.cmb_themes)
-        #vbox.pack_start(myFrame(" Available themes ", hbox), False)
-        vbox.pack_start(inner_box(), False)
+        vbox.pack_start(general_gps_box(), False)
+        vbox.pack_start(gps_serial_box(), False)
 
         hpaned = gtk.VPaned()
         hpaned.pack1(vbox, True, True)
