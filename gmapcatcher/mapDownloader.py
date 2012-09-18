@@ -8,13 +8,12 @@ from threading import Thread, Timer, Lock, RLock
 from traceback import print_exc
 
 import Queue
-import fileUtils
 import mapUtils
 from mapConst import *
-from math import floor,ceil
+from math import floor, ceil
 from time import sleep, clock
 
-ternary = lambda a,b,c: (b,c)[not a]
+ternary = lambda a, b, c: (b, c)[not a]
 
 
 class DownloadTask:
@@ -28,6 +27,7 @@ class DownloadTask:
 
     def __str__(self):
         return "DownloadTask(%s,%s)" % (self.coord, self.layer)
+
 
 ## Downloads tiles from the web.
 #
@@ -52,7 +52,7 @@ class DownloaderThread(Thread):
             try:
                 self.process_task(task)
             except:
-                print_exc() # but don't die
+                print_exc()  # but don't die
             self.inq.task_done()
 
     def process_task(self, task):
@@ -73,6 +73,7 @@ class DownloaderThread(Thread):
         except ValueError:
             True
 # seems to happen at completion - tuple not in list
+
 
 ## Main class used for downloading tiles.
 #
@@ -117,9 +118,9 @@ class MapDownloader:
 
     def stop_all(self):
         while not self.taskq.empty():
-            self.taskq.get_nowait() # clear the queue
+            self.taskq.get_nowait()  # clear the queue
         for i in xrange(len(self.threads)):
-            self.taskq.put(None) # put sentinels for threads
+            self.taskq.put(None)  # put sentinels for threads
         for t in self.threads:
             print ".",
             t.join(0.1)
@@ -151,7 +152,7 @@ class MapDownloader:
                 callback(True, coord, layer)
                 return ret
 
-        if not (coord,layer) in self.queued:
+        if not (coord, layer) in self.queued:
             self.queued.append((coord, layer))
             self.taskq.put(
                 DownloadTask(
@@ -164,27 +165,27 @@ class MapDownloader:
     def query_region(self, xmin, xmax, ymin, ymax, zoom, *args, **kwargs):
         ret = 0
         world_tiles = mapUtils.tiles_on_level(zoom)
-        if xmax-xmin >= world_tiles:
-            xmin,xmax = 0,world_tiles-1
-        if ymax-ymin >= world_tiles:
-            ymin,ymax = 0,world_tiles-1
+        if xmax - xmin >= world_tiles:
+            xmin, xmax = 0, world_tiles - 1
+        if ymax - ymin >= world_tiles:
+            ymin, ymax = 0, world_tiles - 1
         #print "Query region",xmin,xmax,ymin,ymax,zoom
-        for i in xrange((xmax-xmin+world_tiles)%world_tiles+1):
-            x = (xmin+i)%world_tiles
-            for j in xrange((ymax-ymin+world_tiles)%world_tiles+1):
-                y = (ymin+j)%world_tiles
-                ret += self.query_tile((x,y,zoom), *args, **kwargs)
+        for i in xrange((xmax - xmin + world_tiles) % world_tiles + 1):
+            x = (xmin + i) % world_tiles
+            for j in xrange((ymax - ymin + world_tiles) % world_tiles + 1):
+                y = (ymin + j) % world_tiles
+                ret += self.query_tile((x, y, zoom), *args, **kwargs)
         return ret
 
     # @return number of tiles queued for download
     def query_region_around_point(self, center, size, zoom, *args, **kwargs):
         x0, y0 = center[0][0], center[0][1]
-        dx0, dy0 = int(center[1][0] - size[0]/2), int(center[1][1] - size[1]/2)
-        dx1, dy1 = dx0+size[0], dy0+size[1]
-        xmin = int(x0 + floor(dx0/TILES_WIDTH))
-        xmax = int(x0 + ceil(dx1/TILES_WIDTH)) - 1
-        ymin = int(y0 + floor(dy0/TILES_HEIGHT))
-        ymax = int(y0 + ceil(dy1/TILES_HEIGHT)) - 1
+        dx0, dy0 = int(center[1][0] - size[0] / 2), int(center[1][1] - size[1] / 2)
+        dx1, dy1 = dx0 + size[0], dy0 + size[1]
+        xmin = int(x0 + floor(dx0 / TILES_WIDTH))
+        xmax = int(x0 + ceil(dx1 / TILES_WIDTH)) - 1
+        ymin = int(y0 + floor(dy0 / TILES_HEIGHT))
+        ymax = int(y0 + ceil(dy1 / TILES_HEIGHT)) - 1
         return self.query_region(xmin, xmax, ymin, ymax, zoom, *args, **kwargs)
 
     def query_region_around_location(self, lat0, lon0, dlat, dlon, zoom,
@@ -197,10 +198,10 @@ class MapDownloader:
             dlon = 358
 
         top_left = mapUtils.coord_to_tile(
-            (lat0+dlat/2, lon0-dlon/2, zoom)
+            (lat0 + dlat / 2, lon0 - dlon / 2, zoom)
         )
         bottom_right = mapUtils.coord_to_tile(
-            (lat0-dlat/2, lon0+dlon/2, zoom)
+            (lat0 - dlat / 2, lon0 + dlon / 2, zoom)
         )
         self.query_region(top_left[0][0], bottom_right[0][0],
                           top_left[0][1], bottom_right[0][1],
@@ -209,7 +210,7 @@ class MapDownloader:
     # @return number of tiles queued for download
     def query_coordpath(self, coords, zoom, arround, *args, **kwargs):
         ret = 0
-        for (x,y) in mapUtils.tilepath_bulk(mapUtils.coords_to_tilepath(coords, zoom), arround):
+        for (x, y) in mapUtils.tilepath_bulk(mapUtils.coords_to_tilepath(coords, zoom), arround):
             ret += self.query_tile((x, y, zoom), *args, **kwargs)
         return ret
 
@@ -233,16 +234,16 @@ class MapDownloader:
                 completion_callback()
             self.bulk_all_placed = True
 
-
         dThread = Timer(0, downThread)
         dThread.start()
+
 
 class MapQueue:
 
     def __init__(self, iterable=None, maxlen=0):
         self.stack = []
         self.maxlen = maxlen
-        if iterable == None:
+        if iterable is None:
             self.length = 0
         else:
             self.length = max(len(iterable, maxlen))
@@ -262,14 +263,14 @@ class MapQueue:
 
     def task_done(self):
         self.mainlock.acquire()
-        try :
+        try:
             self.pending -= 1
-        finally :
+        finally:
             self.mainlock.release()
 
     def join(self):
         self.mainlock.acquire()
-        try :
+        try:
             while self.pending > 0:
                 self.mainlock.release()
                 sleep(0.1)
@@ -278,8 +279,8 @@ class MapQueue:
             self.mainlock.release()
 
     def get(self, block=True, timeout=None):
-        infinite = timeout == None
-        timeout = ternary(timeout == None, 0, timeout)
+        infinite = timeout is None
+        timeout = ternary(timeout is None, 0, timeout)
         self.mainlock.acquire()
         if (self.empty()):
             if not block:
@@ -311,7 +312,7 @@ class MapQueue:
 
     def put(self, item):
         self.mainlock.acquire()
-        try :
+        try:
             self.stack.append(item)
             self.length += 1
         finally:
@@ -324,4 +325,3 @@ class MapQueue:
         finally:
             self.innerlock.release()
         return ret
-

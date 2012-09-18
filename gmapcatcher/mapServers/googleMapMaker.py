@@ -6,6 +6,7 @@ import gmapcatcher.openanything as openanything
 
 known_layers = {}
 
+
 ## Returns a template URL for the Google Map Maker
 def layer_url_template(layer):
     if layer not in known_layers:
@@ -13,10 +14,12 @@ def layer_url_template(layer):
                                 parse_page() + '&x=%i&y=%i&zoom=%i'
     return known_layers[layer]
 
+
 ## Returns the URL to the Google Map Maker tile
 def get_url(counter, coord):
     return layer_url_template('gwm') % \
-        (counter, coord[0], coord[1], coord[2]+1)
+        (counter, coord[0], coord[1], coord[2] + 1)
+
 
 ## Parse http://www.google.com/mapmaker.
 #  the return value is a number

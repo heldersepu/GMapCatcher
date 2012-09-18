@@ -42,6 +42,7 @@ __docformat__ = 'reStructuredText en'
 DEFAULT_SIZE = 16
 """Default size of a new LRUCache object, if no 'size' argument is given."""
 
+
 class CacheKeyError(KeyError):
     """Error raised when cache requests fail
 
@@ -49,6 +50,7 @@ class CacheKeyError(KeyError):
     this error is raised. To avoid it, you may want to check for the existence
     of a cache record before reading or deleting it."""
     pass
+
 
 class LRUCache(object):
     """Least-Recently-Used (LRU) cache.
@@ -105,14 +107,14 @@ class LRUCache(object):
 
         def __repr__(self):
             return "<%s %s => %s (%s)>" % \
-                   (self.__class__, self.key, self.obj, \
+                   (self.__class__, self.key, self.obj,
                     time.asctime(time.localtime(self.atime)))
 
     def __init__(self, size=DEFAULT_SIZE):
         # Check arguments
         if size <= 0:
             raise ValueError, size
-        elif type(size) is not type(0):
+        elif not isinstance(size, int):
             raise TypeError, size
         object.__init__(self)
         self.__heap = []
@@ -126,10 +128,10 @@ class LRUCache(object):
         return len(self.__heap)
 
     def __contains__(self, key):
-        return self.__dict.has_key(key)
+        return key in self.__dict
 
     def __setitem__(self, key, obj):
-        if self.__dict.has_key(key):
+        if key in self.__dict:
             node = self.__dict[key]
             node.obj = obj
             node.atime = time.time()
@@ -145,7 +147,7 @@ class LRUCache(object):
             heappush(self.__heap, node)
 
     def __getitem__(self, key):
-        if not self.__dict.has_key(key):
+        if not key in self.__dict:
             raise CacheKeyError(key)
         else:
             node = self.__dict[key]
@@ -154,7 +156,7 @@ class LRUCache(object):
             return node.obj
 
     def __delitem__(self, key):
-        if not self.__dict.has_key(key):
+        if not key in self.__dict:
             raise CacheKeyError(key)
         else:
             node = self.__dict[key]
@@ -185,7 +187,7 @@ class LRUCache(object):
         """Return the last modification time for the cache record with key.
         May be useful for cache instances where the stored values can get
         'stale', such as caching file or network resource contents."""
-        if not self.__dict.has_key(key):
+        if not key in self.__dict:
             raise CacheKeyError(key)
         else:
             node = self.__dict[key]

@@ -16,6 +16,7 @@
 class NotImplementedException(Exception):
     pass
 
+
 class TilesRepository:
 
     def __init__(self, MapServ_inst, configpath):
@@ -52,4 +53,3 @@ class TilesRepository:
 
     def set_repository_path(self, newpath):
         raise NotImplementedException()
-

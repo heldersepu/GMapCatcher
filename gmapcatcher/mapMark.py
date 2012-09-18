@@ -6,6 +6,7 @@ import fileUtils
 import mapPixbuf
 from mapConst import *
 
+
 class MyMarkers:
     # coord = (lat, lng, zoom_level)
     positions = {}
@@ -42,7 +43,7 @@ class MyMarkers:
 
     def get_pixDim(self, zl):
         maxZoom = MAP_MAX_ZOOM_LEVEL - 2
-        if zl >= maxZoom :
+        if zl >= maxZoom:
             return 56
         elif zl <= 1:
             return 256

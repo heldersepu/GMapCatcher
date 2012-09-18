@@ -3,6 +3,7 @@
 from mapConst import *
 import gtk
 
+
 class OurCredits(gtk.AboutDialog):
     def __init__(self):
         # add real names here! :-)

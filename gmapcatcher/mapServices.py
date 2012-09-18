@@ -2,9 +2,7 @@
 # All the interaction with the map services
 
 import gtk
-import sys
 import StringIO
-import cStringIO
 from mapConst import *
 from gobject import TYPE_STRING
 
@@ -33,8 +31,10 @@ from threading import Timer
 
 Image = None
 
+
 class MapServException(Exception):
     pass
+
 
 ## All the interaction with the map services.
 #  Other map services can be added see def get_url_from_coord
@@ -50,7 +50,7 @@ class MapServ:
 
     def initLocations(self, configpath, tilerepostype):
         configpath = os.path.expanduser(configpath or DEFAULT_PATH)
-        self.mt_counter=0
+        self.mt_counter = 0
         self.configpath = fileUtils.check_dir(configpath)
         self.locationpath = os.path.join(self.configpath, 'locations')
         self.locations = {}
@@ -67,7 +67,6 @@ class MapServ:
     def __init__(self, configpath=None, tilerepostype=None):
         self.tile_repository = None
         self.initLocations(configpath, tilerepostype)
-
 
         if (os.path.exists(self.locationpath)):
             self.read_locations()
@@ -169,8 +168,7 @@ class MapServ:
                 return googleMaps.get_url(self.mt_counter, coord, layer, conf)
 
         except KeyError:
-            raise MapServException("Invalid layer ID: " + str(layer) )
-
+            raise MapServException("Invalid layer ID: " + str(layer))
 
     def get_tile_from_coord(self, coord, layer, conf):
         href = self.get_url_from_coord(coord, layer, conf)
@@ -178,7 +176,7 @@ class MapServ:
             try:
                 #print 'downloading:', href
                 oa = openanything.fetch(href)
-                if oa['status']==200:
+                if oa['status'] == 200:
                     return oa['data']
                 else:
                     raise RuntimeError, ("HTTP Reponse is: " + str(oa['status']) + ' in ' + str(href),)
@@ -212,13 +210,13 @@ class MapServ:
             for i in range(tPoint['xLow'], tPoint['xHigh']):
                 y = 0
                 for j in range(tPoint['yLow'], tPoint['yHigh']):
-                    if self.get_tile((i,j,zoom), layer, online, False, conf):
-                        pb = self.load_pixbuf((i,j,zoom), layer, False)
+                    if self.get_tile((i, j, zoom), layer, online, False, conf):
+                        pb = self.load_pixbuf((i, j, zoom), layer, False)
                         width, height = pb.get_width(), pb.get_height()
 
                         result.paste(
-                            Image.fromstring("RGB", (width,height), pb.get_pixels()),
-                            (x* TILES_WIDTH, y* TILES_HEIGHT)
+                            Image.fromstring("RGB", (width, height), pb.get_pixels()),
+                            (x * TILES_WIDTH, y * TILES_HEIGHT)
                         )
                     y += 1
                 x += 1
@@ -239,11 +237,11 @@ class MapServ:
         self.exThread.start()
 
     ## Combine tiles (or part of them) in a big PIL image
-    def do_combine_subtile(self, zoom, layer, online, conf, filename, start, size=(1,1), crop_start=(0,0), crop_size=(None, None)):
-        stx,sty = start
-        w,h = size
-        crx,cry = crop_start
-        crw,crh = crop_size
+    def do_combine_subtile(self, zoom, layer, online, conf, filename, start, size=(1, 1), crop_start=(0, 0), crop_size=(None, None)):
+        stx, sty = start
+        w, h = size
+        crx, cry = crop_start
+        crw, crh = crop_size
 
         # Test import PIL
         global Image
@@ -254,23 +252,31 @@ class MapServ:
                 return str(inst)
 
         # Fix cropping to have at most one tile cropped
-        d = crx/TILES_WIDTH
-        stx += d ; w -= d; crx -= d*TILES_WIDTH
+        d = crx / TILES_WIDTH
+        stx += d
+        w -= d
+        crx -= d * TILES_WIDTH
 
-        d = cry/TILES_HEIGHT
-        sty += d ; h -= d; cry -= d*TILES_HEIGHT
+        d = cry / TILES_HEIGHT
+        sty += d
+        h -= d
+        cry -= d * TILES_HEIGHT
 
-        if crw == None: crw = w*TILES_WIDTH - crx
-        else: w = (crx+crw+TILES_WIDTH-1) / TILES_WIDTH
-        if crh == None: crh = h*TILES_HEIGHT - cry
-        else: h = (cry+crh+TILES_HEIGHT-1) / TILES_HEIGHT
+        if crw is None:
+            crw = w * TILES_WIDTH - crx
+        else:
+            w = (crx + crw + TILES_WIDTH - 1) / TILES_WIDTH
+        if crh is None:
+            crh = h * TILES_HEIGHT - cry
+        else:
+            h = (cry + crh + TILES_HEIGHT - 1) / TILES_HEIGHT
 
-        img = Image.new("RGB", (crw, crh), (255,255,255))
+        img = Image.new("RGB", (crw, crh), (255, 255, 255))
 
-        for x in range(stx, stx+w):
-            for y in range(sty, sty+h):
-                if self.get_tile((x,y,zoom), layer, online, False, conf):
-                    pb = self.load_pixbuf((x,y,zoom), layer, False)
+        for x in range(stx, stx + w):
+            for y in range(sty, sty + h):
+                if self.get_tile((x, y, zoom), layer, online, False, conf):
+                    pb = self.load_pixbuf((x, y, zoom), layer, False)
                     if isinstance(pb, str):
                         # is an image encoded in a string file
                         tilef = StringIO.StringIO()
@@ -281,17 +287,16 @@ class MapServ:
                     else:
                         # is a real pixbuf
                         width, height = pb.get_width(), pb.get_height()
-                        tileimg = Image.fromstring("RGB", (width,height), pb.get_pixels())
+                        tileimg = Image.fromstring("RGB", (width, height), pb.get_pixels())
 
-                    px = (x-stx)*TILES_WIDTH - crx
-                    py = (y-sty)*TILES_HEIGHT - cry
+                    px = (x - stx) * TILES_WIDTH - crx
+                    py = (y - sty) * TILES_HEIGHT - cry
 
-                    img.paste(tileimg, (px,py))
+                    img.paste(tileimg, (px, py))
                     del pb
         img.load()
         img.save(filename, 'PNG')
         return filename
-
 
     def load_pixbuf(self, coord, layer, force_update):
         return self.tile_repository.load_pixbuf(coord, layer, force_update)
@@ -301,7 +306,7 @@ class MapServ:
         for str in sorted(self.locations.keys()):
             iter = store.append()
             store.set(iter, 0, str + strAppend)
-        if strAppend=='' and os.path.exists('poi.db'):
+        if strAppend == '' and os.path.exists('poi.db'):
             import sqlite3
             dbconn = sqlite3.connect('poi.db')
             dbcursor = dbconn.cursor()

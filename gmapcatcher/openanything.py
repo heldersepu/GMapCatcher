@@ -11,7 +11,10 @@ __date__ = '$Date: 2004/04/16 21:16:24 $'
 __copyright__ = 'Copyright (c) 2004 Mark Pilgrim'
 __license__ = 'Python'
 
-import urllib2, urlparse, gzip, httplib, mimetypes
+import urllib2
+import urlparse
+import gzip
+import mimetypes
 from StringIO import StringIO
 from mapConst import *
 #from django.template.defaultfilters import urlencode
@@ -19,6 +22,7 @@ from mapConst import *
 
 #USER_AGENT = 'OpenAnything/%s +http://diveintopython.org/http_web_services/' % __version__
 USER_AGENT = '%s/%s +%s' % (NAME, VERSION, WEB_ADDRESS)
+
 
 class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
     def http_error_301(self, req, fp, code, msg, headers):
@@ -33,6 +37,7 @@ class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
         result.status = code
         return result
 
+
 class DefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
     def http_error_default(self, req, fp, code, msg, headers):
         result = urllib2.HTTPError(
@@ -40,19 +45,22 @@ class DefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
         result.status = code
         return result
 
-def encode_post_data_dict( post_data ):
+
+def encode_post_data_dict(post_data):
     data = []
     for key in post_data.keys():
-        data.append( urlencode(key) +'='+ urlencode(post_data[key]) )
+        data.append(urlencode(key) + '=' + urlencode(post_data[key]))
     return '&'.join(data)
 
-def encode_post_data( post_data ):
+
+def encode_post_data(post_data):
     data = []
     for x in post_data:
-        data.append( urlencode(x[0]) +'='+ urlencode(x[1]) )
+        data.append(urlencode(x[0]) + '=' + urlencode(x[1]))
     return '&'.join(data)
 
-def openAnything( source, etag=None, lastmodified=None, agent=USER_AGENT, post_data=None, files=None ):
+
+def openAnything(source, etag=None, lastmodified=None, agent=USER_AGENT, post_data=None, files=None):
     """URL, filename, or string --> stream
 
     This function lets you define parsers that take any input source
@@ -83,10 +91,10 @@ def openAnything( source, etag=None, lastmodified=None, agent=USER_AGENT, post_d
         post_data_dict = post_data
         post_data = []
         for key in post_data_dict.keys():
-            post_data.append( (key, post_data_dict[key]) )
+            post_data.append((key, post_data_dict[key]))
 
     protocol = urlparse.urlparse(source)[0]
-    if protocol=='http' or protocol=='https':
+    if protocol == 'http' or protocol == 'https':
         # open URL with urllib2
         request = urllib2.Request(source)
         request.add_header('User-Agent', agent)
@@ -95,11 +103,11 @@ def openAnything( source, etag=None, lastmodified=None, agent=USER_AGENT, post_d
         if etag:
             request.add_header('If-None-Match', etag)
         if post_data and files:
-            content_type, body = encode_multipart_formdata( post_data, files )
+            content_type, body = encode_multipart_formdata(post_data, files)
             request.add_header('Content-Type', content_type)
             request.add_data(body)
         elif post_data:
-            request.add_data( encode_post_data( post_data ) )
+            request.add_data(encode_post_data(post_data))
         request.add_header('Accept-encoding', 'gzip')
         opener = urllib2.build_opener(SmartRedirectHandler(), DefaultErrorHandler())
         return opener.open(request)
@@ -112,6 +120,7 @@ def openAnything( source, etag=None, lastmodified=None, agent=USER_AGENT, post_d
 
     # treat source as string
     return StringIO(str(source))
+
 
 def fetch(source, etag=None, lastmodified=None, agent=USER_AGENT, post_data=None, files=None):
     '''Fetch data and metadata from a URL, file, stream, or string'''
@@ -134,6 +143,7 @@ def fetch(source, etag=None, lastmodified=None, agent=USER_AGENT, post_data=None
     f.close()
     return result
 
+
 def encode_multipart_formdata(fields, files):
     """
     fields is a sequence of (name, value) elements for regular form fields.
@@ -153,13 +163,14 @@ def encode_multipart_formdata(fields, files):
         L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
         L.append('Content-Type: %s' % get_content_type(filename))
         L.append('')
-        L.append(open(filename,'rb').read())
+        L.append(open(filename, 'rb').read())
     L.append('--' + BOUNDARY + '--')
     L.append('')
     body = CRLF.join(L)
     content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
     #print '--== encode_multipart_formdata:body ==--'
     return content_type, body
+
 
 def get_content_type(filename):
     return mimetypes.guess_type(filename)[0] or 'application/octet-stream'

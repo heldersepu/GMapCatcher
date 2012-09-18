@@ -6,19 +6,21 @@ import re
 import os
 from gmapcatcher.mapConst import *
 
+
 ## Convert from GMapCatcher filename to coord
 #  file = C:\Users\Dog\.googlemaps\tiles\-1\74\541\96\982.png
 # coord = 74*1024 + 541,  96*1024 + 982,  -1
 def get_coord_from_name(filename):
-    m = re.match('.*\D(-\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)\.png',filename)
+    m = re.match('.*\D(-\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)\.png', filename)
     if not m:
-        m = re.match('.*\D(\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)\.png',filename)
+        m = re.match('.*\D(\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)\.png', filename)
     if m:
         g = m.groups()
         if len(g) == 5:
-            return int(g[1])*1024 + int(g[2]), \
-                   int(g[3])*1024 + int(g[4]), \
+            return int(g[1]) * 1024 + int(g[2]), \
+                   int(g[3]) * 1024 + int(g[4]), \
                    int(g[0])
+
 
 ## Rename a file in GMapCatcher format to OSM format
 def convert_file(file, dirDestination):
@@ -27,12 +29,13 @@ def convert_file(file, dirDestination):
         zoom = MAP_MAX_ZOOM_LEVEL - coord[2]
         d = os.path.join(dirDestination, str(zoom))
         if not os.path.exists(d):
-			os.mkdir(d)
+            os.mkdir(d)
         d = os.path.join(d, str(coord[0]))
         if not os.path.exists(d):
-			os.mkdir(d)
+            os.mkdir(d)
         destFile = os.path.join(d, str(coord[1]) + '.png')
         os.rename(file, destFile)
+
 
 ## Do the conversion from the given source to the destination
 def do_conversion(dirSource):

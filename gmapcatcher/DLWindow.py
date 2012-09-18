@@ -18,6 +18,7 @@ import mapServices
 from gtkThread import *
 from os.path import join, isdir
 
+
 class DLWindow(gtk.Window):
 
     def __init__(self, coord, kmx, kmy, layer, conf):
@@ -107,8 +108,8 @@ class DLWindow(gtk.Window):
         gtk.Window.__init__(self)
         lat0 = coord[0]
         lon0 = coord[1]
-        zoom0 = max(MAP_MIN_ZOOM_LEVEL, coord[2]-3)
-        zoom1 = min(MAP_MAX_ZOOM_LEVEL, coord[2]+1)
+        zoom0 = max(MAP_MIN_ZOOM_LEVEL, coord[2] - 3)
+        zoom1 = min(MAP_MAX_ZOOM_LEVEL, coord[2] + 1)
 
         vbox = gtk.VBox(False)
         hbox = gtk.HBox(False, 10)
@@ -129,10 +130,10 @@ class DLWindow(gtk.Window):
         if ico:
             self.set_icon(ico)
 
-        self.complete=[]
-        self.processing=False
-        self.gmap=None
-        self.downloader=None
+        self.complete = []
+        self.processing = False
+        self.gmap = None
+        self.downloader = None
         self.connect('delete-event', self.on_delete)
         self.connect('key-press-event', self.key_press)
         self.show_all()
@@ -148,7 +149,8 @@ class DLWindow(gtk.Window):
                 self.all_done("Canceled")
                 return
         args = MapArgs()
-        if self.processing: return
+        if self.processing:
+            return
         try:
             args.lat = float(self.e_lat0.get_text())
             args.lng = float(self.e_lon0.get_text())
@@ -196,7 +198,7 @@ class DLWindow(gtk.Window):
 
     ## Save the data to a text file
     def save_info(self, strPath, strInfo):
-        file = open(join(strPath, 'gmap'+ mapUtils.timeStamp() +'.bat'), "w")
+        file = open(join(strPath, 'gmap' + mapUtils.timeStamp() + '.bat'), "w")
         file.write(strInfo)
         file.close()
 
@@ -204,17 +206,17 @@ class DLWindow(gtk.Window):
         self.complete.append((coord, layer))
         ncomplete = len(self.complete)
         nqueued = self.downloader.qsize() if self.downloader else 0
-        if nqueued==0 and ((not self.downloader) or self.downloader.bulk_all_placed):
+        if nqueued == 0 and ((not self.downloader) or self.downloader.bulk_all_placed):
             self.download_complete()
             return
         self.update_pbar(
-            "x=%d y=%d zoom=%d" % coord, ncomplete, ncomplete+nqueued
+            "x=%d y=%d zoom=%d" % coord, ncomplete, ncomplete + nqueued
         )
 
     def update_pbar(self, text, pos, maxpos):
         percent = ""
         if pos != maxpos:
-            percentfloat = float(pos)/maxpos
+            percentfloat = float(pos) / maxpos
             self.pbar.set_fraction(percentfloat)
             if percentfloat > 0:
                 percent = " [%.1f%%]" % (percentfloat * 100)
@@ -224,7 +226,7 @@ class DLWindow(gtk.Window):
         if self.pbar.get_text() != "Paused":
             self.all_done("Complete")
 
-    def do_pause(self,w):
+    def do_pause(self, w):
         self.all_done("Paused")
 
     def all_done(self, strMessage):
@@ -243,8 +245,7 @@ class DLWindow(gtk.Window):
             self.on_delete()
             self.destroy()
 
-    def on_delete(self,*params):
+    def on_delete(self, *params):
         if self.downloader:
             self.downloader.stop_all()
         return False
-

@@ -3,9 +3,11 @@
 
 from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 
+
 ## Returns a template URL for the openStreetMaps
 def layer_url_template():
     return 'http://%s.tile.openstreetmap.org/%i/%i/%i.png'
+
 
 ## Returns the URL to the openStreetMaps tile
 def get_url(counter, coord):

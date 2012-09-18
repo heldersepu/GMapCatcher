@@ -8,6 +8,7 @@ import gtk
 import fileUtils
 from customWidgets import myFrame, lbl
 
+
 ## This widget lets the user change the visual theme
 class ChangeTheme():
     ## Load the items into the Combo box
@@ -31,17 +32,17 @@ class ChangeTheme():
         memtype = conf.oneDirPerMap
         memscale = conf.scale_visible
         conf.oneDirPerMap = int(self.cb_oneDirPerMap.get_active())
-        conf.map_service = MAP_SERVERS[self.cmb_service.get_active()+1]
+        conf.map_service = MAP_SERVERS[self.cmb_service.get_active() + 1]
         conf.scale_visible = self.cb_view_scale.get_active()
         conf.save()
         if memservice != conf.map_service or memtype != conf.oneDirPerMap:
             self.mapswindow.layer_combo(True)
         if conf.scale_visible != memscale:
-            self.mapswindow.refresh();
+            self.mapswindow.refresh()
         if self.cmb_themes.get_model():
             cmb_text = self.cmb_themes.get_active_text()
             if cmb_text:
-                fileUtils.write_gtkrc(cmb_text)    ## All the buttons at the bottom
+                fileUtils.write_gtkrc(cmb_text)  # All the buttons at the bottom
 
     def __action_buttons(self, conf):
         def btn_revert_clicked(button, conf):
@@ -101,8 +102,7 @@ class ChangeTheme():
 
         # Check box for option to create a dir per Map service
         hbox = gtk.HBox()
-        self.cb_oneDirPerMap = gtk.CheckButton( \
-            "Use a different folder per Map Service")
+        self.cb_oneDirPerMap = gtk.CheckButton("Use a different folder per Map Service")
         self.cb_oneDirPerMap.set_active(oneDirPerMap)
         hbox.pack_start(self.cb_oneDirPerMap)
         vbox.pack_start(hbox)
@@ -144,4 +144,3 @@ class ChangeTheme():
 
     def __init__(self, mapswindow):
         self.mapswindow = mapswindow
-

@@ -9,11 +9,12 @@ import mapUtils
 from mapConst import *
 from threading import Timer
 
-ternary = lambda a,b,c : (b,c)[not a]
+ternary = lambda a, b, c: (b, c)[not a]
+
 
 ## This widget is where the map is drawn
 class DrawingArea(gtk.DrawingArea):
-    center = ((0,0),(128,128))
+    center = ((0, 0), (128, 128))
     draging_start = (0, 0)
     myThread = None
 
@@ -31,7 +32,7 @@ class DrawingArea(gtk.DrawingArea):
         self.connect('button-release-event', self.da_button_release)
 
     ## Change the mouse cursor over the drawing_area
-    def da_set_cursor(self, dCursor = gtk.gdk.HAND1):
+    def da_set_cursor(self, dCursor=gtk.gdk.HAND1):
         cursor = gtk.gdk.Cursor(dCursor)
         self.window.set_cursor(cursor)
 
@@ -83,9 +84,8 @@ class DrawingArea(gtk.DrawingArea):
         else:
             fix_tile, fix_offset = self.center
 
-
         scala = 2 ** (current_zoom_level - zoom)
-        x = int((fix_tile[0] * TILES_WIDTH  + fix_offset[0]) * scala)
+        x = int((fix_tile[0] * TILES_WIDTH + fix_offset[0]) * scala)
         y = int((fix_tile[1] * TILES_HEIGHT + fix_offset[1]) * scala)
         if dPointer and not doForce:
             x = x - (dPointer[0] - da_center[0])
@@ -106,7 +106,7 @@ class DrawingArea(gtk.DrawingArea):
             (mct[0][0], mct[0][1], zl), self.get_allocation(), self.center
         )
         if xy:
-            for x,y in xy:
+            for x, y in xy:
                 return (x + mct[1][0], y + mct[1][1])
 
     ## Set the Graphics Context used in the visual download
@@ -163,7 +163,7 @@ class DrawingArea(gtk.DrawingArea):
         radius = 10
         self.window.draw_arc(
             gc, True, screen_coord[0] - radius, screen_coord[1] - radius,
-            radius * 2, radius * 2, 0, 360*64
+            radius * 2, radius * 2, 0, 360 * 64
         )
 
     ## Draws a point
@@ -181,7 +181,7 @@ class DrawingArea(gtk.DrawingArea):
         self.window.draw_line(gc, int(screen_coord[0]), int(screen_coord[1]), x, y)
         pangolayout = self.create_pango_layout("")
         pangolayout.set_text(dist_str)
-        self.wr_pltxt(gc,x,y,pangolayout)
+        self.wr_pltxt(gc, x, y, pangolayout)
 
     ## Draws a circle as starting point for ruler
     def draw_stpt(self, mcoord, zl):
@@ -190,14 +190,14 @@ class DrawingArea(gtk.DrawingArea):
         screen_coord = self.coord_to_screen(mcoord[0], mcoord[1], zl)
         self.window.draw_arc(
             gc, True, screen_coord[0] - radius, screen_coord[1] - radius,
-            radius * 2, radius * 2, 0, 360*64
+            radius * 2, radius * 2, 0, 360 * 64
         )
 
     ## Draws an image
     def draw_image(self, screen_coord, img, width, height):
         self.window.draw_pixbuf(
             self.style.black_gc, img, 0, 0,
-            screen_coord[0] - width/2, screen_coord[1] - height/2,
+            screen_coord[0] - width / 2, screen_coord[1] - height / 2,
             width, height
         )
 
@@ -231,7 +231,7 @@ class DrawingArea(gtk.DrawingArea):
             if (cPos > -1):
                 try:
                     my_gc = self.window.new_gc()
-                    color = gtk.gdk.color_parse(marker_name[cPos:cPos+7])
+                    color = gtk.gdk.color_parse(marker_name[cPos:cPos + 7])
                     my_gc.set_rgb_fg_color(color)
                     gc = my_gc
                 except:
@@ -253,9 +253,9 @@ class DrawingArea(gtk.DrawingArea):
                     self.wr_pltxt(gco, screen_coord[0], screen_coord[1], pangolayout)
 
     ## Show the text
-    def wr_pltxt(self,gc,x,y,pl):
+    def wr_pltxt(self, gc, x, y, pl):
         gc1 = self.window.new_gc()
-        gc1.line_width=2
+        gc1.line_width = 2
         gc1.set_rgb_fg_color(gtk.gdk.color_parse("#000000"))
         self.window.draw_layout(gc1, x - 1, y - 1, pl)
         self.window.draw_layout(gc1, x, y - 1, pl)
@@ -269,7 +269,7 @@ class DrawingArea(gtk.DrawingArea):
 
     ## Draw the second layer of elements
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
-                    downloading=False, visual_dlconfig = {},
+                    downloading=False, visual_dlconfig={},
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None, gps_direction=False,
                     segment_no=0, r_coordx={}, r_coordy={}, r_coordz={}):
@@ -300,7 +300,7 @@ class DrawingArea(gtk.DrawingArea):
                 coord = (None, None, None)
 
             # Draw the markers
-            if len(marker.positions) < 1000 :
+            if len(marker.positions) < 1000:
                 self.draw_markers(zl, marker, coord, conf, pixDim)
             else:
                 if (self.myThread is not None):
@@ -328,7 +328,7 @@ class DrawingArea(gtk.DrawingArea):
         if downloading:
             self.window.draw_pixbuf(
                 self.style.black_gc, dlpixbuf, 0, 0, 0, 0, -1, -1)
-        
+
         if (visual_dlconfig != {}):
             self.draw_visual_dlconfig(visual_dlconfig, middle, full, zl)
 
@@ -336,7 +336,7 @@ class DrawingArea(gtk.DrawingArea):
         img = marker.get_marker_pixbuf(zl)
         for string in marker.positions.keys():
             mpos = marker.positions[string]
-            if (zl <= mpos[2]) and (mpos[0],mpos[1]) != (coord[0],coord[1]):
+            if (zl <= mpos[2]) and (mpos[0], mpos[1]) != (coord[0], coord[1]):
                 self.draw_marker(conf, mpos, zl, img, pixDim, string)
 
     def draw_markers_thread(self, *args):
@@ -399,14 +399,15 @@ class DrawingArea(gtk.DrawingArea):
     def draw_ruler_lines(self, segment_no, rx, ry, rz, zl):
         x = 0
         gc = self.style.black_gc
-        gc.line_width=2
+        gc.line_width = 2
         colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00"]
-        while True: # Draw lines then Text
+        while True:  # Draw lines then Text
             gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[x % 4]))
-            try :
-                dist_str = "%0.3f km" % rz[x+1]
-                self.draw_line(gc, rx[x], ry[x], rx[x+1], ry[x+1], dist_str, zl)
+            try:
+                dist_str = "%0.3f km" % rz[x + 1]
+                self.draw_line(gc, rx[x], ry[x], rx[x + 1], ry[x + 1], dist_str, zl)
             except:
                 dist_str = ""
             x = x + 1
-            if x == segment_no : break
+            if x == segment_no:
+                break

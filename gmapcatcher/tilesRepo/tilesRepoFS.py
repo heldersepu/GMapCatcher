@@ -83,8 +83,8 @@ class TilesRepositoryFS(TilesRepository):
             # Remove the old tile only after getting the new data
             if remove_tile:
                 fileUtils.delete_old(filename, conf.force_update_days)
-            file = open( filename, 'wb' )
-            file.write( data )
+            file = open(filename, 'wb')
+            file.write(data)
             file.close()
 
             return True
@@ -94,10 +94,9 @@ class TilesRepositoryFS(TilesRepository):
             print excInst
         return False
 
-
     def get_plain_tile(self, coord, layer):
         if not self.is_tile_in_local_repos(coord, layer):
-            raise tileNotInRepository( str( (coord,layer) ) )
+            raise tileNotInRepository(str((coord, layer)))
 
         filename = self.coord_to_path(coord, layer)
         thefile = open(filename, 'rb')
@@ -106,12 +105,10 @@ class TilesRepositoryFS(TilesRepository):
         return ret
 
     def store_plain_tile(self, coord, layer, tiledata):
-        filename = self.coord_to_path_checkdirs(coord, layer);
-        file = open( filename, 'wb' )
-        file.write( tiledata )
+        filename = self.coord_to_path_checkdirs(coord, layer)
+        file = open(filename, 'wb')
+        file.write(tiledata)
         file.close()
-
-
 
     ## Return the absolute path to a tile
     #  only check path

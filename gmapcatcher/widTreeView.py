@@ -7,6 +7,7 @@ from mapConst import *
 import gtk
 import fileUtils
 
+
 ## This widget allows the user to modify the locations and markers
 class TreeView():
 
@@ -16,7 +17,7 @@ class TreeView():
         # add rows with text
         if locations:
             for strLoc in locations.keys():
-                listStore.append([strLoc , locations[strLoc][0],
+                listStore.append([strLoc, locations[strLoc][0],
                                   locations[strLoc][1], locations[strLoc][2]])
         return listStore
 
@@ -167,4 +168,3 @@ class TreeView():
                        listStore, parent)
         hpaned.pack2(buttons, False, False)
         return hpaned
-

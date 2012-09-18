@@ -8,9 +8,11 @@
 
 from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 
+
 ## Returns a template URL for the Stamen
 def layer_url_template():
     return 'http://%stile.stamen.com/%s/%i/%i/%i.png'
+
 
 ## Returns the URL to the Stamen tile
 def get_url(counter, layer_name, coord):

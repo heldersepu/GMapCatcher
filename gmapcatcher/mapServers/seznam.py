@@ -2,7 +2,6 @@
 ## @package gmapcatcher.mapServers.seznam
 # All the interaction with mapy.cz (mapy.seznam.cz)
 
-import sys
 from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 """
 A bit of theory:
@@ -15,13 +14,13 @@ Map tiles:
 The tiles' URL has a form
 http://<server>.mapserver.mapy.cz/<layer name>/<zoom>_<x coord>_<y coord>
 where:
-	server is one of m1, m2, m3, m4
-	layer names are: base-n, ophoto,  turist, ophoto0203, army2, hybrid, relief-l, ttur, tcyklo
-		meanings are given below
-	zoom is a number from 3 to 16; in case of some very detailed ortophotomaps, it is up to 18 (e.g ortophoto map of Prague). Zoom 1 to 2 are not supported by mapy.cz
-		The higher number, the more detiled map (in contary to GMapCatcher app).
-	x_coord and y_coord are internal coordinates of the bottom left corner of the tile -
-			- 7 digit hexadecimal numbers, they will be discussed below
+    server is one of m1, m2, m3, m4
+    layer names are: base-n, ophoto,  turist, ophoto0203, army2, hybrid, relief-l, ttur, tcyklo
+        meanings are given below
+    zoom is a number from 3 to 16; in case of some very detailed ortophotomaps, it is up to 18 (e.g ortophoto map of Prague). Zoom 1 to 2 are not supported by mapy.cz
+        The higher number, the more detiled map (in contary to GMapCatcher app).
+    x_coord and y_coord are internal coordinates of the bottom left corner of the tile -
+        - 7 digit hexadecimal numbers, they will be discussed below
 
 Examples:
 http://m1.mapserver.mapy.cz/base-n/3_8000000_8000000
@@ -102,30 +101,34 @@ Theoretically in zoom 27 the number ends with one zero in binary, in zoom 28 the
  """
 
 
-
 def layer_url_template(layername):
     #~ layer names are:
     #~ base layers:  base-n, ophoto,  turist, ophoto0203, army2
     #~ semitransparent:  hybrid, relief-l, ttur, tcyklo,
     return 'http://m%i.mapserver.mapy.cz/' + layername + '/%i_%x_%x'
 
+
 def get_url_base(counter, coord, layer):
     layer_names = ["base-n", "ophoto", "relief-l", "hybrid"]
     return get_url_internal(counter, coord, layer_names[layer])
 
-get_url = get_url_base #provide some default method get_url
+get_url = get_url_base  # provide some default method get_url
+
 
 def get_url_hiking(counter, coord, layer):
     layer_names = ["turist", "turist", "relief-l", "ttur"]
     return get_url_internal(counter, coord, layer_names[layer])
 
+
 def get_url_cyclo(counter, coord, layer):
     layer_names = ["turist", "turist", "relief-l", "tcyklo"]
     return get_url_internal(counter, coord, layer_names[layer])
 
+
 def get_url_hist(counter, coord, layer):
     layer_names = ["army2", "army2", "relief-l", "hybrid"]
     return get_url_internal(counter, coord, layer_names[layer])
+
 
 def get_url_internal(counter, coord, layername):
 #The recomputation of the coordinates gives bad results, but at least the whole
@@ -138,18 +141,15 @@ def get_url_internal(counter, coord, layername):
 #I found out on which tiles is displayed the geographical center of Czech republic in mapy.cz
 #and google maps and computed the offsets below. Remember that they are pure experimental.
 #if you select another point as "the centre of universe" you get different offsets.
-    offsets_x = [0, 0, 0, 4,9,18,37,74,149,298,596,1191,2383,4765,9530,19059,38117,76235,152470]
-    offsets_y = [0, 0, 0, 6,13,26,52,104,209,419,838,1675,3349,6698,13395,26791,53582,107165,214331]
+    offsets_x = [0, 0, 0, 4, 9, 18, 37, 74, 149, 298, 596, 1191, 2383, 4765, 9530, 19059, 38117, 76235, 152470]
+    offsets_y = [0, 0, 0, 6, 13, 26, 52, 104, 209, 419, 838, 1675, 3349, 6698, 13395, 26791, 53582, 107165, 214331]
 
-    zoom = MAP_MAX_ZOOM_LEVEL - coord[2] - 1 #the highest zoom is 18
-    y_max = 1 << (zoom  + 1) #maximum value which should occur in this zoom level
-    #~ x_max = 1 << (zoom  + 1) #maximum value which should occur in this zoom level
-    x = int(  ( coord[0] - offsets_x[zoom]    ) << (28 - zoom ))
+    zoom = MAP_MAX_ZOOM_LEVEL - coord[2] - 1  # the highest zoom is 18
+    y_max = 1 << (zoom + 1)  # maximum value which should occur in this zoom level
+    #~ x_max = 1 << (zoom  + 1)  # maximum value which should occur in this zoom level
+    x = int((coord[0] - offsets_x[zoom]) << (28 - zoom))
     #in computation of y, there is additional term -1, which helps to keep the center
     #in the center when zooming. It is connected with fact that e.g. Google coordinate refers to the
     #upper left corner of the tile, while in mapy.cz is lower left corner
-    y = int( (y_max - coord[1] - offsets_y[zoom] - 1) << (28 - zoom )) #
-    return layer_url_template(layername) % (
-            counter + 1, zoom, x, y
-        )
-
+    y = int((y_max - coord[1] - offsets_y[zoom] - 1) << (28 - zoom))
+    return layer_url_template(layername) % (counter + 1, zoom, x, y)

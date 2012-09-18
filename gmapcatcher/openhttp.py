@@ -1,9 +1,11 @@
-import urllib2, urlparse
+import urllib2
+import urlparse
+
 
 def fetch(url):
     result = {}
     protocol = urlparse.urlparse(url)[0]
-    if not protocol=='http':
+    if not protocol == 'http':
         print 'error url %s' % url
         result['data'] = ""
         result['status'] = -1
@@ -22,4 +24,3 @@ def fetch(url):
         result['status'] = -1
     finally:
         return result
-

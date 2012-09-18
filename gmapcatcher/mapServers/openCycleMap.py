@@ -3,9 +3,11 @@
 
 from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 
+
 ## Returns a template URL for the OpenCycleMap
 def layer_url_template():
     return 'http://%s.tile.opencyclemap.org/cycle/%i/%i/%i.png'
+
 
 ## Returns the URL to the OpenCycleMap tile
 def get_url(counter, coord):

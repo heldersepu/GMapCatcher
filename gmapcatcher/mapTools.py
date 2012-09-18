@@ -33,7 +33,7 @@ class MapTools():
                 frame.set_size_request(100, 75)
                 if str in [TOOLS_MENU[1], TOOLS_MENU[2]]:
                     frame.add(
-                        myTree.show(str[5:-1], filePath +'/'+ str[5:], parent)
+                        myTree.show(str[5:-1], filePath + '/' + str[5:], parent)
                     )
                 elif str == TOOLS_MENU[0]:
                     frame.add(mySett.show(parent))
@@ -69,6 +69,6 @@ class MapTools():
                 event.keyval in [87, 119]:
             window.destroy()
 
+
 def main(parent, start_page):
     MapTools(parent, start_page)
-

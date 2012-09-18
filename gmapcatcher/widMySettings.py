@@ -50,14 +50,14 @@ class MySettings():
         def _status_save(conf):
             def statuscombo(active_type_id):
                 hbox = gtk.HBox(False, 10)
-                hbox.pack_start( \
-                    lbl(" Select status bar type "))
+                hbox.pack_start(lbl(" Select status bar type "))
                 self.cmb_status_type = gtk.combo_box_new_text()
                 for strType in STATUS_TYPE:
                     self.cmb_status_type.append_text(strType)
                 self.cmb_status_type.set_active(active_type_id)
                 hbox.pack_start(self.cmb_status_type)
                 return hbox
+
             def save_checkbox(active_bool):
                 self.save_at_close_button = \
                         gtk.CheckButton(" Save View Params ")
@@ -71,7 +71,6 @@ class MySettings():
             hbox.pack_start(save)
             hbox.pack_start(status)
             return hbox
-
 
         def custom_path(conf):
             def repository_type_combo(repos_type_id):
@@ -93,8 +92,7 @@ class MySettings():
             vbox = gtk.VBox(False, 5)
             vbox.set_border_width(5)
             hbox = gtk.HBox(False, 10)
-            hbox.pack_start( \
-                lbl(" This is the directory with all the images. "))
+            hbox.pack_start(lbl(" This is the directory with all the images. "))
             button = gtk.Button("Reset to default")
             button.connect('clicked', set_folder)
             hbox.pack_start(button)
@@ -144,7 +142,7 @@ class MySettings():
             conf.status_location = self.cmb_status_type.get_active()
             conf.save_at_close = self.save_at_close_button.get_active()
 
-            if( os.pathsep == ';' ):
+            if(os.pathsep == ';'):
                 # we have windows OS, filesystem is case insensitive
                 newPath = (self.entry_custom_path.get_text().lower()).strip()
                 oldPath = conf.init_path.lower().strip()
@@ -180,7 +178,6 @@ class MySettings():
                     self.entry_custom_path.set_text(conf.init_path)
                 else:
                     self.entry_custom_path.set_text("None")
-
 
             bbox = gtk.HButtonBox()
             bbox.set_layout(gtk.BUTTONBOX_END)
