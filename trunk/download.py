@@ -17,20 +17,23 @@ mConf = mapConf.MapConf()
 ctx_map = MapServ(mConf.init_path, mConf.repository_type)
 downloader = None
 
+
 def dl_callback(*args, **kwargs):
     if not args[0]:
         sys.stdout.write('\b=*')
+
 
 def download(lat, lng, lat_range, lng_range, max_zl, min_zl, layer):
     for zl in range(max_zl, min_zl - 1, -1):
         sys.stdout.write("\nDownloading zl %d \t" % zl)
         downloader.query_region_around_location(
             lat, lng,
-            lat_range*2, lng_range*2, zl,
+            lat_range * 2, lng_range * 2, zl,
             layer, dl_callback,
             conf=mConf
         )
         downloader.wait_all()
+
 
 def download_coordpath(gpxfile, max_zl, min_zl, layer, arround=2):
     coords = load_gpx_coords(gpxfile)
@@ -44,7 +47,8 @@ if __name__ == "__main__":
 
     if (args.location is None) and (args.gpx is None) and ((args.lat is None) or (args.lng is None)):
         args.print_help()
-        import signal ; os.kill(os.getpid(), signal.SIGTERM)
+        import signal
+        os.kill(os.getpid(), signal.SIGTERM)
         sys.exit(0)
 
     print "location = %s" % args.location
@@ -64,7 +68,7 @@ if __name__ == "__main__":
         # GPX path mode
         args.width = int(args.width)
         if args.width < 0:
-            args.width = 2 # The default for GPX
+            args.width = 2  # The default for GPX
     else:
         if args.width > 0:
             args.lng_range = km_to_lon(args.width, args.lat)
@@ -86,7 +90,7 @@ if __name__ == "__main__":
 
     downloader = MapDownloader(ctx_map, args.nr_threads)
     try:
-        if args.gpx != None:
+        if args.gpx is not None:
             download_coordpath(args.gpx, args.max_zl, args.min_zl, args.layer, arround=args.width)
         else:
             download(args.lat, args.lng, args.lat_range, args.lng_range,
@@ -94,6 +98,5 @@ if __name__ == "__main__":
     finally:
         print "\nDownload Complete!"
         downloader.stop_all()
-        import signal ; os.kill(os.getpid(), signal.SIGTERM)
-
-
+        import signal
+        os.kill(os.getpid(), signal.SIGTERM)

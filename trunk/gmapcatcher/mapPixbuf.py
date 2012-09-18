@@ -16,6 +16,7 @@ else:
 if not isfile(join(_prefix, 'missing.png')):
     _prefix = '/usr/share/pixmaps/gmapcatcher'
 
+
 def ico():
     pix_ico = False
     try:
@@ -23,6 +24,7 @@ def ico():
     except Exception:
         pix_ico = False
     return pix_ico
+
 
 ## Get the Pixbuf from missing.png
 def missing():
@@ -33,9 +35,11 @@ def missing():
         pix_missing = image_data_direct("missing")
     return pix_missing
 
+
 ## Get the Pixbuf of a Cross
 def cross():
     return image_data_direct("cross")
+
 
 def downloading():
     pix_dl = False
@@ -44,6 +48,7 @@ def downloading():
     except Exception:
         pix_dl = image_data_direct("downloading")
     return pix_dl
+
 
 ## Get the Pixbuf from the given image.
 # This is used in myToolTip
@@ -69,8 +74,10 @@ def getImage(filename, intWidth=56, intHeight=56):
                 intHeight * 4)
     return pix_buf
 
+
 def image_data_fs(filename):
     return gtk.gdk.pixbuf_new_from_file(filename)
+
 
 def image_data_direct(name):
     if name == "missing":
@@ -93,4 +100,3 @@ def image_data_direct(name):
                 gtk.gdk.COLORSPACE_RGB, True, 8, 150, 38, 150 * 4)
     else:
         raise Exception('image type not recognized')
-

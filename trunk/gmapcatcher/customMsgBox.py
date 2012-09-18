@@ -4,7 +4,6 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import atk
 
 
 ## Message used to display errors
@@ -16,6 +15,7 @@ def error_msg(parent, strMessage, buttons=gtk.BUTTONS_OK):
     dialog.destroy()
     return resp
 
+
 def error_msg_non_blocking(strTitle, strMessage):
     dialog = gtk.MessageDialog(
         parent         = None,
@@ -25,6 +25,7 @@ def error_msg_non_blocking(strTitle, strMessage):
         message_format = strMessage)
     dialog.set_title(strTitle)
     return dialog
+
 
 ## Message used in the updated notifications
 class updateMsgBox(gtk.Window):
@@ -38,7 +39,7 @@ class updateMsgBox(gtk.Window):
         event_box = gtk.EventBox()
         label_URL = gtk.Label()
         label_URL.set_text("<span foreground=\"blue\" underline=\"single\">" +
-                        strUrl +  "</span>")
+                        strUrl + "</span>")
         label_URL.set_use_markup(True)
         event_box.add(label_URL)
         event_box.set_events(gtk.gdk.BUTTON_PRESS_MASK)

@@ -3,6 +3,7 @@
 
 from mapConst import *
 
+
 class MapArgs():
     max_zl = MAP_MAX_ZOOM_LEVEL
     min_zl = MAP_MIN_ZOOM_LEVEL + 4
@@ -34,7 +35,7 @@ class MapArgs():
         print ' '
         print '  --latrange=   Latitude Range to get    (default = %f)' % self.lat_range
         print '  --lngrange=   Longitude Range to get   (default = %f)' % self.lng_range
-        print '  --height=     Height in Km (will override latrange)'  
+        print '  --height=     Height in Km (will override latrange)'
         print '  --width=      Width in Km (will override lngrange) for locations,'
         print '                and width in "tiles" for GPX paths.'
         print ' '
@@ -54,7 +55,7 @@ class MapArgs():
         if len(arrArgs) > 1:
             for arg in arrArgs[1:]:
                 if arg.startswith('--'):
-                    oarg = arg # Argument with the original case
+                    oarg = arg  # Argument with the original case
                     arg = arg.lower()
                     if arg.startswith('--max-zoom-level='):
                         self.max_zl = int(arg[17:])
@@ -99,9 +100,9 @@ class MapArgs():
                         self.lng_range = 179
 
     def __str__(self):
-        return ("download.py --max-zoom=%s --min-zoom=%s" \
-                + " --latitude=%s --longitude=%s" \
-                + " --width=%s --height=%s") % \
+        return ("download.py --max-zoom=%s --min-zoom=%s" +
+                " --latitude=%s --longitude=%s" +
+                " --width=%s --height=%s") % \
                (self.max_zl, self.min_zl,
                 self.lat, self.lng,
                 self.width, self.height)

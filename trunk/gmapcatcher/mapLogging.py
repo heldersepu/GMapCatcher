@@ -56,6 +56,7 @@ Use grep from gnuwin32 for windows (http://gnuwin32.sourceforge.net/packages/gre
 
 
 import sys
+import os
 import logging
 from traceback import print_exc
 from mapConst import DEFAULT_PATH
@@ -81,9 +82,9 @@ LOGGING_FILE_NAME = None
 LOGGING_FILE_MODE = "w"
 
 
-class FilterSevereOut( logging.Filter ):
+class FilterSevereOut(logging.Filter):
 
-    def __init__(self, name = None, severity = logging.NOTSET):
+    def __init__(self, name=None, severity=logging.NOTSET):
         self.severeout = severity
         if name is not None:
             logging.Filter.__init__(self, name)
@@ -99,7 +100,7 @@ class FilterSevereOut( logging.Filter ):
 
 
 ## Returns the Path to the logging file
-def get_loggingpath( loggingpath = None ):
+def get_loggingpath(loggingpath=None):
     if loggingpath is None:
         if LOGGING_FILE_NAME is not None:
             # the config file must be found at DEFAULT_PATH
@@ -111,7 +112,7 @@ def get_loggingpath( loggingpath = None ):
         return loggingpath
 
 
-def init_logging( loggingpath = None ):
+def init_logging(loggingpath=None):
     """initialization of logging
 
     LOGGING_STDOUT / LOGGING_STDERR / LOGGING_FILE - True/False - allow/deny strem
@@ -121,18 +122,18 @@ def init_logging( loggingpath = None ):
     overrides LOGGING_FILE_NAME.
     """
     log.cur_level = logging.ERROR
-    log.setLevel( log.cur_level )
+    log.setLevel(log.cur_level)
 
     if LOGGING_STDOUT:
         hsout = None
         try:
-            hsout = logging.StreamHandler( sys.stdout )
-            hsout.setFormatter( logging.Formatter(LOGGING_STDOUT_FORMAT) )
-            hsout.setLevel( LOGGING_STDOUT_LEVEL_ABOVE_OR_EQUAL )
-            hsout.addFilter( FilterSevereOut(name=None, severity=LOGGING_STDOUT_LEVEL_BELOW) )
+            hsout = logging.StreamHandler(sys.stdout)
+            hsout.setFormatter(logging.Formatter(LOGGING_STDOUT_FORMAT))
+            hsout.setLevel(LOGGING_STDOUT_LEVEL_ABOVE_OR_EQUAL)
+            hsout.addFilter(FilterSevereOut(name=None, severity=LOGGING_STDOUT_LEVEL_BELOW))
             log.addHandler(hsout)
 
-            if( LOGGING_STDOUT_LEVEL_ABOVE_OR_EQUAL < log.cur_level ):
+            if(LOGGING_STDOUT_LEVEL_ABOVE_OR_EQUAL < log.cur_level):
                 log.cur_level = LOGGING_STDOUT_LEVEL_ABOVE_OR_EQUAL
                 log.setLevel(log.cur_level)
             log.info("Logging to stdout is set.")
@@ -141,16 +142,15 @@ def init_logging( loggingpath = None ):
                 log.removeHandler(hsout)
             print_exc()
 
-
     if LOGGING_STDERR:
         hserr = None
         try:
-            hserr = logging.StreamHandler( sys.stderr )
-            hserr.setFormatter( logging.Formatter( LOGGING_STDERR_FORMAT ) )
-            hserr.setLevel( LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL )
+            hserr = logging.StreamHandler(sys.stderr)
+            hserr.setFormatter(logging.Formatter(LOGGING_STDERR_FORMAT))
+            hserr.setLevel(LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL)
             log.addHandler(hserr)
 
-            if( LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL < log.cur_level ):
+            if(LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL < log.cur_level):
                 log.cur_level = LOGGING_STDERR_LEVEL_ABOVE_OR_EQUAL
                 log.setLevel(log.cur_level)
             log.info("Logging to stderror is set.")
@@ -166,14 +166,14 @@ def init_logging( loggingpath = None ):
 
         hf = None
         try:
-            hf = logging.FileHandler( filename, LOGGING_FILE_MODE )
-            hf.setFormatter( logging.Formatter(LOGGING_FILE_FORMAT) )
-            hf.setLevel( LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL )
+            hf = logging.FileHandler(filename, LOGGING_FILE_MODE)
+            hf.setFormatter(logging.Formatter(LOGGING_FILE_FORMAT))
+            hf.setLevel(LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL)
             log.addHandler(hf)
-            if( LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL < log.cur_level ):
+            if(LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL < log.cur_level):
                 log.cur_level = LOGGING_FILE_LEVEL_ABOVE_OR_EQUAL
                 log.setLevel(log.cur_level)
-            log.info("Logging to file is set to "+str(filename)+".")
+            log.info("Logging to file is set to " + str(filename) + ".")
         except Exception, ex:
             # we have error while logging to file, remove handler and continue
             if hf is not None:

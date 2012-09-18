@@ -5,9 +5,9 @@
 
 from mapConst import *
 import gtk
-import fileUtils
 from customWidgets import myEntry, SpinBtn, myFrame, lbl
 from serialGPS import serialPortScan, BAUDRATES
+
 
 ## This widget lets the user change GPS settings
 class MyGPS():
@@ -26,7 +26,6 @@ class MyGPS():
             self.e_gps_updt_rate.set_text(str(conf.gps_update_rate))
             self.s_gps_max_zoom.set_value(conf.max_gps_zoom)
             self.cmb_gps_mode.set_active(conf.gps_mode)
-
 
         bbox = gtk.HButtonBox()
         bbox.set_layout(gtk.BUTTONBOX_END)
@@ -55,7 +54,7 @@ class MyGPS():
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(lbl("Maximum zoom for GPS: "))
         self.s_gps_max_zoom = SpinBtn(max_gps_zoom,
-                MAP_MIN_ZOOM_LEVEL, MAP_MAX_ZOOM_LEVEL-1)
+                MAP_MIN_ZOOM_LEVEL, MAP_MAX_ZOOM_LEVEL - 1)
         hbox.pack_start(self.s_gps_max_zoom)
         return hbox
 
@@ -109,7 +108,6 @@ class MyGPS():
         hbox.pack_start(self.cmb_gps_baudrate)
         return hbox
 
-
     def key_press(self, widget, event, conf):
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
             # S = 83, 115
@@ -147,4 +145,3 @@ class MyGPS():
         hpaned.pack2(buttons, False, False)
         hpaned.connect('key-press-event', self.key_press, conf)
         return hpaned
-

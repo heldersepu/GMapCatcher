@@ -8,6 +8,7 @@ import fileUtils
 from mapConst import *
 from mapUtils import str_to_tuple
 
+
 ## Class used to read and save the configuration values
 class MapConf():
     config_path = None
@@ -70,8 +71,8 @@ class MapConf():
         config.set(SECTION_INIT, 'google_src', self.google_src)
         config.set(SECTION_INIT, 'match_func', self.match_func)
         config.set(SECTION_INIT, 'show_marker_name', int(self.show_marker_name))
-        config.set(SECTION_INIT, 'marker_font_color', self.marker_font_color)        
-        config.set(SECTION_INIT, 'marker_font_desc', self.marker_font_desc)        
+        config.set(SECTION_INIT, 'marker_font_color', self.marker_font_color)
+        config.set(SECTION_INIT, 'marker_font_desc', self.marker_font_desc)
 
         configfile = open(self.config_path, 'wb')
         config.write(configfile)
@@ -93,9 +94,9 @@ class MapConf():
         ## Initial window height, default is 450
         self.init_height = read_config('height', 450, int)
         ## Initial map zoom, default is MAP_MAX_ZOOM_LEVEL-1
-        self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL-1, int)
+        self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL - 1, int)
         ## Initial map center, default is ((1,0), (9,200))
-        self.init_center = read_config('center', ((1,0),(9,200)), str_to_tuple)
+        self.init_center = read_config('center', ((1, 0), (9, 200)), str_to_tuple)
 
         ## Directory path to the map images, default is "userProfile" folder
         self.init_path = DEFAULT_PATH
@@ -106,8 +107,8 @@ class MapConf():
                 self.init_path = strPath
 
         ## Repository type - filebased / sqlite3
-        self.repository_type =  read_config('repository_type', 0, int)
-        
+        self.repository_type = read_config('repository_type', 0, int)
+
         ## Show a small cross in the center of the map, default is False (0)
         self.show_cross = read_config('show_cross', 0, int)
 

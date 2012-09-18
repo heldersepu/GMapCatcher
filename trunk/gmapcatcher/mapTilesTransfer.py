@@ -10,12 +10,14 @@ import gobject
 import mapUtils
 from tilesRepo.tilesRepo import TilesRepository
 
+
 class InvalidInputParametersError(Exception):
     pass
 
+
 class TilesTransfer(threading.Thread):
 
-    def __init__(self, trepos_source, trepos_destination, center, zooms, region, layer, overwrite_destination ):
+    def __init__(self, trepos_source, trepos_destination, center, zooms, region, layer, overwrite_destination):
         """copy tiles from repos trepos_source to trepos_destination
 
         trepos_source: source repository
@@ -25,7 +27,7 @@ class TilesTransfer(threading.Thread):
         region: (width, height) [km]
         layer: what layer to transfer
         """
-        
+
         threading.Thread.__init__(self)
         self.stop_lock = threading.Lock()
 
@@ -44,13 +46,12 @@ class TilesTransfer(threading.Thread):
         self.layer = layer
         self.overwrite_destination = overwrite_destination
 
-        if ( not isinstance( trepos_source, TilesRepository ) ):
-            raise InvalidInputParametersError( "trepos_source is not subclass of TilesRepository" )
-        if ( not isinstance( trepos_destination, TilesRepository ) ):
-            raise InvalidInputParametersError( "trepos_destination is not subclass of TilesRepository" )
+        if (not isinstance(trepos_source, TilesRepository)):
+            raise InvalidInputParametersError("trepos_source is not subclass of TilesRepository")
+        if (not isinstance(trepos_destination, TilesRepository)):
+            raise InvalidInputParametersError("trepos_destination is not subclass of TilesRepository")
         if self.zoom_max < self.zoom_min:
             raise InvalidInputParametersError("Zoom max (%d) is less than zoom min (%d)." % (self.zoom_max, self.zoom_min))
-
 
     def get_tiles_range_for_zoom(self, zoom):
         # get tiles - copied from mapDownloader
@@ -58,17 +59,15 @@ class TilesTransfer(threading.Thread):
         dlat = mapUtils.km_to_lat(mapUtils.nice_round(self.reg_height))
 
         if dlat > 170:
-            lat0 = 0
             dlat = 170
         if dlon > 358:
-            lon0 = 0
             dlon = 358
 
         top_left = mapUtils.coord_to_tile(
-            (self.center_lat + dlat/2, self.center_lon - dlon/2, zoom)
+            (self.center_lat + dlat / 2, self.center_lon - dlon / 2, zoom)
         )
         bottom_right = mapUtils.coord_to_tile(
-            (self.center_lat - dlat/2, self.center_lon + dlon/2, zoom)
+            (self.center_lat - dlat / 2, self.center_lon + dlon / 2, zoom)
         )
 
         # top_left[0][0], bottom_right[0][0], top_left[0][1], bottom_right[0][1]
@@ -81,8 +80,7 @@ class TilesTransfer(threading.Thread):
             top_left[0][1], bottom_right[0][1] = 0, world_tiles - 1
 
         # xmin, xmax, ymin, ymax
-        return( top_left[0][0], bottom_right[0][0], top_left[0][1], bottom_right[0][1] )
-
+        return(top_left[0][0], bottom_right[0][0], top_left[0][1], bottom_right[0][1])
 
     def set_callback_update(self, callback):
         self.callback_update = callback
@@ -90,18 +88,16 @@ class TilesTransfer(threading.Thread):
     def set_callback_finish(self, callback):
         self.callback_finish = callback
 
-
     def count_all_tiles(self):
         all_tiles = 0
 
         zoom = self.zoom_min
         while zoom <= self.zoom_max:
-            tiles_range = self.get_tiles_range_for_zoom( zoom )
+            tiles_range = self.get_tiles_range_for_zoom(zoom)
             all_tiles = all_tiles + (tiles_range[1] - tiles_range[0] + 1) * (tiles_range[3] - tiles_range[2] + 1)
             zoom = zoom + 1
 
         return all_tiles
-
 
     def run(self):
         """Do transfer tiles.
@@ -109,7 +105,7 @@ class TilesTransfer(threading.Thread):
         if overwrite is true, overwrite existing tiles in destination repository
         """
 
-        gobject.idle_add( self.callback_update, "Computing tiles..." )
+        gobject.idle_add(self.callback_update, "Computing tiles...")
         num_all_tiles = self.count_all_tiles()
 
         update_time = time.time()
@@ -119,7 +115,7 @@ class TilesTransfer(threading.Thread):
         tiles_count = 0
         tiles_written_count = 0
         while zoom >= self.zoom_min:
-            tiles_range = self.get_tiles_range_for_zoom( zoom )
+            tiles_range = self.get_tiles_range_for_zoom(zoom)
 
             ty = tiles_range[2]
             while ty <= tiles_range[3]:
@@ -136,8 +132,8 @@ class TilesTransfer(threading.Thread):
                                 do_it = False
 
                         if do_it:
-                            tile_data = self.trepos_source.get_plain_tile( (tx, ty, zoom), self.layer )
-                            self.trepos_destination.store_plain_tile( (tx, ty, zoom), self.layer, tile_data )
+                            tile_data = self.trepos_source.get_plain_tile((tx, ty, zoom), self.layer)
+                            self.trepos_destination.store_plain_tile((tx, ty, zoom), self.layer, tile_data)
                             tiles_written_count = tiles_written_count + 1
 
                     tx = tx + 1
@@ -145,14 +141,14 @@ class TilesTransfer(threading.Thread):
 
                     if time.time() - update_time > 1:
                         percent = int((tiles_count / (1.0 * num_all_tiles)) * 100)
-                        text = "Processed %d%% (%d of %d tiles)" % (percent, tiles_count, num_all_tiles )
-                        gobject.idle_add( self.callback_update, text, percent )
+                        text = "Processed %d%% (%d of %d tiles)" % (percent, tiles_count, num_all_tiles)
+                        gobject.idle_add(self.callback_update, text, percent)
                         update_time = time.time()
 
                 ty = ty + 1
 
             zoom = zoom - 1
-        gobject.idle_add( self.callback_finish, "All %d tiles processed." % (num_all_tiles, ) )
+        gobject.idle_add(self.callback_finish, "All %d tiles processed." % (num_all_tiles, ))
 
     def should_i_stop(self):
         self.stop_lock.acquire()

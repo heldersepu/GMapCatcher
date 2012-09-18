@@ -5,6 +5,7 @@ import os
 import re
 from time import time
 
+
 ## Return all the locations from a given file (filePath)
 def read_file(strInfo, filePath, maxLine=0):
     fileData = {}
@@ -27,7 +28,7 @@ def read_file(strInfo, filePath, maxLine=0):
                                                 float(m.group(3)),
                                                 zoom)
                 if (maxLine > 0):
-                    if (len(fileData) > maxLine): 
+                    if (len(fileData) > maxLine):
                         break
             except:
                 pass
@@ -36,6 +37,7 @@ def read_file(strInfo, filePath, maxLine=0):
     else:
         write_file(strInfo, filePath, fileData)
         return None
+
 
 ## Writes all the locations (fileData) to given file (filePath)
 def write_file(strInfo, filePath, fileData):
@@ -46,25 +48,26 @@ def write_file(strInfo, filePath, fileData):
         print '  ' + filePath
         return
 
-    file.write("# This is the "+ strInfo +"s file used by GMapCatcher.\n"+\
-        "#\n"+\
-        "# This file contains a list of Locations/Position.\n"+\
-        "# Each entry should be kept on an individual line.\n"+\
-        "# The latitude, longitud and zoom should be TAB separated.\n"+\
-        "#\n"+\
-        "# Additionally, comments (such as these) may be inserted on\n"+\
-        "# lines sarting with a '#' symbol.\n"+\
+    file.write("# This is the " + strInfo + "s file used by GMapCatcher.\n" +
+        "#\n" +
+        "# This file contains a list of Locations/Position.\n" +
+        "# Each entry should be kept on an individual line.\n" +
+        "# The latitude, longitud and zoom should be TAB separated.\n" +
+        "#\n" +
+        "# Additionally, comments (such as these) may be inserted on\n" +
+        "# lines sarting with a '#' symbol.\n" +
         "#\n" + "# For example:\n" + "#\n" +
-        ('#   '+ strInfo +'="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
-         ("Paris, France", 48.856667, 2.350987, 5)) + "#\n" )
+        ('#   ' + strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
+         ("Paris, France", 48.856667, 2.350987, 5)) + "#\n")
 
     for l in sorted(fileData.keys()):
-    	# The method 'write' takes an unicode string here and acording to python manual
-    	# it translates it automatically to string buffer acording to system defaults.
-    	# Probably all systems translate unicode to UTF-8
+        # The method 'write' takes an unicode string here and acording to python manual
+        # it translates it automatically to string buffer acording to system defaults.
+        # Probably all systems translate unicode to UTF-8
         file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
                   (l.encode('latin-1'), fileData[l][0], fileData[l][1], fileData[l][2]))
     file.close()
+
 
 ## Append the location (strData) to given file (filePath)
 def append_file(strInfo, filePath, strData, strName, extraTag=False):
@@ -76,11 +79,12 @@ def append_file(strInfo, filePath, strData, strName, extraTag=False):
         return
     if extraTag:
         file.write(strInfo + '="%s"\tlat="%s"\tlng="%s"\tzoom="%i"\t%s\n' %
-                  (strName, strData[0], strData[1], strData[2]+2, extraTag))
+                  (strName, strData[0], strData[1], strData[2] + 2, extraTag))
     else:
         file.write(strInfo + '="%s"\tlat="%s"\tlng="%s"\tzoom="%i"\n' %
-                  (strName, strData[0], strData[1], strData[2]+2))
+                  (strName, strData[0], strData[1], strData[2] + 2))
     file.close()
+
 
 ## Writes a new gtkrc file with the given theme
 def write_gtkrc(strTheme):
@@ -92,13 +96,14 @@ def write_gtkrc(strTheme):
         print '  ' + filePath
         return
 
-    file.write('# You can change the GMapCatcher theme here!\n'+\
-               '#\n'+\
-               '#gtk-theme-name = "Industrial"\n'+\
-               '#gtk-theme-name = "XFCE-4.2"\n'+\
-               '\n'+\
+    file.write('# You can change the GMapCatcher theme here!\n' +
+               '#\n' +
+               '#gtk-theme-name = "Industrial"\n' +
+               '#gtk-theme-name = "XFCE-4.2"\n' +
+               '\n' +
                'gtk-theme-name = "' + strTheme + '"')
     file.close()
+
 
 ## Returns the current theme from the gtkrc file
 def read_gtkrc():
@@ -110,6 +115,7 @@ def read_gtkrc():
             if line.startswith('gtk-theme-name'):
                 return line[17:].strip('"')
 
+
 ## Returns all the available themes
 def get_themes():
     themesPath = './share/themes/'
@@ -119,6 +125,7 @@ def get_themes():
             if os.path.isdir(themesPath + l) and (l[0] != '.'):
                 myThemes += [l]
     return myThemes
+
 
 ## Checks if a directory exist if not it will be created
 def check_dir(strPath, strSubPath=None):
@@ -132,12 +139,14 @@ def check_dir(strPath, strSubPath=None):
             print '  ' + strPath
     return strPath
 
+
 ## Deletes a given file
 def del_file(filename):
     try:
         os.remove(filename)
     except:
         pass
+
 
 ## Check if the file is older than given time
 #  (24h * 3600s/h) = 86400s
@@ -146,6 +155,7 @@ def is_old(filename, intDays):
         if (int(time() - os.path.getmtime(filename)) > (86400 * intDays)):
             return True
     return False
+
 
 ## Remove file if is older than given time
 def delete_old(filename, intDays):

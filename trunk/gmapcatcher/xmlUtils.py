@@ -1,6 +1,6 @@
 from __future__ import with_statement
-from mapUtils import altitude_to_zoom
 from mapServers.googleMaps import search_location
+
 
 def kml_to_markers(strFileName, marker, lookup=False):
     from xml.dom.minidom import parseString
@@ -39,6 +39,7 @@ def kml_to_markers(strFileName, marker, lookup=False):
                 marker.refresh()
     dom.unlink()
 
+
 def load_gpx_coords(gpxfile):
     from xml.dom.minidom import parseString
 
@@ -46,9 +47,8 @@ def load_gpx_coords(gpxfile):
         with open(gpxfile) as f:
             fileString = unicode(f.read(), errors='ignore')
         dom = parseString(fileString)
-        waypoints = dom.getElementsByTagName("wpt")
         trkpt = dom.getElementsByTagName("trkpt")
-    except Exception, excInst:
+    except:
         raise
 
     coords = []

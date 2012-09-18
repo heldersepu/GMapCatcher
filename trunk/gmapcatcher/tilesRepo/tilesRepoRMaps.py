@@ -19,7 +19,6 @@ import traceback
 
 import gmapcatcher.lrucache as lrucache
 import gmapcatcher.mapPixbuf as mapPixbuf
-import gmapcatcher.fileUtils as fileUtils
 from threading import Lock, Thread
 from gmapcatcher.mapConst import *
 
@@ -27,8 +26,10 @@ from gmapcatcher.mapConst import *
 class tilesReposRMapsException(Exception):
     pass
 
+
 class tilesReposRMapsInvalidPathException(tilesReposRMapsException):
     pass
+
 
 class tileNotInRepository(Exception):
     pass
@@ -65,6 +66,7 @@ CREATE TABLE map_regions (regionsid INTEGER, mapid INTEGER, PRIMARY KEY(regionsi
 
 from tilesRepo import TilesRepository
 
+
 class RMapsThread(Thread):
 
     def __init__(self, url_dir, url_filenameformat):
@@ -79,7 +81,6 @@ class RMapsThread(Thread):
         self.sql_request = None
         self.sql_response = None
         self.finish_flag = False
-
 
         self.event = threading.Event()
         self.thlock = threading.Lock()
@@ -109,17 +110,15 @@ class RMapsThread(Thread):
             self.respcond.notify()
             self.respcond.release()
 
-
     def event_clear(self):
         self.event.clear()
+
     def event_set(self):
         self.event.set()
-
 
     def finish_thread(self):
         self.finish_flag = True
         self.event.set()
-
 
     def process_sqlrequest(self):
         #print "D:process_sqlrequest: " + str(thread.get_ident())
@@ -141,9 +140,9 @@ class RMapsThread(Thread):
 
         # Extends the internal cache to hold the position for the given layer
         if len(self.dbconns) <= layer:
-            self.dbconns.extend(None for i in range(len(self.dbconns), layer+1))
-            self.dbcurss.extend(None for i in range(len(self.dbcurss), layer+1))
-            self.dbzooms.extend(None for i in range(len(self.dbzooms), layer+1))
+            self.dbconns.extend(None for i in range(len(self.dbconns), layer + 1))
+            self.dbcurss.extend(None for i in range(len(self.dbcurss), layer + 1))
+            self.dbzooms.extend(None for i in range(len(self.dbzooms), layer + 1))
 
         if self.dbconns[layer] is None:
             #print "D:sqlite3.connect( url ): " + str(thread.get_ident())
@@ -153,7 +152,7 @@ class RMapsThread(Thread):
             if(not os.path.isfile(dburl)):
                 createTable = True
 
-            conn = sqlite3.connect( dburl )
+            conn = sqlite3.connect(dburl)
             curs = conn.cursor()
 
             self.dbconns[layer] = conn
@@ -161,7 +160,7 @@ class RMapsThread(Thread):
 
             if createTable:
                 #process create table
-                curs.executescript( SQL_DATABASE_DDL )
+                curs.executescript(SQL_DATABASE_DDL)
                 conn.commit()
             self.dbzooms[layer] = curs.execute("SELECT minzoom, maxzoom FROM info LIMIT 1").fetchone()
 
@@ -173,10 +172,12 @@ class RMapsThread(Thread):
 
     def update_zoom(self, layer, zoom):
         if self.dbzooms[layer]:
-            mn,mx = self.dbzooms[layer]
-            if zoom < mn: mn = zoom
-            if zoom > mx: mx = zoom
-            res = (int(mn),int(mx))
+            mn, mx = self.dbzooms[layer]
+            if zoom < mn:
+                mn = zoom
+            if zoom > mx:
+                mx = zoom
+            res = (int(mn), int(mx))
             if res != self.dbzooms[layer]:
                 self.dbzooms[layer] = res
                 self.dbcoursor(layer).execute("UPDATE info SET minzoom = ? AND maxzoom = ?", res)
@@ -185,17 +186,17 @@ class RMapsThread(Thread):
             self.dbzooms[layer] = res
             self.dbcoursor(layer).execute("INSERT INTO info (minzoom, maxzoom) VALUES (?,?)", res)
 
-    def get_tile_row(self, layer, zoom_level, coord, olderthan ):
+    def get_tile_row(self, layer, zoom_level, coord, olderthan):
         # olderthan is ignored in this format, sorry =/
         qry = "SELECT  x,y,z,%d,date('now'),image FROM tiles WHERE z=%i AND x=%i AND y=%i AND s=%i" % (layer, zoom_level, coord[0], coord[1], 0)
         dbcursor = self.dbcoursor(layer)
-        dbcursor.execute( qry )
+        dbcursor.execute(qry)
         self.sql_response = dbcursor.fetchone()
 
     def store_tile(self, layer, zoom_level, coord, tstamp, data):
         try:
             dbcursor = self.dbcoursor(layer)
-            dbcursor.execute( "INSERT INTO tiles (x,y,z,s,image)  VALUES(?,?,?,?,?)", (coord[0], coord[1], zoom_level, 0, sqlite3.Binary(data)) )
+            dbcursor.execute("INSERT INTO tiles (x,y,z,s,image)  VALUES(?,?,?,?,?)", (coord[0], coord[1], zoom_level, 0, sqlite3.Binary(data)))
             self.update_zoom(layer, zoom_level)
             self.dbconnection(layer).commit()
         except sqlite3.IntegrityError:
@@ -212,12 +213,11 @@ class RMapsThread(Thread):
     def delete_tile(self, layer, zoom_level, coord):
         qry = "DELETE FROM tiles WHERE z=%i AND x=%i AND y=%i AND s=%i" % (zoom_level, coord[0], coord[1], 0)
         dbcursor = self.dbcoursor(layer)
-        dbcursor.execute( qry )
+        dbcursor.execute(qry)
         self.dbconnection(layer).commit()
 
-
     def set_sql_request(self, req):
-        self.sql_request = [ req[0], req[1] ]
+        self.sql_request = [req[0], req[1]]
 
     def get_sql_response(self):
         resp = self.sql_response
@@ -232,11 +232,10 @@ class RMapsFuncs():
         self.sql_thread = None
 
         if self.sql_thread is None:
-            self.sql_thread = RMapsThread( url_dir, url_filenameformat )
+            self.sql_thread = RMapsThread(url_dir, url_filenameformat)
 
         if not self.sql_thread.isAlive():
             self.sql_thread.start()
-
 
     def finish(self):
         if self.sql_thread is None:
@@ -245,27 +244,24 @@ class RMapsFuncs():
         self.sql_thread.join()
         self.sql_thread = None
 
-
     def restart_thread(self, url_dir, url_filenameformat):
-        url = os.path.join(url_dir, url_filenameformat)
         if self.sql_thread is not None:
             if self.sql_thread.isAlive():
                 self.sql_thread.finish_thread()
                 self.sql_thread.join()
                 self.sql_thread = None
 
-        self.sql_thread = RMapsThread( url_dir, url_filenameformat )
+        self.sql_thread = RMapsThread(url_dir, url_filenameformat)
         self.sql_thread.start()
 
-
     # coord is [x,y]
-    def get_tile_row(self, layer, zoom_level, coord, olderthan=-1 ):
+    def get_tile_row(self, layer, zoom_level, coord, olderthan=-1):
         try:
             self.sql_thread.thlock.acquire()
             self.sql_thread.respcond.acquire()
 
-            req = ("get_tile_row", (layer, zoom_level, coord, olderthan) )
-            self.sql_thread.set_sql_request( req )
+            req = ("get_tile_row", (layer, zoom_level, coord, olderthan))
+            self.sql_thread.set_sql_request(req)
             self.sql_thread.event_set()
             self.sql_thread.respcond.wait()
             self.sql_thread.respcond.release()
@@ -275,18 +271,16 @@ class RMapsFuncs():
 
         return resp
 
-
     def store_tile(self, layer, zoom_level, coord, tstamp, data):
         try:
             self.sql_thread.thlock.acquire()
             self.sql_thread.respcond.acquire()
 
-            req = ("store_tile", (layer, zoom_level, coord, tstamp, data) )
-            self.sql_thread.set_sql_request( req )
+            req = ("store_tile", (layer, zoom_level, coord, tstamp, data))
+            self.sql_thread.set_sql_request(req)
             self.sql_thread.event_set()
             self.sql_thread.respcond.wait()
             self.sql_thread.respcond.release()
-            resp = self.sql_thread.get_sql_response()
         finally:
             self.sql_thread.thlock.release()
 
@@ -297,8 +291,8 @@ class RMapsFuncs():
             self.sql_thread.thlock.acquire()
             self.sql_thread.respcond.acquire()
 
-            req = ("delete_tile", (layer, zoom_level, coord) )
-            self.sql_thread.set_sql_request( req )
+            req = ("delete_tile", (layer, zoom_level, coord))
+            self.sql_thread.set_sql_request(req)
             self.sql_thread.event_set()
             self.sql_thread.respcond.wait()
             self.sql_thread.respcond.release()
@@ -307,7 +301,6 @@ class RMapsFuncs():
             self.sql_thread.thlock.release()
 
         return resp
-
 
 
 class TilesRepositoryRMaps(TilesRepository):
@@ -321,7 +314,7 @@ class TilesRepositoryRMaps(TilesRepository):
 
         self.missingPixbuf = mapPixbuf.missing()
 
-        self.sqlite3func = RMapsFuncs( self.configpath, RMAPS_REPOSITORY_FILE_FORMAT )
+        self.sqlite3func = RMapsFuncs(self.configpath, RMAPS_REPOSITORY_FILE_FORMAT)
 
     def finish(self):
         self.sqlite3func.finish()
@@ -330,7 +323,7 @@ class TilesRepositoryRMaps(TilesRepository):
 
     ## Sets new repository path to be used for storing tiles
     def set_repository_path(self, newpath):
-        self.sqlite3func.restart_thread( newpath, RMAPS_REPOSITORY_FILE_FORMAT )
+        self.sqlite3func.restart_thread(newpath, RMAPS_REPOSITORY_FILE_FORMAT)
 
     ## Returns the PixBuf of the tile
     # Uses a cache to optimise HDD read access
@@ -341,7 +334,7 @@ class TilesRepositoryRMaps(TilesRepository):
             pixbuf = self.tile_cache[filename]
         else:
             #
-            dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0],coord[1]) )
+            dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0], coord[1]))
             if dbrow is None:
                 pixbuf = self.missingPixbuf
             else:
@@ -353,42 +346,38 @@ class TilesRepositoryRMaps(TilesRepository):
 
         return pixbuf
 
-
     # PUBLIC
     def remove_old_tile(self, coord, layer, filename=None, intSeconds=86400):
         """not used anymore?! don't know about it. But repoFS and repoMGMaps got rid of this
         methods.
         """
-        dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0],coord[1]) )
+        dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0], coord[1]))
 
         # TODO: should be OK, but test properly
-        if dbrow[SQL_IDX_TSTAMP] >= (int( time.time() ) - intSeconds):
+        if dbrow[SQL_IDX_TSTAMP] >= (int(time.time()) - intSeconds):
             try:
                 if filename is None:
                     filename = self.coord_to_path(coord, layer)
-                self.tile_cache[ filename ] = self.create_pixbuf_from_data( dbrow[SQL_IDX_IMG] )
+                self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[SQL_IDX_IMG])
             except:
                 pass
             return False
 
-        dbres = self.sqlite3func.delete_tile(layer, coord[2], (coord[0],coord[1]) )
-        a = dbres
         try:
             if filename is None:
                 filename = self.coord_to_path(coord, layer)
-            del self.tile_cache[ filename ]
+            del self.tile_cache[filename]
         except KeyError:
             pass
 
         return True
-
 
     # PUBLIC
     def is_tile_in_local_repos(self, coord, layer):
         filename = self.coord_to_path(coord, layer)
         if filename in self.tile_cache:
             return True
-        dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0],coord[1]) )
+        dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0], coord[1]))
         if dbrow is None:
             return False
         else:
@@ -399,15 +388,13 @@ class TilesRepositoryRMaps(TilesRepository):
         pixbuf = data
         try:
             loader = gtk.gdk.PixbufLoader()
-            loader.write( data )
+            loader.write(data)
             loader.close()
             pixbuf = loader.get_pixbuf()
         except:
             #print traceback.format_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
-            ei = sys.exc_info()
             raise
         return pixbuf
-
 
     ## Get the png file for the given location
     # Returns true if the file is successfully retrieved
@@ -418,17 +405,16 @@ class TilesRepositoryRMaps(TilesRepository):
         if (force_update and online):
             # force update = delete tile from repository and download new version
             #self.remove_old_tile(coord, layer, filename)
-            dbres = self.sqlite3func.delete_tile(layer, coord[2], (coord[0],coord[1]) )
             # if in remove_old_tile tile_cache is populated if tile is not too old
             if filename in self.tile_cache:
-                del self.tile_cache[ filename ]
+                del self.tile_cache[filename]
 
         else:
             # we don't have to download tile from internet
             if filename in self.tile_cache:
                 return True
 
-            dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0],coord[1]) )
+            dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0], coord[1]))
             if dbrow is not None:
                 try:
                     self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[5])
@@ -439,15 +425,14 @@ class TilesRepositoryRMaps(TilesRepository):
         if not online:
             return False
 
-
-        # donwload data
+        # download data
         try:
             oa_data = self.mapServ_inst.get_tile_from_coord(coord, layer, conf)
             try:
                 self.tile_cache[filename] = self.create_pixbuf_from_data(dbrow[SQL_IDX_IMG])
             except:
                 pass
-            self.sqlite3func.store_tile( layer, coord[2], (coord[0], coord[1]), int( time.time() ), oa_data )
+            self.sqlite3func.store_tile(layer, coord[2], (coord[0], coord[1]), int(time.time()), oa_data)
             return True
 
         except KeyboardInterrupt:
@@ -457,20 +442,16 @@ class TilesRepositoryRMaps(TilesRepository):
             print '\tdownload failed - ' + str(traceback.format_exception(ei[0], ei[1], ei[2], None))
         return False
 
-
     def get_plain_tile(self, coord, layer):
-        dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0],coord[1]) )
+        dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0], coord[1]))
         if dbrow is not None:
             return dbrow[5]
-        raise tileNotInRepository( str( (coord,layer) ) )
-
+        raise tileNotInRepository(str((coord, layer)))
 
     def store_plain_tile(self, coord, layer, tiledata):
         if self.is_tile_in_local_repos(coord, layer):
-            self.sqlite3func.delete_tile(layer, coord[2], (coord[0], coord[1]) )
-        self.sqlite3func.store_tile( layer, coord[2], (coord[0], coord[1]), int( time.time() ), tiledata )
-
-
+            self.sqlite3func.delete_tile(layer, coord[2], (coord[0], coord[1]))
+        self.sqlite3func.store_tile(layer, coord[2], (coord[0], coord[1]), int(time.time()), tiledata)
 
     ## Return the absolute path to a tile
     #  only check path

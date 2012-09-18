@@ -2,7 +2,6 @@
 ## @package gmapcatcher.tilesRepo.Factory
 # Place to set the correct repository
 
-import sys
 import tilesRepoFS
 import tilesRepoMGMaps
 import tilesRepoSQLite3
@@ -13,8 +12,10 @@ import gmapcatcher.mapConst as mapConst
 # list of instantiated repositories
 repositories = []
 
+
 class repositoryNotCreatedError(Exception):
     pass
+
 
 # creates new repository with given path and type
 # public static
@@ -29,13 +30,14 @@ def get_tile_repository(mapservice, configpath, tilerepostype):
     return repos
 
 
-def append_repository_to_list( repos, configpath, tilerepostype ):
+def append_repository_to_list(repos, configpath, tilerepostype):
     global repositories
-    repos_entry = { "repos": repos, "configpath": configpath, "type": tilerepostype }
-    repositories.append( repos_entry )
+    repos_entry = {"repos": repos, "configpath": configpath, "type": tilerepostype}
+    repositories.append(repos_entry)
     return True
 
-def pick_repository_from_list( configpath, tilerepostype ):
+
+def pick_repository_from_list(configpath, tilerepostype):
     """returns instance of repository from list or None"""
     global repositories
 
@@ -72,12 +74,10 @@ def create_repos_inst(mapservice, configpath, repo_type):
     elif repo_type == mapConst.REPOS_TYPE_RMAPS:
         repository_inst = tilesRepoRMaps.TilesRepositoryRMaps(mapservice, configpath)
 
-    else: # repo_type == mapConst.REPOS_TYPE_FILES
+    else:  # repo_type == mapConst.REPOS_TYPE_FILES
         repository_inst = tilesRepoFS.TilesRepositoryFS(mapservice, configpath)
 
     if repository_inst is None:
-        raise repositoryNotCreatedError(str( (configpath, repo_type) ))
+        raise repositoryNotCreatedError(str((configpath, repo_type)))
 
     return repository_inst
-
-

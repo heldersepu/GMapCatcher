@@ -1,7 +1,6 @@
 ## @package gmapcatcher.mapUpdate
 # All the update related logic
 
-import os
 from mapConst import *
 import gtk
 from customMsgBox import updateMsgBox
@@ -25,7 +24,7 @@ class MapUpdate():
     def get_data(self, strURL):
         try:
             oa = openanything.fetch(strURL)
-            if oa['status']==200:
+            if oa['status'] == 200:
                 return oa['data']
         except Exception:
             return False
@@ -52,7 +51,7 @@ class CheckForUpdates():
                 updateMsgBox(
                         "Update detected! \n" +
                         ("A new version of %s is available \n\n" % NAME) +
-                        ("Your version is %s \n" % VERSION ) +
+                        ("Your version is %s \n" % VERSION) +
                         ("Current version is %s" %
                         self.update.latest_version),
                         WEB_ADDRESS,
