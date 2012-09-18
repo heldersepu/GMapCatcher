@@ -24,7 +24,7 @@ from gmapcatcher.DLWindow import DLWindow
 from gmapcatcher.EXWindow import EXWindow
 from gmapcatcher.mapUpdate import CheckForUpdates
 from gmapcatcher.mapServices import MapServ
-from gmapcatcher.customMsgBox import error_msg
+from gmapcatcher.customMsgBox import error_msg, error_msg_non_blocking
 from gmapcatcher.mapDownloader import MapDownloader
 from gmapcatcher.customWidgets import *
 from gmapcatcher.xmlUtils import kml_to_markers
@@ -41,7 +41,6 @@ class MainWindow(gtk.Window):
     showMarkers = True
     tPoint = {}
     gps_idle_time = time.time()
-    gps_invalid_visible = False
     # Variables for Ruler - F7 to activate/deactivate
     Ruler = 0
     ruler_coordx = {}
@@ -348,24 +347,17 @@ class MainWindow(gtk.Window):
                     self.drawing_area.center = tile
 
             self.drawing_area.repaint()
-
             # Update the status bar with the GPS Coordinates
             if self.conf.status_location == STATUS_GPS:
                 self.status_bar.pop(self.status_bar_id)
                 self.status_bar.push(self.status_bar_id,
-                                      "Latitude: " + str(round(coord[0], 4)) + " Longitude: " + str(round(coord[1], 4)))
+                                      "Latitude: " + str(round(coord[0], 6)) + " Longitude: " + str(round(coord[1], 6)))
         else:
             if self.gps_valid:
                 if not self.gps_invalid_visible:
-                    gps_invalid_messageBox = gtk.MessageDialog(
-                        parent         = None,
-                        flags          = gtk.DIALOG_DESTROY_WITH_PARENT,
-                        type           = gtk.MESSAGE_ERROR,
-                        buttons        = gtk.BUTTONS_OK,
-                        message_format = 'Invalid GPS data')
-                    gps_invalid_messageBox.set_title('Invalid GPS data')
-                    gps_invalid_messageBox.connect('response', lambda dialog, response: self.hide_gps_invalid_messageBox(dialog))
-                    gps_invalid_messageBox.show()
+                    dialog = error_msg_non_blocking('Invalid GPS data', 'Invalid GPS data')
+                    dialog.connect('response', lambda dialog, response: self.hide_gps_invalid_messageBox(dialog))
+                    dialog.show()
                     self.gps_invalid_visible = True
             self.gps_valid = False
             # Update the status bar with the GPS Coordinates
@@ -1294,6 +1286,7 @@ class MainWindow(gtk.Window):
         self.save_gps = []
         self.current_gps = False
         self.gps = False
+        self.gps_invalid_visible = False
         self.enable_gps()
         self.downloading = 0
         self.visual_dlconfig = {}

@@ -16,6 +16,15 @@ def error_msg(parent, strMessage, buttons=gtk.BUTTONS_OK):
     dialog.destroy()
     return resp
 
+def error_msg_non_blocking(strTitle, strMessage):
+    dialog = gtk.MessageDialog(
+        parent         = None,
+        flags          = gtk.DIALOG_DESTROY_WITH_PARENT,
+        type           = gtk.MESSAGE_ERROR,
+        buttons        = gtk.BUTTONS_OK,
+        message_format = strMessage)
+    dialog.set_title(strTitle)
+    return dialog
 
 ## Message used in the updated notifications
 class updateMsgBox(gtk.Window):
