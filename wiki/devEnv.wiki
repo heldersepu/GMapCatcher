@@ -14,6 +14,8 @@
          <tr align="left"><th> + GTK+ runtime</th><th> http://sourceforge.net/projects/gtk-win/files/</th></tr>
          <tr align="left"><th> + Py(Stuff) </th><th> http://www.pygtk.org/downloads.html ^(pygtk, pygobject & pycairo)^</th></tr>
          <tr align="left"><th> + PIL </th><th> http://www.pythonware.com/products/pil/</th></tr>
+         <tr align="left"><th> + pyserial </th><th> http://sourceforge.net/projects/pyserial/</th></tr>
+
 
         </table><br>
         If you want to build the win installer you need:
