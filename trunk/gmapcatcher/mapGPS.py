@@ -31,7 +31,7 @@ class GPS:
         self.serial_port = conf.gps_serial_port
         self.baudrate = conf.gps_serial_baudrate
         self.gps_updater = None
-        self.gps_fix = None
+        self.gpsfix = None
         if self.mode != mapConst.GPS_DISABLED:
             self.startGPS()
 
@@ -79,21 +79,13 @@ class GPS:
     ## Get GPS position
     def get_location(self):
         if self.mode != mapConst.GPS_DISABLED:
-            return self.location
+            return (self.gpsfix.latitude, self.gpsfix.longitude)
         return None
 
     ## Callback from the GPSUpdater
     def update(self, fix):
-        if fix.mode > MODE_NO_FIX and \
-                (fix.latitude is not None) and (fix.longitude is not None):
-            # Store location
-            self.location = (fix.latitude, fix.longitude)
-            self.gps_callback(self.location, self.mode, True)
-            self.gps_fix = fix
-        else:
-            self.location = (fix.latitude, fix.longitude)
-            self.gps_callback(self.location, self.mode, False)
-            self.gps_fix = fix
+        self.gpsfix = fix
+        self.gps_callback()
 
     ## Load GPS marker image
     def get_marker_pixbuf(self):
