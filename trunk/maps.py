@@ -506,6 +506,7 @@ class MainWindow(gtk.Window):
         vbox.set_border_width(5)
         vbox.pack_start(self.__create_upper_box())
         vbox.pack_start(self.__create_check_buttons())
+        vbox.set_size_request(-1, 89)
         return myFrame(" Query ", vbox, 0)
 
     def __create_export_paned(self):
