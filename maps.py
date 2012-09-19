@@ -56,11 +56,6 @@ class MainWindow(gtk.Window):
     def get_zoom(self):
         return int(self.scale.get_value())
 
-    ## Automatically display after selecting
-    def on_completion_match(self, completion, model, iter):
-        self.entry.set_text(model[iter][0])
-        self.confirm_clicked(self)
-
     ## Handles the events in the Tools buttons
     def tools_button_event(self, w, event):
         if event.type == gtk.gdk.BUTTON_PRESS:
@@ -68,33 +63,6 @@ class MainWindow(gtk.Window):
         elif event.type == gtk.gdk.KEY_PRESS and \
              event.keyval in [65293, 32]:
             self.menu_tools(None, TOOLS_MENU[0])
-
-    ## Match function for the auto-completion
-    def match_func(self, completion, key, iter):
-        model = completion.get_model()
-        key = key.lower()
-        text = model.get_value(iter, 0).lower()
-        if self.conf.match_func == ENTRY_SUB_MENU[STARTS_WITH]:
-            return text.startswith(key)
-        elif self.conf.match_func == ENTRY_SUB_MENU[ENDS_WITH]:
-            return text.endswith(key)
-        elif self.conf.match_func == ENTRY_SUB_MENU[REGULAR_EXPRESSION]:
-            p = re.compile(key, re.IGNORECASE)
-            return (p.search(text) is not None)
-        else:
-            return (text.find(key) != -1)
-
-    ## Set the auto-completion for the entry box
-    def set_completion(self):
-        completion = gtk.EntryCompletion()
-        completion.connect('match-selected', self.on_completion_match)
-        self.entry.set_completion(completion)
-        completion.set_model(self.ctx_map.completion_model())
-        completion.set_text_column(0)
-        completion.set_minimum_key_length(3)
-        completion.set_match_func(self.match_func)
-        # Populate the dropdownlist
-        self.combo.set_model(self.ctx_map.completion_model(SEPARATOR))
 
     ## Search for the location in the Entry box
     def confirm_clicked(self, button):
@@ -135,7 +103,7 @@ class MainWindow(gtk.Window):
                     return
 
                 self.entry.set_text(location)
-                self.set_completion()
+                self.combo.set_completion(self.ctx_map, self.confirm_clicked, self.conf)
                 locations = self.ctx_map.get_locations()
             coord = locations[unicode(location)]
 
@@ -178,9 +146,8 @@ class MainWindow(gtk.Window):
                     NON_ONEDIR_COMBO_INDICES[self.conf.map_service][newlayer]
         self.drawing_area.repaint()
 
+    ## Combo box dispatches operation and returns to default position - Operations - 1st item
     def on_cb_operations_changed(self, cb_operations):
-        """combo box dispatches operation and returns to default position - Operations - 1st item"""
-
         active = cb_operations.get_active()
         if active == 0:
             return
@@ -330,7 +297,7 @@ class MainWindow(gtk.Window):
 
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
-        combo = ComboBoxEntry(self.confirm_clicked)        
+        combo = ComboBoxEntry(self.confirm_clicked, self.conf)
         self.entry = combo.child
         return combo
 
@@ -1269,7 +1236,7 @@ class MainWindow(gtk.Window):
             self.set_default_size(self.conf.save_width, self.conf.save_height)
         else:
             self.set_default_size(self.conf.init_width, self.conf.init_height)
-        self.set_completion()
+        self.combo.set_completion(self.ctx_map, self.confirm_clicked, self.conf)
         self.combo.default_entry()
         self.drawing_area.center = self.conf.init_center
         self.show_all()
