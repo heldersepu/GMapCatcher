@@ -29,12 +29,12 @@ from gmapcatcher.mapDownloader import MapDownloader
 from gmapcatcher.customWidgets import *
 from gmapcatcher.xmlUtils import kml_to_markers
 from gmapcatcher.widDrawingArea import DrawingArea
+from gmapcatcher.widComboBoxEntry import ComboBoxEntry
 from gmapcatcher.widCredits import OurCredits
 
 
 class MainWindow(gtk.Window):
 
-    default_text = "Enter location here!"
     gps = None
     update = None
     myPointer = None
@@ -60,53 +60,6 @@ class MainWindow(gtk.Window):
     def on_completion_match(self, completion, model, iter):
         self.entry.set_text(model[iter][0])
         self.confirm_clicked(self)
-
-    ## Clean out the entry box if text = default
-    def clean_entry(self, *args):
-        if (self.entry.get_text() == self.default_text):
-            self.entry.set_text("")
-            self.entry.grab_focus()
-
-    ## Reset the default text if entry is empty
-    def default_entry(self, *args):
-        if (self.entry.get_text().strip() == ''):
-            self.entry.set_text(self.default_text)
-
-    ## Handles the change event of the ComboBox
-    def changed_combo(self, *args):
-        str = self.entry.get_text()
-        if (str.endswith(SEPARATOR)):
-            self.entry.set_text(str.strip())
-            self.confirm_clicked(self)
-
-    ## Show the combo list if is not empty
-    def combo_popup(self):
-        if self.combo.get_model().get_iter_root() is not None:
-            self.combo.popup()
-
-    ## Handles the pressing of arrow keys
-    def key_press_combo(self, w, event):
-        if event.keyval in [65362, 65364]:
-            self.combo_popup()
-            return True
-
-    ## Add a new item to the menu of the EntryBox
-    def populate_popup(self, w, menu):
-        def menuitem_response(w, string):
-            self.conf.match_func = string
-        subMenu = gtk.Menu()
-        for item in ENTRY_SUB_MENU:
-            iMenuItem = gtk.RadioMenuItem(None, item)
-            iMenuItem.set_active(item == self.conf.match_func)
-            iMenuItem.connect("activate", menuitem_response, item)
-            subMenu.append(iMenuItem)
-
-        menuItem = gtk.MenuItem()
-        menu.append(menuItem)
-        menuItem = gtk.MenuItem('Auto-Completion Method')
-        menuItem.set_submenu(subMenu)
-        menu.append(menuItem)
-        menu.show_all()
 
     ## Handles the events in the Tools buttons
     def tools_button_event(self, w, event):
@@ -150,8 +103,8 @@ class MainWindow(gtk.Window):
             error_msg(self, "Need location")
             self.entry.grab_focus()
             return
-        if (location == self.default_text):
-            self.clean_entry(self)
+        if (location == ComboBoxEntry.DEFAULT_TEXT):
+            self.combo.clean_entry()
             return
         p = re.compile('(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:lon)?g?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', re.IGNORECASE)
         coords = p.search(location)
@@ -171,7 +124,7 @@ class MainWindow(gtk.Window):
                     if error_msg(self, "Offline mode, cannot do search!" +
                                 "      Would you like to get online?",
                                 gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
-                        self.combo_popup()
+                        self.combo.combo_popup()
                         return
                 self.cb_offline.set_active(False)
 
@@ -377,23 +330,8 @@ class MainWindow(gtk.Window):
 
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
-        combo = gtk.combo_box_entry_new_text()
-        combo.connect('changed', self.changed_combo)
-        combo.connect('key-press-event', self.key_press_combo)
-
-        entry = combo.child
-        # Start search after hit 'ENTER'
-        entry.connect('activate', self.confirm_clicked)
-        # Launch clean_entry for all the signals/events below
-        entry.connect("button-press-event", self.clean_entry)
-        entry.connect("cut-clipboard", self.clean_entry)
-        entry.connect("copy-clipboard", self.clean_entry)
-        entry.connect("paste-clipboard", self.clean_entry)
-        entry.connect("move-cursor", self.clean_entry)
-        entry.connect("populate-popup", self.populate_popup)
-        # Launch the default_entry on the focus out
-        entry.connect("focus-out-event", self.default_entry)
-        self.entry = entry
+        combo = ComboBoxEntry(self.confirm_clicked)        
+        self.entry = combo.child
         return combo
 
     ## Creates the box that packs the comboBox & buttons
@@ -1332,7 +1270,7 @@ class MainWindow(gtk.Window):
         else:
             self.set_default_size(self.conf.init_width, self.conf.init_height)
         self.set_completion()
-        self.default_entry()
+        self.combo.default_entry()
         self.drawing_area.center = self.conf.init_center
         self.show_all()
         if self.conf.save_at_close:
