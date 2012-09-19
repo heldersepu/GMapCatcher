@@ -68,11 +68,11 @@ class ComboBoxEntry(gtk.ComboBoxEntry):
             return True
 
     ## Handles the change event of the ComboBox
-    def changed_combo(self, confirm_clicked, *args):
+    def changed_combo(self, w, confirm_clicked):
         str = self.child.get_text()
         if (str.endswith(SEPARATOR)):
             self.child.set_text(str.strip())
-            confirm_clicked(self)
+            confirm_clicked(None)
 
     ## Set the auto-completion for the entry box
     def set_completion(self, ctx_map, confirm_clicked, conf):
@@ -84,13 +84,13 @@ class ComboBoxEntry(gtk.ComboBoxEntry):
         completion.set_minimum_key_length(3)
         completion.set_match_func(self.match_func, conf)
         # Populate the dropdownlist
-        test = ctx_map.completion_model(SEPARATOR)
-        self.set_model(test)
+        self.set_model(ctx_map.completion_model(SEPARATOR))
+        self.set_text_column(0)
 
     ## Automatically display after selecting
     def on_completion_match(self, completion, model, iter, confirm_clicked):
         self.entry.set_text(model[iter][0])
-        confirm_clicked(self)
+        confirm_clicked(None)
 
     ## Match function for the auto-completion
     def match_func(self, completion, key, iter, conf):
