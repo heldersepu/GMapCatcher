@@ -214,86 +214,77 @@ class MainWindow(gtk.Window):
         return True
 
     ## Called when new coordinates are obtained from the GPS
-    def gps_callback(self, coord, mode, valid):
-        zl = self.get_zoom()
-        self.current_gps = coord
-        tile = mapUtils.coord_to_tile((coord[0], coord[1], zl))
+    def gps_callback(self):
+        if self.gps.gpsfix:
+            zl = self.get_zoom()
+            tile = mapUtils.coord_to_tile((self.gps.gpsfix.latitude, self.gps.gpsfix.longitude, zl))
 
-        if valid:
-            # Save the GPS coordinates
-            l = len(self.save_gps)
-            if l > 0:
-                mostrecentcoord = self.save_gps[l - 1]
-                if abs(mostrecentcoord[0] - coord[0]) > self.conf.gps_increment \
-                        or abs(mostrecentcoord[1] - coord[1]) >\
-                        self.conf.gps_increment:
-                    self.save_gps.append(coord)
+            if self.gps.gpsfix.mode != MODE_NO_FIX:
+                self.gps_valid = True
+                # The map should be centered around a new GPS location
+                if self.gps.mode == GPS_CENTER or self.reCenter_gps:
+                    self.reCenter_gps = False
+                    self.drawing_area.center = tile
+                # The map should be moved only to keep GPS location on the screen
+                elif self.gps.mode == GPS_ON_SCREEN:
+                    rect = self.drawing_area.get_allocation()
+                    xy = mapUtils.tile_coord_to_screen(
+                        (tile[0][0], tile[0][1], zl), rect, self.drawing_area.center)
+                    if xy:
+                        for x, y in xy:
+                            x = x + tile[1][0]
+                            y = y + tile[1][1]
+                            if not(0 < x < rect.width) or not(0 < y < rect.height):
+                                self.drawing_area.center = tile
+                            else:
+                                if GPS_IMG_SIZE[0] > x:
+                                    self.drawing_area.da_jump(1, zl, True)
+                                elif x > rect.width - GPS_IMG_SIZE[0]:
+                                    self.drawing_area.da_jump(3, zl, True)
+                                elif GPS_IMG_SIZE[1] > y:
+                                    self.drawing_area.da_jump(2, zl, True)
+                                elif y > rect.height - GPS_IMG_SIZE[1]:
+                                    self.drawing_area.da_jump(4, zl, True)
+                    else:
+                        self.drawing_area.center = tile
+                # GPS update timeout, recenter GPS only after 3 sec idle
+                elif self.gps.mode == GPS_TIMEOUT:
+                    if (time.time() - self.gps_idle_time) > 3:
+                        self.drawing_area.center = tile
+
+                self.drawing_area.repaint()
+                # Update the status bar with the GPS Coordinates
+                if self.conf.status_location == STATUS_GPS:
+                    self.status_bar.pop(self.status_bar_id)
+                    self.status_bar.push(self.status_bar_id,
+                                          "Latitude: " + str(round(self.gps.gpsfix.latitude, 6)) + " Longitude: " + str(round(self.gps.gpsfix.longitude, 6)))
             else:
-                self.save_gps.append(coord)
-
-            self.gps_valid = True
-            # The map should be centered around a new GPS location
-            if mode == GPS_CENTER or self.reCenter_gps:
-                self.reCenter_gps = False
-                self.drawing_area.center = tile
-            # The map should be moved only to keep GPS location on the screen
-            elif mode == GPS_ON_SCREEN:
-                rect = self.drawing_area.get_allocation()
-                xy = mapUtils.tile_coord_to_screen(
-                    (tile[0][0], tile[0][1], zl), rect, self.drawing_area.center)
-                if xy:
-                    for x, y in xy:
-                        x = x + tile[1][0]
-                        y = y + tile[1][1]
-                        if not(0 < x < rect.width) or not(0 < y < rect.height):
-                            self.drawing_area.center = tile
-                        else:
-                            if GPS_IMG_SIZE[0] > x:
-                                self.drawing_area.da_jump(1, zl, True)
-                            elif x > rect.width - GPS_IMG_SIZE[0]:
-                                self.drawing_area.da_jump(3, zl, True)
-                            elif GPS_IMG_SIZE[1] > y:
-                                self.drawing_area.da_jump(2, zl, True)
-                            elif y > rect.height - GPS_IMG_SIZE[1]:
-                                self.drawing_area.da_jump(4, zl, True)
-                else:
-                    self.drawing_area.center = tile
-            # GPS update timeout, recenter GPS only after 3 sec idle
-            elif mode == GPS_TIMEOUT:
-                if (time.time() - self.gps_idle_time) > 3:
-                    self.drawing_area.center = tile
-
-            self.drawing_area.repaint()
-            # Update the status bar with the GPS Coordinates
-            if self.conf.status_location == STATUS_GPS:
-                self.status_bar.pop(self.status_bar_id)
-                self.status_bar.push(self.status_bar_id,
-                                      "Latitude: " + str(round(coord[0], 6)) + " Longitude: " + str(round(coord[1], 6)))
+                self.gps_invalid()
         else:
-            if self.gps_valid:
-                if not self.gps_invalid_visible:
-                    dialog = error_msg_non_blocking('Invalid GPS data', 'Invalid GPS data')
-                    dialog.connect('response', lambda dialog, response: self.hide_gps_invalid_messageBox(dialog))
-                    dialog.show()
-                    self.gps_invalid_visible = True
-            self.gps_valid = False
-            # Update the status bar with the GPS Coordinates
-            if self.conf.status_location == STATUS_GPS:
-                self.status_bar.pop(self.status_bar_id)
-                self.status_bar.push(self.status_bar_id, 'INVALID DATA FROM GPS')
+            self.gps_invalid()
+
+    def gps_invalid(self):
+        if self.gps_valid:
+            if not self.gps_invalid_visible:
+                dialog = error_msg_non_blocking('Invalid GPS data', 'Invalid GPS data')
+                dialog.connect('response', lambda dialog, response: self.hide_gps_invalid_messageBox(dialog))
+                dialog.show()
+                self.gps_invalid_visible = True
+        self.gps_valid = False
+        # Update the status bar with the GPS Coordinates
+        if self.conf.status_location == STATUS_GPS:
+            self.status_bar.pop(self.status_bar_id)
+            self.status_bar.push(self.status_bar_id, 'INVALID DATA FROM GPS')
 
     def hide_gps_invalid_messageBox(self, dialog):
         self.gps_invalid_visible = False
         dialog.destroy()
 
     def gps_direction(self):
-        if not self.gps or len(self.save_gps) < 2:
-            return False
-        l = len(self.save_gps)
-        h = self.save_gps[l - 1][0] - self.save_gps[l - 2][0]
-        v = self.save_gps[l - 1][1] - self.save_gps[l - 2][1]
-        return ternary(h != 0, math.atan(v / h), ternary(v > 0, math.pi / 2.0,
-                ternary(v < 0, -1 * math.pi / 2.0, False)))
+        # @todo new counting based on the gps heading
+        if self.gps and self.gps.gpsfix:
+            return self.gps.gpsfix.track
+        return None
 
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
@@ -567,9 +558,9 @@ class MainWindow(gtk.Window):
     ## add GPS location latitude/longitude to clipboard
     def gps_location(self):
         clipboard = gtk.Clipboard()
-        if self.current_gps:
+        if self.gps and self.gps.gpsfix:
             clipboard.set_text("Latitude=%.6f, Longitude=%.6f" %
-                              (self.current_gps[0], self.current_gps[1]))
+                              (self.gps.gpsfix.latitude, self.gps.gpsfix.longitude))
         else:
             clipboard.set_text("No GPS location detected.")
 
@@ -1184,7 +1175,6 @@ class MainWindow(gtk.Window):
         self.background = []
         self.foreground = []
         self.save_gps = []
-        self.current_gps = False
         self.gps = False
         self.gps_invalid_visible = False
         self.enable_gps()

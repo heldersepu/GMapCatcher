@@ -205,22 +205,38 @@ class DrawingArea(gtk.DrawingArea):
         self.window.draw_line(gc, int(x1), int(y1), int(x2), int(y2))
 
     def draw_arrow(self, screen_coord, direction):
+        arrow_length = 50
         self.set_arrow_gc()
-        cos = math.cos(direction)
-        sin = math.sin(direction)
-        arrowtop = (screen_coord[0] + 12 * cos, screen_coord[1] + 12 * sin)
+        rad = direction * math.pi / 180
+        sin = math.sin(rad)
+        cos = math.cos(rad)
+
+        if direction not in [0, 90, 180, 270]:
+            arrowtop = (screen_coord[0] + arrow_length * sin, screen_coord[1] - arrow_length * cos)
+        else:
+            if direction == 0:
+                arrowtop = (screen_coord[0], screen_coord[1] - arrow_length)
+            elif direction == 90:
+                arrowtop = (screen_coord[0] + arrow_length, screen_coord[1])
+            elif direction == 180:
+                arrowtop = (screen_coord[0], screen_coord[1] + arrow_length)
+            elif direction == 270:
+                arrowtop = (screen_coord[0] - arrow_length, screen_coord[1])
+
         self.w_draw_line(self.arrow_gc,
-                screen_coord[0] - 12 * cos,
-                screen_coord[1] - 12 * sin,
-                arrowtop[0], arrowtop[1])
-        self.w_draw_line(self.arrow_gc,
-                arrowtop[0], arrowtop[1],
-                arrowtop[0] + 7 * math.cos(direction + 3 * math.pi / 4.0),
-                arrowtop[1] + 7 * math.sin(direction + 3 * math.pi / 4.0))
-        self.w_draw_line(self.arrow_gc,
-                arrowtop[0], arrowtop[1],
-                arrowtop[0] + 7 * math.cos(direction - 3 * math.pi / 4.0),
-                arrowtop[1] + 7 * math.sin(direction - 3 * math.pi / 4.0))
+                screen_coord[0],
+                screen_coord[1],
+                arrowtop[0],
+                arrowtop[1])
+        # TODO: Arrow pointers
+        # self.w_draw_line(self.arrow_gc,
+        #         arrowtop[0], arrowtop[1],
+        #         arrowtop[0] + 7 * math.cos(direction + 3 * math.pi / 4.0),
+        #         arrowtop[1] + 7 * math.sin(direction + 3 * math.pi / 4.0))
+        # self.w_draw_line(self.arrow_gc,
+        #         arrowtop[0], arrowtop[1],
+        #         arrowtop[0] + 7 * math.cos(direction - 3 * math.pi / 4.0),
+        #         arrowtop[1] + 7 * math.sin(direction - 3 * math.pi / 4.0))
 
     ## Draws the marker
     def draw_marker(self, conf, mcoord, zl, img, pixDim, marker_name):
@@ -313,7 +329,7 @@ class DrawingArea(gtk.DrawingArea):
             self.draw_ruler_lines(segment_no, r_coordx, r_coordy, r_coordz, zl)
 
         # Draw GPS position
-        if gps:
+        if gps and gps.gpsfix:
             location = gps.get_location()
             if location is not None and (zl <= conf.max_gps_zoom):
                 img = gps.pixbuf
@@ -321,7 +337,7 @@ class DrawingArea(gtk.DrawingArea):
                 if screen_coord:
                     self.draw_image(screen_coord, img,
                         GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
-                    if gps_direction:
+                    if gps_direction is not None:
                         self.draw_arrow(screen_coord, gps_direction)
 
         # Draw the downloading notification
