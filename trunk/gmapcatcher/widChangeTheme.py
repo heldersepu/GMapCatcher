@@ -36,7 +36,7 @@ class ChangeTheme():
         conf.scale_visible = self.cb_view_scale.get_active()
         conf.save()
         if memservice != conf.map_service or memtype != conf.oneDirPerMap:
-            self.mapswindow.layer_combo(True)
+            self.mapswindow.cmb_layer.refresh()
         if conf.scale_visible != memscale:
             self.mapswindow.refresh()
         if self.cmb_themes.get_model():
