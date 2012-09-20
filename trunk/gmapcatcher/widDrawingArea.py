@@ -321,8 +321,6 @@ class DrawingArea(gtk.DrawingArea):
 
         # Draw GPS position
         if gps and gps.gpsfix:
-            if len(gps.gps_points) > 1:
-                self.draw_gps_line(gps.gps_points, zl)
             location = gps.get_location()
             if location is not None and (zl <= conf.max_gps_zoom):
                 img = gps.pixbuf
@@ -332,6 +330,8 @@ class DrawingArea(gtk.DrawingArea):
                         GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
                     if gps.gpsfix.speed >= 0.5:  # draw arrow only, if speed is over 0.5 knots
                         self.draw_arrow(screen_coord, gps.gpsfix.track)
+            if conf.gps_track and len(gps.gps_points) > 1:
+                self.draw_gps_line(gps.gps_points, zl, conf.gps_track_width)
 
         # Draw the downloading notification
         if downloading:
@@ -421,9 +421,9 @@ class DrawingArea(gtk.DrawingArea):
             if i == segment_no:
                 break
 
-    def draw_gps_line(self, points, zl):
+    def draw_gps_line(self, points, zl, gps_track_width):
         gc = self.style.black_gc
-        gc.line_width = 2
+        gc.line_width = gps_track_width
         color = '#FF0000'
         i = 0
         while True:  # Draw line

@@ -17,6 +17,9 @@ class MyGPS():
         conf.max_gps_zoom = self.s_gps_max_zoom.get_value_as_int()
         conf.gps_mode = self.cmb_gps_mode.get_active()
         conf.gps_type = self.cmb_gps_type.get_active()
+        conf.gps_track = int(self.cb_gps_track.get_active())
+        conf.gps_track_width = self.sb_gps_track_width.get_value_as_int()
+        conf.gps_track_interval = self.sb_gps_track_interval.get_value_as_int()
         conf.gps_serial_port = self.cmb_gps_serial_port.get_active_text()
         conf.gps_serial_baudrate = int(self.cmb_gps_baudrate.get_active_text())
         conf.save()
@@ -80,6 +83,23 @@ class MyGPS():
         hbox.pack_start(self.cmb_gps_type)
         return hbox
 
+    ## Settings for GPS track:
+    def gps_track_settings(self, gps_track, track_width, track_interval):
+        self.cb_gps_track = gtk.CheckButton('Draw GPS track')
+        self.cb_gps_track.set_active(gps_track)
+        self.sb_gps_track_width = SpinBtn(track_width, 1, 20, 1, 2)
+        self.sb_gps_track_interval = SpinBtn(track_interval, 1, 1000, 10, 4)
+
+        vbox = gtk.VBox(False, 10)
+        hbox = gtk.HBox(False, 10)
+        hbox.pack_start(self.cb_gps_track)
+        hbox.pack_start(lbl("Track width: "))
+        hbox.pack_start(self.sb_gps_track_width)
+        hbox.pack_start(lbl("Point interval (in meters): "))
+        hbox.pack_start(self.sb_gps_track_interval)
+        vbox.pack_start(hbox)
+        return myFrame(" GPS track ", vbox)
+
     ## ComboBox to select serial port
     def gps_serial_port_combo(self, serial_port):
         hbox = gtk.HBox(False, 10)
@@ -137,6 +157,7 @@ class MyGPS():
         vbox.set_border_width(10)
 
         vbox.pack_start(general_gps_box(), False)
+        vbox.pack_start(self.gps_track_settings(conf.gps_track, conf.gps_track_width, conf.gps_track_interval))
         vbox.pack_start(gps_serial_box(), False)
 
         hpaned = gtk.VPaned()
