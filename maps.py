@@ -29,6 +29,7 @@ from gmapcatcher.mapDownloader import MapDownloader
 from gmapcatcher.customWidgets import *
 from gmapcatcher.xmlUtils import kml_to_markers
 from gmapcatcher.widDrawingArea import DrawingArea
+from gmapcatcher.widComboBoxLayer import ComboBoxLayer
 from gmapcatcher.widComboBoxEntry import ComboBoxEntry
 from gmapcatcher.widCredits import OurCredits
 
@@ -320,35 +321,7 @@ class MainWindow(gtk.Window):
         bbox.add(button_go)
 
         hbox.pack_start(bbox, False, True, 15)
-        return hbox
-
-    def layer_combo(self, refresh=False):
-        if (refresh):
-            self.cmb_layer_container.remove(self.cmb_layer)
-        self.cmb_layer = gtk.combo_box_new_text()
-        if self.conf.oneDirPerMap:
-            for kv in MAP_SERVICES:
-                w = kv["serviceName"] + " " + kv["layerName"]
-                self.cmb_layer.append_text(w)
-        else:
-            for w in range(len(LAYER_NAMES)):
-                for kv in MAP_SERVICES:
-                    if kv['serviceName'] == self.conf.map_service and kv['ID'] == w:
-                        self.cmb_layer.append_text(LAYER_NAMES[w])
-        if (not self.conf.oneDirPerMap):
-            if self.layer in NON_ONEDIR_COMBO_INDICES[self.conf.map_service]:
-                self.cmb_layer.set_active(
-                    NON_ONEDIR_COMBO_INDICES[self.conf.map_service]
-                    .index(self.layer))
-            else:
-                self.cmb_layer.set_active(0)
-                self.layer_changed(self.cmb_layer)
-        else:
-            self.cmb_layer.set_active(self.layer)
-        self.cmb_layer.connect('changed', self.layer_changed)
-        self.cmb_layer_container.pack_start(self.cmb_layer)
-        self.cmb_layer.show()
-        self.cmb_layer_container.show()
+        return hbox        
 
     ## Creates the box with the CheckButtons
     def __create_check_buttons(self):
@@ -386,7 +359,10 @@ class MainWindow(gtk.Window):
         bbox.pack_start(cb_operations, False, False, 5)
 
         self.cmb_layer_container = gtk.HBox()
-        self.layer_combo()
+        self.cmb_layer = ComboBoxLayer(self.conf, self.layer)
+        self.cmb_layer.connect('changed', self.layer_changed)
+        self.cmb_layer_container.pack_start(self.cmb_layer)
+        
         bbox.pack_start(self.cmb_layer_container, False, False, 0)
         hbox.add(bbox)
         return hbox
