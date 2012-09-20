@@ -316,7 +316,7 @@ class DrawingArea(gtk.DrawingArea):
                 self.myThread.start()
 
         # Draw the Ruler lines
-        if (segment_no > 1):
+        if (segment_no >= 1):
             self.draw_ruler_lines(segment_no, r_coordx, r_coordy, r_coordz, zl)
 
         # Draw GPS position
