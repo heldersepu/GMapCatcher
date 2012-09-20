@@ -657,11 +657,11 @@ class MainWindow(gtk.Window):
         self.from_coord = self.pointer_to_world_coord((event.x, event.y))
         x = self.from_coord[0]
         y = self.from_coord[1]
-        l = len(self.ruler_coord)
-
         self.ruler_coord.append((x, y))
 
-        if l > 0:
+        l = len(self.ruler_coord)
+
+        if l > 1:
             z = mapUtils.countDistanceFromLatLon(
                     (self.ruler_coord[l - 2][0], self.ruler_coord[l - 2][1]),
                     (self.ruler_coord[l - 1][0], self.ruler_coord[l - 1][1])
@@ -673,6 +673,8 @@ class MainWindow(gtk.Window):
                 self.status_bar.push(self.status_bar_id, "Segment Distance = %.4f km, Total distance = %.4f km" % (z, (self.total_dist)))
             else:
                 self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), (self.total_dist)))
+        else:
+            self.status_bar.push(self.status_bar_id, "Click to second point to show ruler and distances")
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
