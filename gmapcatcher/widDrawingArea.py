@@ -173,9 +173,9 @@ class DrawingArea(gtk.DrawingArea):
         )
 
     ## Draws a line for ruler
-    def draw_line(self, gc, from_coordx, from_coordy, to_coordx, to_coordy, dist_str, zl):
-        screen_coord = self.coord_to_screen(from_coordx, from_coordy, zl)
-        screen_coord1 = self.coord_to_screen(to_coordx, to_coordy, zl)
+    def draw_line(self, gc, from_coord, to_coord, dist_str, zl):
+        screen_coord = self.coord_to_screen(from_coord[0], from_coord[1], zl)
+        screen_coord1 = self.coord_to_screen(to_coord[0], to_coord[1], zl)
         if screen_coord and screen_coord1:
             x = int(screen_coord1[0])
             y = int(screen_coord1[1])
@@ -279,7 +279,7 @@ class DrawingArea(gtk.DrawingArea):
                     downloading=False, visual_dlconfig={},
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None,
-                    segment_no=0, r_coordx={}, r_coordy={}, r_coordz={},
+                    r_coord=[],
                     tracks=None):
         self.set_scale_gc()
         self.set_visualdl_gc()
@@ -317,8 +317,8 @@ class DrawingArea(gtk.DrawingArea):
                 self.myThread.start()
 
         # Draw the Ruler lines
-        if (segment_no >= 1):
-            self.draw_ruler_lines(segment_no, r_coordx, r_coordy, r_coordz, zl)
+        if len(r_coord) >= 1:
+            self.draw_ruler_lines(r_coord, zl, conf.gps_track_width)
 
         # Draw GPS position
         if gps and gps.gpsfix:
@@ -343,7 +343,7 @@ class DrawingArea(gtk.DrawingArea):
             self.draw_visual_dlconfig(visual_dlconfig, middle, full, zl)
 
         if tracks:
-            self.draw_tracks(tracks, zl)
+            self.draw_tracks(tracks, zl, conf.gps_track_width)
 
     def draw_markers(self, zl, marker, coord, conf, pixDim):
         img = marker.get_marker_pixbuf(zl)
@@ -409,41 +409,38 @@ class DrawingArea(gtk.DrawingArea):
                     middle[1] + full[1] / (sz * 2) + ypos,
                     self.visualdl_lo)
 
-    def draw_ruler_lines(self, segment_no, rx, ry, rz, zl):
-        i = 0
+    def draw_ruler_lines(self, r, zl, gps_track_width):
         gc = self.style.black_gc
         gc.line_width = 2
         colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00"]
-        while True:  # Draw lines then Text
+        for i in range(0, len(r) - 1):
             gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
-            try:
-                dist_str = '%.3f km' % mapUtils.countDistanceFromLatLon((rx[i], ry[i]), (rx[i + 1], ry[i + 1]))
-                self.draw_line(gc, rx[i], ry[i], rx[i + 1], ry[i + 1], dist_str, zl)
-            except:
-                pass
-            i = i + 1
-            if i == segment_no:
-                break
+            dist_str = '%.3f km' % mapUtils.countDistanceFromLatLon((r[i][0], r[i][1]), (r[i + 1][0], r[i + 1][1]))
+            self.draw_line(gc, (r[i][0], r[i][1]), (r[i + 1][0], r[i + 1][1]), dist_str, zl)
 
     def draw_gps_line(self, points, zl, gps_track_width):
         gc = self.style.black_gc
         gc.line_width = gps_track_width
         color = '#FF0000'
-        i = 0
-        while True:  # Draw line
+        for i in range(0, len(points) - 1):
             gc.set_rgb_fg_color(gtk.gdk.color_parse(color))
             self.draw_line(gc, points[i][0], points[i][1], points[i + 1][0], points[i + 1][1], '', zl)
-            i = i + 1
-            if i == len(points) - 1:
-                break
 
-    def draw_tracks(self, tracks, zl):
+    def draw_tracks(self, tracks, zl, gps_track_width):
         gc = self.style.black_gc
         gc.line_width = 2
         colors = ["#00FF00", "#0000FF", "#FF0000", "#FFFF00", "#FF00FF"]
         i = 0
         for track in tracks:
+            old_length = 0
+            new_length = 0
             gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
             for j in range(0, len(track) - 1):
-                self.draw_line(gc, track[j][0], track[j][1], track[j + 1][0], track[j + 1][1], '', zl)
+                new_length += mapUtils.countDistanceFromLatLon((track[j][0], track[j][1]), (track[j + 1][0], track[j + 1][1]))
+                if new_length - old_length > 1:
+                    dist_str = '%.2f km' % new_length
+                    old_length = new_length
+                else:
+                    dist_str = ''
+                self.draw_line(gc, track[j], track[j + 1], dist_str, zl)
             i = i + 1

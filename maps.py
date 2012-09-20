@@ -44,8 +44,7 @@ class MainWindow(gtk.Window):
     gps_idle_time = time.time()
     # Variables for Ruler - F7 to activate/deactivate
     Ruler = 0
-    ruler_coordx = {}
-    ruler_coordy = {}
+    ruler_coord = {}
     ruler_coordzl = {}
     ruler_coordz = {}
     from_coord = {}
@@ -206,10 +205,7 @@ class MainWindow(gtk.Window):
             dialog.connect('response', lambda dialog, response: dialog.destroy())
             dialog.show()
         else:
-            points = list()
-            for i in range(0, len(self.ruler_coordx) - 1):
-                points.append((self.ruler_coordx[i], self.ruler_coordy[i]))
-            mapUtils.saveGPX(points)
+            mapUtils.saveGPX(self.ruler_coord)
 
     def export_gps_clicked(self, w, pointer=None):
         if self.gps and len(self.gps.gps_points) > 0:
@@ -349,7 +345,7 @@ class MainWindow(gtk.Window):
         bbox.add(button_go)
 
         hbox.pack_start(bbox, False, True, 15)
-        return hbox        
+        return hbox
 
     ## Creates the box with the CheckButtons
     def __create_check_buttons(self):
@@ -393,7 +389,7 @@ class MainWindow(gtk.Window):
         self.cmb_layer = ComboBoxLayer(self.conf, self.layer)
         self.cmb_layer.connect('changed', self.layer_changed)
         self.cmb_layer_container.pack_start(self.cmb_layer)
-        
+
         bbox.pack_start(self.cmb_layer_container, False, False, 0)
         hbox.add(bbox)
         return hbox
@@ -678,7 +674,7 @@ class MainWindow(gtk.Window):
                 self.add_marker((event.x, event.y))
             # Left-Click in Ruler Mode
             elif (event.button == 1 & self.Ruler):
-                self.add_segment(event)
+                self.add_ruler_segment(event)
 
         # Double-Click event Zoom In or Out
         elif event.type == gtk.gdk._2BUTTON_PRESS:
@@ -689,61 +685,29 @@ class MainWindow(gtk.Window):
             else:
                 self.do_zoom(self.get_zoom() - 1, True, (event.x, event.y))
 
-    def add_segment(self, event):
+    def add_ruler_segment(self, event):
         self.from_coord = self.pointer_to_world_coord((event.x, event.y))
         x = self.from_coord[0]
         y = self.from_coord[1]
-        zl = self.get_zoom()
+        l = len(self.ruler_coord)
 
-        if self.segment_no == -1:  # First Click
-            self.ruler_coordx[0] = x  # Latiude
-            self.ruler_coordy[0] = y  # Longitude
-            self.ruler_coordzl[0] = zl  # Zoom Level
-            self.ruler_coordz[0] = 0.00  # Distance from last point
-            self.segment_no = 0
+        self.ruler_coord.append((x, y))
 
-        if self.segment_no > 0:  # Calculation required only from 2nd -Click
-            sn = self.segment_no
-            so = self.segment_no - 1
-            self.ruler_coordx[sn] = x  # Latiude
-            self.ruler_coordy[sn] = y  # Longitude
-            self.ruler_coordzl[sn] = zl  # Zoom Level
-            screen_coord1 = self.drawing_area.coord_to_screen(self.ruler_coordx[so], self.ruler_coordy[so], self.ruler_coordzl[so])
-            screen_coord2 = self.drawing_area.coord_to_screen(x, y, zl)
-            if screen_coord1 is None or screen_coord2 is None:
-                return
-
-            if screen_coord1[0] > screen_coord2[0]:
-                x = screen_coord1[0] - screen_coord2[0]
-            else:
-                x = screen_coord2[0] - screen_coord1[0]
-
-            if screen_coord1[1] > screen_coord2[1]:
-                y = screen_coord1[1] - screen_coord2[1]
-            else:
-                y = screen_coord2[1] - screen_coord1[1]
-
+        if l > 0:
             z = mapUtils.countDistanceFromLatLon(
-                    (self.ruler_coordx[so], self.ruler_coordy[so]),
-                    (self.ruler_coordx[sn], self.ruler_coordy[sn])
+                    (self.ruler_coord[l - 2][0], self.ruler_coord[l - 2][1]),
+                    (self.ruler_coord[l - 1][0], self.ruler_coord[l - 1][1])
                 )
 
-            self.ruler_coordz[sn] = z  # Distance from last point
             self.draw_overlay()
-
             self.total_dist = self.total_dist + z
             if (z > 10):
                 self.status_bar.push(self.status_bar_id, "Segment Distance = %.4f km, Total distance = %.4f km" % (z, (self.total_dist)))
             else:
                 self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), (self.total_dist)))
 
-        # increament incl. so=0
-        self.segment_no = self.segment_no + 1
-
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
-        x = 0.00
-        y = 0.00
         if (event.state & gtk.gdk.BUTTON1_MASK):
             self.gps_idle_time = time.time()
             self.drawing_area.da_move(event.x, event.y, self.get_zoom())
@@ -753,68 +717,7 @@ class MainWindow(gtk.Window):
 
         if self.conf.status_location == STATUS_MOUSE or \
            (self.conf.status_location == STATUS_GPS and not mapGPS.available):
-            coord = self.pointer_to_world_coord((event.x, event.y))
             self.status_bar.pop(self.status_bar_id)
-
-            self.from_coord = (event.x, event.y)
-            if self.Ruler:
-                da = self.drawing_area
-                sn = self.segment_no
-                so = self.segment_no - 1
-                zl = self.get_zoom()
-                gc = da.style.black_gc
-
-                if self.segment_no == -1:  # Before First Click
-                    self.status_bar.push(self.status_bar_id, "Ruler Mode - Click for Starting Point")
-                    gc.line_width = 2
-                    gc.set_rgb_fg_color(gtk.gdk.color_parse("#FF0000"))
-
-                if self.segment_no >= 0:  # After the First Click
-                    self.ruler_coordx[sn] = coord[0]
-                    self.ruler_coordy[sn] = coord[1]
-                    self.ruler_coordzl[sn] = zl
-                    self.ruler_coordz[sn] = 0.00
-
-                if self.segment_no > 0:  # Mouse-motion: There is a line to draw
-                    x = coord[0]
-                    y = coord[1]
-
-                    self.scale.set_value(coord[2])
-                    cursor = gtk.gdk.Cursor(gtk.gdk.PENCIL)
-                    da.window.set_cursor(cursor)
-
-                    # Mouse motion: Needs repaint to remove temp lines.
-                    da.repaint()
-                    # Drawing area->draw line takes world coord
-                    da.draw_line(gc, self.ruler_coordx[so], self.ruler_coordy[so], x, y, "", zl)
-                    screen_coord1 = self.drawing_area.coord_to_screen(self.ruler_coordx[so], self.ruler_coordy[so], self.ruler_coordzl[so])
-                    screen_coord2 = self.drawing_area.coord_to_screen(x, y, zl)
-
-                    if (screen_coord1[0] > screen_coord2[0]):
-                        x = screen_coord1[0] - screen_coord2[0]
-                    else:
-                        x = screen_coord2[0] - screen_coord1[0]
-
-                    if (screen_coord1[1] > screen_coord2[1]):
-                        y = screen_coord1[1] - screen_coord2[1]
-                    else:
-                        y = screen_coord2[1] - screen_coord1[1]
-
-                    z = mapUtils.countDistanceFromLatLon(
-                        (self.ruler_coordx[so], self.ruler_coordy[so]),
-                        (self.ruler_coordx[sn], self.ruler_coordy[sn])
-                    )
-
-                    self.ruler_coordz[sn] = z
-
-                    if z > 10:
-                        self.status_bar.push(self.status_bar_id, "New Segment Distance = %.4f km, Total distance = %.4f km" % (z, self.total_dist))
-                    else:
-                        self.status_bar.push(self.status_bar_id, "New Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), self.total_dist))
-            else:
-                self.status_bar.push(self.status_bar_id, "Latitude=%.6f Longitude=%.6f" %
-                                (coord[0], coord[1]))
-                self.drawing_area.da_set_cursor()  # Reset HAND1 cursor
 
     def view_credits(self, menuitem):
         w = OurCredits()
@@ -944,7 +847,7 @@ class MainWindow(gtk.Window):
                 self.downloading > 0, self.visual_dlconfig, self.marker,
                 self.ctx_map.get_locations(), self.entry.get_text(),
                 self.showMarkers, self.gps,
-                self.segment_no, self.ruler_coordx, self.ruler_coordy, self.ruler_coordz,
+                self.ruler_coord,
                 self.tracks
             )
 
@@ -1067,20 +970,17 @@ class MainWindow(gtk.Window):
         # F7 = 65476 for Ruler
         elif event.keyval == 65476:
             self.Ruler = not self.Ruler
-            if (self.Ruler):
+            if self.Ruler:
                 self.total_dist = 0.00
-                self.segment_no = -1  # Segment Number
-                self.ruler_coordx[0] = 0.00  # Latiude
-                self.ruler_coordy[0] = 0.00  # Longitude
-                self.ruler_coordzl[0] = 0  # Zoom Level
-                self.ruler_coordz[0] = 0.00  # Distance from last point
+                # self.segment_no = -1  # Segment Number
+                self.ruler_coord = list()
                 cursor = gtk.gdk.Cursor(gtk.gdk.PENCIL)
                 self.drawing_area.window.set_cursor(cursor)
                 self.status_bar.push(self.status_bar_id, "Ruler Mode - Click for Starting Point")
             else:
                 self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
-                self.segment_no = -1  # Segment Number
-                self.drawing_area.repaint()  # Remove ruler lines
+                self.ruler_coord = list()
+                self.drawing_area.repaint()
                 self.drawing_area.da_set_cursor()
         # F8 = 65477
         elif event.keyval == 65477:
