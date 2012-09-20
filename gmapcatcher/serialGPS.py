@@ -109,30 +109,29 @@ class SerialGPS(Thread):
 
     ## Data handler for NMEA-data
     # currently handles $GPRMC, $GPGGA and $GPGSA
-    # accepts only lines with correct amount of values
     def dataHandler(self, line):
         data = line.strip().split(',')
-        if data[0] == '$GPRMC' and len(data) == 12:
+        if data[0] == '$GPRMC':
             self.fix.time = float(data[1])
             if data[4] == 'S':  # if on the southern hemisphere, latitude is negative
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[3]))
-                except ValueError:
+                except:
                     pass
             else:
                 try:
                     self.fix.latitude = self.convertDegrees(float(data[3]))
-                except ValueError:
+                except:
                     pass
             if data[6] == 'W':  # if on the western hemisphere, longitude is negative
                 try:
                     self.fix.longitude = -self.convertDegrees(float(data[5]))
-                except ValueError:
+                except:
                     pass
             else:
                 try:
                     self.fix.longitude = self.convertDegrees(float(data[5]))
-                except ValueError:
+                except:
                     pass
             try:
                 self.fix.speed = float(data[7])
@@ -143,34 +142,34 @@ class SerialGPS(Thread):
             except:
                 pass
 
-        elif data[0] == '$GPGGA' and len(data) == 15:
+        elif data[0] == '$GPGGA':
             self.fix.time = float(data[1])
             if data[3] == 'S':  # if on the southern hemisphere, latitude is negative
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[2]))
-                except ValueError:
+                except:
                     pass
             else:
                 try:
                     self.fix.latitude = self.convertDegrees(float(data[2]))
-                except ValueError:
+                except:
                     pass
             if data[5] == 'W':  # if on the western hemisphere, longitude is negative
                 try:
                     self.fix.longitude = -self.convertDegrees(float(data[4]))
-                except ValueError:
+                except:
                     pass
             else:
                 try:
                     self.fix.longitude = self.convertDegrees(float(data[4]))
-                except ValueError:
+                except:
                     pass
             try:
                 self.fix.altitude = float(data[9])
-            except ValueError:
+            except:
                 pass
 
-        elif data[0] == '$GPGSA' and len(data) == 18:
+        elif data[0] == '$GPGSA':
             self.fix.mode = int(data[2])
 
     def convertDegrees(self, degrees):
