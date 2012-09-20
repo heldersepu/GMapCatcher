@@ -106,7 +106,12 @@ class MyGPS():
         hbox.pack_start(lbl("Serial port: "))
         self.cmb_gps_serial_port = gtk.combo_box_new_text()
         i = 0
-        for strPort in serialPortScan():
+        ports = serialPortScan()
+        # Adding current port from config to the list,
+        # in case the GPS just isn't currently connected, we don't want to lose it...
+        if serial_port not in ports:
+            ports.insert(0, serial_port)
+        for strPort in ports:
             self.cmb_gps_serial_port.append_text(strPort)
             if strPort == serial_port:
                 self.cmb_gps_serial_port.set_active(i)
