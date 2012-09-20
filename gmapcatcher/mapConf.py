@@ -48,6 +48,9 @@ class MapConf():
         config.set(SECTION_INIT, 'max_gps_zoom', self.max_gps_zoom)
         config.set(SECTION_INIT, 'gps_increment', self.gps_increment)
         config.set(SECTION_INIT, 'gps_type', self.gps_type)
+        config.set(SECTION_INIT, 'gps_track', self.gps_track)
+        config.set(SECTION_INIT, 'gps_track_interval', self.gps_track_interval)
+        config.set(SECTION_INIT, 'gps_track_width', self.gps_track_width)
         config.set(SECTION_INIT, 'gps_serial_port', self.gps_serial_port)
         config.set(SECTION_INIT, 'gps_serial_baudrate', self.gps_serial_baudrate)
         config.set(SECTION_INIT, 'map_service', self.map_service)
@@ -129,6 +132,12 @@ class MapConf():
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int)
         ## GPS-type, GPSd (0) or serial (1), default is GPSd
         self.gps_type = read_config('gps_type', 0, int)
+        ## Draw GPS-track, default is 1 (True)
+        self.gps_track = read_config('gps_track', 1, int)
+        ## GPS-track "interval" in meters, default is 50m
+        self.gps_track_interval = read_config('gps_track_interval', 50, int)
+        ## GPS-track width, default is 2px
+        self.gps_track_width = read_config('gps_track_width', 2, int)
         ## GPS serial port, default is 'none'
         self.gps_serial_port = read_config('gps_serial_port', 'none', str)
         ## GPS serial baudrate, default is 9600
