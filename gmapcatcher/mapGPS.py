@@ -12,6 +12,7 @@ import mapPixbuf
 from threading import Event, Thread
 import time
 from mapConst import MODE_NO_FIX
+import mapUtils
 
 TYPE_GPSD = 0
 TYPE_SERIAL = 1
@@ -32,6 +33,21 @@ class GPS:
         self.baudrate = conf.gps_serial_baudrate
         self.gps_updater = None
         self.gpsfix = None
+        self.gps_points = list()
+        # self.gps_points = [
+        #     (61.052844, 28.096504),
+        #     (61.056832, 28.093758),
+        #     (61.056624, 28.107061),
+        #     (61.052595, 28.107920),
+        #     (61.047069, 28.115559),
+        #     (61.049894, 28.132639),
+        #     (61.053924, 28.159418),
+        #     (61.055129, 28.180532),
+        #     (61.056416, 28.194866),
+        #     (61.052678, 28.207741),
+        #     (61.053633, 28.219929),
+        #     (61.058285, 61.058285),
+        #     ]
         if self.mode != mapConst.GPS_DISABLED:
             self.startGPS()
 
@@ -85,6 +101,12 @@ class GPS:
     ## Callback from the GPSUpdater
     def update(self, fix):
         self.gpsfix = fix
+        if fix.mode != MODE_NO_FIX:
+            if not self.gps_points:
+                self.gps_points.append((fix.longitude, fix.latitude))
+            # if distance between points is greater than 50 meters, append to gps_points
+            elif mapUtils.countDistanceFromLatLon(self.gps_points[-1], (fix.longitude, fix.latitude)) > 0.05:
+                self.gps_points.append((fix.longitude, fix.latitude))
         self.gps_callback()
 
     ## Load GPS marker image

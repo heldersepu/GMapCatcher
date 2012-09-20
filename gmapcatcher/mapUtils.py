@@ -159,7 +159,7 @@ def tile_coord_to_screen(tile_coord, rect, center):
         dy -= y_rollup
 
     if dx + TILES_WIDTH >= 0 and dx < rect.width and \
-       dy + TILES_HEIGHT >= 0 and dy < rect.height:
+            dy + TILES_HEIGHT >= 0 and dy < rect.height:
         return [(xx, yy)
             for xx in xrange(int(dx), rect.width, x_rollup)
             for yy in xrange(int(dy), rect.height, y_rollup)]
@@ -224,3 +224,15 @@ def subs_entity(match):
 def html_decode(string):
     entity_re = re.compile("&(#?)(x?)(\d{1,5}|\w{1,8});")
     return entity_re.subn(subs_entity, string)[0]
+
+
+def countDistanceFromLatLon(a, b):
+    R = 6371  # Mean radius of Earth in km
+    dLat = math.radians(a[0] - b[0])
+    dLon = math.radians(a[1] - b[1])
+    lat1 = math.radians(a[0])
+    lat2 = math.radians(b[0])
+    a = math.sin(dLat / 2) * math.sin(dLat / 2) + math.sin(dLon / 2) * math.sin(dLon / 2) * math.cos(lat1) * math.cos(lat2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    d = float(R * c)
+    return d

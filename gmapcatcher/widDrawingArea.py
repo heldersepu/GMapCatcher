@@ -176,12 +176,13 @@ class DrawingArea(gtk.DrawingArea):
     def draw_line(self, gc, from_coordx, from_coordy, to_coordx, to_coordy, dist_str, zl):
         screen_coord = self.coord_to_screen(from_coordx, from_coordy, zl)
         screen_coord1 = self.coord_to_screen(to_coordx, to_coordy, zl)
-        x = int(screen_coord1[0])
-        y = int(screen_coord1[1])
-        self.window.draw_line(gc, int(screen_coord[0]), int(screen_coord[1]), x, y)
-        pangolayout = self.create_pango_layout("")
-        pangolayout.set_text(dist_str)
-        self.wr_pltxt(gc, x, y, pangolayout)
+        if screen_coord and screen_coord1:
+            x = int(screen_coord1[0])
+            y = int(screen_coord1[1])
+            self.window.draw_line(gc, int(screen_coord[0]), int(screen_coord[1]), x, y)
+            pangolayout = self.create_pango_layout("")
+            pangolayout.set_text(dist_str)
+            self.wr_pltxt(gc, x, y, pangolayout)
 
     ## Draws a circle as starting point for ruler
     def draw_stpt(self, mcoord, zl):
@@ -207,7 +208,7 @@ class DrawingArea(gtk.DrawingArea):
     def draw_arrow(self, screen_coord, direction):
         arrow_length = 50
         self.set_arrow_gc()
-        rad = direction * math.pi / 180
+        rad = math.radians(direction)
         sin = math.sin(rad)
         cos = math.cos(rad)
 
@@ -277,7 +278,7 @@ class DrawingArea(gtk.DrawingArea):
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
                     downloading=False, visual_dlconfig={},
                     marker=None, locations={}, entry_name="",
-                    showMarkers=False, gps=None, gps_direction=False,
+                    showMarkers=False, gps=None,
                     segment_no=0, r_coordx={}, r_coordy={}, r_coordz={}):
         self.set_scale_gc()
         self.set_visualdl_gc()
@@ -320,6 +321,8 @@ class DrawingArea(gtk.DrawingArea):
 
         # Draw GPS position
         if gps and gps.gpsfix:
+            if len(gps.gps_points) > 1:
+                self.draw_gps_line(gps.gps_points, zl)
             location = gps.get_location()
             if location is not None and (zl <= conf.max_gps_zoom):
                 img = gps.pixbuf
@@ -327,8 +330,8 @@ class DrawingArea(gtk.DrawingArea):
                 if screen_coord:
                     self.draw_image(screen_coord, img,
                         GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
-                    if gps_direction is not None:
-                        self.draw_arrow(screen_coord, gps_direction)
+                    if gps.gpsfix.speed >= 0.5:  # draw arrow only, if speed is over 0.5 knots
+                        self.draw_arrow(screen_coord, gps.gpsfix.track)
 
         # Draw the downloading notification
         if downloading:
@@ -403,17 +406,29 @@ class DrawingArea(gtk.DrawingArea):
                     self.visualdl_lo)
 
     def draw_ruler_lines(self, segment_no, rx, ry, rz, zl):
-        x = 0
+        i = 0
         gc = self.style.black_gc
         gc.line_width = 2
         colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00"]
         while True:  # Draw lines then Text
-            gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[x % 4]))
+            gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
             try:
-                dist_str = "%0.3f km" % rz[x + 1]
-                self.draw_line(gc, rx[x], ry[x], rx[x + 1], ry[x + 1], dist_str, zl)
+                dist_str = '%.3f km' % mapUtils.countDistanceFromLatLon((rx[i], ry[i]), (rx[i + 1], ry[i + 1]))
+                self.draw_line(gc, rx[i], ry[i], rx[i + 1], ry[i + 1], dist_str, zl)
             except:
-                dist_str = ""
-            x = x + 1
-            if x == segment_no:
+                pass
+            i = i + 1
+            if i == segment_no:
+                break
+
+    def draw_gps_line(self, points, zl):
+        gc = self.style.black_gc
+        gc.line_width = 2
+        color = '#FF0000'
+        i = 0
+        while True:  # Draw line
+            gc.set_rgb_fg_color(gtk.gdk.color_parse(color))
+            self.draw_line(gc, points[i][0], points[i][1], points[i + 1][0], points[i + 1][1], '', zl)
+            i = i + 1
+            if i == len(points) - 1:
                 break

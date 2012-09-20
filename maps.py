@@ -139,7 +139,7 @@ class MainWindow(gtk.Window):
                 self.visual_dlconfig['active'] = False
             if self.gps and not self.gps_warning():
                 self.gps.stop_all()
-                self.gps = False
+                self.gps = None
             self.layer = newlayer
         else:
             self.layer = \
@@ -215,7 +215,7 @@ class MainWindow(gtk.Window):
 
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self):
-        if self.gps.gpsfix:
+        if self.gps and self.gps.gpsfix:
             zl = self.get_zoom()
             tile = mapUtils.coord_to_tile((self.gps.gpsfix.latitude, self.gps.gpsfix.longitude, zl))
 
@@ -254,7 +254,7 @@ class MainWindow(gtk.Window):
 
                 self.drawing_area.repaint()
                 # Update the status bar with the GPS Coordinates
-                if self.conf.status_location == STATUS_GPS:
+                if self.conf.status_location == STATUS_GPS and not self.Ruler:
                     self.status_bar.pop(self.status_bar_id)
                     self.status_bar.push(self.status_bar_id,
                                           "Latitude: " + str(round(self.gps.gpsfix.latitude, 6)) + " Longitude: " + str(round(self.gps.gpsfix.longitude, 6)))
@@ -272,19 +272,13 @@ class MainWindow(gtk.Window):
                 self.gps_invalid_visible = True
         self.gps_valid = False
         # Update the status bar with the GPS Coordinates
-        if self.conf.status_location == STATUS_GPS:
+        if self.conf.status_location == STATUS_GPS and not self.Ruler:
             self.status_bar.pop(self.status_bar_id)
             self.status_bar.push(self.status_bar_id, 'INVALID DATA FROM GPS')
 
     def hide_gps_invalid_messageBox(self, dialog):
         self.gps_invalid_visible = False
         dialog.destroy()
-
-    def gps_direction(self):
-        # @todo new counting based on the gps heading
-        if self.gps and self.gps.gpsfix:
-            return self.gps.gpsfix.track
-        return None
 
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
@@ -721,18 +715,20 @@ class MainWindow(gtk.Window):
                 y = screen_coord1[1] - screen_coord2[1]
             else:
                 y = screen_coord2[1] - screen_coord1[1]
-            z = math.sqrt(math.pow(x, 2) + math.pow(y, 2))
-            km = mapUtils.km_per_pixel((0, 0, zl))
-            z = z * km
+            
+            z = mapUtils.countDistanceFromLatLon(
+                    (self.ruler_coordx[so], self.ruler_coordy[so]),
+                    (self.ruler_coordx[sn], self.ruler_coordy[sn])
+                )
 
             self.ruler_coordz[sn] = z  # Distance from last point
             self.draw_overlay()
 
             self.total_dist = self.total_dist + z
             if (z > 10):
-                self.status_bar.push(self.status_bar_id, "Segment Distance = %.4f km, Total distance = %.4f km" % (z, (self.total_dist + z)))
+                self.status_bar.push(self.status_bar_id, "Segment Distance = %.4f km, Total distance = %.4f km" % (z, (self.total_dist)))
             else:
-                self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), (self.total_dist + z)))
+                self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), (self.total_dist)))
 
         # increament incl. so=0
         self.segment_no = self.segment_no + 1
@@ -797,9 +793,10 @@ class MainWindow(gtk.Window):
                     else:
                         y = screen_coord2[1] - screen_coord1[1]
 
-                    z = math.sqrt(math.pow(x, 2) + math.pow(y, 2))
-                    km = mapUtils.km_per_pixel((0, 0, zl))
-                    z = z * km
+                    z = mapUtils.countDistanceFromLatLon(
+                        (self.ruler_coordx[sn-1], self.ruler_coordy[sn-1]),
+                        (self.ruler_coordx[sn], self.ruler_coordy[sn])
+                    )
 
                     self.ruler_coordz[sn] = z
 
@@ -939,7 +936,7 @@ class MainWindow(gtk.Window):
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
                 self.downloading > 0, self.visual_dlconfig, self.marker,
                 self.ctx_map.get_locations(), self.entry.get_text(),
-                self.showMarkers, self.gps, self.gps_direction(),
+                self.showMarkers, self.gps,
                 self.segment_no, self.ruler_coordx, self.ruler_coordy, self.ruler_coordz
             )
 
@@ -1136,9 +1133,9 @@ class MainWindow(gtk.Window):
                 self.conf
             )
             if self.gps and not self.gps_warning():
-                self.gps = False
+                self.gps = None
         else:
-            self.gps = False
+            self.gps = None
 
     def gps_warning(self):
         if mapGPS.available and self.conf.map_service in NO_GPS:
@@ -1175,7 +1172,7 @@ class MainWindow(gtk.Window):
         self.background = []
         self.foreground = []
         self.save_gps = []
-        self.gps = False
+        self.gps = None
         self.gps_invalid_visible = False
         self.enable_gps()
         self.downloading = 0
