@@ -211,17 +211,7 @@ class DrawingArea(gtk.DrawingArea):
         sin = math.sin(rad)
         cos = math.cos(rad)
 
-        if direction not in [0, 90, 180, 270]:
-            arrowtop = (screen_coord[0] + arrow_length * sin, screen_coord[1] - arrow_length * cos)
-        else:
-            if direction == 0:
-                arrowtop = (screen_coord[0], screen_coord[1] - arrow_length)
-            elif direction == 90:
-                arrowtop = (screen_coord[0] + arrow_length, screen_coord[1])
-            elif direction == 180:
-                arrowtop = (screen_coord[0], screen_coord[1] + arrow_length)
-            elif direction == 270:
-                arrowtop = (screen_coord[0] - arrow_length, screen_coord[1])
+        arrowtop = (screen_coord[0] + arrow_length * sin, screen_coord[1] - arrow_length * cos)
 
         self.w_draw_line(self.arrow_gc,
                 screen_coord[0],
