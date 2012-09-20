@@ -44,11 +44,6 @@ class MainWindow(gtk.Window):
     gps_idle_time = time.time()
     # Variables for Ruler - F7 to activate/deactivate
     Ruler = 0
-    ruler_coord = {}
-    ruler_coordzl = {}
-    ruler_coordz = {}
-    from_coord = {}
-    segment_no = -1
     total_dist = 0.00
 
     ## Get the zoom level from the scale
