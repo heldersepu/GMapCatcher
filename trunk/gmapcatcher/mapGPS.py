@@ -104,7 +104,7 @@ class GPS:
         if fix.mode != MODE_NO_FIX:
             if not self.gps_points:
                 self.gps_points.append((fix.latitude, fix.longitude))
-            # if distance between points is greater than defined in config meters, append to gps_points
+            # if distance between points is greater than defined in config, append to gps_points
             elif mapUtils.countDistanceFromLatLon(self.gps_points[-1], (fix.latitude, fix.longitude)) > (self.conf.gps_track_interval / 1000):
                 self.gps_points.append((fix.latitude, fix.longitude))
         self.gps_callback()
