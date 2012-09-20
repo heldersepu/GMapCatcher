@@ -1082,6 +1082,7 @@ class MainWindow(gtk.Window):
         self.visual_dlconfig = {}
         self.hide_dlfeedback = False
         self.tracks = []
+        self.ruler_coord = []
 
         gtk.Window.__init__(self)
         try:
