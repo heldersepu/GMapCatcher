@@ -63,14 +63,30 @@ def FolderChooser():
 
 
 ## Prompt user to select a File
-def FileChooser(strPath, strTitle="Select File"):
+def FileChooser(strPath='.', strTitle="Select File"):
     strFileName = False
     dialog = gtk.FileChooserDialog(strTitle, None,
-                                   gtk.FILE_CHOOSER_ACTION_OPEN,
-                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                    gtk.FILE_CHOOSER_ACTION_OPEN,
+                                    (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                     gtk.STOCK_OK, gtk.RESPONSE_OK))
     dialog.set_default_response(gtk.RESPONSE_OK)
     dialog.set_current_folder(strPath)
+    if dialog.run() == gtk.RESPONSE_OK:
+        strFileName = dialog.get_filename()
+    dialog.destroy()
+    return strFileName
+
+
+## Prompt user to select a File
+def FileSaveChooser(strPath='.', strTitle="Select File"):
+    strFileName = False
+    dialog = gtk.FileChooserDialog(strTitle, None,
+                                    gtk.FILE_CHOOSER_ACTION_SAVE,
+                                    (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                    gtk.STOCK_SAVE, gtk.RESPONSE_OK))
+    dialog.set_default_response(gtk.RESPONSE_CANCEL)
+    dialog.set_current_folder(strPath)
+    dialog.set_do_overwrite_confirmation(True)
     if dialog.run() == gtk.RESPONSE_OK:
         strFileName = dialog.get_filename()
     dialog.destroy()

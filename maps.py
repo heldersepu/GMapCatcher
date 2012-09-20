@@ -13,7 +13,6 @@ import signal
 import gobject
 import sys
 import re
-import math
 import time
 
 from gmapcatcher.mapConst import *
@@ -157,6 +156,12 @@ class MainWindow(gtk.Window):
             self.download_clicked(cb_operations)
         elif active == 2:
             self.export_clicked(cb_operations)
+        elif active == 3:
+            self.import_gpx_clicked(cb_operations)
+        elif active == 4:
+            self.export_gps_clicked(cb_operations)
+        elif active == 5:
+            self.export_ruler_clicked(cb_operations)
 
         cb_operations.set_active(0)
 
@@ -190,6 +195,29 @@ class MainWindow(gtk.Window):
         exw = EXWindow(self.ctx_map, coord, km_px * rect.width, km_px * rect.height,
                         self.layer, self.conf)
         exw.show()
+
+    def import_gpx_clicked(self, w, pointer=None):
+        self.tracks.extend(mapUtils.openGPX())
+        self.draw_overlay()
+
+    def export_ruler_clicked(self, w, pointer=None):
+        if not self.Ruler:
+            dialog = error_msg_non_blocking('No ruler active', 'No ruler active')
+            dialog.connect('response', lambda dialog, response: dialog.destroy())
+            dialog.show()
+        else:
+            points = list()
+            for i in range(0, len(self.ruler_coordx) - 1):
+                points.append((self.ruler_coordx[i], self.ruler_coordy[i]))
+            mapUtils.saveGPX(points)
+
+    def export_gps_clicked(self, w, pointer=None):
+        if self.gps and len(self.gps.gps_points) > 0:
+            mapUtils.saveGPX(self.gps.gps_points)
+        else:
+            dialog = error_msg_non_blocking('No GPS points', 'No GPS points to save')
+            dialog.connect('response', lambda dialog, response: dialog.destroy())
+            dialog.show()
 
     def visual_download(self):
         if self.visual_dlconfig.get('active', False):
@@ -353,7 +381,10 @@ class MainWindow(gtk.Window):
         cb_operations = gtk.combo_box_new_text()
         cb_operations.append_text("Operations")
         cb_operations.append_text("Download")
-        cb_operations.append_text("Export")
+        cb_operations.append_text("Export map")
+        cb_operations.append_text("Import GPX track(s)")
+        cb_operations.append_text("Export GPS track")
+        cb_operations.append_text("Export ruler")
         cb_operations.set_active(0)
         cb_operations.connect('changed', self.on_cb_operations_changed)
         bbox.pack_start(cb_operations, False, False, 5)
@@ -634,12 +665,12 @@ class MainWindow(gtk.Window):
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
         # Single click event
-        if (event.type == gtk.gdk.BUTTON_PRESS):
-            if (not self.Ruler):  # Check if Ruler is active
+        if event.type == gtk.gdk.BUTTON_PRESS:
+            if not self.Ruler:  # Check if Ruler is active
                 self.segment_no = -1
 
             # Right-Click event shows the popUp menu
-            if (event.button != 1):
+            if event.button != 1:
                 self.myPointer = (event.x, event.y)
                 w.popup(None, None, None, event.button, event.time)
             # Ctrl + Click adds a marker
@@ -650,7 +681,7 @@ class MainWindow(gtk.Window):
                 self.add_segment(event)
 
         # Double-Click event Zoom In or Out
-        elif (event.type == gtk.gdk._2BUTTON_PRESS):
+        elif event.type == gtk.gdk._2BUTTON_PRESS:
             # Alt + 2Click Zoom Out
             if (event.state & gtk.gdk.MOD1_MASK):
                 self.do_zoom(self.get_zoom() + 1, True, (event.x, event.y))
@@ -664,14 +695,14 @@ class MainWindow(gtk.Window):
         y = self.from_coord[1]
         zl = self.get_zoom()
 
-        if (self.segment_no == -1):  # First Click
+        if self.segment_no == -1:  # First Click
             self.ruler_coordx[0] = x  # Latiude
             self.ruler_coordy[0] = y  # Longitude
             self.ruler_coordzl[0] = zl  # Zoom Level
             self.ruler_coordz[0] = 0.00  # Distance from last point
             self.segment_no = 0
 
-        if (self.segment_no > 0):  # Calculation required only from 2nd -Click
+        if self.segment_no > 0:  # Calculation required only from 2nd -Click
             sn = self.segment_no
             so = self.segment_no - 1
             self.ruler_coordx[sn] = x  # Latiude
@@ -682,16 +713,16 @@ class MainWindow(gtk.Window):
             if screen_coord1 is None or screen_coord2 is None:
                 return
 
-            if (screen_coord1[0] > screen_coord2[0]):
+            if screen_coord1[0] > screen_coord2[0]:
                 x = screen_coord1[0] - screen_coord2[0]
             else:
                 x = screen_coord2[0] - screen_coord1[0]
 
-            if (screen_coord1[1] > screen_coord2[1]):
+            if screen_coord1[1] > screen_coord2[1]:
                 y = screen_coord1[1] - screen_coord2[1]
             else:
                 y = screen_coord2[1] - screen_coord1[1]
-            
+
             z = mapUtils.countDistanceFromLatLon(
                     (self.ruler_coordx[so], self.ruler_coordy[so]),
                     (self.ruler_coordx[sn], self.ruler_coordy[sn])
@@ -720,31 +751,31 @@ class MainWindow(gtk.Window):
                 self.visual_download()
             self.update_export()
 
-        if (self.conf.status_location == STATUS_MOUSE or
-           (self.conf.status_location == STATUS_GPS and not mapGPS.available)):
+        if self.conf.status_location == STATUS_MOUSE or \
+           (self.conf.status_location == STATUS_GPS and not mapGPS.available):
             coord = self.pointer_to_world_coord((event.x, event.y))
             self.status_bar.pop(self.status_bar_id)
 
             self.from_coord = (event.x, event.y)
-            if (self.Ruler):
+            if self.Ruler:
                 da = self.drawing_area
                 sn = self.segment_no
                 so = self.segment_no - 1
                 zl = self.get_zoom()
                 gc = da.style.black_gc
 
-                if (self.segment_no == -1):  # Before First Click
+                if self.segment_no == -1:  # Before First Click
                     self.status_bar.push(self.status_bar_id, "Ruler Mode - Click for Starting Point")
                     gc.line_width = 2
                     gc.set_rgb_fg_color(gtk.gdk.color_parse("#FF0000"))
 
-                if (self.segment_no >= 0):  # After the First Click
+                if self.segment_no >= 0:  # After the First Click
                     self.ruler_coordx[sn] = coord[0]
                     self.ruler_coordy[sn] = coord[1]
                     self.ruler_coordzl[sn] = zl
                     self.ruler_coordz[sn] = 0.00
 
-                if (self.segment_no > 0):  # Mouse-motion: There is a line to draw
+                if self.segment_no > 0:  # Mouse-motion: There is a line to draw
                     x = coord[0]
                     y = coord[1]
 
@@ -770,13 +801,13 @@ class MainWindow(gtk.Window):
                         y = screen_coord2[1] - screen_coord1[1]
 
                     z = mapUtils.countDistanceFromLatLon(
-                        (self.ruler_coordx[sn-1], self.ruler_coordy[sn-1]),
+                        (self.ruler_coordx[so], self.ruler_coordy[so]),
                         (self.ruler_coordx[sn], self.ruler_coordy[sn])
                     )
 
                     self.ruler_coordz[sn] = z
 
-                    if (z > 10):
+                    if z > 10:
                         self.status_bar.push(self.status_bar_id, "New Segment Distance = %.4f km, Total distance = %.4f km" % (z, self.total_dist))
                     else:
                         self.status_bar.push(self.status_bar_id, "New Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), self.total_dist))
@@ -913,7 +944,8 @@ class MainWindow(gtk.Window):
                 self.downloading > 0, self.visual_dlconfig, self.marker,
                 self.ctx_map.get_locations(), self.entry.get_text(),
                 self.showMarkers, self.gps,
-                self.segment_no, self.ruler_coordx, self.ruler_coordy, self.ruler_coordz
+                self.segment_no, self.ruler_coordx, self.ruler_coordy, self.ruler_coordz,
+                self.tracks
             )
 
     ## Handles the pressing of F11 & F12
@@ -1154,6 +1186,7 @@ class MainWindow(gtk.Window):
         self.downloading = 0
         self.visual_dlconfig = {}
         self.hide_dlfeedback = False
+        self.tracks = []
 
         gtk.Window.__init__(self)
         try:

@@ -4,9 +4,11 @@
 
 import math
 from mapConst import *
+from customWidgets import *
 from time import gmtime, strftime
 from htmlentitydefs import name2codepoint
 import re
+from gmapcatcher import gpxpy
 
 
 def tiles_on_level(zoom_level):
@@ -236,3 +238,35 @@ def countDistanceFromLatLon(a, b):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     d = float(R * c)
     return d
+
+
+def saveGPX(points):
+    home = os.getenv('USERPROFILE') or os.getenv('HOME')
+    f_name = FileSaveChooser(home, strTitle="Select File")
+    if f_name:
+        gpx = gpxpy.gpx.GPX()
+        gpx_track = gpxpy.gpx.GPXTrack()
+        gpx.tracks.append(gpx_track)
+        gpx_segment = gpxpy.gpx.GPXTrackSegment()
+        gpx_track.segments.append(gpx_segment)
+        for p in points:
+            gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(p[0], p[1]))
+        f = open(f_name, 'w')
+        f.write(gpx.to_xml())
+        f.close()
+
+
+def openGPX():
+    home = os.getenv('USERPROFILE') or os.getenv('HOME')
+    f_name = FileChooser(home, strTitle="Select File")
+    if f_name:
+        f = open(f_name, 'r')
+        tracks = list()
+        gpx = gpxpy.parse(f)
+        for track in gpx.tracks:
+            track_points = list()
+            for segment in track.segments:
+                for point in segment.points:
+                    track_points.append((point.latitude, point.longitude))
+            tracks.append(track_points)
+    return tracks

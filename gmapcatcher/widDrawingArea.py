@@ -279,7 +279,8 @@ class DrawingArea(gtk.DrawingArea):
                     downloading=False, visual_dlconfig={},
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None,
-                    segment_no=0, r_coordx={}, r_coordy={}, r_coordz={}):
+                    segment_no=0, r_coordx={}, r_coordy={}, r_coordz={},
+                    tracks=None):
         self.set_scale_gc()
         self.set_visualdl_gc()
         rect = self.get_allocation()
@@ -340,6 +341,9 @@ class DrawingArea(gtk.DrawingArea):
 
         if (visual_dlconfig != {}):
             self.draw_visual_dlconfig(visual_dlconfig, middle, full, zl)
+
+        if tracks:
+            self.draw_tracks(tracks, zl)
 
     def draw_markers(self, zl, marker, coord, conf, pixDim):
         img = marker.get_marker_pixbuf(zl)
@@ -432,3 +436,14 @@ class DrawingArea(gtk.DrawingArea):
             i = i + 1
             if i == len(points) - 1:
                 break
+
+    def draw_tracks(self, tracks, zl):
+        gc = self.style.black_gc
+        gc.line_width = 2
+        colors = ["#00FF00", "#0000FF", "#FF0000", "#FFFF00", "#FF00FF"]
+        i = 0
+        for track in tracks:
+            gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
+            for j in range(0, len(track) - 1):
+                self.draw_line(gc, track[j][0], track[j][1], track[j + 1][0], track[j + 1][1], '', zl)
+            i = i + 1
