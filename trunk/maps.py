@@ -653,33 +653,6 @@ class MainWindow(gtk.Window):
             gui_callback(self.export_done)
         )
 
-    ## Handles Right & Double clicks events in the drawing_area
-    def da_click_events(self, w, event):
-        # Single click event
-        if event.type == gtk.gdk.BUTTON_PRESS:
-            if not self.Ruler:  # Check if Ruler is active
-                self.segment_no = -1
-
-            # Right-Click event shows the popUp menu
-            if event.button != 1:
-                self.myPointer = (event.x, event.y)
-                w.popup(None, None, None, event.button, event.time)
-            # Ctrl + Click adds a marker
-            elif (event.state & gtk.gdk.CONTROL_MASK):
-                self.add_marker((event.x, event.y))
-            # Left-Click in Ruler Mode
-            elif (event.button == 1 & self.Ruler):
-                self.add_ruler_segment(event)
-
-        # Double-Click event Zoom In or Out
-        elif event.type == gtk.gdk._2BUTTON_PRESS:
-            # Alt + 2Click Zoom Out
-            if (event.state & gtk.gdk.MOD1_MASK):
-                self.do_zoom(self.get_zoom() + 1, True, (event.x, event.y))
-            # 2Click Zoom In
-            else:
-                self.do_zoom(self.get_zoom() - 1, True, (event.x, event.y))
-
     def add_ruler_segment(self, event):
         self.from_coord = self.pointer_to_world_coord((event.x, event.y))
         x = self.from_coord[0]
@@ -700,6 +673,30 @@ class MainWindow(gtk.Window):
                 self.status_bar.push(self.status_bar_id, "Segment Distance = %.4f km, Total distance = %.4f km" % (z, (self.total_dist)))
             else:
                 self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), (self.total_dist)))
+
+    ## Handles Right & Double clicks events in the drawing_area
+    def da_click_events(self, w, event):
+        # Single click event
+        if event.type == gtk.gdk.BUTTON_PRESS:
+            # Right-Click event shows the popUp menu
+            if event.button == 3:
+                self.myPointer = (event.x, event.y)
+                w.popup(None, None, None, event.button, event.time)
+            # Ctrl + Click adds a marker
+            elif (event.state & gtk.gdk.CONTROL_MASK):
+                self.add_marker((event.x, event.y))
+            # Left-Click in Ruler Mode
+            elif event.button == 1 and self.Ruler:
+                self.add_ruler_segment(event)
+
+        # Double-Click event Zoom In or Out
+        elif event.type == gtk.gdk._2BUTTON_PRESS:
+            # Alt + 2Click Zoom Out
+            if (event.state & gtk.gdk.MOD1_MASK):
+                self.do_zoom(self.get_zoom() + 1, True, (event.x, event.y))
+            # 2Click Zoom In
+            else:
+                self.do_zoom(self.get_zoom() - 1, True, (event.x, event.y))
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
@@ -967,7 +964,6 @@ class MainWindow(gtk.Window):
             self.Ruler = not self.Ruler
             if self.Ruler:
                 self.total_dist = 0.00
-                # self.segment_no = -1  # Segment Number
                 self.ruler_coord = list()
                 cursor = gtk.gdk.Cursor(gtk.gdk.PENCIL)
                 self.drawing_area.window.set_cursor(cursor)
