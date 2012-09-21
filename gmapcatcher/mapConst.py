@@ -116,7 +116,10 @@ GPS_ON_SCREEN = 3
 GPS_TIMEOUT = 4
 GPS_NAMES = ["GPS Disabled", "GPS Marker", "GPS Center",
              "GPS on Screen", "GPS Timeout"]
-GPS_TYPES = ["GPSd", "Serial"]
+TYPE_OFF = 0
+TYPE_GPSD = 1
+TYPE_SERIAL = 2
+GPS_TYPES = ["Off", "GPSd", "Serial"]
 MODE_NO_FIX = 1
 MODE_2D = 2
 MODE_3D = 3

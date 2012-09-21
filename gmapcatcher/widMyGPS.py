@@ -141,7 +141,8 @@ class MyGPS():
     ## Put all the GPS Widgets together
     def show(self, conf):
         def general_gps_box():
-            boxes = [self.gps_updt_rate(conf.gps_update_rate), self.gps_max_zoom(conf.max_gps_zoom), self.gps_mode_combo(conf.gps_mode), self.gps_type_combo(conf.gps_type)]
+            boxes = [self.gps_type_combo(conf.gps_type), self.gps_updt_rate(conf.gps_update_rate),
+                    self.gps_max_zoom(conf.max_gps_zoom), self.gps_mode_combo(conf.gps_mode)]
             vbox = gtk.VBox(False, 5)
             for box in boxes:
                 hbox = gtk.HBox(False, 10)
