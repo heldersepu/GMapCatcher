@@ -148,7 +148,7 @@ class RMapsThread(Thread):
             #print "D:sqlite3.connect( url ): " + str(thread.get_ident())
             createTable = False
 
-            dburl = os.path.join(self.url_dir, self.url_filenameformat % MAP_SERVICES[layer]['TextID'])
+            dburl = os.path.join(self.url_dir, self.url_filenameformat % LAYER_NAMES[layer])
             if(not os.path.isfile(dburl)):
                 createTable = True
 
@@ -305,15 +305,13 @@ class RMapsFuncs():
 
 class TilesRepositoryRMaps(TilesRepository):
 
-    def __init__(self, MapServ_inst, configpath):
-        TilesRepository.__init__(self, MapServ_inst, configpath)
+    def __init__(self, MapServ_inst, conf):
+        TilesRepository.__init__(self, MapServ_inst, conf)
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
-        self.configpath = configpath
+        self.configpath = conf.init_path
         self.lock = Lock()
-
         self.missingPixbuf = mapPixbuf.missing()
-
         self.sqlite3func = RMapsFuncs(self.configpath, RMAPS_REPOSITORY_FILE_FORMAT)
 
     def finish(self):
@@ -333,7 +331,6 @@ class TilesRepositoryRMaps(TilesRepository):
         if (not force_update) and (filename in self.tile_cache):
             pixbuf = self.tile_cache[filename]
         else:
-            #
             dbrow = self.sqlite3func.get_tile_row(layer, coord[2], (coord[0], coord[1]))
             if dbrow is None:
                 pixbuf = self.missingPixbuf
@@ -343,7 +340,6 @@ class TilesRepositoryRMaps(TilesRepository):
                     self.tile_cache[filename] = pixbuf
                 except:
                     pixbuf = self.missingPixbuf
-
         return pixbuf
 
     # PUBLIC
@@ -463,7 +459,7 @@ class TilesRepositoryRMaps(TilesRepository):
     # private
     def coord_to_path(self, tile_coord, layer):
         path = os.path.join(self.configpath,
-                            MAP_SERVICES[layer]["layerDir"],
+                            LAYER_DIRS[layer],
                             str('%d' % tile_coord[2]),
                             str(tile_coord[0] / 1024),
                             str(tile_coord[0] % 1024),

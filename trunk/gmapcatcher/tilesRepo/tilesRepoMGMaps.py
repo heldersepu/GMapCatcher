@@ -20,9 +20,9 @@ from tilesRepo import TilesRepository
 
 class TilesRepositoryMGMaps(TilesRepository):
 
-    def __init__(self, MapServ_inst, configpath):
-        TilesRepository.__init__(self, MapServ_inst, configpath)
-        self.set_repository_path(configpath)
+    def __init__(self, MapServ_inst, conf):
+        TilesRepository.__init__(self, MapServ_inst, conf)
+        self.set_repository_path(conf.init_path)
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
         self.lock = Lock()
@@ -124,7 +124,7 @@ class TilesRepositoryMGMaps(TilesRepository):
     def coord_to_path(self, tile_coord, layer):
         return os.path.join(
             self.configpath,
-            "Yahoo" + MAP_SERVICES[layer]["layerName"][:3] +
+            "Yahoo" + LAYER_NAMES[layer] +
             "_" + str(MAP_MAX_ZOOM_LEVEL - tile_coord[2]),
             self.calc_v2_hash(tile_coord[0], tile_coord[1]),
             str(tile_coord[0]) + "_" + str(tile_coord[1]) + ".mgm"
@@ -136,7 +136,7 @@ class TilesRepositoryMGMaps(TilesRepository):
         path = fileUtils.check_dir(self.configpath)
         path = fileUtils.check_dir(
             path,
-            "Yahoo" + MAP_SERVICES[layer]["layerName"][:3] +
+            "Yahoo" + LAYER_NAMES[layer] +
             "_" + str(MAP_MAX_ZOOM_LEVEL - tile_coord[2])
         )
         path = fileUtils.check_dir(

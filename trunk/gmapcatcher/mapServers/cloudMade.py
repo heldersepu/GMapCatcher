@@ -10,8 +10,8 @@ def layer_url_template(API_KEY):
 
 
 ## Returns the URL to the CloudMade tile
-def get_url(counter, coord, conf, dimensions=256):
+def get_url(counter, coord, layer, conf):
     server = ['a', 'b', 'c']
     return layer_url_template(conf.cloudMade_API) % (server[counter % 3],
-            conf.cloudMade_styleID, dimensions,
+            conf.cloudMade_styleID, 256,
             MAP_MAX_ZOOM_LEVEL - coord[2], coord[0], coord[1])

@@ -90,8 +90,7 @@ class MapArgs():
                     elif arg.startswith('--hybrid'):
                         self.layer = LAYER_HYB
                     elif arg.startswith('--mapid='):
-                        mid = arg[8:]
-                        self.layer = [i for i in range(len(MAP_SERVICES)) if MAP_SERVICES[i]['TextID'] == mid][0]
+                        self.layer = arg[8:]
                     elif arg.startswith('--full-range'):
                         self.location = "Whole World"
                         self.lng = 0

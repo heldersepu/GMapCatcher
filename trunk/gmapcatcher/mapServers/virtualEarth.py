@@ -13,7 +13,7 @@ def layer_url_template(layer):
 
 
 ## Returns the URL to the virtualEarth tile
-def get_url(counter, coord, layer):
+def get_url(counter, coord, layer, conf):
     version = 392
     return layer_url_template(layer) % (counter, tile_to_quadkey(coord), version)
 

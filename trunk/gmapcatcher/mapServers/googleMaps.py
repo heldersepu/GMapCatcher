@@ -9,14 +9,13 @@ from gmapcatcher.mapConst import *
 
 known_layers = {}
 
-
 ## Returns a template URL for the GoogleMaps
 def layer_url_template(layer, conf):
     if layer not in known_layers:
-        map_server_query = {"gmap": "m", "ghyb": "h", "gsat": "k", "gter": "p"}
+        map_server_query = ["m", "k", "p", "h"]
 
         oa = openanything.fetch(
-            'http://maps.google.com/maps?t=' + map_server_query[MAP_SERVICES[layer]["TextID"]])
+            'http://maps.google.com/maps?t=' + map_server_query[layer])
 
         if oa['status'] != 200:
             print "Trying to fetch http://maps.google.com/maps but failed"

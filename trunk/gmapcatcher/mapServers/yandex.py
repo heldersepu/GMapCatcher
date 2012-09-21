@@ -10,6 +10,6 @@ def layer_url_template():
 
 
 ## Returns the URL to the yandex tile
-def get_url(counter, coord):
+def get_url(counter, coord, layer, conf):
     return layer_url_template() % (counter + 1,
                 coord[0], coord[1], MAP_MAX_ZOOM_LEVEL - coord[2])
