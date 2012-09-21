@@ -29,8 +29,6 @@ import mapServers.eniro as eniro
 
 from threading import Timer
 
-Image = None
-
 
 class MapServException(Exception):
     pass
@@ -95,8 +93,6 @@ class MapServ:
     def get_url_from_coord(self, coord, layer, conf):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
-        # do I really need this empty line? I commented it out. (standa31415)
-        #print
         try:
             if not conf.oneDirPerMap:
                 if conf.map_service == MAP_SERVERS[VIRTUAL_EARTH] and (layer != LAYER_TER):
@@ -236,67 +232,6 @@ class MapServ:
         self.exThread = Timer(0, exportThread)
         self.exThread.start()
 
-    ## Combine tiles (or part of them) in a big PIL image
-    def do_combine_subtile(self, zoom, layer, online, conf, filename, start, size=(1, 1), crop_start=(0, 0), crop_size=(None, None)):
-        stx, sty = start
-        w, h = size
-        crx, cry = crop_start
-        crw, crh = crop_size
-
-        # Test import PIL
-        global Image
-        if not Image:
-            try:
-                from PIL import Image
-            except Exception, inst:
-                return str(inst)
-
-        # Fix cropping to have at most one tile cropped
-        d = crx / TILES_WIDTH
-        stx += d
-        w -= d
-        crx -= d * TILES_WIDTH
-
-        d = cry / TILES_HEIGHT
-        sty += d
-        h -= d
-        cry -= d * TILES_HEIGHT
-
-        if crw is None:
-            crw = w * TILES_WIDTH - crx
-        else:
-            w = (crx + crw + TILES_WIDTH - 1) / TILES_WIDTH
-        if crh is None:
-            crh = h * TILES_HEIGHT - cry
-        else:
-            h = (cry + crh + TILES_HEIGHT - 1) / TILES_HEIGHT
-
-        img = Image.new("RGB", (crw, crh), (255, 255, 255))
-
-        for x in range(stx, stx + w):
-            for y in range(sty, sty + h):
-                if self.get_tile((x, y, zoom), layer, online, False, conf):
-                    pb = self.load_pixbuf((x, y, zoom), layer, False)
-                    if isinstance(pb, str):
-                        # is an image encoded in a string file
-                        tilef = StringIO.StringIO()
-                        tilef.write(pb)
-                        tilef.seek(0)
-                        print repr(tilef.read())
-                        tileimg = Image.open(tilef)
-                    else:
-                        # is a real pixbuf
-                        width, height = pb.get_width(), pb.get_height()
-                        tileimg = Image.fromstring("RGB", (width, height), pb.get_pixels())
-
-                    px = (x - stx) * TILES_WIDTH - crx
-                    py = (y - sty) * TILES_HEIGHT - cry
-
-                    img.paste(tileimg, (px, py))
-                    del pb
-        img.load()
-        img.save(filename, 'PNG')
-        return filename
 
     def load_pixbuf(self, coord, layer, force_update):
         return self.tile_repository.load_pixbuf(coord, layer, force_update)
