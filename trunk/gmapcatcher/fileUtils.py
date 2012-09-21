@@ -133,7 +133,7 @@ def check_dir(strPath, strSubPath=None):
         strPath = os.path.join(strPath, strSubPath)
     if not os.path.isdir(strPath):
         try:
-            os.mkdir(strPath)
+            os.makedirs(strPath)
         except Exception:
             print 'Error! Can not create directory:'
             print '  ' + strPath

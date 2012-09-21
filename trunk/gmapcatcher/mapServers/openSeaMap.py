@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ## @package gmapcatcher.mapServers.openSeaMap
 
 from gmapcatcher.mapConst import *
