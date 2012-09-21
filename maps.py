@@ -379,7 +379,7 @@ class MainWindow(gtk.Window):
         bbox.pack_start(cb_operations, False, False, 5)
 
         self.cmb_layer_container = gtk.HBox()
-        self.cmb_layer = ComboBoxLayer(self.conf, self.layer)
+        self.cmb_layer = ComboBoxLayer(self.conf)
         self.cmb_layer.connect('changed', self.layer_changed)
         self.cmb_layer_container.pack_start(self.cmb_layer)
 
