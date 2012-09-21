@@ -437,7 +437,7 @@ class DrawingArea(gtk.DrawingArea):
             new_length = 0
             gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
             for j in range(0, len(track) - 1):
-                new_length += mapUtils.countDistanceFromLatLon((track[j][0], track[j][1]), (track[j + 1][0], track[j + 1][1]))
+                new_length += mapUtils.countDistanceFromLatLon(track[j], track[j + 1])
                 if new_length - old_length > 1:
                     dist_str = '%.2f km' % new_length
                     old_length = new_length

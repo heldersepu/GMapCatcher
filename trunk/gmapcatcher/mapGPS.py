@@ -101,12 +101,11 @@ class GPS:
     ## Callback from the GPSUpdater
     def update(self, fix):
         self.gpsfix = fix
-        if fix.mode != MODE_NO_FIX:
-            if not self.gps_points:
-                self.gps_points.append((fix.latitude, fix.longitude))
-            # if distance between points is greater than defined in config, append to gps_points
-            elif mapUtils.countDistanceFromLatLon(self.gps_points[-1], (fix.latitude, fix.longitude)) > (self.conf.gps_track_interval / 1000):
-                self.gps_points.append((fix.latitude, fix.longitude))
+        # if distance between points is greater than defined in config or first point, append to gps_points
+        if fix.mode != MODE_NO_FIX \
+          and (mapUtils.countDistanceFromLatLon(self.gps_points[-1], (fix.latitude, fix.longitude)) > (float(self.conf.gps_track_interval) / 1000)
+          or len(self.gps_points) == 0):
+            self.gps_points.append((fix.latitude, fix.longitude))
         self.gps_callback()
 
     ## Load GPS marker image

@@ -191,8 +191,10 @@ class MainWindow(gtk.Window):
         exw.show()
 
     def import_gpx_clicked(self, w, pointer=None):
-        self.tracks.extend(mapUtils.openGPX())
-        self.draw_overlay()
+        tracks = mapUtils.openGPX()
+        if tracks:
+            self.tracks.extend(tracks)
+            self.draw_overlay()
 
     def export_ruler_clicked(self, w, pointer=None):
         if not self.Ruler:

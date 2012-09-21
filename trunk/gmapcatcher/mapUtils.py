@@ -257,6 +257,7 @@ def saveGPX(points):
 
 
 def openGPX():
+    tracks = None
     home = os.getenv('USERPROFILE') or os.getenv('HOME')
     f_name = FileChooser(home, strTitle="Select File")
     if f_name:
