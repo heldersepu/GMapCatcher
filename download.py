@@ -14,7 +14,7 @@ from gmapcatcher.mapDownloader import MapDownloader
 from gmapcatcher.xmlUtils import load_gpx_coords
 
 mConf = mapConf.MapConf()
-ctx_map = MapServ(mConf.init_path, mConf.repository_type)
+ctx_map = MapServ(mConf)
 downloader = None
 
 
@@ -82,11 +82,11 @@ if __name__ == "__main__":
         print "Download %s (%f, %f), range (%f, %f), mapsource: \"%s %s\", zoom level: %d to %d" % \
                 (args.location, args.lat, args.lng,
                  args.lat_range, args.lng_range,
-                 MAP_SERVICES[args.layer]['serviceName'], MAP_SERVICES[args.layer]['layerName'],
+                 '', '',
                  args.max_zl, args.min_zl)
     else:
         print "Download path in %s, mapsource: \"%s %s\", zoom level: %d to %d, width=%d tiles" % \
-                (args.gpx, MAP_SERVICES[args.layer]['serviceName'], MAP_SERVICES[args.layer]['layerName'], args.max_zl, args.min_zl, args.width)
+                (args.gpx, '', '', args.max_zl, args.min_zl, args.width)
 
     downloader = MapDownloader(ctx_map, args.nr_threads)
     try:

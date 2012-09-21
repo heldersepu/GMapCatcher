@@ -16,7 +16,7 @@ def layer_url_template(layer):
 
 
 ## Returns the URL to the Google Map Maker tile
-def get_url(counter, coord):
+def get_url(counter, coord, layer, conf):
     return layer_url_template('gwm') % \
         (counter, coord[0], coord[1], coord[2] + 1)
 

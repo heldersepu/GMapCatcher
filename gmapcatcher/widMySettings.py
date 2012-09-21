@@ -155,7 +155,7 @@ class MySettings():
                 if (newPath != oldPath) or (self.cmb_repos_type.get_active() != conf.repository_type):
                     conf.init_path = self.entry_custom_path.get_text()
                     conf.repository_type = self.cmb_repos_type.get_active()
-                    parent.ctx_map.initLocations(conf.init_path, conf.repository_type)
+                    parent.ctx_map.initLocations(conf)
                     parent.drawing_area.repaint()
             else:
                 conf.init_path = None

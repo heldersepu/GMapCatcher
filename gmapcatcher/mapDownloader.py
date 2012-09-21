@@ -138,10 +138,7 @@ class MapDownloader:
         if layer == LAYER_HYB:
             ret += self.query_tile(coord, LAYER_SAT, callback,
                     online, force_update, conf)
-        elif MAP_SERVICES[layer]['ID'] == LAYER_HYB:
-            ret += self.query_tile(coord, layer -
-                    HYB_SAT_LAYER_OFFSETS[MAP_SERVICES[layer]['serviceName']],
-                    callback, online, force_update, conf)
+
         #print "query_tile(",coord,layer,callback,online,force_update,")"
         world_tiles = mapUtils.tiles_on_level(coord[2])
         coord = (mapUtils.mod(coord[0], world_tiles),

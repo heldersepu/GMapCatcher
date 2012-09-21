@@ -15,7 +15,7 @@ def layer_url_template(layer):
 
 
 ## Returns the URL to the Yahoo map tile
-def get_url(counter, coord, layer):
+def get_url(counter, coord, layer, conf):
     #server = ['a', 'b', 'c']
     return layer_url_template(layer) % (
             coord[0],

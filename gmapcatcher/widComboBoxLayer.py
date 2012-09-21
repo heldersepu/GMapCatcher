@@ -4,7 +4,7 @@
 
 import gtk
 from mapConst import *
-from gobject import TYPE_STRING
+from gobject import TYPE_STRING, TYPE_INT
 
 
 ## This widget is where we the available Layers
@@ -19,18 +19,22 @@ class ComboBoxLayer(gtk.ComboBoxEntry):
         self.set_active(current_layer)
 
     def populate(self):
-        store = gtk.ListStore(TYPE_STRING)
+        store = ListStore()
         if self.conf.oneDirPerMap:
-            for kv in MAP_SERVICES:
-                w = kv["serviceName"] + " " + kv["layerName"]
-                iter = store.append()
-                store.set(iter, 0, w)
+            for mapSrv in MAP_SERVICES:
+                mapName = MAP_SERVERS[mapSrv['ID']]
+                store.add(mapName, mapSrv['ID'], mapSrv['layers'][0])
+                if (len(mapSrv['layers']) > 0):
+                    for ln in mapSrv['layers']:
+                        if ln > 0:
+                            w = mapName + " " + LAYER_NAMES[ln]
+                            store.add(w, mapSrv['ID'], ln)
         else:
-            for w in range(len(LAYER_NAMES)):
-                for kv in MAP_SERVICES:
-                    if kv['serviceName'] == self.conf.map_service and kv['ID'] == w:
-                        iter = store.append()
-                        store.set(iter, 0, LAYER_NAMES[w])
+            for mapSrv in MAP_SERVICES:
+                if MAP_SERVERS[mapSrv['ID']] == self.conf.map_service:
+                    mapName = MAP_SERVERS[mapSrv['ID']]
+                    for ln in mapSrv['layers']:
+                        store.add(LAYER_NAMES[ln], mapSrv['ID'], ln)
 
         self.set_model(store)
         self.set_text_column(0)
@@ -49,5 +53,14 @@ class ComboBoxLayer(gtk.ComboBoxEntry):
     def refresh(self):
         self.child.set_text('')
         self.set_model(None)
-        self.populate()
-        self.combo_popup()
+        self.populate()        
+
+class ListStore(gtk.ListStore):
+    def __init__(self):
+        super(ListStore, self).__init__(TYPE_STRING, TYPE_INT, TYPE_INT)
+        
+    def add(self, str, int1, int2):
+        iter = self.append()                        
+        self.set(iter, 0, str)
+        self.set(iter, 1, int1)
+        self.set(iter, 2, int2)

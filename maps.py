@@ -23,7 +23,7 @@ from gmapcatcher.DLWindow import DLWindow
 from gmapcatcher.EXWindow import EXWindow
 from gmapcatcher.mapUpdate import CheckForUpdates
 from gmapcatcher.mapServices import MapServ
-from gmapcatcher.customMsgBox import user_confirm, error_msg, error_msg_non_blocking
+from gmapcatcher.customMsgBox import error_msg, error_msg_non_blocking
 from gmapcatcher.mapDownloader import MapDownloader
 from gmapcatcher.customWidgets import *
 from gmapcatcher.xmlUtils import kml_to_markers
@@ -125,19 +125,15 @@ class MainWindow(gtk.Window):
 
     ## Handles the change in the combo box Layer(Map, Sat.. )
     def layer_changed(self, w):
-        newlayer = w.get_active()
-        if self.conf.oneDirPerMap:
-            self.conf.map_service = MAP_SERVICES[newlayer]["serviceName"]
-            if self.visual_dlconfig.get('active', False) and \
-                    not self.check_bulk_down():
-                self.visual_dlconfig['active'] = False
-            if self.gps and not self.gps_warning():
-                self.gps.stop_all()
-                self.gps = None
-            self.layer = newlayer
-        else:
-            self.layer = \
-                    NON_ONEDIR_COMBO_INDICES[self.conf.map_service][newlayer]
+        index = w.get_active()
+        cmb_model = self.cmb_layer.get_model()
+        self.conf.map_service = MAP_SERVERS[cmb_model[index][1]]
+        self.layer = cmb_model[index][2]
+        if self.visual_dlconfig.get('active', False) and not self.check_bulk_down():
+            self.visual_dlconfig['active'] = False
+        if self.gps and not self.gps_warning():
+            self.gps.stop_all()
+            self.gps = None
         self.drawing_area.repaint()
 
     ## Combo box dispatches operation and returns to default position - Operations - 1st item
@@ -979,8 +975,6 @@ class MainWindow(gtk.Window):
                 self.drawing_area.window.set_cursor(cursor)
                 self.status_bar.push(self.status_bar_id, "Ruler Mode - Click for Starting Point")
             else:
-                if user_confirm(self, 'Do you use ruler as track?'):
-                    self.tracks.append(self.ruler_coord)
                 self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
                 self.ruler_coord = list()
                 self.drawing_area.repaint()
@@ -1061,23 +1055,19 @@ class MainWindow(gtk.Window):
             elif (panePos > intPos + 2):
                 pane.set_position(intPos + 2)
 
+    def got_focus(self, *args):
+        if self.cmb_layer.child.get_text() == '':
+            self.cmb_layer.combo_popup()
+
     def __init__(self, parent=None, config_path=None):
         self.conf = MapConf(config_path)
         self.crossPixbuf = mapPixbuf.cross()
         self.dlpixbuf = mapPixbuf.downloading()
         self.marker = MyMarkers(self.conf.init_path)
-        self.ctx_map = MapServ(self.conf.init_path, self.conf.repository_type)
+        self.ctx_map = MapServ(self.conf)
         self.downloader = MapDownloader(self.ctx_map)
         if self.conf.save_at_close:
             self.layer = self.conf.save_layer
-            if not self.conf.oneDirPerMap:
-                changelayer = True
-                for kv in MAP_SERVICES:
-                    if kv['serviceName'] == self.conf.map_service and \
-                            kv['ID'] == self.layer:
-                        changelayer = False
-                if changelayer:
-                    self.layer = LAYER_MAP
         else:
             self.layer = LAYER_MAP
         self.background = []
@@ -1129,6 +1119,7 @@ class MainWindow(gtk.Window):
         vbox.pack_start(self.status_bar, False, False, 0)
         self.add(vbox)
 
+        self.connect('focus-in-event', self.got_focus)
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 450)

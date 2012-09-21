@@ -22,16 +22,15 @@ import mapServers.googleMapMaker as googleMapMaker
 import mapServers.virtualEarth as virtualEarth
 import mapServers.yandex as yandex
 import mapServers.seznam as seznam
+import mapServers.seznamHiking as seznamHiking
+import mapServers.seznamCyclo as seznamCyclo
+import mapServers.seznamHist as seznamHist
 import mapServers.stamenMaps as stamenMaps
 import mapServers.refugesInfo as refugesInfo
 import mapServers.openSeaMap as openSeaMap
 import mapServers.eniro as eniro
 
 from threading import Timer
-
-
-class MapServException(Exception):
-    pass
 
 
 ## All the interaction with the map services.
@@ -46,25 +45,25 @@ class MapServ:
     def write_locations(self):
         fileUtils.write_file('location', self.locationpath, self.locations)
 
-    def initLocations(self, configpath, tilerepostype):
-        configpath = os.path.expanduser(configpath or DEFAULT_PATH)
+    def initLocations(self, conf):
+        configpath = os.path.expanduser(conf.init_path or DEFAULT_PATH)
         self.mt_counter = 0
         self.configpath = fileUtils.check_dir(configpath)
         self.locationpath = os.path.join(self.configpath, 'locations')
         self.locations = {}
 
-        if tilerepostype is None:
-            tilerepostype = DEFAULT_REPOS_TYPE
+        if conf.repository_type is None:
+            conf.repository_type = DEFAULT_REPOS_TYPE
 
         if self.tile_repository is not None:
             self.tile_repository.finish()
             self.tile_repository = None
 
-        self.tile_repository = trFactory.get_tile_repository(self, configpath, tilerepostype)
+        self.tile_repository = trFactory.get_tile_repository(self, conf)
 
-    def __init__(self, configpath=None, tilerepostype=None):
+    def __init__(self, conf):
         self.tile_repository = None
-        self.initLocations(configpath, tilerepostype)
+        self.initLocations(conf)
 
         if (os.path.exists(self.locationpath)):
             self.read_locations()
@@ -82,7 +81,6 @@ class MapServ:
     def search_location(self, location):
         location, coord = googleMaps.search_location(location)
         location = mapUtils.html_decode(location)
-#        print "searched", location
         if (location[:6] != "error="):
             self.locations[location] = coord
             self.write_locations()
@@ -93,78 +91,40 @@ class MapServ:
     def get_url_from_coord(self, coord, layer, conf):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
-        try:
-            if not conf.oneDirPerMap:
-                if conf.map_service == MAP_SERVERS[VIRTUAL_EARTH] and (layer != LAYER_TER):
-                    return virtualEarth.get_url(self.mt_counter, coord, layer)
-                elif conf.map_service == MAP_SERVERS[OSM] and (layer == LAYER_MAP):
-                    return openStreetMaps.get_url(self.mt_counter, coord)
-                elif conf.map_service == MAP_SERVERS[STAMEN]:
-                    return stamenMaps.get_url(self.mt_counter, layer, coord)
-                elif conf.map_service == MAP_SERVERS[REFUGES]:
-                    return refugesInfo.get_url(self.mt_counter, layer, coord)
-                elif conf.map_service == MAP_SERVERS[CLOUDMADE] and (layer == LAYER_MAP):
-                    return cloudMade.get_url(self.mt_counter, coord, conf)
-                elif conf.map_service == MAP_SERVERS[YAHOO] and (layer != LAYER_TER):
-                    return yahoo.get_url(self.mt_counter, coord, layer)
-                elif conf.map_service == MAP_SERVERS[INFO_FREEWAY] and (layer == LAYER_MAP):
-                    return informationFreeway.get_url(self.mt_counter, coord)
-                elif conf.map_service == MAP_SERVERS[OPENCYCLEMAP] and (layer == LAYER_MAP):
-                    return openCycleMap.get_url(self.mt_counter, coord)
-                elif conf.map_service == MAP_SERVERS[GOOGLE_MAKER] and (layer == LAYER_MAP):
-                    return googleMapMaker.get_url(self.mt_counter, coord)
-                elif conf.map_service == MAP_SERVERS[YANDEX] and (layer == LAYER_MAP):
-                    return yandex.get_url(self.mt_counter, coord)
-                elif conf.map_service == MAP_SERVERS[SEZNAM]:
-                    return seznam.get_url_base(self.mt_counter, coord, layer)
-                elif conf.map_service == MAP_SERVERS[SEZNAM_HIKING]:
-                    return seznam.get_url_hiking(self.mt_counter, coord, layer)
-                elif conf.map_service == MAP_SERVERS[SEZNAM_CYCLO]:
-                    return seznam.get_url_cyclo(self.mt_counter, coord, layer)
-                elif conf.map_service == MAP_SERVERS[SEZNAM_HIST]:
-                    return seznam.get_url_hist(self.mt_counter, coord, layer)
-                elif conf.map_service == MAP_SERVERS[OPENSEAMAP]:
-                    return openSeaMap.get_url(self.mt_counter, coord, layer, conf)
-                elif conf.map_service == MAP_SERVERS[ENIRO]:
-                    return eniro.get_url(self.mt_counter, coord, layer, conf)
-                else:
-                    return googleMaps.get_url(self.mt_counter, coord, layer, conf)
-
-            if (MAP_SERVICES[layer]["TextID"] in ["veter", "vemap", "vesat"]):
-                return virtualEarth.get_url(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
-            elif (MAP_SERVICES[layer]["TextID"] == "osmmap"):
-                return openStreetMaps.get_url(self.mt_counter, coord)
-            elif (MAP_SERVICES[layer]["TextID"] in ("stamen_toner", "stamen_water", "stamen_terrain")):
-                return stamenMaps.get_url(self.mt_counter, MAP_SERVICES[layer]["layerDir"], coord)
-            elif (MAP_SERVICES[layer]["TextID"] in ("refhyk", "refter", "refonlyhyk")):
-                return refugesInfo.get_url(self.mt_counter, MAP_SERVICES[layer]["layerDir"], coord)
-            elif (MAP_SERVICES[layer]["TextID"] == "cmmap"):
-                return cloudMade.get_url(self.mt_counter, coord, conf)
-            elif (MAP_SERVICES[layer]["TextID"] in ["yter", "ymap", "yhyb"]):
-                return yahoo.get_url(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
-            elif (MAP_SERVICES[layer]["TextID"] == "ifwmap"):
-                return informationFreeway.get_url(self.mt_counter, coord)
-            elif (MAP_SERVICES[layer]["TextID"] == "ocmmap"):
-                return openCycleMap.get_url(self.mt_counter, coord)
-            elif (MAP_SERVICES[layer]["TextID"] == "gmmmap"):
-                return googleMapMaker.get_url(self.mt_counter, coord)
-            elif (MAP_SERVICES[layer]["TextID"] in ["seznam_base", "seznam_satellite", "seznam_terrain", "seznam_hybrid"]):
-                return seznam.get_url_base(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
-            elif (MAP_SERVICES[layer]["TextID"] in ["seznam_hiking", "seznam_terrain", "seznam_hiking_routes"]):
-                return seznam.get_url_hiking(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
-            elif (MAP_SERVICES[layer]["TextID"] in ["seznam_cyclo", "seznam_terrain", "seznam_cyclo_routes"]):
-                return seznam.get_url_cyclo(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
-            elif (MAP_SERVICES[layer]["TextID"] in ["seznam_hist", "seznam_terrain", "seznam_hybrid"]):
-                return seznam.get_url_hist(self.mt_counter, coord, MAP_SERVICES[layer]["ID"])
-            elif (MAP_SERVICES[layer]["TextID"] == "openseamap"):
-                return openSeaMap.get_url(self.mt_counter, coord, layer, conf)
-            elif (MAP_SERVICES[layer]["TextID"] == "eniro"):
-                return eniro.get_url(self.mt_counter, coord, layer, conf)
-            else:
-                return googleMaps.get_url(self.mt_counter, coord, layer, conf)
-
-        except KeyError:
-            raise MapServException("Invalid layer ID: " + str(layer))
+        if conf.map_service == MAP_SERVERS[VIRTUAL_EARTH]:
+            return virtualEarth.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[OSM]:
+            return openStreetMaps.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[STAMEN]:
+            return stamenMaps.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[REFUGES]:
+            return refugesInfo.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[CLOUDMADE]:
+            return cloudMade.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[YAHOO]:
+            return yahoo.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[INFO_FREEWAY]:
+            return informationFreeway.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[OPENCYCLEMAP]:
+            return openCycleMap.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[GOOGLE_MAKER]:
+            return googleMapMaker.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[YANDEX]:
+            return yandex.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[SEZNAM]:
+            return seznam.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[SEZNAM_HIKING]:
+            return seznamHiking.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[SEZNAM_CYCLO]:
+            return seznamCyclo.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[SEZNAM_HIST]:
+            return seznamHist.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[OPENSEAMAP]:
+            return openSeaMap.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[ENIRO]:
+            return eniro.get_url(self.mt_counter, coord, layer, conf)
+        else:
+            return googleMaps.get_url(self.mt_counter, coord, layer, conf)
 
     def get_tile_from_coord(self, coord, layer, conf):
         href = self.get_url_from_coord(coord, layer, conf)

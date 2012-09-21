@@ -108,25 +108,8 @@ def layer_url_template(layername):
     return 'http://m%i.mapserver.mapy.cz/' + layername + '/%i_%x_%x'
 
 
-def get_url_base(counter, coord, layer):
+def get_url(counter, coord, layer, conf):
     layer_names = ["base-n", "ophoto", "relief-l", "hybrid"]
-    return get_url_internal(counter, coord, layer_names[layer])
-
-get_url = get_url_base  # provide some default method get_url
-
-
-def get_url_hiking(counter, coord, layer):
-    layer_names = ["turist", "turist", "relief-l", "ttur"]
-    return get_url_internal(counter, coord, layer_names[layer])
-
-
-def get_url_cyclo(counter, coord, layer):
-    layer_names = ["turist", "turist", "relief-l", "tcyklo"]
-    return get_url_internal(counter, coord, layer_names[layer])
-
-
-def get_url_hist(counter, coord, layer):
-    layer_names = ["army2", "army2", "relief-l", "hybrid"]
     return get_url_internal(counter, coord, layer_names[layer])
 
 

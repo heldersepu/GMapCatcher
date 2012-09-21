@@ -23,7 +23,7 @@ def layer_url_template():
 
 
 ## Returns the URL to the Stamen tile
-def get_url(counter, layer_name, coord):
+def get_url(counter, coord, layer, conf):
     # server = ['', 'a.', 'b.', 'c.', 'd.']
-    return layer_url_template() % (layer_name,
+    return layer_url_template() % (layer,
                 MAP_MAX_ZOOM_LEVEL - coord[2], coord[0], coord[1])

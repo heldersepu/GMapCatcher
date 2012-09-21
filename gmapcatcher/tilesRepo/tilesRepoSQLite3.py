@@ -253,15 +253,13 @@ class SQLite3Funcs():
 
 class TilesRepositorySQLite3(TilesRepository):
 
-    def __init__(self, MapServ_inst, configpath):
-        TilesRepository.__init__(self, MapServ_inst, configpath)
+    def __init__(self, MapServ_inst, conf):
+        TilesRepository.__init__(self, MapServ_inst, conf)
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
-        self.configpath = configpath
+        self.configpath = conf.init_path
         self.lock = Lock()
-
         self.missingPixbuf = mapPixbuf.missing()
-
         self.sqlite3func = SQLite3Funcs(self.configpath, SQLITE3_REPOSITORY_FILE)
 
     def finish(self):
@@ -411,7 +409,7 @@ class TilesRepositorySQLite3(TilesRepository):
     # private
     def coord_to_path(self, tile_coord, layer):
         path = os.path.join(self.configpath,
-                            MAP_SERVICES[layer]["layerDir"],
+                            LAYER_DIRS[layer],
                             str('%d' % tile_coord[2]),
                             str(tile_coord[0] / 1024),
                             str(tile_coord[0] % 1024),

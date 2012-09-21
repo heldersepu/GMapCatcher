@@ -81,7 +81,7 @@ class DLWindow(gtk.Window):
 
             gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
             self.b_download = gtk.Button(stock=gtk.STOCK_HARDDISK)
-            self.b_download.connect('clicked', self.run, conf.init_path, conf.repository_type, strFolder)
+            self.b_download.connect('clicked', self.start_download, strFolder)
             hbbox.pack_start(self.b_download)
 
             hbox = gtk.HBox()
@@ -139,9 +139,9 @@ class DLWindow(gtk.Window):
         self.show_all()
 
     ## Start the download
-    def run(self, w, init_path, repostype, strFolder):
+    def start_download(self, w, strFolder):
         # Creating our own gmap
-        self.gmap = mapServices.MapServ(init_path, repostype)
+        self.gmap = mapServices.MapServ(self.conf)
         self.complete = []
         self.downloader = MapDownloader(self.gmap)
         if self.conf.map_service in NO_BULK_DOWN:

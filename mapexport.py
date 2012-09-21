@@ -11,7 +11,7 @@ from gmapcatcher.mapServices import MapServ
 from gmapcatcher.xmlUtils import load_gpx_coords
 
 mConf = mapConf.MapConf()
-ctx_map = MapServ(mConf.init_path, mConf.repository_type)
+ctx_map = MapServ(mConf)
 
 
 from reportlab.pdfgen import canvas
