@@ -184,3 +184,10 @@ class MapConf():
     ## Write the configuration to the default file
     def save(self):
         self.write()
+
+    ## Write the configuration to the default file
+    def get_layer_dir(self, layer):
+        if self.oneDirPerMap:
+            return os.path.join(self.map_service, LAYER_DIRS[layer])
+        else
+            return LAYER_DIRS[layer]

@@ -307,8 +307,9 @@ class TilesRepositoryRMaps(TilesRepository):
 
     def __init__(self, MapServ_inst, conf):
         TilesRepository.__init__(self, MapServ_inst, conf)
-        self.tile_cache = lrucache.LRUCache(1000)
+        self.tile_cache = lrucache.LRUCache(1000)        
         self.mapServ_inst = MapServ_inst
+        self.conf = conf
         self.configpath = conf.init_path
         self.lock = Lock()
         self.missingPixbuf = mapPixbuf.missing()
@@ -459,7 +460,7 @@ class TilesRepositoryRMaps(TilesRepository):
     # private
     def coord_to_path(self, tile_coord, layer):
         path = os.path.join(self.configpath,
-                            LAYER_DIRS[layer],
+                            self.conf.get_layer_dir(layer),
                             str('%d' % tile_coord[2]),
                             str(tile_coord[0] / 1024),
                             str(tile_coord[0] % 1024),

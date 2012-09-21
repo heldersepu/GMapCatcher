@@ -22,6 +22,7 @@ class TilesRepositoryFS(TilesRepository):
 
     def __init__(self, MapServ_inst, conf):
         TilesRepository.__init__(self, MapServ_inst, conf)
+        self.conf = conf
         self.configpath = conf.init_path
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
@@ -121,7 +122,7 @@ class TilesRepositoryFS(TilesRepository):
     def coord_to_path(self, tile_coord, layer):
         return os.path.join(
                             self.configpath,
-                            LAYER_DIRS[layer],
+                            self.conf.get_layer_dir(layer),
                             str(tile_coord[2]),
                             str(tile_coord[0] / 1024),
                             str(tile_coord[0] % 1024),
@@ -138,7 +139,7 @@ class TilesRepositoryFS(TilesRepository):
     # private
     def coord_to_path_checkdirs(self, tile_coord, layer):
         self.lock.acquire()
-        path = os.path.join(self.configpath, LAYER_DIRS[layer],)
+        path = os.path.join(self.configpath, self.conf.get_layer_dir(layer),)
         path = fileUtils.check_dir(path)
         path = fileUtils.check_dir(path, '%d' % tile_coord[2])
         path = fileUtils.check_dir(path, "%d" % (tile_coord[0] / 1024))
