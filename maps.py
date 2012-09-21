@@ -678,18 +678,24 @@ class MainWindow(gtk.Window):
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
-        # Single click event
+        ## Single click event
+        # On button press, set the coordinates
         if event.type == gtk.gdk.BUTTON_PRESS:
+            self.dragXY = (event.x, event.y)
+        elif event.type == gtk.gdk.BUTTON_RELEASE:
             # Right-Click event shows the popUp menu
             if event.button == 3:
                 self.myPointer = (event.x, event.y)
                 w.popup(None, None, None, event.button, event.time)
-            # Ctrl + Click adds a marker
-            elif (event.state & gtk.gdk.CONTROL_MASK):
-                self.add_marker((event.x, event.y))
-            # Left-Click in Ruler Mode
-            elif event.button == 1 and self.Ruler:
-                self.add_ruler_segment(event)
+            # If window hasn't been dragged, it's possible to add marker or ruler
+            # if the window has been dragged, just ignore it...
+            if self.dragXY == (event.x, event.y):
+                # Ctrl + Click adds a marker
+                if (event.state & gtk.gdk.CONTROL_MASK):
+                    self.add_marker((event.x, event.y))
+                # Left-Click in Ruler Mode
+                elif event.button == 1 and self.Ruler:
+                    self.add_ruler_segment(event)
 
         # Double-Click event Zoom In or Out
         elif event.type == gtk.gdk._2BUTTON_PRESS:
