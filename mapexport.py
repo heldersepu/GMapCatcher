@@ -18,6 +18,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib import pagesizes
 from reportlab.lib.units import inch
 
+Image = None
+
 # Constants
 TILE = 256
 
@@ -140,7 +142,7 @@ def mapPDF(pdffile, zoom, layer=2, coords=None, coord_center=None, coord_range=N
             flist.append(imfn)
 
             crx, cry = st[0] + int(round(px * dpi * pgsz[0])), st[1] + int(round(py * dpi * pgsz[1]))
-            ctx_map.do_combine_subtile(dbzoom, layer, True, mConf, imfn, (0, 0), crop_start=(crx, cry), crop_size=(pgw, pgh))
+            do_combine_subtile(dbzoom, layer, True, mConf, imfn, (0, 0), crop_start=(crx, cry), crop_size=(pgw, pgh))
 
             pdf.drawImage(imfn, MARGIN[0] * inch, MARGIN[1] * inch, width=(pgsz[0] + SOLAPE[0]) * 72.0, height=(pgsz[1] + SOLAPE[1]) * 72.0, )
             pdf.setFont("Helvetica", 7)
@@ -154,6 +156,67 @@ def mapPDF(pdffile, zoom, layer=2, coords=None, coord_center=None, coord_range=N
         os.unlink(f)
     print pages
 
+    ## Combine tiles (or part of them) in a big PIL image
+    def do_combine_subtile(zoom, layer, online, conf, filename, start, size=(1, 1), crop_start=(0, 0), crop_size=(None, None)):
+        stx, sty = start
+        w, h = size
+        crx, cry = crop_start
+        crw, crh = crop_size
+
+        # Test import PIL
+        global Image
+        if not Image:
+            try:
+                from PIL import Image
+            except Exception, inst:
+                return str(inst)
+
+        # Fix cropping to have at most one tile cropped
+        d = crx / TILES_WIDTH
+        stx += d
+        w -= d
+        crx -= d * TILES_WIDTH
+
+        d = cry / TILES_HEIGHT
+        sty += d
+        h -= d
+        cry -= d * TILES_HEIGHT
+
+        if crw is None:
+            crw = w * TILES_WIDTH - crx
+        else:
+            w = (crx + crw + TILES_WIDTH - 1) / TILES_WIDTH
+        if crh is None:
+            crh = h * TILES_HEIGHT - cry
+        else:
+            h = (cry + crh + TILES_HEIGHT - 1) / TILES_HEIGHT
+
+        img = Image.new("RGB", (crw, crh), (255, 255, 255))
+
+        for x in range(stx, stx + w):
+            for y in range(sty, sty + h):
+                if ctx_map.get_tile((x, y, zoom), layer, online, False, conf):
+                    pb = ctx_map.load_pixbuf((x, y, zoom), layer, False)
+                    if isinstance(pb, str):
+                        # is an image encoded in a string file
+                        tilef = StringIO.StringIO()
+                        tilef.write(pb)
+                        tilef.seek(0)
+                        print repr(tilef.read())
+                        tileimg = Image.open(tilef)
+                    else:
+                        # is a real pixbuf
+                        width, height = pb.get_width(), pb.get_height()
+                        tileimg = Image.fromstring("RGB", (width, height), pb.get_pixels())
+
+                    px = (x - stx) * TILES_WIDTH - crx
+                    py = (y - sty) * TILES_HEIGHT - cry
+
+                    img.paste(tileimg, (px, py))
+                    del pb
+        img.load()
+        img.save(filename, 'PNG')
+        return filename
 
 def coordRange(coords):
     xr, yr = None, None
