@@ -6,6 +6,19 @@ pygtk.require('2.0')
 import gtk
 
 
+## Message used to as user confirmation
+def user_confirm(parent, strMessage, buttons=gtk.BUTTONS_YES_NO):
+    dialog = gtk.MessageDialog(parent,
+            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+            gtk.MESSAGE_QUESTION, buttons, strMessage)
+    resp = dialog.run()
+    dialog.destroy()
+    if resp == -8:
+        return True
+    else:
+        return False
+
+
 ## Message used to display errors
 def error_msg(parent, strMessage, buttons=gtk.BUTTONS_OK):
     dialog = gtk.MessageDialog(parent,
@@ -18,11 +31,11 @@ def error_msg(parent, strMessage, buttons=gtk.BUTTONS_OK):
 
 def error_msg_non_blocking(strTitle, strMessage):
     dialog = gtk.MessageDialog(
-        parent         = None,
-        flags          = gtk.DIALOG_DESTROY_WITH_PARENT,
-        type           = gtk.MESSAGE_ERROR,
-        buttons        = gtk.BUTTONS_OK,
-        message_format = strMessage)
+        parent=None,
+        flags=gtk.DIALOG_DESTROY_WITH_PARENT,
+        type=gtk.MESSAGE_ERROR,
+        buttons=gtk.BUTTONS_OK,
+        message_format=strMessage)
     dialog.set_title(strTitle)
     return dialog
 

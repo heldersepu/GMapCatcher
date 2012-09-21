@@ -180,9 +180,10 @@ class DrawingArea(gtk.DrawingArea):
             x = int(screen_coord1[0])
             y = int(screen_coord1[1])
             self.window.draw_line(gc, int(screen_coord[0]), int(screen_coord[1]), x, y)
-            pangolayout = self.create_pango_layout("")
-            pangolayout.set_text(dist_str)
-            self.wr_pltxt(gc, x, y, pangolayout)
+            if dist_str:
+                pangolayout = self.create_pango_layout("")
+                pangolayout.set_text(dist_str)
+                self.wr_pltxt(gc, x, y, pangolayout)
 
     ## Draws a circle as starting point for ruler
     def draw_stpt(self, mcoord, zl):
@@ -411,12 +412,12 @@ class DrawingArea(gtk.DrawingArea):
 
     def draw_ruler_lines(self, r, zl, gps_track_width):
         gc = self.style.black_gc
-        gc.line_width = 2
-        colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00"]
+        gc.line_width = gps_track_width
+        colors = ["#FF0000", "#00FF00", "#4444FF", "#FFFF00"]
         for i in range(0, len(r) - 1):
             gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
-            dist_str = '%.3f km' % mapUtils.countDistanceFromLatLon((r[i][0], r[i][1]), (r[i + 1][0], r[i + 1][1]))
-            self.draw_line(gc, (r[i][0], r[i][1]), (r[i + 1][0], r[i + 1][1]), dist_str, zl)
+            dist_str = '%.3f km' % mapUtils.countDistanceFromLatLon(r[i], r[i + 1])
+            self.draw_line(gc, r[i], r[i + 1], dist_str, zl)
 
     def draw_gps_line(self, points, zl, gps_track_width):
         gc = self.style.black_gc
@@ -424,12 +425,12 @@ class DrawingArea(gtk.DrawingArea):
         color = '#FF0000'
         for i in range(0, len(points) - 1):
             gc.set_rgb_fg_color(gtk.gdk.color_parse(color))
-            self.draw_line(gc, points[i][0], points[i][1], points[i + 1][0], points[i + 1][1], '', zl)
+            self.draw_line(gc, points[i], points[i + 1], '', zl)
 
     def draw_tracks(self, tracks, zl, gps_track_width):
         gc = self.style.black_gc
-        gc.line_width = 2
-        colors = ["#00FF00", "#0000FF", "#FF0000", "#FFFF00", "#FF00FF"]
+        gc.line_width = gps_track_width
+        colors = ["#00FF00", "#4444FF", "#FF0000", "#FFFF00", "#FF00FF"]
         i = 0
         for track in tracks:
             old_length = 0
