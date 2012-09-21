@@ -189,5 +189,5 @@ class MapConf():
     def get_layer_dir(self, layer):
         if self.oneDirPerMap:
             return os.path.join(self.map_service, LAYER_DIRS[layer])
-        else
+        else:
             return LAYER_DIRS[layer]
