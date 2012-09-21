@@ -11,12 +11,7 @@ import mapConst
 import mapPixbuf
 from threading import Event, Thread
 import time
-from mapConst import MODE_NO_FIX
 import mapUtils
-
-TYPE_GPSD = 0
-TYPE_SERIAL = 1
-
 
 class GPS:
     def __init__(self, gps_callback, conf):
@@ -53,7 +48,7 @@ class GPS:
 
     def startGPS(self):
         global available
-        if self.type == TYPE_GPSD:
+        if self.type == mapConst.TYPE_GPSD:
             try:
                 # Open binding to GPS daemon
                 self.gps_session = gps.gps()
@@ -65,7 +60,7 @@ class GPS:
             except:
                 # No GPS connected
                 available = False
-        elif self.type == TYPE_SERIAL:
+        elif self.type == mapConst.TYPE_SERIAL:
             print 'serial started'
             try:
                 self.gps_updater = GPSUpdater(self.type, self.update_rate, self.update, serial_port=self.serial_port, baudrate=self.baudrate)
@@ -74,6 +69,8 @@ class GPS:
                     self.set_mode(self.conf.gps_mode)
             except:
                 available = False
+        else: 
+            available = False
 
     def stop_all(self):
         try:
@@ -102,7 +99,7 @@ class GPS:
     def update(self, fix):
         self.gpsfix = fix
         # if distance between points is greater than defined in config or first point, append to gps_points
-        if fix.mode != MODE_NO_FIX and \
+        if fix.mode != mapConst.MODE_NO_FIX and \
             (len(self.gps_points) == 0 or
             mapUtils.countDistanceFromLatLon(self.gps_points[-1], (fix.latitude, fix.longitude)) > (float(self.conf.gps_track_interval) / 1000)):
                 self.gps_points.append((fix.latitude, fix.longitude))
@@ -133,7 +130,7 @@ class GPSUpdater(Thread):
 
     def run(self):
         global available
-        if self.gps_type == TYPE_GPSD and self.gps_session:
+        if self.gps_type == mapConst.TYPE_GPSD and self.gps_session:
             try:
                 while not self.finished.is_set():
                     self.gps_session.next()
@@ -143,7 +140,7 @@ class GPSUpdater(Thread):
             except StopIteration:
                 available = False
                 print "GPSD has terminated"
-        elif self.gps_type == TYPE_SERIAL and self.serial_port and self.baudrate:
+        elif self.gps_type == mapConst.TYPE_SERIAL and self.serial_port and self.baudrate:
             sergps = serialGPS.SerialGPS(self.serial_port, self.baudrate)
             sergps.start()
             while not self.finished.is_set():
@@ -151,6 +148,8 @@ class GPSUpdater(Thread):
                 available = sergps.available
                 self.function(sergps.fix)
             sergps.stop()
+        else:
+            available = False
 
     def cancel(self):
         self.finished.set()
