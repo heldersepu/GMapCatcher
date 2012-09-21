@@ -19,9 +19,9 @@ class NotImplementedException(Exception):
 
 class TilesRepository:
 
-    def __init__(self, MapServ_inst, configpath):
+    def __init__(self, MapServ_inst, conf):
         self.finished = False
-        self.configpath = configpath
+        self.configpath = conf.init_path
 
     def finish(self):
         self.finished = True

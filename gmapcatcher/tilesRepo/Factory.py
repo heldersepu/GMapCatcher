@@ -22,7 +22,7 @@ def get_tile_repository(mapservice, conf):
     return repos
 
 def append_repository_to_list(repos, conf):
-    global repositories  
+    global repositories
     repos_entry = {"repos": repos, "configpath": conf.init_path, "type": conf.repository_type}
     repositories.append(repos_entry)
     return True
