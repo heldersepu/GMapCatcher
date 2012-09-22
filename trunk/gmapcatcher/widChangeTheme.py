@@ -86,16 +86,18 @@ class ChangeTheme():
         return hbox
 
     ## ComboBox to change the map service
-    def service_combo(self, map_service, oneDirPerMap):
+    def service_combo(self, conf):
         vbox = gtk.VBox(False, 5)
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(lbl("Select your favorite map service: "))
         self.cmb_service = gtk.combo_box_new_text()
         intActive = 0
+        bad_map_servers = conf.hide_map_servers.split(',')
         for intPos in range(1, len(MAP_SERVERS)):
-            self.cmb_service.append_text(MAP_SERVERS[intPos])
-            if MAP_SERVERS[intPos] == map_service:
-                intActive = intPos - 1
+            if not str(intPos) in bad_map_servers:
+                self.cmb_service.append_text(MAP_SERVERS[intPos])
+                if MAP_SERVERS[intPos] == conf.map_service:
+                    intActive = intPos - 1
         self.cmb_service.set_active(intActive)
         hbox.pack_start(self.cmb_service)
         vbox.pack_start(hbox)
@@ -103,7 +105,7 @@ class ChangeTheme():
         # Check box for option to create a dir per Map service
         hbox = gtk.HBox()
         self.cb_oneDirPerMap = gtk.CheckButton("Use a different folder per Map Service")
-        self.cb_oneDirPerMap.set_active(oneDirPerMap)
+        self.cb_oneDirPerMap.set_active(conf.oneDirPerMap)
         hbox.pack_start(self.cb_oneDirPerMap)
         vbox.pack_start(hbox)
         return myFrame(" Map service ", vbox)
@@ -118,7 +120,7 @@ class ChangeTheme():
         def inner_box():
             vbox = gtk.VBox(False, 10)
             vbox.pack_start(self.scale_cross_element(conf.scale_visible, conf.show_cross))
-            vbox.pack_start(self.service_combo(conf.map_service, conf.oneDirPerMap))
+            vbox.pack_start(self.service_combo(conf))
             hbox = gtk.HBox(False, 10)
             hbox.set_border_width(20)
             hbox.pack_start(vbox)
