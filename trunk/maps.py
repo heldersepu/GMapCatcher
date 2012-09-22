@@ -667,12 +667,36 @@ class MainWindow(gtk.Window):
 
             self.draw_overlay()
             self.total_dist = self.total_dist + z
-            if (z > 10):
+            if z > 10:
                 self.status_bar.push(self.status_bar_id, "Segment Distance = %.4f km, Total distance = %.4f km" % (z, (self.total_dist)))
             else:
-                self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), (self.total_dist)))
+                self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % (z * 1000, (self.total_dist)))
         else:
             self.status_bar.push(self.status_bar_id, "Click to second point to show ruler and distances")
+
+    def remove_last_ruler_segment(self):
+        l = len(self.ruler_coord)
+        if l > 0:
+            z = mapUtils.countDistanceFromLatLon(
+                    (self.ruler_coord[l - 2][0], self.ruler_coord[l - 2][1]),
+                    (self.ruler_coord[l - 1][0], self.ruler_coord[l - 1][1])
+                )
+            self.total_dist = self.total_dist - z
+            self.ruler_coord.pop()
+            self.drawing_area.repaint()
+            new_l = len(self.ruler_coord)
+            if new_l > 1:
+                self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), (self.total_dist)))
+            elif new_l == 1:
+                self.status_bar.push(self.status_bar_id, "Click to second point to show ruler and distances")
+            else:
+                self.Ruler = not self.Ruler
+                self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
+                self.drawing_area.repaint()
+        else:
+            self.Ruler = not self.Ruler
+            self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
+            self.drawing_area.repaint()
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
@@ -983,6 +1007,9 @@ class MainWindow(gtk.Window):
         elif event.keyval == 65477:
             self.showMarkers = not self.showMarkers
             self.drawing_area.repaint()
+        # if Ruler is active, delete (65535) removes last element from ruler
+        elif event.keyval == 65535 and self.Ruler:
+            self.remove_last_ruler_segment()
 
         # All Navigation Keys when in FullScreen
         elif self.get_border_width() == 0:
