@@ -23,7 +23,7 @@ from gmapcatcher.DLWindow import DLWindow
 from gmapcatcher.EXWindow import EXWindow
 from gmapcatcher.mapUpdate import CheckForUpdates
 from gmapcatcher.mapServices import MapServ
-from gmapcatcher.customMsgBox import error_msg, error_msg_non_blocking
+from gmapcatcher.customMsgBox import user_confirm, error_msg, error_msg_non_blocking
 from gmapcatcher.mapDownloader import MapDownloader
 from gmapcatcher.customWidgets import *
 from gmapcatcher.xmlUtils import kml_to_markers
@@ -999,6 +999,8 @@ class MainWindow(gtk.Window):
                 self.drawing_area.window.set_cursor(cursor)
                 self.status_bar.push(self.status_bar_id, "Ruler Mode - Click for Starting Point")
             else:
+                if user_confirm(self, 'Do you want to use ruler as track?'):
+                    self.tracks.append(self.ruler_coord)
                 self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
                 self.ruler_coord = list()
                 self.drawing_area.repaint()
