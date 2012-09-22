@@ -354,18 +354,14 @@ class MainWindow(gtk.Window):
         hbox.pack_start(self.cb_forceupdate)
 
         bbox = gtk.HBox(False, 0)
-        if mapGPS.available and self.gps:
-            cmb_gps = gtk.combo_box_new_text()
-            for w in GPS_NAMES:
-                cmb_gps.append_text(w)
-            cmb_gps.set_active(self.conf.gps_mode)
-            cmb_gps.connect('changed', self.gps_changed)
-            bbox.pack_start(cmb_gps, False, False, 0)
-
-        #gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
-        #button = gtk.Button(stock=gtk.STOCK_HARDDISK)
-        #button.connect('clicked', self.download_clicked)
-        #bbox.pack_start(button, False, False, 5)
+        cmb_gps = gtk.combo_box_new_text()
+        for w in GPS_NAMES:
+            cmb_gps.append_text(w)
+        cmb_gps.set_active(self.conf.gps_mode)
+        cmb_gps.connect('changed', self.gps_changed)
+        bbox.pack_start(cmb_gps, False, False, 0)
+        self.cmb_gps = cmb_gps
+        self.update_cmb_gps()
 
         cb_operations = gtk.combo_box_new_text()
         cb_operations.append_text("Operations")
@@ -386,6 +382,13 @@ class MainWindow(gtk.Window):
         bbox.pack_start(self.cmb_layer_container, False, False, 0)
         hbox.add(bbox)
         return hbox
+
+    #Show or hide the gps combo depending on type
+    def update_cmb_gps(self):
+        if (self.conf.gps_type > 0):
+            self.cmb_gps.show()
+        else:
+            self.cmb_gps.hide()
 
     def __create_top_paned(self):
         vbox = gtk.VBox(False, 5)
@@ -1018,10 +1021,13 @@ class MainWindow(gtk.Window):
             self.navigation(event.keyval, self.get_zoom())
 
     ## All the refresh operations
-    def refresh(self):
+    def refresh(self, *args):
+        if self.cmb_layer.child.get_text() == '':
+            self.cmb_layer.combo_popup()
         self.enable_gps()
         self.update_export()
         self.marker.refresh()
+        self.update_cmb_gps()
         self.drawing_area.repaint()
         if self.conf.status_location == STATUS_NONE:
             self.status_bar.hide()
@@ -1084,10 +1090,6 @@ class MainWindow(gtk.Window):
             elif (panePos > intPos + 2):
                 pane.set_position(intPos + 2)
 
-    def got_focus(self, *args):
-        if self.cmb_layer.child.get_text() == '':
-            self.cmb_layer.combo_popup()
-
     def __init__(self, parent=None, config_path=None):
         self.conf = MapConf(config_path)
         self.crossPixbuf = mapPixbuf.cross()
@@ -1148,7 +1150,7 @@ class MainWindow(gtk.Window):
         vbox.pack_start(self.status_bar, False, False, 0)
         self.add(vbox)
 
-        self.connect('focus-in-event', self.got_focus)
+        self.connect('focus-in-event', self.refresh)
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 450)
