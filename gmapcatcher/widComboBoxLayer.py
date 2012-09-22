@@ -20,33 +20,28 @@ class ComboBoxLayer(gtk.ComboBoxEntry):
 
     def populate(self):
         store = ListStore()
-        currentMap = None
-        i = 0
-        if self.conf.oneDirPerMap:
-            for mapSrv in MAP_SERVICES:
-                mapName = MAP_SERVERS[mapSrv['ID']]
-                store.add(mapName, mapSrv['ID'], mapSrv['layers'][0])
+        currentMap = 0
+        bad_map_servers = self.conf.hide_map_servers.split(',')
+        for mapSrv in MAP_SERVICES:
+            mapName = MAP_SERVERS[mapSrv['ID']]
+            if self.conf.oneDirPerMap:
+                if not str(mapSrv['ID']) in bad_map_servers:
+                    store.add(mapName, mapSrv['ID'], mapSrv['layers'][0])
+                    if mapName == self.conf.map_service:
+                        currentMap = len(store) - 1
+                    if (len(mapSrv['layers']) > 0):
+                        for ln in mapSrv['layers']:
+                            if ln > 0:
+                                w = mapName + " " + LAYER_NAMES[ln]
+                                store.add(w, mapSrv['ID'], ln)
+                                if mapName == self.conf.map_service and ln == self.conf.save_layer:
+                                    currentMap = len(store) - 1
+            else:
                 if mapName == self.conf.map_service:
-                    currentMap = i
-                i += 1
-                if (len(mapSrv['layers']) > 0):
-                    for ln in mapSrv['layers']:
-                        if ln > 0:
-                            w = mapName + " " + LAYER_NAMES[ln]
-                            store.add(w, mapSrv['ID'], ln)
-                            if mapName == self.conf.map_service and ln == self.conf.save_layer:
-                                currentMap = i
-                            i += 1
-        else:
-            for mapSrv in MAP_SERVICES:
-                if MAP_SERVERS[mapSrv['ID']] == self.conf.map_service:
-                    mapName = MAP_SERVERS[mapSrv['ID']]
                     for ln in mapSrv['layers']:
                         store.add(LAYER_NAMES[ln], mapSrv['ID'], ln)
                         if ln == self.conf.save_layer:
-                            currentMap = i
-                        i += 1
-
+                            currentMap = len(store) - 1
         self.set_model(store)
         self.set_text_column(0)
         return currentMap
