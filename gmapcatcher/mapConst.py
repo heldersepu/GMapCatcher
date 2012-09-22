@@ -46,13 +46,13 @@ LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles", "hyb_tiles"]
 FIRST_LAYER_ID = 0
 MAP_SERVICES = [
     {"ID": GOOGLE,        "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER,LAYER_HYB]},
-    {"ID": YAHOO,         "layers": [LAYER_MAP,LAYER_SAT,LAYER_HYB]},
-    {"ID": VIRTUAL_EARTH, "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER]},
     {"ID": OSM,           "layers": [LAYER_MAP]},
     {"ID": CLOUDMADE,     "layers": [LAYER_MAP]},
+    {"ID": YAHOO,         "layers": [LAYER_MAP,LAYER_SAT,LAYER_HYB]},
     {"ID": INFO_FREEWAY,  "layers": [LAYER_MAP]},
     {"ID": OPENCYCLEMAP,  "layers": [LAYER_MAP]},
     {"ID": GOOGLE_MAKER,  "layers": [LAYER_MAP]},
+    {"ID": VIRTUAL_EARTH, "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER]},
     {"ID": YANDEX,        "layers": [LAYER_MAP]},
     {"ID": SEZNAM,        "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER,LAYER_HYB]},   
     {"ID": SEZNAM_HIKING, "layers": [LAYER_SAT,LAYER_TER,LAYER_HYB]},
