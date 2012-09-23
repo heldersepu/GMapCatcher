@@ -9,7 +9,7 @@ import gtk
 from customMsgBox import error_msg_non_blocking
 from customWidgets import *
 from gtkThread import *
-from mapUtils import saveGPX
+from mapUtils import openGPX, saveGPX
 
 
 class trackWindow(gtk.Window):
@@ -19,32 +19,48 @@ class trackWindow(gtk.Window):
         self.tracks = tracks
         self.shown_tracks = shown_tracks
         self.cb_tracks = list()
+        self._createTrackCB()
         vbox = gtk.VBox(False)
-        for i in range(len(tracks)):
-            vbox.pack_start(self._createTrackCB(i, tracks[i]))
+        vbox.pack_start(self.track_vbox)
         vbox.pack_start(self._createButtons())
         self.set_title("GMapCatcher track control")
         self.set_border_width(10)
         self.add(vbox)
         self.show_all()
 
-    def _createTrackCB(self, i, track):
-        self.cb_tracks.append(gtk.CheckButton(track['name']))
-        if track in self.shown_tracks:
-            self.cb_tracks[i].set_active(True)
-        return self.cb_tracks[i]
+    def _createTrackCB(self):
+        self.track_vbox = gtk.VBox(False)
+        for i in range(len(self.tracks)):
+            self.cb_tracks.append(gtk.CheckButton(self.tracks[i]['name']))
+            self.cb_tracks[-1].connect('toggled', self.showTracks)
+            if self.tracks[i] in self.shown_tracks:
+                self.cb_tracks[-1].set_active(True)
+            self.track_vbox.pack_start(self.cb_tracks[i])
 
     def _createButtons(self):
         hbbox = gtk.HButtonBox()
         hbbox.set_border_width(10)
         hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
+        self.b_import = gtk.Button('_Import tracks')
+        self.b_import.connect('clicked', self.importTracks)
+        hbbox.pack_start(self.b_import)
         self.b_export = gtk.Button('_Export selected tracks')
         self.b_export.connect('clicked', self.exportTracks)
         hbbox.pack_start(self.b_export)
-        self.b_show = gtk.Button('_Show selected tracks')
-        self.b_show.connect('clicked', self.showTracks)
-        hbbox.pack_start(self.b_show)
         return hbbox
+
+    def importTracks(self, w):
+        tracks = openGPX()
+        if tracks:
+            self.mapsObj.tracks.extend(tracks)
+            self.mapsObj.shown_tracks.extend(tracks)
+            self.mapsObj.drawing_area.repaint()
+            for track in tracks:
+                self.cb_tracks.append(gtk.CheckButton(track['name']))
+                self.cb_tracks[-1].set_active(True)
+                self.cb_tracks[-1].connect('toggled', self.showTracks)
+                self.track_vbox.pack_start(self.cb_tracks[-1])
+                self.cb_tracks[-1].show()
 
     def exportTracks(self, w):
         tracksToExport = list()
