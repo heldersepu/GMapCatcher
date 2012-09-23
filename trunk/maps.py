@@ -21,6 +21,7 @@ from gmapcatcher.mapConf import MapConf
 from gmapcatcher.mapMark import MyMarkers
 from gmapcatcher.DLWindow import DLWindow
 from gmapcatcher.EXWindow import EXWindow
+from gmapcatcher.trackWindow import trackWindow
 from gmapcatcher.mapUpdate import CheckForUpdates
 from gmapcatcher.mapServices import MapServ
 from gmapcatcher.customMsgBox import user_confirm, error_msg, error_msg_non_blocking
@@ -147,7 +148,7 @@ class MainWindow(gtk.Window):
         elif index == 3:
             self.export_gps_clicked(w)
         elif index == 4:
-            self.export_ruler_clicked(w)
+            self.track_control_clicked(w)
 
     def download_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
@@ -184,21 +185,23 @@ class MainWindow(gtk.Window):
         tracks = mapUtils.openGPX()
         if tracks:
             self.tracks.extend(tracks)
+            self.shown_tracks.extend(tracks)
             self.draw_overlay()
-
-    def export_ruler_clicked(self, w, pointer=None):
-        if not self.Ruler:
-            dialog = error_msg_non_blocking('No ruler active', 'No ruler active')
-            dialog.connect('response', lambda dialog, response: dialog.destroy())
-            dialog.show()
-        else:
-            mapUtils.saveGPX(self.ruler_coord)
 
     def export_gps_clicked(self, w, pointer=None):
         if self.gps and len(self.gps.gps_points) > 0:
-            mapUtils.saveGPX(self.gps.gps_points)
+            mapUtils.saveGPX([self.gps.gps_points])
         else:
             dialog = error_msg_non_blocking('No GPS points', 'No GPS points to save')
+            dialog.connect('response', lambda dialog, response: dialog.destroy())
+            dialog.show()
+
+    def track_control_clicked(self, w, pointer=None):
+        if len(self.tracks) > 0:
+            trackw = trackWindow(self, self.tracks, self.shown_tracks)
+            trackw.show()
+        else:
+            dialog = error_msg_non_blocking('No tracks loaded.', 'No tracks loaded.')
             dialog.connect('response', lambda dialog, response: dialog.destroy())
             dialog.show()
 
@@ -297,14 +300,14 @@ class MainWindow(gtk.Window):
         combo = ComboBoxEntry(self.confirm_clicked, self.conf)
         self.entry = combo.child
         return combo
-        
+
     def operations_sub_menu(self):
         importm = gtk.MenuItem("Operations")
         imenu = gtk.Menu()
-        SUB_MENU = ["Download","Export map","Import GPX track(s)","Export GPS track","Export ruler"]
-        for i in range(len(SUB_MENU)):            
+        SUB_MENU = ["Download", "Export map", "Import GPX track(s)", "Export GPS track", "Track control"]
+        for i in range(len(SUB_MENU)):
             menu_item = gtk.MenuItem(SUB_MENU[i])
-            menu_item.connect('activate', self.on_operations_changed, i)            
+            menu_item.connect('activate', self.on_operations_changed, i)
             imenu.append(menu_item)
         importm.set_submenu(imenu)
         importm.show_all()
@@ -870,7 +873,7 @@ class MainWindow(gtk.Window):
                 self.ctx_map.get_locations(), self.entry.get_text(),
                 self.showMarkers, self.gps,
                 self.ruler_coord,
-                self.tracks
+                self.shown_tracks
             )
 
     ## Handles the pressing of F11 & F12
@@ -1000,7 +1003,10 @@ class MainWindow(gtk.Window):
                 self.status_bar.push(self.status_bar_id, "Ruler Mode - Click for Starting Point")
             else:
                 if user_confirm(self, 'Do you want to use ruler as track?'):
-                    self.tracks.append(self.ruler_coord)
+                    track = {'name': 'Ruler %i' % self.rulers, 'coords': self.ruler_coord}
+                    self.tracks.append(track)
+                    self.shown_tracks.append(track)
+                    self.rulers += 1
                 self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
                 self.ruler_coord = list()
                 self.drawing_area.repaint()
@@ -1108,6 +1114,8 @@ class MainWindow(gtk.Window):
         self.visual_dlconfig = {}
         self.hide_dlfeedback = False
         self.tracks = []
+        self.shown_tracks = []
+        self.rulers = 1
         self.ruler_coord = []
 
         gtk.Window.__init__(self)

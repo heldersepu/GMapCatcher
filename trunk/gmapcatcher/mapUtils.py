@@ -240,17 +240,18 @@ def countDistanceFromLatLon(a, b):
     return d
 
 
-def saveGPX(points):
+def saveGPX(trackSegments):
     home = os.getenv('USERPROFILE') or os.getenv('HOME')
     f_name = FileSaveChooser(home, strTitle="Select File")
     if f_name:
         gpx = gpxpy.gpx.GPX()
         gpx_track = gpxpy.gpx.GPXTrack()
         gpx.tracks.append(gpx_track)
-        gpx_segment = gpxpy.gpx.GPXTrackSegment()
-        gpx_track.segments.append(gpx_segment)
-        for p in points:
-            gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(p[0], p[1]))
+        for trackSegment in trackSegments:
+            gpx_segment = gpxpy.gpx.GPXTrackSegment()
+            gpx_track.segments.append(gpx_segment)
+            for p in trackSegment['coords']:
+                gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(p[0], p[1]))
         f = open(f_name, 'w')
         f.write(gpx.to_xml())
         f.close()
@@ -265,9 +266,12 @@ def openGPX():
         tracks = list()
         gpx = gpxpy.parse(f)
         for track in gpx.tracks:
-            track_points = list()
+            i = 1
             for segment in track.segments:
+                track_points = list()
                 for point in segment.points:
                     track_points.append((point.latitude, point.longitude))
-            tracks.append(track_points)
+                if len(track.segments) > 1:
+                    tracks.append({'name': '%s - %i' % (f_name, i), 'coords': track_points})
+                    i += 1
     return tracks
