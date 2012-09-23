@@ -144,11 +144,9 @@ class MainWindow(gtk.Window):
         elif index == 1:
             self.export_clicked(w)
         elif index == 2:
-            self.import_gpx_clicked(w)
+            self.track_control_clicked(w)
         elif index == 3:
             self.export_gps_clicked(w)
-        elif index == 4:
-            self.track_control_clicked(w)
 
     def download_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
@@ -181,13 +179,6 @@ class MainWindow(gtk.Window):
                         self.layer, self.conf)
         exw.show()
 
-    def import_gpx_clicked(self, w, pointer=None):
-        tracks = mapUtils.openGPX()
-        if tracks:
-            self.tracks.extend(tracks)
-            self.shown_tracks.extend(tracks)
-            self.draw_overlay()
-
     def export_gps_clicked(self, w, pointer=None):
         if self.gps and len(self.gps.gps_points) > 0:
             mapUtils.saveGPX([self.gps.gps_points])
@@ -197,13 +188,8 @@ class MainWindow(gtk.Window):
             dialog.show()
 
     def track_control_clicked(self, w, pointer=None):
-        if len(self.tracks) > 0:
-            trackw = trackWindow(self, self.tracks, self.shown_tracks)
-            trackw.show()
-        else:
-            dialog = error_msg_non_blocking('No tracks loaded.', 'No tracks loaded.')
-            dialog.connect('response', lambda dialog, response: dialog.destroy())
-            dialog.show()
+        trackw = trackWindow(self, self.tracks, self.shown_tracks)
+        trackw.show()
 
     def visual_download(self):
         if self.visual_dlconfig.get('active', False):
@@ -304,7 +290,7 @@ class MainWindow(gtk.Window):
     def operations_sub_menu(self):
         importm = gtk.MenuItem("Operations")
         imenu = gtk.Menu()
-        SUB_MENU = ["Download", "Export map", "Import GPX track(s)", "Export GPS track", "Track control"]
+        SUB_MENU = ["Download", "Export map", "Track control", "Export GPS track"]
         for i in range(len(SUB_MENU)):
             menu_item = gtk.MenuItem(SUB_MENU[i])
             menu_item.connect('activate', self.on_operations_changed, i)
