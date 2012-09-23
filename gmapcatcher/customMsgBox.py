@@ -30,6 +30,7 @@ def error_msg(parent, strMessage, buttons=gtk.BUTTONS_OK):
 
 
 def error_msg_non_blocking(strTitle, strMessage):
+    strMessage = strMessage.center(50)
     dialog = gtk.MessageDialog(
         parent=None,
         flags=gtk.DIALOG_DESTROY_WITH_PARENT,
