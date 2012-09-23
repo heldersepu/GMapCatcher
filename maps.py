@@ -137,23 +137,17 @@ class MainWindow(gtk.Window):
         self.drawing_area.repaint()
 
     ## Combo box dispatches operation and returns to default position - Operations - 1st item
-    def on_cb_operations_changed(self, cb_operations):
-        active = cb_operations.get_active()
-        if active == 0:
-            return
-
-        if active == 1:
-            self.download_clicked(cb_operations)
-        elif active == 2:
-            self.export_clicked(cb_operations)
-        elif active == 3:
-            self.import_gpx_clicked(cb_operations)
-        elif active == 4:
-            self.export_gps_clicked(cb_operations)
-        elif active == 5:
-            self.export_ruler_clicked(cb_operations)
-
-        cb_operations.set_active(0)
+    def on_operations_changed(self, w, index):
+        if index == 0:
+            self.download_clicked(w)
+        elif index == 1:
+            self.export_clicked(w)
+        elif index == 2:
+            self.import_gpx_clicked(w)
+        elif index == 3:
+            self.export_gps_clicked(w)
+        elif index == 4:
+            self.export_ruler_clicked(w)
 
     def download_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
@@ -303,6 +297,18 @@ class MainWindow(gtk.Window):
         combo = ComboBoxEntry(self.confirm_clicked, self.conf)
         self.entry = combo.child
         return combo
+        
+    def operations_sub_menu(self):
+        importm = gtk.MenuItem("Operations")
+        imenu = gtk.Menu()
+        SUB_MENU = ["Download","Export map","Import GPX track(s)","Export GPS track","Export ruler"]
+        for i in range(len(SUB_MENU)):            
+            menu_item = gtk.MenuItem(SUB_MENU[i])
+            menu_item.connect('activate', self.on_operations_changed, i)            
+            imenu.append(menu_item)
+        importm.set_submenu(imenu)
+        importm.show_all()
+        return importm
 
     ## Creates the box that packs the comboBox & buttons
     def __create_upper_box(self):
@@ -312,6 +318,8 @@ class MainWindow(gtk.Window):
         button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
         button.set_size_request(34, -1)
         menu = gtk_menu(TOOLS_MENU, self.menu_tools)
+        menu.prepend(self.operations_sub_menu())
+
         self.visual_dltool = gtk.CheckMenuItem(TOOLS_MENU_PLUS_VISUAL_DL)
         menu.append(self.visual_dltool)
         self.visual_dltool.connect('toggled', self.visual_dltool_toggled)
@@ -362,17 +370,6 @@ class MainWindow(gtk.Window):
         bbox.pack_start(cmb_gps, False, False, 0)
         self.cmb_gps = cmb_gps
         self.update_cmb_gps()
-
-        cb_operations = gtk.combo_box_new_text()
-        cb_operations.append_text("Operations")
-        cb_operations.append_text("Download")
-        cb_operations.append_text("Export map")
-        cb_operations.append_text("Import GPX track(s)")
-        cb_operations.append_text("Export GPS track")
-        cb_operations.append_text("Export ruler")
-        cb_operations.set_active(0)
-        cb_operations.connect('changed', self.on_cb_operations_changed)
-        bbox.pack_start(cb_operations, False, False, 5)
 
         self.cmb_layer_container = gtk.HBox()
         self.cmb_layer = ComboBoxLayer(self.conf)
