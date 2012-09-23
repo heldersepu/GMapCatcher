@@ -6,6 +6,7 @@
 from mapConst import *
 import gtk
 import fileUtils
+import mapHideMapServers
 from customWidgets import myFrame, lbl
 
 
@@ -97,7 +98,7 @@ class ChangeTheme():
             if not str(intPos) in bad_map_servers:
                 self.cmb_service.append_text(MAP_SERVERS[intPos])
                 if MAP_SERVERS[intPos] == conf.map_service:
-                    intActive = len(self.cmb_service.get_model()) - 1                    
+                    intActive = len(self.cmb_service.get_model()) - 1
         self.cmb_service.set_active(intActive)
         hbox.pack_start(self.cmb_service)
         vbox.pack_start(hbox)
@@ -107,8 +108,20 @@ class ChangeTheme():
         self.cb_oneDirPerMap = gtk.CheckButton("Use a different folder per Map Service")
         self.cb_oneDirPerMap.set_active(conf.oneDirPerMap)
         hbox.pack_start(self.cb_oneDirPerMap)
+
+        event_box = gtk.EventBox()
+        label = gtk.Label()
+        label.set_text("<span foreground=\"blue\" underline=\"single\">Select Map Servers</span>")
+        label.set_use_markup(True)
+        event_box.add(label)
+        event_box.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+        event_box.connect("button_press_event", self.open_editor)
+        hbox.pack_start(event_box)
         vbox.pack_start(hbox)
         return myFrame(" Map service ", vbox)
+
+    def open_editor(self, *w):
+        mapHideMapServers.main(self.mapswindow)
 
     def key_press(self, widget, event, conf):
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [83, 115]:
