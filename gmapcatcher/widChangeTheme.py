@@ -32,7 +32,7 @@ class ChangeTheme():
         memtype = conf.oneDirPerMap
         memscale = conf.scale_visible
         conf.oneDirPerMap = int(self.cb_oneDirPerMap.get_active())
-        conf.map_service = MAP_SERVERS[self.cmb_service.get_active() + 1]
+        conf.map_service = self.cmb_service.get_active_text()
         conf.scale_visible = self.cb_view_scale.get_active()
         conf.save()
         if memservice != conf.map_service or memtype != conf.oneDirPerMap:
@@ -93,11 +93,11 @@ class ChangeTheme():
         self.cmb_service = gtk.combo_box_new_text()
         intActive = 0
         bad_map_servers = conf.hide_map_servers.split(',')
-        for intPos in range(1, len(MAP_SERVERS)):
+        for intPos in range(len(MAP_SERVERS)):
             if not str(intPos) in bad_map_servers:
                 self.cmb_service.append_text(MAP_SERVERS[intPos])
                 if MAP_SERVERS[intPos] == conf.map_service:
-                    intActive = intPos - 1
+                    intActive = len(self.cmb_service.get_model()) - 1                    
         self.cmb_service.set_active(intActive)
         hbox.pack_start(self.cmb_service)
         vbox.pack_start(hbox)
