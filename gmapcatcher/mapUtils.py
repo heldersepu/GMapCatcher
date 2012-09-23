@@ -274,4 +274,6 @@ def openGPX():
                 if len(track.segments) > 1:
                     tracks.append({'name': '%s - %i' % (f_name, i), 'coords': track_points})
                     i += 1
+                else:
+                    tracks.append({'name': '%s' % f_name, 'coords': track_points})
     return tracks
