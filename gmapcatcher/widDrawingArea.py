@@ -436,12 +436,18 @@ class DrawingArea(gtk.DrawingArea):
             old_length = 0
             new_length = 0
             gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
-            for j in range(0, len(track) - 1):
-                new_length += mapUtils.countDistanceFromLatLon(track[j], track[j + 1])
-                if new_length - old_length > 1:
+            for j in range(0, len(track['coords']) - 1):
+                new_length += mapUtils.countDistanceFromLatLon(track['coords'][j], track['coords'][j + 1])
+                if j == 0:
+                    screen_coord = self.coord_to_screen(track['coords'][j][0], track['coords'][j][1], zl)
+                    if screen_coord:
+                        pangolayout = self.create_pango_layout("")
+                        pangolayout.set_text(track['name'])
+                        self.wr_pltxt(gc, int(screen_coord[0]), int(screen_coord[1]), pangolayout)
+                if (new_length - old_length) > 1:
                     dist_str = '%.2f km' % new_length
                     old_length = new_length
                 else:
                     dist_str = ''
-                self.draw_line(gc, track[j], track[j + 1], dist_str, zl)
+                self.draw_line(gc, track['coords'][j], track['coords'][j + 1], dist_str, zl)
             i = i + 1
