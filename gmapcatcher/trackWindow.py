@@ -13,11 +13,9 @@ from mapUtils import openGPX, saveGPX
 
 
 class trackWindow(gtk.Window):
-    def __init__(self, mapsObj, tracks, shown_tracks):
+    def __init__(self, mapsObj):
         gtk.Window.__init__(self)
         self.mapsObj = mapsObj
-        self.tracks = tracks
-        self.shown_tracks = shown_tracks
         self.cb_tracks = list()
         self._createTrackCB()
         vbox = gtk.VBox(False)
@@ -30,11 +28,11 @@ class trackWindow(gtk.Window):
 
     def _createTrackCB(self):
         self.track_vbox = gtk.VBox(False)
-        for i in range(len(self.tracks)):
-            self.cb_tracks.append(gtk.CheckButton(self.tracks[i]['name']))
-            self.cb_tracks[-1].connect('toggled', self.showTracks)
-            if self.tracks[i] in self.shown_tracks:
+        for i in range(len(self.mapsObj.tracks)):
+            self.cb_tracks.append(gtk.CheckButton(self.mapsObj.tracks[i]['name']))
+            if self.mapsObj.tracks[i] in self.mapsObj.shown_tracks:
                 self.cb_tracks[-1].set_active(True)
+            self.cb_tracks[-1].connect('toggled', self.showTracks)
             self.track_vbox.pack_start(self.cb_tracks[i])
 
     def _createButtons(self):
@@ -64,9 +62,9 @@ class trackWindow(gtk.Window):
 
     def exportTracks(self, w):
         tracksToExport = list()
-        for i in range(len(self.tracks)):
+        for i in range(len(self.mapsObj.tracks)):
             if self.cb_tracks[i].get_active():
-                tracksToExport.append(self.tracks[i])
+                tracksToExport.append(self.mapsObj.tracks[i])
         if len(tracksToExport) > 0:
             saveGPX(tracksToExport)
         else:
@@ -76,8 +74,8 @@ class trackWindow(gtk.Window):
 
     def showTracks(self, w):
         tracksToShow = list()
-        for i in range(len(self.tracks)):
+        for i in range(len(self.mapsObj.tracks)):
             if self.cb_tracks[i].get_active():
-                tracksToShow.append(self.tracks[i])
+                tracksToShow.append(self.mapsObj.tracks[i])
         self.mapsObj.shown_tracks = tracksToShow
         self.mapsObj.drawing_area.repaint()

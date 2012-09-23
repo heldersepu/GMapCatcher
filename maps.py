@@ -188,7 +188,7 @@ class MainWindow(gtk.Window):
             dialog.show()
 
     def track_control_clicked(self, w, pointer=None):
-        trackw = trackWindow(self, self.tracks, self.shown_tracks)
+        trackw = trackWindow(self)
         trackw.show()
 
     def visual_download(self):

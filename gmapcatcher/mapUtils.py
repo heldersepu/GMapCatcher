@@ -265,15 +265,17 @@ def openGPX():
         f = open(f_name, 'r')
         tracks = list()
         gpx = gpxpy.parse(f)
+        i = 1
         for track in gpx.tracks:
-            i = 1
             for segment in track.segments:
                 track_points = list()
                 for point in segment.points:
                     track_points.append((point.latitude, point.longitude))
-                if len(track.segments) > 1:
+                if len(track.segments) > 1 or len(gpx.tracks) > 1:
                     tracks.append({'name': '%s - %i' % (f_name, i), 'coords': track_points})
-                    i += 1
+                    if len(track.segments) > 1:
+                        i += 1
                 else:
                     tracks.append({'name': '%s' % f_name, 'coords': track_points})
+            i += 1
     return tracks
