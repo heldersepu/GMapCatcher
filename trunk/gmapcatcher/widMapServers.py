@@ -7,7 +7,7 @@ from mapConst import *
 import gtk
 
 
-## This widget allows the user to modify the locations and markers
+## This widget allows the user to modify visible map services
 class WidMapServers():
 
     ## Appends items to a list from the given file
@@ -81,8 +81,8 @@ class WidMapServers():
             tvcolumn.set_resizable(True)
             tvcolumn.set_expand(intPos == 1)
 
-        # make myTree searchable by location
-        myTree.set_search_column(0)
+        # make myTree searchable by Map Name
+        myTree.set_search_column(1)
         listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
 
         hpaned = gtk.VPaned()

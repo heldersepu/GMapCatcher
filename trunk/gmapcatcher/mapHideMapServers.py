@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ## @package gmapcatcher.mapHideMapServers
-# Window to dget, items are displayed in multiple tabs.
+# Window to display a list of map servers.
 
 from mapConst import *
 import pygtk
