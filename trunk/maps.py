@@ -947,7 +947,7 @@ class MainWindow(gtk.Window):
             self.show_export()
         # F4 = 65473
         elif event.keyval == 65473:
-            fileName = FileChooser('.', 'Select KML File to import')
+            fileName = FileChooser(mapUtils.getHome(), 'Select KML File to import')
             if fileName:
                 kmlResponse = kml_to_markers(fileName, self.marker)
                 if kmlResponse:
