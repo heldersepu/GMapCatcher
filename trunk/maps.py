@@ -145,8 +145,6 @@ class MainWindow(gtk.Window):
             self.export_clicked(w)
         elif index == 2:
             self.track_control_clicked(w)
-        elif index == 3:
-            self.export_gps_clicked(w)
 
     def download_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
@@ -179,15 +177,7 @@ class MainWindow(gtk.Window):
                         self.layer, self.conf)
         exw.show()
 
-    def export_gps_clicked(self, w, pointer=None):
-        if self.gps and len(self.gps.gps_points) > 0:
-            mapUtils.saveGPX([self.gps.gps_points])
-        else:
-            dialog = error_msg_non_blocking('No GPS points', 'No GPS points to save')
-            dialog.connect('response', lambda dialog, response: dialog.destroy())
-            dialog.show()
-
-    def track_control_clicked(self, w, pointer=None):
+    def track_control_clicked(self, w=None, pointer=None):
         trackw = trackWindow(self)
         trackw.show()
 
@@ -290,7 +280,7 @@ class MainWindow(gtk.Window):
     def operations_sub_menu(self):
         importm = gtk.MenuItem("Operations")
         imenu = gtk.Menu()
-        SUB_MENU = ["Download", "Export map", "Track control", "Export GPS track"]
+        SUB_MENU = ["Download", "Export map", "Track control"]
         for i in range(len(SUB_MENU)):
             menu_item = gtk.MenuItem(SUB_MENU[i])
             menu_item.connect('activate', self.on_operations_changed, i)
@@ -988,7 +978,7 @@ class MainWindow(gtk.Window):
                 self.drawing_area.window.set_cursor(cursor)
                 self.status_bar.push(self.status_bar_id, "Ruler Mode - Click for Starting Point")
             else:
-                if user_confirm(self, 'Do you want to use ruler as track?'):
+                if len(self.ruler_coord) > 1 and user_confirm(self, 'Do you want to use ruler as track?'):
                     track = {'name': 'Ruler %i' % self.rulers, 'coords': self.ruler_coord}
                     self.tracks.append(track)
                     self.shown_tracks.append(track)
@@ -999,6 +989,9 @@ class MainWindow(gtk.Window):
                 self.drawing_area.da_set_cursor()
         # F8 = 65477
         elif event.keyval == 65477:
+            self.track_control_clicked()
+        # F9 = 65478
+        elif event.keyval == 65478:
             self.showMarkers = not self.showMarkers
             self.drawing_area.repaint()
         # if Ruler is active, delete (65535) removes last element from ruler
