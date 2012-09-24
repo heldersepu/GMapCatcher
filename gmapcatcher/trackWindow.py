@@ -45,6 +45,9 @@ class trackWindow(gtk.Window):
         self.b_export = gtk.Button('_Export selected tracks')
         self.b_export.connect('clicked', self.exportTracks)
         hbbox.pack_start(self.b_export)
+        self.b_gps_export = gtk.Button('Export _GPS track')
+        self.b_gps_export.connect('clicked', self.exportGPS)
+        hbbox.pack_start(self.b_gps_export)
         return hbbox
 
     def importTracks(self, w):
@@ -69,6 +72,14 @@ class trackWindow(gtk.Window):
             saveGPX(tracksToExport)
         else:
             dialog = error_msg_non_blocking('No tracks', 'No tracks to export')
+            dialog.connect('response', lambda dialog, response: dialog.destroy())
+            dialog.show()
+
+    def exportGPS(self, w):
+        if self.mapsObj.gps and len(self.mapsObj.gps.gps_points) > 0:
+            mapUtils.saveGPX([self.mapsObj.gps.gps_points])
+        else:
+            dialog = error_msg_non_blocking('No GPS points', 'No GPS points to save')
             dialog.connect('response', lambda dialog, response: dialog.destroy())
             dialog.show()
 
