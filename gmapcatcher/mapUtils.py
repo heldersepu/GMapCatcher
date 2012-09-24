@@ -241,8 +241,7 @@ def countDistanceFromLatLon(a, b):
 
 
 def saveGPX(trackSegments):
-    home = os.getenv('USERPROFILE') or os.getenv('HOME')
-    f_name = FileSaveChooser(home, strTitle="Select File")
+    f_name = FileSaveChooser(getHome(), strTitle="Select File")
     if f_name:
         gpx = gpxpy.gpx.GPX()
         gpx_track = gpxpy.gpx.GPXTrack()
@@ -259,8 +258,7 @@ def saveGPX(trackSegments):
 
 def openGPX():
     tracks = None
-    home = os.getenv('USERPROFILE') or os.getenv('HOME')
-    f_name = FileChooser(home, strTitle="Select File")
+    f_name = FileChooser(getHome(), strTitle="Select File")
     if f_name:
         f = open(f_name, 'r')
         tracks = list()
@@ -279,3 +277,7 @@ def openGPX():
                     tracks.append({'name': '%s' % f_name, 'coords': track_points})
             i += 1
     return tracks
+
+
+def getHome():
+    return os.getenv('USERPROFILE') or os.getenv('HOME')
