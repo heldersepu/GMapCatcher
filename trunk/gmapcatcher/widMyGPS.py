@@ -10,7 +10,7 @@ from serialGPS import serialPortScan, BAUDRATES
 
 
 ## This widget lets the user change GPS settings
-class MyGPS():
+class MyGPS(gtk.VPaned):
     ## All the buttons at the bottom
     def btn_save_clicked(self, button, conf):
         conf.gps_update_rate = self.e_gps_updt_rate.get_text()
@@ -72,14 +72,21 @@ class MyGPS():
         hbox.pack_start(self.cmb_gps_mode)
         return hbox
 
+    ## Changes to the gps type combo box
+    def cmb_gps_changed(self, w):
+        sensitive = (w.get_active() > GPS_DISABLED)
+        self.boxes[1].set_sensitive(sensitive)
+        self.boxes[2].set_sensitive(sensitive)
+        self.boxes[3].set_sensitive(sensitive)
+
     ## ComboBox to change the GPS type
-    def gps_type_combo(self, gps_type):
+    def gps_type_combo(self):
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(lbl("GPS type: "))
         self.cmb_gps_type = gtk.combo_box_new_text()
         for strType in GPS_TYPES:
             self.cmb_gps_type.append_text(strType)
-        self.cmb_gps_type.set_active(gps_type)
+        self.cmb_gps_type.connect('changed', self.cmb_gps_changed)
         hbox.pack_start(self.cmb_gps_type)
         return hbox
 
@@ -141,10 +148,10 @@ class MyGPS():
     ## Put all the GPS Widgets together
     def show(self, conf):
         def general_gps_box():
-            boxes = [self.gps_type_combo(conf.gps_type), self.gps_updt_rate(conf.gps_update_rate),
+            self.boxes = [self.gps_type_combo(), self.gps_updt_rate(conf.gps_update_rate),
                     self.gps_max_zoom(conf.max_gps_zoom), self.gps_mode_combo(conf.gps_mode)]
             vbox = gtk.VBox(False, 5)
-            for box in boxes:
+            for box in self.boxes:
                 hbox = gtk.HBox(False, 10)
                 hbox.pack_start(box)
                 vbox.pack_start(hbox)
@@ -166,9 +173,9 @@ class MyGPS():
         vbox.pack_start(self.gps_track_settings(conf.gps_track, conf.gps_track_width, conf.gps_track_interval))
         vbox.pack_start(gps_serial_box(), False)
 
-        hpaned = gtk.VPaned()
-        hpaned.pack1(vbox, True, True)
+        self.pack1(vbox, True, True)
         buttons = self.__action_buttons(conf)
-        hpaned.pack2(buttons, False, False)
-        hpaned.connect('key-press-event', self.key_press, conf)
-        return hpaned
+        self.pack2(buttons, False, False)
+        self.connect('key-press-event', self.key_press, conf)
+        self.cmb_gps_type.set_active(conf.gps_type)
+        return self
