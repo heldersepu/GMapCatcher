@@ -17,23 +17,34 @@ class trackWindow(gtk.Window):
         gtk.Window.__init__(self)
         self.mapsObj = mapsObj
         self.cb_tracks = list()
-        self._createTrackCB()
         vbox = gtk.VBox(False)
-        vbox.pack_start(self.track_vbox)
+        vbox.pack_start(self._createTrackCB(mapsObj))
         vbox.pack_start(self._createButtons())
         self.set_title("GMapCatcher track control")
         self.set_border_width(10)
         self.add(vbox)
         self.show_all()
+        self.update_widgets()
 
-    def _createTrackCB(self):
+    def _createTrackCB(self, mapsObj):
+        frame = gtk.Frame()
+        frame.set_border_width(10)
+        vbox = gtk.VBox(False, 10)
+        self.no_tracks = gtk.Label()
+        self.no_tracks.set_text("<b><span foreground=\"red\">No Tracks Found!</span></b>")
+        self.no_tracks.set_use_markup(True)
+        vbox.pack_start(self.no_tracks)
+        alignment = gtk.Alignment(0.5, 0.5, 0, 0)
         self.track_vbox = gtk.VBox(False)
-        for i in range(len(self.mapsObj.tracks)):
-            self.cb_tracks.append(gtk.CheckButton(self.mapsObj.tracks[i]['name']))
-            if self.mapsObj.tracks[i] in self.mapsObj.shown_tracks:
-                self.cb_tracks[-1].set_active(True)
-            self.cb_tracks[-1].connect('toggled', self.showTracks)
+        for i in range(len(mapsObj.tracks)):
+            self.cb_tracks.append(gtk.CheckButton(mapsObj.tracks[i]['name']))
+            self.cb_tracks[i].set_active(mapsObj.tracks[i] in mapsObj.shown_tracks)
+            self.cb_tracks[i].connect('toggled', self.showTracks)
             self.track_vbox.pack_start(self.cb_tracks[i])
+        alignment.add(self.track_vbox)
+        vbox.pack_start(alignment)
+        frame.add(vbox)        
+        return frame
 
     def _createButtons(self):
         hbbox = gtk.HButtonBox()
@@ -50,6 +61,12 @@ class trackWindow(gtk.Window):
         hbbox.pack_start(self.b_gps_export)
         return hbbox
 
+    def update_widgets(self):
+        hasTracks = len(self.cb_tracks) > 0
+        self.no_tracks.set_visible(not hasTracks)
+        self.b_export.set_sensitive(hasTracks)
+        self.b_gps_export.set_sensitive(self.mapsObj.gps and len(self.mapsObj.gps.gps_points) > 0)        
+
     def importTracks(self, w):
         tracks = openGPX()
         if tracks:
@@ -60,8 +77,9 @@ class trackWindow(gtk.Window):
                 self.cb_tracks.append(gtk.CheckButton(track['name']))
                 self.cb_tracks[-1].set_active(True)
                 self.cb_tracks[-1].connect('toggled', self.showTracks)
-                self.track_vbox.pack_start(self.cb_tracks[-1])
                 self.cb_tracks[-1].show()
+                self.track_vbox.pack_start(self.cb_tracks[-1])
+        self.update_widgets()
 
     def exportTracks(self, w):
         tracksToExport = list()
