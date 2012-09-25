@@ -26,8 +26,8 @@ class gpsWindow(gtk.Window):
         self.set_title("GPS")
         self.set_border_width(10)
         self.update_widgets()
+        self.set_size_request(300, 400)
         self.show_all()
-
         gobject.timeout_add_seconds(1, self.update_widgets)
 
     def _createLabels(self, font):
@@ -65,7 +65,6 @@ class gpsWindow(gtk.Window):
                 self.fix_label.set_text('<b><span foreground=\"green\">FIX</span></b>')
             else:
                 self.fix_label.set_text('<b><span foreground=\"red\">NO FIX</span></b>')
-            self.fix_label.set_use_markup(True)
             if self.mapsObj.gps.gpsfix.time != 0.0:
                 gps_time = str(self.mapsObj.gps.gpsfix.time)
                 self.gps_values[0].set_text('%s:%s:%s' % (gps_time[0:2], gps_time[2:4], gps_time[4:6]))
@@ -83,4 +82,9 @@ class gpsWindow(gtk.Window):
             self.gps_values[3].set_text('%.1f %s' % (speed, self.speed_choices[speed_unit]))
             self.gps_values[4].set_text('%.1f' % self.mapsObj.gps.gpsfix.track)
             self.gps_values[5].set_text('%.1f' % self.mapsObj.gps.gpsfix.altitude)
+        else:
+            self.fix_label.set_text('<span foreground=\"red\">No GPS detected</span>')
+            for gps_value in self.gps_values:
+                gps_value.set_text('---')
+        self.fix_label.set_use_markup(True)
         return True
