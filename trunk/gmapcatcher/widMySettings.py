@@ -48,7 +48,7 @@ class MySettings():
             return myFrame(" Center ", hbox)
 
         def _status_save(conf):
-            def statuscombo(active_type_id):
+            def status_combo(active_type_id):
                 hbox = gtk.HBox(False, 10)
                 hbox.pack_start(lbl(" Select status bar type "))
                 self.cmb_status_type = gtk.combo_box_new_text()
@@ -64,7 +64,7 @@ class MySettings():
                 self.save_at_close_button.set_active(active_bool)
                 return self.save_at_close_button
             status = myFrame(" Location Status ",
-                            statuscombo(conf.status_location))
+                            status_combo(conf.statusbar_type))
             save = myFrame(" Close Settings ",
                           save_checkbox(conf.save_at_close))
             hbox = gtk.HBox(False, 10)
@@ -139,7 +139,7 @@ class MySettings():
             conf.init_width = self.s_width.get_value_as_int()
             conf.init_height = self.s_height.get_value_as_int()
             conf.language = self.s_language.get_active_text()
-            conf.status_location = self.cmb_status_type.get_active()
+            conf.statusbar_type = self.cmb_status_type.get_active()
             conf.save_at_close = self.save_at_close_button.get_active()
 
             if(os.pathsep == ';'):

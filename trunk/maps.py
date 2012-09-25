@@ -245,7 +245,7 @@ class MainWindow(gtk.Window):
 
                 self.drawing_area.repaint()
                 # Update the status bar with the GPS Coordinates
-                if self.conf.status_location == STATUS_GPS and not self.Ruler:
+                if self.conf.statusbar_type == STATUS_GPS and not self.Ruler:
                     self.status_bar.pop(self.status_bar_id)
                     self.status_bar.push(self.status_bar_id,
                                           "Latitude: " + str(round(self.gps.gpsfix.latitude, 6)) + " Longitude: " + str(round(self.gps.gpsfix.longitude, 6)))
@@ -263,7 +263,7 @@ class MainWindow(gtk.Window):
                 self.gps_invalid_visible = True
         self.gps_valid = False
         # Update the status bar with the GPS Coordinates
-        if self.conf.status_location == STATUS_GPS and not self.Ruler:
+        if self.conf.statusbar_type == STATUS_GPS and not self.Ruler:
             self.status_bar.pop(self.status_bar_id)
             self.status_bar.push(self.status_bar_id, 'INVALID DATA FROM GPS')
 
@@ -716,8 +716,8 @@ class MainWindow(gtk.Window):
                 self.visual_download()
             self.update_export()
 
-        if self.conf.status_location == STATUS_MOUSE or \
-           (self.conf.status_location == STATUS_GPS and not mapGPS.available):
+        if self.conf.statusbar_type == STATUS_MOUSE or \
+           (self.conf.statusbar_type == STATUS_GPS and not mapGPS.available):
             self.status_bar.pop(self.status_bar_id)
 
     def view_credits(self, menuitem):
@@ -1010,7 +1010,7 @@ class MainWindow(gtk.Window):
         self.marker.refresh()
         self.update_cmb_gps()
         self.drawing_area.repaint()
-        if self.conf.status_location == STATUS_NONE:
+        if self.conf.statusbar_type == STATUS_NONE:
             self.status_bar.hide()
         else:
             self.status_bar.show()
@@ -1157,7 +1157,7 @@ class MainWindow(gtk.Window):
         self.show_all()
         if self.conf.save_at_close:
             self.move(self.conf.save_hlocation, self.conf.save_vlocation)
-        if self.conf.status_location == STATUS_NONE:
+        if self.conf.statusbar_type == STATUS_NONE:
             self.status_bar.hide()
         self.export_panel.hide()
         self.drawing_area.da_set_cursor()
