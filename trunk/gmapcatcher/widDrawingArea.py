@@ -109,6 +109,7 @@ class DrawingArea(gtk.DrawingArea):
         )
         if xy:
             for x, y in xy:
+                print (x + mct[1][0], y + mct[1][1])
                 return (x + mct[1][0], y + mct[1][1])
 
     ## Set the Graphics Context used in the visual download
@@ -176,16 +177,14 @@ class DrawingArea(gtk.DrawingArea):
 
     ## Draws a line for ruler
     def draw_line(self, gc, from_coord, to_coord, dist_str, zl):
-        screen_coord = self.coord_to_screen(from_coord[0], from_coord[1], zl)
-        screen_coord1 = self.coord_to_screen(to_coord[0], to_coord[1], zl)
-        if screen_coord and screen_coord1:
-            x = int(screen_coord1[0])
-            y = int(screen_coord1[1])
-            self.window.draw_line(gc, int(screen_coord[0]), int(screen_coord[1]), x, y)
+        ini = self.coord_to_screen(from_coord[0], from_coord[1], zl)
+        end = self.coord_to_screen(to_coord[0], to_coord[1], zl)
+        if ini and end:
+            self.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
             if dist_str:
                 pangolayout = self.create_pango_layout("")
                 pangolayout.set_text(dist_str)
-                self.wr_pltxt(gc, x, y, pangolayout)
+                self.wr_pltxt(gc, end[0], end[1], pangolayout)
 
     ## Draws a circle as starting point for ruler
     def draw_stpt(self, mcoord, zl):
