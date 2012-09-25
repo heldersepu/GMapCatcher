@@ -17,6 +17,7 @@ class DrawingArea(gtk.DrawingArea):
     center = ((0, 0), (128, 128))
     draging_start = (0, 0)
     myThread = None
+    isPencil = False
 
     def __init__(self):
         super(DrawingArea, self).__init__()
@@ -35,17 +36,18 @@ class DrawingArea(gtk.DrawingArea):
     def da_set_cursor(self, dCursor=gtk.gdk.HAND1):
         cursor = gtk.gdk.Cursor(dCursor)
         self.window.set_cursor(cursor)
+        self.isPencil = (dCursor == gtk.gdk.PENCIL)
 
     ## Handles left (press click) event in the drawing_area
     def da_button_press(self, w, event):
         if (event.button == 1):
             self.draging_start = (event.x, event.y)
-            self.da_set_cursor(gtk.gdk.FLEUR)
+            if not self.isPencil: self.da_set_cursor(gtk.gdk.FLEUR)
 
     ## Handles left (release click) event in the drawing_area
     def da_button_release(self, w, event):
         if (event.button == 1):
-            self.da_set_cursor()
+            if not self.isPencil: self.da_set_cursor()
 
     ## Jumps in the drawing_area
     def da_jump(self, intDirection, zoom, doBigJump=False):
