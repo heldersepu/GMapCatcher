@@ -44,7 +44,7 @@ class MapConf():
         config.set(SECTION_INIT, 'version_url', self.version_url)
         config.set(SECTION_INIT, 'check_for_updates', self.check_for_updates)
         config.set(SECTION_INIT, 'oneDirPerMap', self.oneDirPerMap)
-        config.set(SECTION_INIT, 'status_location', self.status_location)
+        config.set(SECTION_INIT, 'statusbar_type', self.statusbar_type)
         config.set(SECTION_INIT, 'save_at_close', int(self.save_at_close))
         config.set(SECTION_INIT, 'save_layer', self.save_layer)
         config.set(SECTION_INIT, 'save_hlocation', self.save_hlocation)
@@ -119,8 +119,8 @@ class MapConf():
         self.check_for_updates = read_config('check_for_updates', 1, int)
         ## oneDirPerMap setting, default is False
         self.oneDirPerMap = read_config('oneDirPerMap', 0, int)
-        ## status setting, default is STATUS_NONE
-        self.status_location = read_config('status_location', 0, int)
+        ## Statusbar type, default is STATUS_NONE
+        self.statusbar_type = read_config('statusbar_type', STATUS_NONE, int)
         ## save width/height/layer/location at close, default is SAVE_AT_CLOSE
         self.save_at_close = read_config('save_at_close', 1, int)
         ## layer when saved at close
