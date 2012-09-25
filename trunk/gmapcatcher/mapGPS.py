@@ -49,6 +49,7 @@ class GPS:
 
     def startGPS(self):
         global available
+        available = True
         if self.type == mapConst.TYPE_GPSD:
             try:
                 # Open binding to GPS daemon

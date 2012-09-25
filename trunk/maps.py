@@ -910,10 +910,10 @@ class MainWindow(gtk.Window):
             self.drawing_area.da_jump(3, zoom, True)
 
         # Minus = [45,65453]   Zoom Out
-        # Plus  = [61,65451]   Zoom In
+        # Plus  = [43,65451]   Zoom In
         elif keyval in [45, 65453]:
             self.do_zoom(zoom + 1, True)
-        elif keyval in [61, 65451]:
+        elif keyval in [43, 65451]:
             self.do_zoom(zoom - 1, True)
 
         # Space = 32   ReCenter the GPS
