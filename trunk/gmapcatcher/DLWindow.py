@@ -10,12 +10,12 @@ import gtk
 from mapArgs import MapArgs
 from fileUtils import check_dir
 from mapDownloader import MapDownloader
-from customWidgets import *
+from customWidgets import lbl, myEntry, myFrame, SpinBtn
 
 import mapPixbuf
 import mapUtils
 import mapServices
-from gtkThread import *
+from gtkThread import gui_callback
 from os.path import join, isdir
 
 
