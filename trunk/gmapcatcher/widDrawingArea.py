@@ -111,7 +111,6 @@ class DrawingArea(gtk.DrawingArea):
         )
         if xy:
             for x, y in xy:
-                print (x + mct[1][0], y + mct[1][1])
                 return (x + mct[1][0], y + mct[1][1])
 
     ## Set the Graphics Context used in the visual download
