@@ -5,10 +5,9 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gobject
 
-from gtkThread import *
-import pango
+from gobject import timeout_add_seconds
+from pango import FontDescription
 from mapConst import MODE_NO_FIX
 
 
@@ -21,14 +20,14 @@ class gpsWindow(gtk.Window):
         self.gps_values = []
 
         vbox = gtk.VBox(False)
-        vbox.pack_start(self._createLabels(pango.FontDescription("24")))
+        vbox.pack_start(self._createLabels(FontDescription("24")))
         self.add(vbox)
         self.set_title("GPS")
         self.set_border_width(10)
         self.update_widgets()
         self.set_size_request(300, 400)
         self.show_all()
-        gobject.timeout_add_seconds(1, self.update_widgets)
+        timeout_add_seconds(1, self.update_widgets)
 
     def _createLabels(self, font):
         texts = ['GPS time', 'Latitude', 'Longitude', 'Speed', 'Heading', 'Altitude']
