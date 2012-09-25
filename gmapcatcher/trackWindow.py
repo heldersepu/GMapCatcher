@@ -7,8 +7,6 @@ pygtk.require('2.0')
 import gtk
 
 from customMsgBox import error_msg_non_blocking
-from customWidgets import *
-from gtkThread import *
 from mapUtils import openGPX, saveGPX
 
 
@@ -43,7 +41,7 @@ class trackWindow(gtk.Window):
             self.track_vbox.pack_start(self.cb_tracks[i])
         alignment.add(self.track_vbox)
         vbox.pack_start(alignment)
-        frame.add(vbox)        
+        frame.add(vbox)
         return frame
 
     def _createButtons(self):
@@ -65,7 +63,10 @@ class trackWindow(gtk.Window):
         hasTracks = len(self.cb_tracks) > 0
         self.no_tracks.set_visible(not hasTracks)
         self.b_export.set_sensitive(hasTracks)
-        self.b_gps_export.set_sensitive(self.mapsObj.gps and len(self.mapsObj.gps.gps_points) > 0)        
+        if self.mapsObj.gps and len(self.mapsObj.gps.gps_points) > 0:
+            self.b_gps_export.set_sensitive(True)
+        else:
+            self.b_gps_export.set_sensitive(False)
 
     def importTracks(self, w):
         tracks = openGPX()

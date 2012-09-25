@@ -16,7 +16,7 @@ import re
 import time
 
 from gmapcatcher.mapConst import *
-from gmapcatcher.gtkThread import *
+from gmapcatcher.gtkThread import gui_callback
 from gmapcatcher.mapConf import MapConf
 from gmapcatcher.mapMark import MyMarkers
 from gmapcatcher.DLWindow import DLWindow
@@ -27,7 +27,7 @@ from gmapcatcher.mapUpdate import CheckForUpdates
 from gmapcatcher.mapServices import MapServ
 from gmapcatcher.customMsgBox import user_confirm, error_msg, error_msg_non_blocking
 from gmapcatcher.mapDownloader import MapDownloader
-from gmapcatcher.customWidgets import *
+from gmapcatcher.customWidgets import gtk, gtk_menu, myToolTip, myFrame, lbl, legal_warning, ProgressBar, SpinBtn
 from gmapcatcher.xmlUtils import kml_to_markers
 from gmapcatcher.widDrawingArea import DrawingArea
 from gmapcatcher.widComboBoxLayer import ComboBoxLayer

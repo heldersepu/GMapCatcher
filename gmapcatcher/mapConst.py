@@ -2,7 +2,7 @@
 ## @package gmapcatcher.mapConst
 # Place to keep all constants
 
-from changeableConst import *
+# from changeableConst import STRICT_LEGAL
 import os
 
 NAME = "GMapCatcher"
