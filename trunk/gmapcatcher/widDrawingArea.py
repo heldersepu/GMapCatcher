@@ -42,12 +42,14 @@ class DrawingArea(gtk.DrawingArea):
     def da_button_press(self, w, event):
         if (event.button == 1):
             self.draging_start = (event.x, event.y)
-            if not self.isPencil: self.da_set_cursor(gtk.gdk.FLEUR)
+            if not self.isPencil:
+                self.da_set_cursor(gtk.gdk.FLEUR)
 
     ## Handles left (release click) event in the drawing_area
     def da_button_release(self, w, event):
         if (event.button == 1):
-            if not self.isPencil: self.da_set_cursor()
+            if not self.isPencil:
+                self.da_set_cursor()
 
     ## Jumps in the drawing_area
     def da_jump(self, intDirection, zoom, doBigJump=False):
@@ -432,23 +434,35 @@ class DrawingArea(gtk.DrawingArea):
         gc = self.style.black_gc
         gc.line_width = gps_track_width
         colors = ["#00FF00", "#4444FF", "#FF0000", "#FFFF00", "#FF00FF"]
+        if zl >= 10:
+            minimum_distance = 10
+        elif zl >= 6:
+            minimum_distance = 1
+        elif zl >= 2:
+            minimum_distance = 0.1
+        else:
+            minimum_distance = 0.01
         i = 0
         for track in tracks:
+            last_drawn = None
             old_length = 0
             new_length = 0
             gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
             for j in range(0, len(track['coords']) - 1):
                 new_length += mapUtils.countDistanceFromLatLon(track['coords'][j], track['coords'][j + 1])
                 if j == 0:
+                    last_drawn = track['coords'][j]
                     screen_coord = self.coord_to_screen(track['coords'][j][0], track['coords'][j][1], zl)
                     if screen_coord:
                         pangolayout = self.create_pango_layout("")
                         pangolayout.set_text(track['name'])
                         self.wr_pltxt(gc, int(screen_coord[0]), int(screen_coord[1]), pangolayout)
-                if (new_length - old_length) > 1:
-                    dist_str = '%.2f km' % new_length
-                    old_length = new_length
-                else:
-                    dist_str = ''
-                self.draw_line(gc, track['coords'][j], track['coords'][j + 1], dist_str, zl)
+                elif mapUtils.countDistanceFromLatLon(track['coords'][j], last_drawn) >= minimum_distance:
+                    if (new_length - old_length) > 1 and (new_length - old_length) > minimum_distance:
+                        dist_str = '%.2f km' % new_length
+                        old_length = new_length
+                    else:
+                        dist_str = ''
+                    self.draw_line(gc, last_drawn, track['coords'][j], dist_str, zl)
+                    last_drawn = track['coords'][j]
             i = i + 1
