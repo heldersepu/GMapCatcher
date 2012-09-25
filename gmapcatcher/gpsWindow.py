@@ -30,15 +30,12 @@ class gpsWindow(gtk.Window):
 
         gobject.timeout_add_seconds(1, self.update_widgets)
 
-        # self.updateThread = Timer(1, self.update_widgets)
-        # self.updateThread.start()
-
     def _createLabels(self, font):
         texts = ['GPS time', 'Latitude', 'Longitude', 'Speed', 'Heading', 'Altitude']
         table = gtk.Table(len(texts) + 2, 2)
         table.set_col_spacings(5)
         table.set_row_spacings(5)
-        # table.set_homogeneous(True)
+
         self.fix_label = gtk.Label()
         self.fix_label.set_use_markup(True)
         self.fix_label.modify_font(font)
@@ -87,31 +84,3 @@ class gpsWindow(gtk.Window):
             self.gps_values[4].set_text('%.1f' % self.mapsObj.gps.gpsfix.track)
             self.gps_values[5].set_text('%.1f' % self.mapsObj.gps.gpsfix.altitude)
         return True
-
-
-
-    # def _createTrackCB(self, mapsObj):
-    #     frame = gtk.Frame()
-    #     frame.set_border_width(10)
-    #     vbox = gtk.VBox(False, 10)
-    #     self.no_tracks = gtk.Label()
-    #     self.no_tracks.set_text("<b><span foreground=\"red\">No Tracks Found!</span></b>")
-    #     self.no_tracks.set_use_markup(True)
-    #     vbox.pack_start(self.no_tracks)
-    #     alignment = gtk.Alignment(0.5, 0.5, 0, 0)
-    #     self.track_vbox = gtk.VBox(False)
-    #     for i in range(len(mapsObj.tracks)):
-    #         self.cb_tracks.append(gtk.CheckButton(mapsObj.tracks[i]['name']))
-    #         self.cb_tracks[i].set_active(mapsObj.tracks[i] in mapsObj.shown_tracks)
-    #         self.cb_tracks[i].connect('toggled', self.showTracks)
-    #         self.track_vbox.pack_start(self.cb_tracks[i])
-    #     alignment.add(self.track_vbox)
-    #     vbox.pack_start(alignment)
-    #     frame.add(vbox)
-    #     return frame
-
-    # def update_widgets(self):
-    #     hasTracks = len(self.cb_tracks) > 0
-    #     self.no_tracks.set_visible(not hasTracks)
-    #     self.b_export.set_sensitive(hasTracks)
-    #     self.b_gps_export.set_sensitive(self.mapsObj.gps and len(self.mapsObj.gps.gps_points) > 0)

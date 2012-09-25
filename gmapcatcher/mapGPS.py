@@ -105,7 +105,6 @@ class GPS:
             (len(self.gps_points) == 0 or
             mapUtils.countDistanceFromLatLon(self.gps_points[-1], (fix.latitude, fix.longitude)) > (float(self.conf.gps_track_interval) / 1000)):
                 self.gps_points.append((fix.latitude, fix.longitude))
-                print 'point added'
         self.gps_callback()
 
     ## Load GPS marker image
