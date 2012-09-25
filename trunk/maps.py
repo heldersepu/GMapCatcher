@@ -1006,7 +1006,7 @@ class MainWindow(gtk.Window):
     def refresh(self, *args):
         if self.cmb_layer.child.get_text() == '':
             self.cmb_layer.combo_popup()
-        self.enable_gps(False)
+        # self.enable_gps(False)
         self.update_export()
         self.marker.refresh()
         self.update_cmb_gps()
