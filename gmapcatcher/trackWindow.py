@@ -95,7 +95,7 @@ class trackWindow(gtk.Window):
 
     def exportGPS(self, w):
         if self.mapsObj.gps and len(self.mapsObj.gps.gps_points) > 0:
-            mapUtils.saveGPX([self.mapsObj.gps.gps_points])
+            saveGPX([self.mapsObj.gps.gps_points])
         else:
             dialog = error_msg_non_blocking('No GPS points', 'No GPS points to save')
             dialog.connect('response', lambda dialog, response: dialog.destroy())
