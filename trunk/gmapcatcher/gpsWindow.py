@@ -17,12 +17,11 @@ class gpsWindow(gtk.Window):
         gtk.Window.__init__(self)
         self.mapsObj = mapsObj
 
-        self.font = pango.FontDescription("24")
         self.speed_choices = ['kn', 'km/h', 'mph']
         self.gps_values = []
 
         vbox = gtk.VBox(False)
-        vbox.pack_start(self._createLabels(mapsObj))
+        vbox.pack_start(self._createLabels(pango.FontDescription("24")))
         self.add(vbox)
         self.set_title("GPS")
         self.set_border_width(10)
@@ -34,7 +33,7 @@ class gpsWindow(gtk.Window):
         # self.updateThread = Timer(1, self.update_widgets)
         # self.updateThread.start()
 
-    def _createLabels(self, mapsObj):
+    def _createLabels(self, font):
         texts = ['GPS time', 'Latitude', 'Longitude', 'Speed', 'Heading', 'Altitude']
         table = gtk.Table(len(texts) + 2, 2)
         table.set_col_spacings(5)
@@ -42,18 +41,18 @@ class gpsWindow(gtk.Window):
         # table.set_homogeneous(True)
         self.fix_label = gtk.Label()
         self.fix_label.set_use_markup(True)
-        self.fix_label.modify_font(self.font)
+        self.fix_label.modify_font(font)
         table.attach(self.fix_label, 0, 2, 0, 1)
         for i in range(len(texts)):
             label = gtk.Label('<b>%s</b>' % texts[i])
             label.set_use_markup(True)
             label.set_alignment(0, 0.5)
-            label.modify_font(self.font)
+            label.modify_font(font)
             table.attach(label, 0, 1, i + 1, i + 2)
 
             label = gtk.Label()
             label.set_alignment(0, 0.5)
-            label.modify_font(self.font)
+            label.modify_font(font)
             self.gps_values.append(label)
             table.attach(self.gps_values[-1], 1, 2, i + 1, i + 2)
         self.cmb_speed = gtk.combo_box_new_text()
