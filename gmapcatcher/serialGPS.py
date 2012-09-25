@@ -110,6 +110,7 @@ class SerialGPS(Thread):
     ## Data handler for NMEA-data
     # currently handles $GPRMC, $GPGGA and $GPGSA
     def dataHandler(self, line):
+        # print line  # for debug
         data = line.strip().split(',')
         if data[0] == '$GPRMC':
             self.fix.time = float(data[1])

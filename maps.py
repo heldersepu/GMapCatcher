@@ -1006,7 +1006,7 @@ class MainWindow(gtk.Window):
     def refresh(self, *args):
         if self.cmb_layer.child.get_text() == '':
             self.cmb_layer.combo_popup()
-        # self.enable_gps(False)
+        self.enable_gps(False)
         self.update_export()
         self.marker.refresh()
         self.update_cmb_gps()
@@ -1050,10 +1050,20 @@ class MainWindow(gtk.Window):
     def enable_gps(self, show_warning):
         self.gps_valid = False
         if mapGPS.available:
-            self.gps = mapGPS.GPS(
-                self.gps_callback,
-                self.conf
-            )
+            if self.gps:
+                if self.gps.type != self.conf.gps_type \
+                  or self.gps.serial_port != self.conf.gps_serial_port \
+                  or self.gps.baudrate != self.conf.gps_serial_baudrate:
+                    self.gps.stop_all()
+                    self.gps = mapGPS.GPS(
+                        self.gps_callback,
+                        self.conf
+                    )
+            else:
+                self.gps = mapGPS.GPS(
+                    self.gps_callback,
+                    self.conf
+                )
             if show_warning and self.gps and not self.gps_warning():
                 self.gps = None
         else:
