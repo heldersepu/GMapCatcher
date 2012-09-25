@@ -21,6 +21,7 @@ from gmapcatcher.mapConf import MapConf
 from gmapcatcher.mapMark import MyMarkers
 from gmapcatcher.DLWindow import DLWindow
 from gmapcatcher.EXWindow import EXWindow
+from gmapcatcher.gpsWindow import gpsWindow
 from gmapcatcher.trackWindow import trackWindow
 from gmapcatcher.mapUpdate import CheckForUpdates
 from gmapcatcher.mapServices import MapServ
@@ -145,6 +146,8 @@ class MainWindow(gtk.Window):
             self.export_clicked(w)
         elif index == 2:
             self.track_control_clicked(w)
+        elif index == 3:
+            self.gps_window_clicked(w)
 
     def download_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
@@ -180,6 +183,10 @@ class MainWindow(gtk.Window):
     def track_control_clicked(self, w=None, pointer=None):
         trackw = trackWindow(self)
         trackw.show()
+
+    def gps_window_clicked(self, w=None, pointer=None):
+        gpsw = gpsWindow(self)
+        gpsw.show()
 
     def visual_download(self):
         if self.visual_dlconfig.get('active', False):
@@ -280,7 +287,7 @@ class MainWindow(gtk.Window):
     def operations_sub_menu(self):
         importm = gtk.MenuItem("Operations")
         imenu = gtk.Menu()
-        SUB_MENU = ["Download", "Export map", "Track control"]
+        SUB_MENU = ["Download", "Export map", "Track control", "GPS window"]
         for i in range(len(SUB_MENU)):
             menu_item = gtk.MenuItem(SUB_MENU[i])
             menu_item.connect('activate', self.on_operations_changed, i)
