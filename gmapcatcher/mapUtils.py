@@ -270,11 +270,20 @@ def openGPX():
                 for point in segment.points:
                     track_points.append((point.latitude, point.longitude))
                 if len(track.segments) > 1 or len(gpx.tracks) > 1:
-                    tracks.append({'name': '%s - %i' % (f_name, i), 'coords': track_points})
+                    tracks.append({'name': '%s - track %i' % (f_name, i), 'coords': track_points})
                     if len(track.segments) > 1:
                         i += 1
                 else:
-                    tracks.append({'name': '%s' % f_name, 'coords': track_points})
+                    tracks.append({'name': '%s - track' % f_name, 'coords': track_points})
+            i += 1
+        for route in gpx.routes:
+            track_points = list()
+            for point in route.points:
+                track_points.append((point.latitude, point.longitude))
+            if len(gpx.routes) > 1:
+                tracks.append({'name': '%s - route %i' % (f_name, i), 'coords': track_points})
+            else:
+                tracks.append({'name': '%s - route' % f_name, 'coords': track_points})
             i += 1
     return tracks
 
