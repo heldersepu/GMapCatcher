@@ -8,6 +8,7 @@ import gtk
 
 from customMsgBox import error_msg_non_blocking
 from mapUtils import openGPX, saveGPX
+from customWidgets import 
 
 
 class trackWindow(gtk.Window):
