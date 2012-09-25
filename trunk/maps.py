@@ -974,8 +974,7 @@ class MainWindow(gtk.Window):
             if self.Ruler:
                 self.total_dist = 0.00
                 self.ruler_coord = list()
-                cursor = gtk.gdk.Cursor(gtk.gdk.PENCIL)
-                self.drawing_area.window.set_cursor(cursor)
+                self.drawing_area.da_set_cursor(gtk.gdk.PENCIL)
                 self.status_bar.push(self.status_bar_id, "Ruler Mode - Click for Starting Point")
             else:
                 if len(self.ruler_coord) > 1 and user_confirm(self, 'Do you want to use ruler as track?'):
