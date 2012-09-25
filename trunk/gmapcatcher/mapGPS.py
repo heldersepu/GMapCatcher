@@ -13,6 +13,7 @@ from threading import Event, Thread
 import time
 import mapUtils
 
+
 class GPS:
     def __init__(self, gps_callback, conf):
         global available
@@ -69,7 +70,7 @@ class GPS:
                     self.set_mode(self.conf.gps_mode)
             except:
                 available = False
-        else: 
+        else:
             available = False
 
     def stop_all(self):
