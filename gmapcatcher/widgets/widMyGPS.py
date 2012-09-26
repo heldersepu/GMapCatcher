@@ -5,7 +5,7 @@
 
 import gtk
 from gmapcatcher.mapConst import *
-from gmapcatcher.serialGPS import serialPortScan, BAUDRATES
+from gmapcatcher.serialGPS import serialPortScan, BAUDRATES, available as serialAvailable
 from customWidgets import myEntry, SpinBtn, myFrame, lbl
 
 
@@ -158,12 +158,15 @@ class MyGPS(gtk.VPaned):
             return myFrame(" GPS ", vbox)
 
         def gps_serial_box():
-            boxes = [self.gps_serial_port_combo(conf.gps_serial_port), self.gps_baudrate_combo(conf.gps_serial_baudrate)]
             vbox = gtk.VBox(False, 5)
-            for box in boxes:
-                hbox = gtk.HBox(False, 10)
-                hbox.pack_start(box)
-                vbox.pack_start(hbox)
+            if serialAvailable:
+                boxes = [self.gps_serial_port_combo(conf.gps_serial_port), self.gps_baudrate_combo(conf.gps_serial_baudrate)]
+                for box in boxes:
+                    hbox = gtk.HBox(False, 10)
+                    hbox.pack_start(box)
+                    vbox.pack_start(hbox)
+            else:
+                vbox.pack_start(lbl('Install python-serial to use serial GPS.'))
             return myFrame(" Serial ", vbox)
 
         vbox = gtk.VBox(False, 10)
