@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.mapPixbuf
+## @package gmapcatcher.widgets.mapPixbuf
 # Get the Pixbuf from image files.
-#
 
-from mapConst import *
 import gtk
+from mapConst import *
 from os.path import join, dirname, abspath, exists, isfile
+
 
 ## Absolute Path to the images directory
 if 'library.zip' in __file__:

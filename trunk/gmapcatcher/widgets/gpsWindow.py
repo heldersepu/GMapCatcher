@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.gpsWindow
+## @package gmapcatcher.widgets.gpsWindow
 # Widget to show GPS information
 
 import pygtk

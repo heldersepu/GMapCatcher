@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.mapTools
+## @package gmapcatcher.widgets.mapTools
 # The tools widget, items are displayed in multiple tabs.
 
-from mapConst import *
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -10,6 +9,7 @@ import widTreeView
 import widMySettings
 import widChangeTheme
 import widMyGPS
+from mapConst import *
 
 
 class MapTools():

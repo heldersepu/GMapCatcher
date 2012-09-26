@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.widMySettings
+## @package gmapcatcher.widgets.widMySettings
 # Settings widget that displays common settings.
 # Displayed inside a tab in MapTools.
 
-from mapConst import *
 import os
 import gtk
+from mapConst import *
 from customWidgets import SpinBtn, myFrame, lbl, FolderChooser
 
 

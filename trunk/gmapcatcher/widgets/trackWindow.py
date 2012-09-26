@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.trackWindow
+## @package gmapcatcher.widgets.trackWindow
 # Widget that allows track control
 
 import pygtk

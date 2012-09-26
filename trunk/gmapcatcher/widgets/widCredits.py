@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+## @package gmapcatcher.widgets.widCredits
+# AboutDialog widget used to show credits
 
-from mapConst import *
 import gtk
+from mapConst import *
 
 
 class OurCredits(gtk.AboutDialog):

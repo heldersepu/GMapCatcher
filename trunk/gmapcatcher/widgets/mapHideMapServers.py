@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.mapHideMapServers
+## @package gmapcatcher.widgets.mapHideMapServers
 # Window to display a list of map servers.
 
-from mapConst import *
 import pygtk
 pygtk.require('2.0')
 import gtk
+from mapConst import *
 from widMapServers import WidMapServers
 
 
