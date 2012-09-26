@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.widMapServers
+## @package gmapcatcher.widgets.widMapServers
 # Widget used to display the list of the MapServers
 # Displayed inside MapHideMapServers.
 
-from mapConst import *
 import gtk
+from mapConst import *
 
 
 ## This widget allows the user to modify visible map services

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.widComboBoxEntry
+## @package gmapcatcher.widgets.widComboBoxEntry
 # ComboBoxEntry widget used to collect data to search
 
 import gtk

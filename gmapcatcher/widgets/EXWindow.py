@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.EXWindow
+## @package gmapcatcher.widgets.EXWindow
 # Widget that allows Export of entire locations to new tiles repository
 
-from mapConst import *
 import pygtk
 pygtk.require('2.0')
 import gtk
 
+from mapConst import *
 from customWidgets import lbl, myEntry, myFrame, SpinBtn, FolderChooser
 
 import tilesRepo.Factory as trFactory

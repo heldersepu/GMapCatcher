@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.widChangeTheme
+## @package gmapcatcher.widgets.widChangeTheme
 # Change Theme widget used to change the GTK theme.
 # Displayed inside a tab in MapTools.
 
-from mapConst import *
 import gtk
 import fileUtils
 import mapHideMapServers
+from mapConst import *
 from customWidgets import myFrame, lbl
 
 

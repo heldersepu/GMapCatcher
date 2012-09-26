@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.widDrawingArea
+## @package gmapcatcher.widgets.widDrawingArea
 # DrawingArea widget used to display the map
 
 import gtk

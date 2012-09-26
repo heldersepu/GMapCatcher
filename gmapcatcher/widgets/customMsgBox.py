@@ -1,4 +1,5 @@
-## @package gmapcatcher.customMsgBox
+# -*- coding: utf-8 -*-
+## @package gmapcatcher.widgets.customMsgBox
 # A group of custom message box widgets.
 
 import pygtk

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.customWidgets
+## @package gmapcatcher.widgets.customWidgets
 # This is a collection of Custom Widgets
 
 import gtk

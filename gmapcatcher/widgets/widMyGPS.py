@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.widMyGPS
+## @package gmapcatcher.widgets.widMyGPS
 # GPS widget used to modify some GPS settings
 # Displayed inside a tab in MapTools.
 
-from mapConst import *
 import gtk
+from mapConst import *
 from customWidgets import myEntry, SpinBtn, myFrame, lbl
 from serialGPS import serialPortScan, BAUDRATES
 

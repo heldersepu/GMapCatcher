@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.DLWindow
+## @package gmapcatcher.widgets.DLWindow
 # Widget that allows Download of entire locations
 
-from mapConst import *
 import pygtk
 pygtk.require('2.0')
 import gtk
 
+from mapConst import *
 from mapArgs import MapArgs
 from fileUtils import check_dir
 from mapDownloader import MapDownloader

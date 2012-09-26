@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-## @package gmapcatcher.widTreeView
+## @package gmapcatcher.widgets.widTreeView
 # TreeView widget used to display the list of the locations.
 # Displayed inside a tab in MapTools.
 
-from mapConst import *
 import gtk
 import fileUtils
+from mapConst import *
 
 
 ## This widget allows the user to modify the locations and markers
