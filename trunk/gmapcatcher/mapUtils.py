@@ -241,12 +241,10 @@ def countDistanceFromLatLon(a, b):
 
 
 def countBearingFromLatLon(a, b):
-    # lats = (last_drawn[0], track['coords'][j][0])
-    # longs = (last_drawn[1], track['coords'][j][1])
     y = math.sin(a[1] - b[1]) * math.cos(b[0])
     x = math.cos(a[0]) * math.sin(b[0]) - \
             math.sin(a[0]) * math.cos(b[0]) * math.cos(a[1] - b[1])
-    bearing = (math.degrees(math.atan2(y, x)) + 360) % 360
+    bearing = (((math.degrees(math.atan2(y, x)) + 360) % 360) + 180) % 360
     return bearing
 
 
