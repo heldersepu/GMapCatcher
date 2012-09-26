@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
-import serial
+available = True
+try:
+    import serial
+except:
+    available = False
 from threading import Thread, Event
 from math import floor
 import platform
