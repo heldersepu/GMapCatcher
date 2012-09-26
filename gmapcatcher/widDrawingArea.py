@@ -436,6 +436,8 @@ class DrawingArea(gtk.DrawingArea):
         if zl >= 10:
             minimum_distance = 10
         elif zl >= 6:
+            minimum_distance = 5
+        elif zl >= 4:
             minimum_distance = 1
         elif zl >= 2:
             minimum_distance = 0.1
@@ -447,8 +449,9 @@ class DrawingArea(gtk.DrawingArea):
             old_length = 0
             new_length = 0
             gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
-            for j in range(0, len(track['coords']) - 1):
-                new_length += mapUtils.countDistanceFromLatLon(track['coords'][j], track['coords'][j + 1])
+            for j in range(len(track['coords'])):
+                if j != 0:
+                    new_length += mapUtils.countDistanceFromLatLon(track['coords'][j - 1], track['coords'][j])
                 if j == 0:
                     last_drawn = track['coords'][j]
                     screen_coord = self.coord_to_screen(track['coords'][j][0], track['coords'][j][1], zl)
@@ -456,7 +459,8 @@ class DrawingArea(gtk.DrawingArea):
                         pangolayout = self.create_pango_layout("")
                         pangolayout.set_text(track['name'])
                         self.wr_pltxt(gc, int(screen_coord[0]), int(screen_coord[1]), pangolayout)
-                elif mapUtils.countDistanceFromLatLon(track['coords'][j], last_drawn) >= minimum_distance:
+                elif mapUtils.countDistanceFromLatLon(track['coords'][j], last_drawn) >= minimum_distance \
+                 or j == (len(track['coords']) - 1):
                     if (new_length - old_length) > 1 and (new_length - old_length) > minimum_distance:
                         dist_str = '%.2f km' % new_length
                         old_length = new_length
