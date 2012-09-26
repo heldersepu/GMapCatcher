@@ -39,6 +39,7 @@ class gpsWindow(gtk.Window):
         self.fix_label.set_use_markup(True)
         self.fix_label.modify_font(font)
         table.attach(self.fix_label, 0, 2, 0, 1)
+
         for i in range(len(texts)):
             label = gtk.Label('<b>%s</b>' % texts[i])
             label.set_use_markup(True)
@@ -51,12 +52,29 @@ class gpsWindow(gtk.Window):
             label.modify_font(font)
             self.gps_values.append(label)
             table.attach(self.gps_values[-1], 1, 2, i + 1, i + 2)
+
+        i += 1
         self.cmb_speed = gtk.combo_box_new_text()
         for choices in self.speed_choices:
             self.cmb_speed.append_text('Speed unit: %s' % choices)
         self.cmb_speed.set_active(0)
-        table.attach(self.cmb_speed, 0, 2, len(texts) + 1, len(texts) + 2)
+        table.attach(self.cmb_speed, 0, 2, i + 1, i + 2)
+
+        i += 1
+        button = gtk.Button('copy GPS location to clipboard')
+        button.connect('clicked', self.locationToClipboad)
+        table.attach(button, 0, 2, i + 1, i + 2)
+
         return table
+
+    def locationToClipboad(self, w=None):
+        ## add GPS location latitude/longitude to clipboard
+        clipboard = gtk.Clipboard()
+        if self.mapsObj.gps and self.mapsObj.gps.gpsfix:
+            clipboard.set_text("Latitude=%.6f, Longitude=%.6f" %
+                              (self.mapsObj.gps.gpsfix.latitude, self.mapsObj.gps.gpsfix.longitude))
+        else:
+            clipboard.set_text("No GPS location detected.")
 
     def update_widgets(self):
         if self.mapsObj.gps and self.mapsObj.gps.gpsfix:
