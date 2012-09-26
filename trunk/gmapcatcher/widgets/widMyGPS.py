@@ -20,8 +20,9 @@ class MyGPS(gtk.VPaned):
         conf.gps_track = int(self.cb_gps_track.get_active())
         conf.gps_track_width = self.sb_gps_track_width.get_value_as_int()
         conf.gps_track_interval = self.sb_gps_track_interval.get_value_as_int()
-        conf.gps_serial_port = self.cmb_gps_serial_port.get_active_text()
-        conf.gps_serial_baudrate = int(self.cmb_gps_baudrate.get_active_text())
+        if serialAvailable:
+            conf.gps_serial_port = self.cmb_gps_serial_port.get_active_text()
+            conf.gps_serial_baudrate = int(self.cmb_gps_baudrate.get_active_text())
         conf.save()
 
     def __action_buttons(self, conf):
