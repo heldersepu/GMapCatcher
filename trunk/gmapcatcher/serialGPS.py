@@ -38,7 +38,7 @@ def serialPortScan():
 class gpsfix:
     def __init__(self):
         self.mode = MODE_NO_FIX
-        self.time = float()
+        self.time = ''
         self.ept = float()
         self.latitude = self.longitude = 0.0
         self.epx = float()
@@ -54,7 +54,7 @@ class gpsfix:
 
     def printFix(self):
         print 'Mode: %i' % self.mode
-        print 'Time: %f' % self.time
+        print 'Time: %s' % self.time
         print 'Lat/Lon: %.4f %.4f' % (self.latitude, self.longitude)
         print 'Altitude: %.2f' % (self.altitude)
         print 'Speed KN/KM: %f %f' % (self.speed, self.speed * 1.852)
@@ -113,7 +113,7 @@ class SerialGPS(Thread):
         # print line  # for debug
         data = line.strip().split(',')
         if data[0] == '$GPRMC':
-            self.fix.time = float(data[1])
+            self.fix.time = data[1]
             if data[4] == 'S':  # if on the southern hemisphere, latitude is negative
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[3]))
@@ -144,7 +144,7 @@ class SerialGPS(Thread):
                 pass
 
         elif data[0] == '$GPGGA':
-            self.fix.time = float(data[1])
+            self.fix.time = data[1]
             if data[3] == 'S':  # if on the southern hemisphere, latitude is negative
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[2]))
