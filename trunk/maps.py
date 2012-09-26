@@ -368,7 +368,7 @@ class MainWindow(gtk.Window):
 
     #Show or hide the gps combo depending on type
     def update_cmb_gps(self):
-        if (self.conf.gps_type > 0):
+        if (self.conf.gps_type > TYPE_OFF):
             self.cmb_gps.show()
         else:
             self.cmb_gps.hide()
@@ -1077,7 +1077,8 @@ class MainWindow(gtk.Window):
 
     def gps_warning(self):
         if mapGPS.available and self.conf.map_service in NO_GPS:
-            return legal_warning(self, self.conf.map_service, "gps integration")
+            if (self.conf.gps_type > TYPE_OFF):
+                return legal_warning(self, self.conf.map_service, "gps integration")
         return True
 
     def pane_notify(self, pane, gparamspec, intPos):
