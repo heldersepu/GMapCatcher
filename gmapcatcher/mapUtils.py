@@ -253,6 +253,7 @@ def saveGPX(trackSegments):
     if f_name:
         gpx = gpxpy.gpx.GPX()
         gpx_track = gpxpy.gpx.GPXTrack()
+        gpx_track.name = NAME + ' Tracks'
         gpx.tracks.append(gpx_track)
         for trackSegment in trackSegments:
             gpx_segment = gpxpy.gpx.GPXTrackSegment()
