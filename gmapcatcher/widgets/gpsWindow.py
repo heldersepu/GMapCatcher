@@ -69,8 +69,8 @@ class gpsWindow(gtk.Window):
                 self.gps_values[0].set_text('%s:%s:%s' % (gps_time[0:2], gps_time[2:4], gps_time[4:6]))
             else:
                 self.gps_values[0].set_text('0.0')
-            self.gps_values[1].set_text('%.4f' % self.mapsObj.gps.gpsfix.latitude)
-            self.gps_values[2].set_text('%.4f' % self.mapsObj.gps.gpsfix.longitude)
+            self.gps_values[1].set_text('%.6f' % self.mapsObj.gps.gpsfix.latitude)
+            self.gps_values[2].set_text('%.6f' % self.mapsObj.gps.gpsfix.longitude)
             speed_unit = self.cmb_speed.get_active()
             if speed_unit == 1:
                 speed = self.mapsObj.gps.gpsfix.speed * 1.852
