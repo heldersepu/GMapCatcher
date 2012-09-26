@@ -7,7 +7,7 @@ pygtk.require('2.0')
 import gtk
 
 from customMsgBox import error_msg_non_blocking
-from mapUtils import openGPX, saveGPX
+from gmapcatcher.mapUtils import openGPX, saveGPX
 
 
 class trackWindow(gtk.Window):

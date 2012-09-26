@@ -4,9 +4,9 @@
 # Displayed inside a tab in MapTools.
 
 import gtk
-import fileUtils
 import mapHideMapServers
-from mapConst import *
+import gmapcatcher.fileUtils as fileUtils
+from gmapcatcher.mapConst import *
 from customWidgets import myFrame, lbl
 
 

@@ -8,7 +8,7 @@ import gtk
 
 from gobject import timeout_add_seconds
 from pango import FontDescription
-from mapConst import MODE_NO_FIX
+from gmapcatcher.mapConst import MODE_NO_FIX
 
 
 class gpsWindow(gtk.Window):

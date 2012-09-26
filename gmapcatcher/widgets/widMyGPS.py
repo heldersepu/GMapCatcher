@@ -4,9 +4,9 @@
 # Displayed inside a tab in MapTools.
 
 import gtk
-from mapConst import *
+from gmapcatcher.mapConst import *
+from gmapcatcher.serialGPS import serialPortScan, BAUDRATES
 from customWidgets import myEntry, SpinBtn, myFrame, lbl
-from serialGPS import serialPortScan, BAUDRATES
 
 
 ## This widget lets the user change GPS settings

@@ -8,7 +8,7 @@ try:
 except:
     available = False
 import mapConst
-import mapPixbuf
+import widgets.mapPixbuf as mapPixbuf
 from threading import Event, Thread
 import time
 import mapUtils

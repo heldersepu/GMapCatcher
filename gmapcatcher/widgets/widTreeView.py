@@ -4,8 +4,8 @@
 # Displayed inside a tab in MapTools.
 
 import gtk
-import fileUtils
-from mapConst import *
+import gmapcatcher.fileUtils as fileUtils
+from gmapcatcher.mapConst import *
 
 
 ## This widget allows the user to modify the locations and markers

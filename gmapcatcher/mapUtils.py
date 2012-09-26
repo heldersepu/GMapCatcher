@@ -2,12 +2,12 @@
 ## @package gmapcatcher.mapUtils
 # A group of map utilities
 
+import re
 import math
 from mapConst import *
-from customWidgets import FileChooser, FileSaveChooser
+from widgets.customWidgets import FileChooser, FileSaveChooser
 from time import gmtime, strftime
 from htmlentitydefs import name2codepoint
-import re
 from gmapcatcher import gpxpy
 
 

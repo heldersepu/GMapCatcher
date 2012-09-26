@@ -3,7 +3,7 @@
 
 import os
 import fileUtils
-import mapPixbuf
+import widgets.mapPixbuf as mapPixbuf
 from mapConst import *
 
 

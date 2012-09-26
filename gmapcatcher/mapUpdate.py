@@ -3,7 +3,7 @@
 
 from mapConst import *
 import gtk
-from customMsgBox import updateMsgBox
+from widgets.customMsgBox import updateMsgBox
 import openanything
 from threading import Timer
 

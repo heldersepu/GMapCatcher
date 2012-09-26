@@ -5,7 +5,7 @@
 
 import os
 import gtk
-from mapConst import *
+from gmapcatcher.mapConst import *
 from customWidgets import SpinBtn, myFrame, lbl, FolderChooser
 
 
