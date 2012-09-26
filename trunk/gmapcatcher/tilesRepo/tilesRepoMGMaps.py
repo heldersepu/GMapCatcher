@@ -10,8 +10,8 @@
 
 import os
 import gmapcatcher.lrucache as lrucache
-import gmapcatcher.mapPixbuf as mapPixbuf
 import gmapcatcher.fileUtils as fileUtils
+import gmapcatcher.widgets.mapPixbuf as mapPixbuf
 
 from threading import Lock
 from gmapcatcher.mapConst import *

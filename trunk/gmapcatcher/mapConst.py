@@ -2,7 +2,6 @@
 ## @package gmapcatcher.mapConst
 # Place to keep all constants
 
-# from changeableConst import STRICT_LEGAL
 import os
 
 NAME = "GMapCatcher"
@@ -142,3 +141,4 @@ REGULAR_EXPRESSION = 3
 ENTRY_SUB_MENU = ['Starts With...', 'Ends With...',
         'Contains...', 'Regular Expression...']
 
+STRICT_LEGAL = False

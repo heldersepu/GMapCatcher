@@ -3,15 +3,15 @@
 # Get the Pixbuf from image files.
 
 import gtk
-from mapConst import *
+from gmapcatcher.mapConst import *
 from os.path import join, dirname, abspath, exists, isfile
 
 
 ## Absolute Path to the images directory
 if 'library.zip' in __file__:
-    _prefix = abspath(join(dirname(__file__), "../../images"))
+    _prefix = abspath(join(dirname(__file__), "../../../images"))
 else:
-    _prefix = abspath(join(dirname(__file__), "../images"))
+    _prefix = abspath(join(dirname(__file__), "../../images"))
 
 if not isfile(join(_prefix, 'missing.png')):
     _prefix = '/usr/share/pixmaps/gmapcatcher'

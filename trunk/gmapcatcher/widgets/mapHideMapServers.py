@@ -5,7 +5,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-from mapConst import *
+from gmapcatcher.mapConst import *
 from widMapServers import WidMapServers
 
 

@@ -5,7 +5,7 @@
 import gtk
 import gobject
 import mapPixbuf
-from mapConst import *
+from gmapcatcher.mapConst import *
 from inputValidation import allow_only_numbers
 
 import warnings

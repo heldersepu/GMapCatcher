@@ -3,7 +3,7 @@
 # AboutDialog widget used to show credits
 
 import gtk
-from mapConst import *
+from gmapcatcher.mapConst import *
 
 
 class OurCredits(gtk.AboutDialog):

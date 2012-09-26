@@ -1,4 +1,4 @@
-## @package gmapcatcher.inputValidation
+## @package gmapcatcher.widgets.inputValidation
 # Validation of all the user input.
 
 

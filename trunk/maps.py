@@ -5,34 +5,34 @@
 # This is the Main Window
 
 import os
-import gmapcatcher.mapGPS as mapGPS
-import gmapcatcher.mapUtils as mapUtils
-import gmapcatcher.mapTools as mapTools
-import gmapcatcher.mapPixbuf as mapPixbuf
+import re
+import sys
+import time
 import signal
 import gobject
-import sys
-import re
-import time
+import gmapcatcher.mapGPS as mapGPS
+import gmapcatcher.mapUtils as mapUtils
+import gmapcatcher.widgets.mapTools as mapTools
+import gmapcatcher.widgets.mapPixbuf as mapPixbuf
 
 from gmapcatcher.mapConst import *
 from gmapcatcher.gtkThread import gui_callback
 from gmapcatcher.mapConf import MapConf
 from gmapcatcher.mapMark import MyMarkers
-from gmapcatcher.DLWindow import DLWindow
-from gmapcatcher.EXWindow import EXWindow
-from gmapcatcher.gpsWindow import gpsWindow
-from gmapcatcher.trackWindow import trackWindow
 from gmapcatcher.mapUpdate import CheckForUpdates
 from gmapcatcher.mapServices import MapServ
-from gmapcatcher.customMsgBox import user_confirm, error_msg, error_msg_non_blocking
 from gmapcatcher.mapDownloader import MapDownloader
-from gmapcatcher.customWidgets import gtk, gtk_menu, myToolTip, myFrame, lbl, legal_warning, ProgressBar, SpinBtn
 from gmapcatcher.xmlUtils import kml_to_markers
-from gmapcatcher.widDrawingArea import DrawingArea
-from gmapcatcher.widComboBoxLayer import ComboBoxLayer
-from gmapcatcher.widComboBoxEntry import ComboBoxEntry
-from gmapcatcher.widCredits import OurCredits
+from gmapcatcher.widgets.DLWindow import DLWindow
+from gmapcatcher.widgets.EXWindow import EXWindow
+from gmapcatcher.widgets.gpsWindow import gpsWindow
+from gmapcatcher.widgets.trackWindow import trackWindow
+from gmapcatcher.widgets.customMsgBox import user_confirm, error_msg, error_msg_non_blocking
+from gmapcatcher.widgets.customWidgets import gtk, gtk_menu, myToolTip, myFrame, lbl, legal_warning, ProgressBar, SpinBtn
+from gmapcatcher.widgets.widDrawingArea import DrawingArea
+from gmapcatcher.widgets.widComboBoxLayer import ComboBoxLayer
+from gmapcatcher.widgets.widComboBoxEntry import ComboBoxEntry
+from gmapcatcher.widgets.widCredits import OurCredits
 
 
 class MainWindow(gtk.Window):

@@ -6,15 +6,13 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from mapConst import *
+from gmapcatcher.mapConst import *
 from customWidgets import lbl, myEntry, myFrame, SpinBtn, FolderChooser
 
-import tilesRepo.Factory as trFactory
-import mapTilesTransfer
-
+import gmapcatcher.tilesRepo.Factory as trFactory
+import gmapcatcher.mapTilesTransfer as mapTilesTransfer
+import gmapcatcher.mapUtils as mapUtils
 import mapPixbuf
-import mapUtils
-# from gtkThread import gui_callback
 
 
 class EXWindow(gtk.Window):

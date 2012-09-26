@@ -4,7 +4,7 @@
 # Displayed inside MapHideMapServers.
 
 import gtk
-from mapConst import *
+from gmapcatcher.mapConst import *
 
 
 ## This widget allows the user to modify visible map services

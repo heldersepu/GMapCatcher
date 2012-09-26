@@ -3,7 +3,7 @@
 # ComboBoxLayer widget used to collect data to search
 
 import gtk
-from mapConst import *
+from gmapcatcher.mapConst import *
 from gobject import TYPE_STRING, TYPE_INT
 
 

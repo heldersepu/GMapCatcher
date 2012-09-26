@@ -9,7 +9,7 @@ import widTreeView
 import widMySettings
 import widChangeTheme
 import widMyGPS
-from mapConst import *
+from gmapcatcher.mapConst import *
 
 
 class MapTools():

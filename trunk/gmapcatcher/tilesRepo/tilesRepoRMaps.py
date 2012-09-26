@@ -18,7 +18,7 @@ import threading
 import traceback
 
 import gmapcatcher.lrucache as lrucache
-import gmapcatcher.mapPixbuf as mapPixbuf
+import gmapcatcher.widgets.mapPixbuf as mapPixbuf
 from threading import Lock, Thread
 from gmapcatcher.mapConst import *
 

@@ -6,16 +6,16 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from mapConst import *
-from mapArgs import MapArgs
-from fileUtils import check_dir
-from mapDownloader import MapDownloader
+from gmapcatcher.mapConst import *
+from gmapcatcher.mapArgs import MapArgs
+from gmapcatcher.fileUtils import check_dir
+from gmapcatcher.mapDownloader import MapDownloader
 from customWidgets import lbl, myEntry, myFrame, SpinBtn
 
 import mapPixbuf
-import mapUtils
-import mapServices
-from gtkThread import gui_callback
+import gmapcatcher.mapUtils as mapUtils
+import gmapcatcher.mapServices as mapServices
+from gmapcatcher.gtkThread import gui_callback
 from os.path import join, isdir
 
 

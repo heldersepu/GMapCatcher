@@ -5,8 +5,8 @@
 import gtk
 import pango
 import math
-import mapUtils
-from mapConst import *
+import gmapcatcher.mapUtils as mapUtils
+from gmapcatcher.mapConst import *
 from threading import Timer
 
 ternary = lambda a, b, c: (b, c)[not a]
