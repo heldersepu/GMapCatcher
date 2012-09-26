@@ -16,7 +16,7 @@ import gmapcatcher.widgets.mapTools as mapTools
 import gmapcatcher.widgets.mapPixbuf as mapPixbuf
 
 from gmapcatcher.mapConst import *
-from gmapcatcher.gtkThread import gui_callback
+from gmapcatcher.gtkThread import gui_callback, webbrowser_open
 from gmapcatcher.mapConf import MapConf
 from gmapcatcher.mapMark import MyMarkers
 from gmapcatcher.mapUpdate import CheckForUpdates
