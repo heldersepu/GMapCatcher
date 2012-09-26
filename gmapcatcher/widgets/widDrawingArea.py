@@ -176,16 +176,16 @@ class DrawingArea(gtk.DrawingArea):
             gc, screen_coord[0], screen_coord[1]
         )
 
-    ## Draws a line for ruler
-    def draw_line(self, gc, from_coord, to_coord, dist_str, zl):
-        ini = self.coord_to_screen(from_coord[0], from_coord[1], zl)
-        end = self.coord_to_screen(to_coord[0], to_coord[1], zl)
-        if ini and end:
-            self.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
-            if dist_str:
-                pangolayout = self.create_pango_layout("")
-                pangolayout.set_text(dist_str)
-                self.wr_pltxt(gc, end[0], end[1], pangolayout)
+    # ## Draws a line for ruler
+    # def draw_line(self, gc, from_coord, to_coord, dist_str, zl):
+    #     ini = self.coord_to_screen(from_coord[0], from_coord[1], zl)
+    #     end = self.coord_to_screen(to_coord[0], to_coord[1], zl)
+    #     if ini and end:
+    #         self.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
+    #         if dist_str:
+    #             pangolayout = self.create_pango_layout("")
+    #             pangolayout.set_text(dist_str)
+    #             self.wr_pltxt(gc, end[0], end[1], pangolayout)
 
     ## Draws a circle as starting point for ruler
     def draw_stpt(self, mcoord, zl):
@@ -412,60 +412,95 @@ class DrawingArea(gtk.DrawingArea):
                     middle[1] + full[1] / (sz * 2) + ypos,
                     self.visualdl_lo)
 
-    def draw_ruler_lines(self, r, zl, gps_track_width):
+    def draw_line(self, points, color, zl, width, draw_distance=False):
         gc = self.style.black_gc
-        gc.line_width = gps_track_width
-        colors = ["#FF0000", "#00FF00", "#4444FF", "#FFFF00"]
-        for i in range(0, len(r) - 1):
-            gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
-            dist_str = '%.3f km' % mapUtils.countDistanceFromLatLon(r[i], r[i + 1])
-            self.draw_line(gc, r[i], r[i + 1], dist_str, zl)
+        gc.line_width = width
+        gc.set_rgb_fg_color(gtk.gdk.color_parse(color))
+        dist_str = None
+        total_distance = 0
+        for j in range(len(points) - 1):
+            if draw_distance:
+                distance = mapUtils.countDistanceFromLatLon(points[j], points[j + 1])
+                total_distance += distance
+                dist_str = '%.3f km \n%.3f km' % (distance, total_distance)
+            ini = self.coord_to_screen(points[j][0], points[j][1], zl)
+            end = self.coord_to_screen(points[j + 1][0], points[j + 1][1], zl)
+            if ini and end:
+                self.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
+                if dist_str:
+                    pangolayout = self.create_pango_layout("")
+                    pangolayout.set_text(dist_str)
+                    self.wr_pltxt(gc, end[0], end[1], pangolayout)
+        return gc
 
-    def draw_gps_line(self, points, zl, gps_track_width):
-        gc = self.style.black_gc
-        gc.line_width = gps_track_width
+    def draw_ruler_lines(self, points, zl, track_width):
+        color = '#00FF00'
+        self.draw_line(points, color, zl, track_width, True)
+        # for i in range(0, len(r) - 1):
+        #     gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
+        #     dist_str = '%.3f km' % mapUtils.countDistanceFromLatLon(r[i], r[i + 1])
+        #     self.draw_line(gc, r[i], r[i + 1], dist_str, zl)
+
+    def draw_gps_line(self, points, zl, track_width):
         color = '#FF0000'
-        for i in range(0, len(points) - 1):
-            gc.set_rgb_fg_color(gtk.gdk.color_parse(color))
-            self.draw_line(gc, points[i], points[i + 1], '', zl)
+        self.draw_line(points, color, zl, track_width, False)
+        # for i in range(0, len(points) - 1):
+        #     gc.set_rgb_fg_color(gtk.gdk.color_parse(color))
+        #     self.draw_line(gc, points[i], points[i + 1], '', zl)
 
-    def draw_tracks(self, tracks, zl, gps_track_width):
-        gc = self.style.black_gc
-        gc.line_width = gps_track_width
-        colors = ["#00FF00", "#4444FF", "#FF0000", "#FFFF00", "#FF00FF"]
-        if zl >= 10:
-            minimum_distance = 10
-        elif zl >= 6:
-            minimum_distance = 5
-        elif zl >= 4:
-            minimum_distance = 1
-        elif zl >= 2:
-            minimum_distance = 0.1
-        else:
-            minimum_distance = 0.01
+    def draw_tracks(self, tracks, zl, track_width, draw_distance=True):
+        colors = ["#4444FF", "#FFFF00", "#FF00FF"]
         i = 0
         for track in tracks:
-            last_drawn = None
-            old_length = 0
-            new_length = 0
-            gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
-            for j in range(len(track['coords'])):
-                if j != 0:
-                    new_length += mapUtils.countDistanceFromLatLon(track['coords'][j - 1], track['coords'][j])
-                if j == 0:
-                    last_drawn = track['coords'][j]
-                    screen_coord = self.coord_to_screen(track['coords'][j][0], track['coords'][j][1], zl)
-                    if screen_coord:
-                        pangolayout = self.create_pango_layout("")
-                        pangolayout.set_text(track['name'])
-                        self.wr_pltxt(gc, int(screen_coord[0]), int(screen_coord[1]), pangolayout)
-                elif mapUtils.countDistanceFromLatLon(track['coords'][j], last_drawn) >= minimum_distance \
-                 or j == (len(track['coords']) - 1):
-                    if (new_length - old_length) > 1 and (new_length - old_length) > minimum_distance:
-                        dist_str = '%.2f km' % new_length
-                        old_length = new_length
-                    else:
-                        dist_str = ''
-                    self.draw_line(gc, last_drawn, track['coords'][j], dist_str, zl)
-                    last_drawn = track['coords'][j]
-            i = i + 1
+            color = colors[i % len(colors)]
+            gc = self.draw_line(track['coords'], color, zl, track_width, draw_distance)
+            screen_coord = self.coord_to_screen(track['coords'][0][0], track['coords'][0][1], zl)
+            if screen_coord:
+                pangolayout = self.create_pango_layout("")
+                pangolayout.set_text(track['name'])
+                self.wr_pltxt(gc, int(screen_coord[0]), int(screen_coord[1]), pangolayout)
+            i += 1
+        # print tracks
+        # for points in tracks:
+        #     screen_coord = self.coord_to_screen(track['coords'][j][0], track['coords'][j][1], zl)
+        #     if screen_coord:
+        #         pangolayout = self.create_pango_layout("")
+        #         pangolayout.set_text(track['name'])
+        #         self.wr_pltxt(gc, int(screen_coord[0]), int(screen_coord[1]), pangolayout)
+        # self.draw_lines(tracks, colors, zl, gps_track_width, draw_distance=True)
+        # if zl >= 10:
+        #     minimum_distance = 10
+        # elif zl >= 6:
+        #     minimum_distance = 5
+        # elif zl >= 4:
+        #     minimum_distance = 1
+        # elif zl >= 2:
+        #     minimum_distance = 0.1
+        # else:
+        #     minimum_distance = 0.01
+        # i = 0
+        # for track in tracks:
+        #     last_drawn = None
+        #     old_length = 0
+        #     new_length = 0
+        #     gc.set_rgb_fg_color(gtk.gdk.color_parse(colors[i % 4]))
+        #     for j in range(len(track['coords'])):
+        #         if j != 0:
+        #             new_length += mapUtils.countDistanceFromLatLon(track['coords'][j - 1], track['coords'][j])
+        #         if j == 0:
+        #             last_drawn = track['coords'][j]
+        #             screen_coord = self.coord_to_screen(track['coords'][j][0], track['coords'][j][1], zl)
+        #             if screen_coord:
+        #                 pangolayout = self.create_pango_layout("")
+        #                 pangolayout.set_text(track['name'])
+        #                 self.wr_pltxt(gc, int(screen_coord[0]), int(screen_coord[1]), pangolayout)
+        #         elif mapUtils.countDistanceFromLatLon(track['coords'][j], last_drawn) >= minimum_distance \
+        #          or j == (len(track['coords']) - 1):
+        #             if (new_length - old_length) > 1 and (new_length - old_length) > minimum_distance:
+        #                 dist_str = '%.2f km' % new_length
+        #                 old_length = new_length
+        #             else:
+        #                 dist_str = ''
+        #             self.draw_line(gc, last_drawn, track['coords'][j], dist_str, zl)
+        #             last_drawn = track['coords'][j]
+        #     i = i + 1
