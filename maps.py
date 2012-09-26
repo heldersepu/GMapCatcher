@@ -723,8 +723,8 @@ class MainWindow(gtk.Window):
                 self.visual_download()
             self.update_export()
 
-        if self.conf.statusbar_type == STATUS_MOUSE or \
-           (self.conf.statusbar_type == STATUS_GPS and not mapGPS.available):
+        if not self.Ruler and (self.conf.statusbar_type == STATUS_MOUSE or
+           (self.conf.statusbar_type == STATUS_GPS and not mapGPS.available)):
             self.status_bar.pop(self.status_bar_id)
 
     def view_credits(self, menuitem):
