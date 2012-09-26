@@ -28,7 +28,7 @@ from gmapcatcher.widgets.EXWindow import EXWindow
 from gmapcatcher.widgets.gpsWindow import gpsWindow
 from gmapcatcher.widgets.trackWindow import trackWindow
 from gmapcatcher.widgets.customMsgBox import user_confirm, error_msg, error_msg_non_blocking
-from gmapcatcher.widgets.customWidgets import gtk, gtk_menu, myToolTip, myFrame, lbl, legal_warning, ProgressBar, SpinBtn
+from gmapcatcher.widgets.customWidgets import gtk, gtk_menu, myToolTip, myFrame, lbl, legal_warning, ProgressBar, SpinBtn, FileChooser
 from gmapcatcher.widgets.widDrawingArea import DrawingArea
 from gmapcatcher.widgets.widComboBoxLayer import ComboBoxLayer
 from gmapcatcher.widgets.widComboBoxEntry import ComboBoxEntry
