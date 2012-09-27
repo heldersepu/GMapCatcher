@@ -95,6 +95,16 @@ http://gmapcatcher.googlecode.com/svn/wiki/visual_download.png
 == Export map to image ==
 http://gmapcatcher.googlecode.com/svn/wiki/exportMap.PNG
 
+== Drawing paths ==
+
+Paths in GMapCatcher can be used to measure distances and draw paths to follow while navigating.
+
+You can start drawing a path by pressing F7. This activates the ruler and you can left-click on any point of the map to add a point to the path. 
+
+If you make a mistake, press delete to remove last point. You can zoom and move map normally when creating a path.
+
+The path shows segment length and the whole path length (up to that point) on every point of the path. After you finish drawing the path, just press F7 again to close the tool. You then have a choice to use path as a track or dismiss it. If you choose to use it as track, it will be shown on the map until you close GMapCatcher or hide the track through Track control.
+
 = Tools menu =
 == Settings ==
 
