@@ -977,22 +977,25 @@ class MainWindow(gtk.Window):
                 self.drawing_area.repaint()
         # F7 = 65476 for Ruler
         elif event.keyval == 65476:
-            self.Ruler = not self.Ruler
-            if self.Ruler:
+            if not self.Ruler:
                 self.total_dist = 0.00
                 self.ruler_coord = list()
                 self.drawing_area.da_set_cursor(gtk.gdk.PENCIL)
                 self.status_bar.push(self.status_bar_id, "Ruler Mode - Click for Starting Point")
+                self.Ruler = not self.Ruler
             else:
-                if len(self.ruler_coord) > 1 and user_confirm(self, 'Do you want to use ruler as track?'):
+                confirm = user_confirm(self, 'Do you want to use ruler as track?')
+                if len(self.ruler_coord) > 1 and confirm == gtk.RESPONSE_YES:
                     track = {'name': 'Ruler %i' % self.rulers, 'coords': self.ruler_coord}
                     self.tracks.append(track)
                     self.shown_tracks.append(track)
                     self.rulers += 1
-                self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
-                self.ruler_coord = list()
-                self.drawing_area.repaint()
-                self.drawing_area.da_set_cursor()
+                elif confirm != gtk.RESPONSE_CANCEL:
+                    self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
+                    self.ruler_coord = list()
+                    self.drawing_area.repaint()
+                    self.drawing_area.da_set_cursor()
+                    self.Ruler = not self.Ruler
         # F8 = 65477
         elif event.keyval == 65477:
             self.track_control_clicked()
