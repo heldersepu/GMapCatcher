@@ -806,9 +806,7 @@ class MainWindow(gtk.Window):
             if self.downloading <= 0:
                 self.hide_dlfeedback = True
                 self.drawing_area.repaint()
-        hybridsat = (self.layer == LAYER_HYB and layer == LAYER_SAT) or \
-                (MAP_SERVICES[self.layer]['ID'] == LAYER_HYB and
-                MAP_SERVICES[layer]['ID'] == LAYER_SAT)
+        hybridsat = (self.layer == LAYER_HYB and layer == LAYER_SAT)
         if (self.layer == layer or hybridsat) and self.get_zoom() == tile_coord[2]:
             da = self.drawing_area
             rect = da.get_allocation()
@@ -1044,11 +1042,7 @@ class MainWindow(gtk.Window):
             self.update.finish()
         gtk.gdk.threads_leave()
         if self.conf.save_at_close:
-            # this accounts for when the oneDirPerMap setting has recently changed
-            if self.conf.oneDirPerMap or self.layer <= LAYER_HYB:
-                self.conf.save_layer = self.layer
-            else:
-                self.conf.save_layer = MAP_SERVICES[self.layer]['ID']
+            self.conf.save_layer = self.layer
             self.conf.save_width = sz[0]
             self.conf.save_height = sz[1]
             self.conf.save_hlocation = location[0]
@@ -1099,7 +1093,7 @@ class MainWindow(gtk.Window):
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf)
         self.downloader = MapDownloader(self.ctx_map)
-        if self.conf.save_at_close:
+        if self.conf.save_at_close and (LAYER_MAP <= self.conf.save_layer <= LAYER_HYB):
             self.layer = self.conf.save_layer
         else:
             self.layer = LAYER_MAP
