@@ -1,5 +1,5 @@
 #labels Featured
-<font size="5">*User guide for GMapCatcher 0.7*</font>
+<font size="5">*User guide for GMapCatcher (trunk)*</font>
 <font size="5">*Table of contents*</font> 
 <wiki:toc max_depth="3" />
 
@@ -16,6 +16,8 @@ GMapCatcher is an online and offline map viewer. Currently the following map pro
   * [http://www.bing.com/maps/ Virtual Earth]
 
 Users can choose their preferred map and watch it while online. All viewed map section will be stored on disk and may be viewed offline. Additionally a downloading tool is provided which saves a user defined area to disk for offline viewing.
+
+*This user guide is for the latest SVN-trunk, so all functions may not be available in current packaged versions.*
 
 = User interface =
 
@@ -119,6 +121,9 @@ Below is Track control window being used to show one of the drawn ruler paths an
 
 http://gmapcatcher.googlecode.com/svn/wiki/images/track_control.png
 
+=== GPS window ===
+
+http://gmapcatcher.googlecode.com/svn/wiki/images/gps_window.png
 
 == Settings ==
 
