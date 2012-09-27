@@ -112,7 +112,9 @@ All values in the tab Settings describe display properties when starting the pro
 ||  F4            ||  Import markers from KML file ||
 ||  F5            ||  Refresh ||
 ||  F6            ||  Hide/Show the visual path download zone ||
-||  F8            ||  Hide/Show the markers ||
+||  F7            ||  Draw a path in the map ||
+||  F8            ||  Show the path control window ||
+||  F9            ||  Hide/Show the markers ||
 ||  F12           ||  Hide/Show all buttons ||
 ||  F11           ||  Full screen   ||
 ||  ESC           ||  Undo F12 & F11 ||
