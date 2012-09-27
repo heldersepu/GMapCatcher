@@ -106,6 +106,21 @@ If you make a mistake, press delete to remove last point. You can zoom and move 
 The path shows segment length and the whole path length (up to that point) on every point of the path. After you finish drawing the path, just press F7 again to close the tool. You then have a choice to use path as a track or dismiss it. If you choose to use it as track, it will be shown on the map until you close GMapCatcher or hide the track through Track control.
 
 = Tools menu =
+== Operations ==
+
+=== Track control ===
+
+Track control allows controlling of tracks shown in the map. Through this window you can also import and export tracks, as well as export GPS track. GMapCatcher uses GPX-files to store this information.
+
+Toggling the tracks also toggles the tracks shown on the map.
+
+With import tracks you can import tracks and routes from GPX-files. You can export selected tracks to a GPX-file with "Export selected tracks" -button. Note that this exports all the selected tracks to a single file, so if you want to export them seperately, select only one track at a time. By selecting "Export GPS track" you can export the current GPS-trace to GPX-file (only available if GPS and GPS-track drawing is active).
+
+Below is Track control window being used to show one of the drawn ruler paths and one track from imported file.
+
+http://gmapcatcher.googlecode.com/svn/wiki/images/track_control.png
+
+
 == Settings ==
 
 All values in the tab Settings describe display properties when starting the programme. Therefore any change requires a restart of the programme in order to have effect.
