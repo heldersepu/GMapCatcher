@@ -177,5 +177,7 @@ All values in the tab Settings describe display properties when starting the pro
 
 
 = Config File =
+The config file is named *gmapcatcher.conf* and it contains all the settings for GMapCatcher.
+
 Details of all the keys in the config file here:
 http://gmapcatcher.googlecode.com/svn/doxygen/html/classgmapcatcher_1_1map_conf_1_1_map_conf.html#pub-attribs
