@@ -12,12 +12,10 @@ def user_confirm(parent, strMessage, buttons=gtk.BUTTONS_YES_NO):
     dialog = gtk.MessageDialog(parent,
             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
             gtk.MESSAGE_QUESTION, buttons, strMessage)
+    dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
     resp = dialog.run()
     dialog.destroy()
-    if resp == -8:
-        return True
-    else:
-        return False
+    return resp
 
 
 ## Message used to display errors
