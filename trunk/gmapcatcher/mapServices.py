@@ -29,6 +29,7 @@ import mapServers.stamenMaps as stamenMaps
 import mapServers.refugesInfo as refugesInfo
 import mapServers.openSeaMap as openSeaMap
 import mapServers.eniro as eniro
+import mapServers.nokia as nokia
 
 from threading import Timer
 
@@ -123,6 +124,8 @@ class MapServ:
             return openSeaMap.get_url(self.mt_counter, coord, layer, conf)
         elif conf.map_service == MAP_SERVERS[ENIRO]:
             return eniro.get_url(self.mt_counter, coord, layer, conf)
+        elif conf.map_service == MAP_SERVERS[NOKIA]:
+            return nokia.get_url(self.mt_counter, coord, layer, conf)
         else:
             return googleMaps.get_url(self.mt_counter, coord, layer, conf)
 

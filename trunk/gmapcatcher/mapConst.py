@@ -26,13 +26,14 @@ STAMEN = 13
 REFUGES = 14
 OPENSEAMAP = 15
 ENIRO = 16
+NOKIA = 17
 
 MAP_SERVERS = [
     "Google", "OpenStreetMap", "CloudMade", "Yahoo",
     "InformationFreeway", "OpenCycleMap", "Google Map Maker",
     "Virtual Earth", "Yandex",
     "Seznam", "Seznam Turistická", "Seznam Cyklo", "Seznam Historická",
-    "Stamen", "Refuges Europe", "OpenSeaMap", "Eniro"
+    "Stamen", "Refuges Europe", "OpenSeaMap", "Eniro", "Nokia"
 ]
 
 LAYER_MAP = 0
@@ -61,6 +62,7 @@ MAP_SERVICES = [
     {"ID": REFUGES,       "layers": [LAYER_MAP,LAYER_SAT,LAYER_HYB]},
     {"ID": OPENSEAMAP,    "layers": [LAYER_MAP,LAYER_HYB]},
     {"ID": ENIRO,         "layers": [LAYER_MAP,LAYER_HYB]},
+    {"ID": NOKIA,         "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER]},
 ]
 
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
