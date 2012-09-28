@@ -114,21 +114,6 @@ class MySettings():
             vbox.pack_start(hbox)
             return myFrame(" Custom Maps Directory ", vbox)
 
-        def _language(old_lang="en"):
-            vbox = gtk.VBox(False, 5)
-            combo = gtk.combo_box_new_text()
-            nr = -1
-            df = 0
-            for lang in LANGUAGES:
-                nr = nr + 1
-                combo.append_text(lang)
-                if (lang == old_lang):
-                    df = nr
-            combo.set_active(df)
-            vbox.pack_start(combo)
-            self.s_language = combo
-            return myFrame(" Language ", vbox)
-
         def btn_save_clicked(button):
             conf.init_center = ((self.s_center00.get_value_as_int()),
                                 (self.s_center01.get_value_as_int())), \
@@ -138,7 +123,6 @@ class MySettings():
             conf.init_zoom = self.s_zoom.get_value_as_int()
             conf.init_width = self.s_width.get_value_as_int()
             conf.init_height = self.s_height.get_value_as_int()
-            conf.language = self.s_language.get_active_text()
             conf.statusbar_type = self.cmb_status_type.get_active()
             conf.save_at_close = self.save_at_close_button.get_active()
 
@@ -217,7 +201,6 @@ class MySettings():
         conf = parent.conf
         hbox.pack_start(_size(conf.init_width, conf.init_height))
         hbox.pack_start(_zoom(conf.init_zoom), False)
-        hbox.pack_start(_language(conf.language))
         vbox.pack_start(hbox, False)
 
         hbox = gtk.HBox(False, 10)

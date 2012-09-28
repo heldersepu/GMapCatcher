@@ -120,7 +120,10 @@ class SerialGPS(Thread):
         # print line  # for debug
         data = line.strip().split(',')
         if data[0] == '$GPRMC':
-            self.fix.time = data[1]
+            try:
+                self.fix.time = data[1]
+            except:
+                pass
             if data[4] == 'S':  # if on the southern hemisphere, latitude is negative
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[3]))
@@ -151,7 +154,10 @@ class SerialGPS(Thread):
                 pass
 
         elif data[0] == '$GPGGA':
-            self.fix.time = data[1]
+            try:
+                self.fix.time = data[1]
+            except:
+                pass
             if data[3] == 'S':  # if on the southern hemisphere, latitude is negative
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[2]))
@@ -178,7 +184,10 @@ class SerialGPS(Thread):
                 pass
 
         elif data[0] == '$GPGSA':
-            self.fix.mode = int(data[2])
+            try:
+                self.fix.mode = int(data[2])
+            except:
+                pass
 
     def convertDegrees(self, degrees):
         return float(int(floor(degrees / 100)) + (degrees / 100 - int(floor(degrees / 100))) / 60 * 100)
