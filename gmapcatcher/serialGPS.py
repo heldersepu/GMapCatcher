@@ -111,7 +111,8 @@ class SerialGPS(Thread):
     def stop(self):
         self.__stop.set()
         self.join(5)
-        self.ser.close()
+        if self.ser:
+            self.ser.close()
 
     ## Data handler for NMEA-data
     # currently handles $GPRMC, $GPGGA and $GPGSA
