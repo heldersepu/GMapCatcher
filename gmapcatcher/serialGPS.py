@@ -124,7 +124,11 @@ class SerialGPS(Thread):
                 self.fix.time = data[1]
             except:
                 pass
-            if data[4] == 'S':  # if on the southern hemisphere, latitude is negative
+            try:
+                hemisphere = data[4]
+            except:
+                hemisphere = None
+            if hemisphere == 'S':  # if on the southern hemisphere, latitude is negative
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[3]))
                 except:
@@ -134,7 +138,11 @@ class SerialGPS(Thread):
                     self.fix.latitude = self.convertDegrees(float(data[3]))
                 except:
                     pass
-            if data[6] == 'W':  # if on the western hemisphere, longitude is negative
+            try:
+                hemisphere = data[6]
+            except:
+                hemisphere = None
+            if hemisphere == 'W':  # if on the western hemisphere, longitude is negative
                 try:
                     self.fix.longitude = -self.convertDegrees(float(data[5]))
                 except:
@@ -158,7 +166,11 @@ class SerialGPS(Thread):
                 self.fix.time = data[1]
             except:
                 pass
-            if data[3] == 'S':  # if on the southern hemisphere, latitude is negative
+            try:
+                hemisphere = data[3]
+            except:
+                hemisphere = None
+            if hemisphere == 'S':  # if on the southern hemisphere, latitude is negative
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[2]))
                 except:
@@ -168,7 +180,11 @@ class SerialGPS(Thread):
                     self.fix.latitude = self.convertDegrees(float(data[2]))
                 except:
                     pass
-            if data[5] == 'W':  # if on the western hemisphere, longitude is negative
+            try:
+                hemisphere = data[5]
+            except:
+                hemisphere = None
+            if hemisphere == 'W':  # if on the western hemisphere, longitude is negative
                 try:
                     self.fix.longitude = -self.convertDegrees(float(data[4]))
                 except:
