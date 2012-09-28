@@ -47,6 +47,15 @@ class MySettings():
             hbox.pack_start(lbl(" )) "), False)
             return myFrame(" Center ", hbox)
 
+        def _units(active):
+            hbox = gtk.HBox(False, 10)
+            self.cmb_unit_type = gtk.combo_box_new_text()
+            for i in range(len(DISTANCE_UNITS)):
+                self.cmb_unit_type.append_text('%s / %s' % (DISTANCE_UNITS[i], SPEED_UNITS[i]))
+            self.cmb_unit_type.set_active(active)
+            hbox.pack_start(self.cmb_unit_type)
+            return myFrame(" Select units ", hbox)
+
         def _status_save(conf):
             def status_combo(active_type_id):
                 hbox = gtk.HBox(False, 10)
@@ -125,6 +134,7 @@ class MySettings():
             conf.init_height = self.s_height.get_value_as_int()
             conf.statusbar_type = self.cmb_status_type.get_active()
             conf.save_at_close = self.save_at_close_button.get_active()
+            conf.units = self.cmb_unit_type.get_active()
 
             if(os.pathsep == ';'):
                 # we have windows OS, filesystem is case insensitive
@@ -201,6 +211,8 @@ class MySettings():
         conf = parent.conf
         hbox.pack_start(_size(conf.init_width, conf.init_height))
         hbox.pack_start(_zoom(conf.init_zoom), False)
+        hbox.pack_start(_zoom(conf.init_zoom), False)
+        hbox.pack_start(_units(conf.units))
         vbox.pack_start(hbox, False)
 
         hbox = gtk.HBox(False, 10)

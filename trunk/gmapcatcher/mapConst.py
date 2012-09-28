@@ -126,6 +126,13 @@ MODE_3D = 3
 # default distance - fraction of deg - for gps track increment
 GPS_INCREMENT = 0.001
 
+# Units for distance measurement and GPS speed
+DISTANCE_UNITS = ['km', 'miles', 'NM']
+SPEED_UNITS = ['km/h', 'mph', 'knots']
+UNIT_TYPE_KM = 0
+UNIT_TYPE_MILE = 1
+UNIT_TYPE_NM = 2
+
 SECTION_INIT = 'init'
 SECTION_GPS = 'gps'
 SECTION_MAP = 'map'

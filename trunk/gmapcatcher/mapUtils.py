@@ -299,3 +299,22 @@ def openGPX():
 
 def getHome():
     return os.getenv('USERPROFILE') or os.getenv('HOME')
+
+
+def convertDistance(unit_from, unit_to, value):
+    if unit_from == 'km':
+        if unit_to == 'miles':
+            return float(value) / 1.609344
+        elif unit_to == 'NM':
+            return float(value) / 1.852
+    elif unit_from == 'miles':
+        if unit_to == 'km':
+            return float(value) * 1.609344
+        elif unit_to == 'NM':
+            return float(value) * 0.868976242
+    elif unit_from == 'NM':
+        if unit_to == 'km':
+            return float(value) * 1.852
+        elif unit_to == 'miles':
+            return float(value) * 1.15077945
+    return value
