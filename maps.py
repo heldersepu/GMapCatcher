@@ -649,13 +649,12 @@ class MainWindow(gtk.Window):
                     (self.ruler_coord[l - 2][0], self.ruler_coord[l - 2][1]),
                     (self.ruler_coord[l - 1][0], self.ruler_coord[l - 1][1])
                 )
-
+            unit = self.conf.units
+            if unit != UNIT_TYPE_KM:
+                z = mapUtils.convertUnits(UNIT_TYPE_KM, unit, z)
             self.draw_overlay()
             self.total_dist = self.total_dist + z
-            if z > 10:
-                self.status_bar.push(self.status_bar_id, "Segment Distance = %.4f km, Total distance = %.4f km" % (z, (self.total_dist)))
-            else:
-                self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % (z * 1000, (self.total_dist)))
+            self.status_bar.push(self.status_bar_id, "Segment Distance = %.3f %s, Total distance = %.3f %s" % (z, DISTANCE_UNITS[unit], self.total_dist, DISTANCE_UNITS[unit]))
         else:
             self.status_bar.push(self.status_bar_id, "Click to second point to show ruler and distances")
 
@@ -666,12 +665,14 @@ class MainWindow(gtk.Window):
                     (self.ruler_coord[l - 2][0], self.ruler_coord[l - 2][1]),
                     (self.ruler_coord[l - 1][0], self.ruler_coord[l - 1][1])
                 )
+            if unit != UNIT_TYPE_KM:
+                z = mapUtils.convertUnits(UNIT_TYPE_KM, unit, z)
             self.total_dist = self.total_dist - z
             self.ruler_coord.pop()
             self.drawing_area.repaint()
             new_l = len(self.ruler_coord)
             if new_l > 1:
-                self.status_bar.push(self.status_bar_id, "Segment Distance = %.2f m, Total distance = %.4f km" % ((z * 1000), (self.total_dist)))
+                self.status_bar.push(self.status_bar_id, "Segment Distance = %.3f m, Total distance = %.3f km" % (z, self.total_dist))
             elif new_l == 1:
                 self.status_bar.push(self.status_bar_id, "Click to second point to show ruler and distances")
             else:
@@ -987,6 +988,7 @@ class MainWindow(gtk.Window):
                     self.tracks.append(track)
                     self.shown_tracks.append(track)
                     self.rulers += 1
+                    self.Ruler = not self.Ruler
                 elif confirm != gtk.RESPONSE_CANCEL:
                     self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
                     self.ruler_coord = list()
