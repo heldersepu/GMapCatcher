@@ -677,9 +677,10 @@ class MainWindow(gtk.Window):
             elif new_l == 1:
                 self.status_bar.push(self.status_bar_id, "Click to second point to show ruler and distances")
             else:
-                self.Ruler = not self.Ruler
-                self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
+                self.ruler_coord = list()
                 self.drawing_area.repaint()
+                self.drawing_area.da_set_cursor()
+                self.Ruler = not self.Ruler
         else:
             self.Ruler = not self.Ruler
             self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
