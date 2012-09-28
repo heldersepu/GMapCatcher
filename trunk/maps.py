@@ -665,6 +665,7 @@ class MainWindow(gtk.Window):
                     (self.ruler_coord[l - 2][0], self.ruler_coord[l - 2][1]),
                     (self.ruler_coord[l - 1][0], self.ruler_coord[l - 1][1])
                 )
+            unit = self.conf.units
             if unit != UNIT_TYPE_KM:
                 z = mapUtils.convertUnits(UNIT_TYPE_KM, unit, z)
             self.total_dist = self.total_dist - z
@@ -672,7 +673,7 @@ class MainWindow(gtk.Window):
             self.drawing_area.repaint()
             new_l = len(self.ruler_coord)
             if new_l > 1:
-                self.status_bar.push(self.status_bar_id, "Segment Distance = %.3f m, Total distance = %.3f km" % (z, self.total_dist))
+                self.status_bar.push(self.status_bar_id, "Total distance = %.3f km" % (self.total_dist))
             elif new_l == 1:
                 self.status_bar.push(self.status_bar_id, "Click to second point to show ruler and distances")
             else:
