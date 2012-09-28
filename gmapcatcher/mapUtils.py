@@ -301,20 +301,20 @@ def getHome():
     return os.getenv('USERPROFILE') or os.getenv('HOME')
 
 
-def convertDistance(unit_from, unit_to, value):
-    if unit_from == 'km':
-        if unit_to == 'miles':
+def convertUnits(unit_from, unit_to, value):
+    if unit_from == UNIT_TYPE_KM:
+        if unit_to == UNIT_TYPE_MILE:
             return float(value) / 1.609344
-        elif unit_to == 'NM':
+        elif unit_to == UNIT_TYPE_NM:
             return float(value) / 1.852
-    elif unit_from == 'miles':
-        if unit_to == 'km':
+    elif unit_from == UNIT_TYPE_MILE:
+        if unit_to == UNIT_TYPE_KM:
             return float(value) * 1.609344
-        elif unit_to == 'NM':
+        elif unit_to == UNIT_TYPE_NM:
             return float(value) * 0.868976242
-    elif unit_from == 'NM':
-        if unit_to == 'km':
+    elif unit_from == UNIT_TYPE_NM:
+        if unit_to == UNIT_TYPE_KM:
             return float(value) * 1.852
-        elif unit_to == 'miles':
+        elif unit_to == UNIT_TYPE_MILE:
             return float(value) * 1.15077945
     return value

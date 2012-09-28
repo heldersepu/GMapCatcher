@@ -85,7 +85,7 @@ class gpsWindow(gtk.Window):
             speed_unit = self.mapsObj.conf.units
             speed = self.mapsObj.gps.gpsfix.speed
             if speed_unit != UNIT_TYPE_NM:
-                speed = mapUtils.convertDistance('NM', DISTANCE_UNITS[speed_unit], speed)
+                speed = mapUtils.convertUnits(UNIT_TYPE_NM, speed_unit, speed)
             self.gps_values[3].set_text('%.1f %s' % (speed, SPEED_UNITS[speed_unit]))
             self.gps_values[4].set_text('%.1f' % self.mapsObj.gps.gpsfix.track)
             self.gps_values[5].set_text('%.1f' % self.mapsObj.gps.gpsfix.altitude)
