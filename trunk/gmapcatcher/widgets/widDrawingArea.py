@@ -413,7 +413,7 @@ class DrawingArea(gtk.DrawingArea):
             if draw_distance:
                 distance = mapUtils.countDistanceFromLatLon(points[j], points[j + 1])
                 if unit != UNIT_TYPE_KM:
-                    distance = mapUtils.convertUnits(UNIT_TYPE_NM, unit, distance)
+                    distance = mapUtils.convertUnits(UNIT_TYPE_KM, unit, distance)
                 total_distance += distance
                 dist_str = '%.3f %s \n%.3f %s' % (distance, DISTANCE_UNITS[unit], total_distance, DISTANCE_UNITS[unit])
             ini = self.coord_to_screen(points[j][0], points[j][1], zl)
