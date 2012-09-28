@@ -83,6 +83,7 @@ class SerialGPS(Thread):
             self.ser.flushInput()
             self.available = True
         except serial.SerialException:
+            self.__stop.set()
             self.ser = None
             self.fix.mode = MODE_NO_FIX
             self.available = False
@@ -99,6 +100,7 @@ class SerialGPS(Thread):
                             self.dataHandler(line)  # handle data
                         self.buf = lines[-1]  # set the buffer to only include the last line
                 else:
+                    self.__stop.set()
                     self.fix.mode == MODE_NO_FIX
                     self.available = False
         except serial.SerialException:
