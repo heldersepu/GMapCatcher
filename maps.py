@@ -732,7 +732,7 @@ class MainWindow(gtk.Window):
 
     def visual_dltool_toggled(self, menuitem):
         if not self.visual_dlconfig.get('downloader', False):
-            self.visual_dlconfig['downloader'] = MapDownloader(self.ctx_map)
+            self.visual_dlconfig['downloader'] = MapDownloader(self.ctx_map, self.conf.maxthreads)
 
         if menuitem.get_active():
             if self.check_bulk_down():
@@ -970,7 +970,7 @@ class MainWindow(gtk.Window):
                         self.visual_dlconfig.get('active', False))
                 if not self.visual_dlconfig.get('downloader', False):
                     self.visual_dlconfig['downloader'] = \
-                            MapDownloader(self.ctx_map)
+                            MapDownloader(self.ctx_map, self.conf.maxthreads)
                 self.drawing_area.repaint()
         # F7 = 65476 for Ruler
         elif event.keyval == 65476:
@@ -1088,7 +1088,7 @@ class MainWindow(gtk.Window):
         self.dlpixbuf = mapPixbuf.downloading()
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf)
-        self.downloader = MapDownloader(self.ctx_map)
+        self.downloader = MapDownloader(self.ctx_map, self.conf.maxthreads)
         if self.conf.save_at_close and (LAYER_MAP <= self.conf.save_layer <= LAYER_HYB):
             self.layer = self.conf.save_layer
         else:

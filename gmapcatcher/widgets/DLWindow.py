@@ -143,7 +143,7 @@ class DLWindow(gtk.Window):
         # Creating our own gmap
         self.gmap = mapServices.MapServ(self.conf)
         self.complete = []
-        self.downloader = MapDownloader(self.gmap)
+        self.downloader = MapDownloader(self.gmap, self.conf.maxthreads)
         if self.conf.map_service in NO_BULK_DOWN:
             if not legal_warning(self, self.conf.map_service, "bulk downloading"):
                 self.all_done("Canceled")
