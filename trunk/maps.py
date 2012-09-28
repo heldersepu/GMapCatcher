@@ -1051,24 +1051,21 @@ class MainWindow(gtk.Window):
 
     def enable_gps(self, show_warning):
         self.gps_valid = False
-        if mapGPS.available:
-            if self.gps:
-                if self.gps.type != self.conf.gps_type \
-                  or self.gps.serial_port != self.conf.gps_serial_port \
-                  or self.gps.baudrate != self.conf.gps_serial_baudrate:
-                    self.gps.stop_all()
-                    self.gps = mapGPS.GPS(
-                        self.gps_callback,
-                        self.conf
-                    )
-            else:
+        if self.gps:
+            if self.gps.type != self.conf.gps_type \
+              or self.gps.serial_port != self.conf.gps_serial_port \
+              or self.gps.baudrate != self.conf.gps_serial_baudrate:
+                self.gps.stop_all()
                 self.gps = mapGPS.GPS(
                     self.gps_callback,
                     self.conf
                 )
-            if show_warning and self.gps and not self.gps_warning():
-                self.gps = None
         else:
+            self.gps = mapGPS.GPS(
+                self.gps_callback,
+                self.conf
+            )
+        if show_warning and self.gps and not self.gps_warning():
             self.gps = None
 
     def gps_warning(self):
