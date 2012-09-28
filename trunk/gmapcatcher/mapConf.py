@@ -69,6 +69,7 @@ class MapConf():
         config.set(SECTION_MAP, 'show_marker_name', int(self.show_marker_name))
         config.set(SECTION_MAP, 'marker_font_color', self.marker_font_color)
         config.set(SECTION_MAP, 'marker_font_desc', self.marker_font_desc)
+        config.set(SECTION_MAP, 'maxthreads', self.maxthreads)
 
         config.add_section(SECTION_GPS)
         config.set(SECTION_GPS, 'max_gps_zoom', self.max_gps_zoom)
@@ -166,6 +167,8 @@ class MapConf():
         ## The font Description for the marker "sans bold 12"
         ## http://www.pygtk.org/docs/pygtk/class-pangofontdescription.html
         self.marker_font_desc = read_config('marker_font_desc', 'normal', str, SECTION_MAP)
+        ## Maximum number of threads to download maps
+        self.maxthreads = read_config('maxthreads', 4, int, SECTION_MAP)
 
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float, SECTION_GPS)
