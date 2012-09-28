@@ -310,7 +310,7 @@ class DrawingArea(gtk.DrawingArea):
 
         # Draw the Ruler lines
         if len(r_coord) >= 1:
-            self.draw_ruler_lines(r_coord, zl, conf.gps_track_width)
+            self.draw_ruler_lines(conf.units, r_coord, zl, conf.gps_track_width)
 
         # Draw GPS position
         if gps and gps.gpsfix:
@@ -324,7 +324,7 @@ class DrawingArea(gtk.DrawingArea):
                     if gps.gpsfix.speed >= 0.5:  # draw arrow only, if speed is over 0.5 knots
                         self.draw_arrow(screen_coord, gps.gpsfix.track)
             if conf.gps_track and len(gps.gps_points) > 1:
-                self.draw_gps_line(gps.gps_points, zl, conf.gps_track_width)
+                self.draw_gps_line(conf.units, gps.gps_points, zl, conf.gps_track_width)
 
         # Draw the downloading notification
         if downloading:
@@ -335,7 +335,7 @@ class DrawingArea(gtk.DrawingArea):
             self.draw_visual_dlconfig(visual_dlconfig, middle, full, zl)
 
         if tracks:
-            self.draw_tracks(tracks, zl, conf.gps_track_width)
+            self.draw_tracks(conf.units, tracks, zl, conf.gps_track_width)
 
     def draw_markers(self, zl, marker, coord, conf, pixDim):
         img = marker.get_marker_pixbuf(zl)
@@ -403,7 +403,7 @@ class DrawingArea(gtk.DrawingArea):
 
     ## Draw line with zoomlevel, [points], color, width and optional distance string
     # returns used gc (to be used in write_text for example)
-    def draw_line(self, zl, points, color, width, draw_distance=False):
+    def draw_line(self, unit, zl, points, color, width, draw_distance=False):
         gc = self.style.black_gc
         gc.line_width = width
         gc.set_rgb_fg_color(gtk.gdk.color_parse(color))
@@ -412,8 +412,10 @@ class DrawingArea(gtk.DrawingArea):
         for j in range(len(points) - 1):
             if draw_distance:
                 distance = mapUtils.countDistanceFromLatLon(points[j], points[j + 1])
+                if unit != 0:
+                    distance = mapUtils.convertDistance('km', DISTANCE_UNITS[unit], distance)
                 total_distance += distance
-                dist_str = '%.3f km \n%.3f km' % (distance, total_distance)
+                dist_str = '%.3f %s \n%.3f %s' % (distance, DISTANCE_UNITS[unit], total_distance, DISTANCE_UNITS[unit])
             ini = self.coord_to_screen(points[j][0], points[j][1], zl)
             end = self.coord_to_screen(points[j + 1][0], points[j + 1][1], zl)
             if ini and end:
@@ -432,19 +434,19 @@ class DrawingArea(gtk.DrawingArea):
             pangolayout.set_text(text)
             self.wr_pltxt(gc, screen_coord[0], screen_coord[1], pangolayout)
 
-    def draw_ruler_lines(self, points, zl, track_width):
+    def draw_ruler_lines(self, unit, points, zl, track_width):
         color = '#00FF00'
-        self.draw_line(zl, points, color, track_width, True)
+        self.draw_line(unit, zl, points, color, track_width, True)
 
-    def draw_gps_line(self, points, zl, track_width):
+    def draw_gps_line(self, unit, points, zl, track_width):
         color = '#FF0000'
-        self.draw_line(zl, points, color, track_width, False)
+        self.draw_line(unit, zl, points, color, track_width, False)
 
-    def draw_tracks(self, tracks, zl, track_width, draw_distance=True):
+    def draw_tracks(self, unit, tracks, zl, track_width, draw_distance=True):
         colors = ["#4444FF", "#FFFF00", "#FF00FF"]
         i = 0
         for track in tracks:
             color = colors[i % len(colors)]
-            gc = self.draw_line(zl, track['coords'], color, track_width, draw_distance)
+            gc = self.draw_line(unit, zl, track['coords'], color, track_width, draw_distance)
             self.write_text(gc, zl, track['coords'][0], track['name'])
             i += 1

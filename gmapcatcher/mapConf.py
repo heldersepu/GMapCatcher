@@ -53,6 +53,7 @@ class MapConf():
         config.set(SECTION_INIT, 'save_height', self.save_height)
         config.set(SECTION_INIT, 'match_func', self.match_func)
         config.set(SECTION_INIT, 'hide_map_servers', self.hide_map_servers)
+        config.set(SECTION_INIT, 'units', self.units)
 
         config.add_section(SECTION_MAP)
         config.set(SECTION_MAP, 'zoom', self.init_zoom)
@@ -137,6 +138,8 @@ class MapConf():
         self.match_func = read_config('match_func', ENTRY_SUB_MENU[0], str)
         ## List of map servers to hide
         self.hide_map_servers = read_config('hide_map_servers', '0', str)
+        ## Speed and distance units (default km / km/h)
+        self.units = read_config('units', 0, int)
 
         ## Initial map zoom, default is MAP_MAX_ZOOM_LEVEL-1
         self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL - 1, int, SECTION_MAP)

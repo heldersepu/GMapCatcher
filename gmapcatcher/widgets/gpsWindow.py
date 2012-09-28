@@ -8,7 +8,8 @@ import gtk
 
 from gobject import timeout_add_seconds
 from pango import FontDescription
-from gmapcatcher.mapConst import MODE_NO_FIX
+from gmapcatcher.mapConst import *
+from gmapcatcher import mapUtils
 
 
 class gpsWindow(gtk.Window):
@@ -16,7 +17,6 @@ class gpsWindow(gtk.Window):
         gtk.Window.__init__(self)
         self.mapsObj = mapsObj
 
-        self.speed_choices = ['kn', 'km/h', 'mph']
         self.gps_values = []
 
         vbox = gtk.VBox(False)
@@ -54,13 +54,6 @@ class gpsWindow(gtk.Window):
             table.attach(self.gps_values[-1], 1, 2, i + 1, i + 2)
 
         i += 1
-        self.cmb_speed = gtk.combo_box_new_text()
-        for choices in self.speed_choices:
-            self.cmb_speed.append_text('Speed unit: %s' % choices)
-        self.cmb_speed.set_active(0)
-        table.attach(self.cmb_speed, 0, 2, i + 1, i + 2)
-
-        i += 1
         button = gtk.Button('copy GPS location to clipboard')
         button.connect('clicked', self.locationToClipboad)
         table.attach(button, 0, 2, i + 1, i + 2)
@@ -89,14 +82,11 @@ class gpsWindow(gtk.Window):
                 self.gps_values[0].set_text('0.0')
             self.gps_values[1].set_text('%.6f' % self.mapsObj.gps.gpsfix.latitude)
             self.gps_values[2].set_text('%.6f' % self.mapsObj.gps.gpsfix.longitude)
-            speed_unit = self.cmb_speed.get_active()
-            if speed_unit == 1:
-                speed = self.mapsObj.gps.gpsfix.speed * 1.852
-            elif speed_unit == 2:
-                speed = self.mapsObj.gps.gpsfix.speed * 1.150779
-            else:
-                speed = self.mapsObj.gps.gpsfix.speed
-            self.gps_values[3].set_text('%.1f %s' % (speed, self.speed_choices[speed_unit]))
+            speed_unit = self.mapsObj.conf.units
+            speed = self.mapsObj.gps.gpsfix.speed
+            if speed_unit != UNIT_TYPE_NM:
+                speed = mapUtils.convertDistance('NM', DISTANCE_UNITS[speed_unit], speed)
+            self.gps_values[3].set_text('%.1f %s' % (speed, SPEED_UNITS[speed_unit]))
             self.gps_values[4].set_text('%.1f' % self.mapsObj.gps.gpsfix.track)
             self.gps_values[5].set_text('%.1f' % self.mapsObj.gps.gpsfix.altitude)
         else:
