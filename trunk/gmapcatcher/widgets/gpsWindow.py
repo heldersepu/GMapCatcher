@@ -20,12 +20,12 @@ class gpsWindow(gtk.Window):
         self.gps_values = []
 
         vbox = gtk.VBox(False)
-        vbox.pack_start(self._createLabels(FontDescription("24")))
+        vbox.pack_start(self._createLabels(FontDescription("16")))
         self.add(vbox)
         self.set_title("GPS")
         self.set_border_width(10)
         self.update_widgets()
-        self.set_size_request(300, 400)
+        self.set_size_request(200, 300)
         self.show_all()
         timeout_add_seconds(1, self.update_widgets)
 
