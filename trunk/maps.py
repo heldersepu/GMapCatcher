@@ -214,10 +214,9 @@ class MainWindow(gtk.Window):
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self):
         if self.gps and self.gps.gpsfix:
-            zl = self.get_zoom()
-            tile = mapUtils.coord_to_tile((self.gps.gpsfix.latitude, self.gps.gpsfix.longitude, zl))
-
             if self.gps.gpsfix.mode != MODE_NO_FIX:
+                zl = self.get_zoom()
+                tile = mapUtils.coord_to_tile((self.gps.gpsfix.latitude, self.gps.gpsfix.longitude, zl))
                 self.gps_valid = True
                 # The map should be centered around a new GPS location
                 if self.gps.mode == GPS_CENTER or self.reCenter_gps:
