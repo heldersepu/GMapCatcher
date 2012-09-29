@@ -87,48 +87,53 @@ class MapServ:
             self.write_locations()
         return location
 
+    ## Get the Map Server package
+    def get_map_server(self, map_service):
+        if map_service == MAP_SERVERS[VIRTUAL_EARTH]:
+            return virtualEarth
+        elif map_service == MAP_SERVERS[OSM]:
+            return openStreetMaps
+        elif map_service == MAP_SERVERS[STAMEN]:
+            return stamenMaps
+        elif map_service == MAP_SERVERS[REFUGES]:
+            return refugesInfo
+        elif map_service == MAP_SERVERS[CLOUDMADE]:
+            return cloudMade
+        elif map_service == MAP_SERVERS[YAHOO]:
+            return yahoo
+        elif map_service == MAP_SERVERS[INFO_FREEWAY]:
+            return informationFreeway
+        elif map_service == MAP_SERVERS[OPENCYCLEMAP]:
+            return openCycleMap
+        elif map_service == MAP_SERVERS[GOOGLE_MAKER]:
+            return googleMapMaker
+        elif map_service == MAP_SERVERS[YANDEX]:
+            return yandex
+        elif map_service == MAP_SERVERS[SEZNAM]:
+            return seznam
+        elif map_service == MAP_SERVERS[SEZNAM_HIKING]:
+            return seznamHiking
+        elif map_service == MAP_SERVERS[SEZNAM_CYCLO]:
+            return seznamCyclo
+        elif map_service == MAP_SERVERS[SEZNAM_HIST]:
+            return seznamHist
+        elif map_service == MAP_SERVERS[OPENSEAMAP]:
+            return openSeaMap
+        elif map_service == MAP_SERVERS[ENIRO]:
+            return eniro
+        elif map_service == MAP_SERVERS[NOKIA]:
+            return nokia
+        else:
+            return googleMaps
+        
     ## Get the URL for the given coordinates
     # In this function we point to the proper map service
     def get_url_from_coord(self, coord, layer, conf):
         self.mt_counter += 1
         self.mt_counter = self.mt_counter % NR_MTS
-        if conf.map_service == MAP_SERVERS[VIRTUAL_EARTH]:
-            return virtualEarth.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[OSM]:
-            return openStreetMaps.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[STAMEN]:
-            return stamenMaps.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[REFUGES]:
-            return refugesInfo.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[CLOUDMADE]:
-            return cloudMade.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[YAHOO]:
-            return yahoo.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[INFO_FREEWAY]:
-            return informationFreeway.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[OPENCYCLEMAP]:
-            return openCycleMap.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[GOOGLE_MAKER]:
-            return googleMapMaker.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[YANDEX]:
-            return yandex.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[SEZNAM]:
-            return seznam.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[SEZNAM_HIKING]:
-            return seznamHiking.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[SEZNAM_CYCLO]:
-            return seznamCyclo.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[SEZNAM_HIST]:
-            return seznamHist.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[OPENSEAMAP]:
-            return openSeaMap.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[ENIRO]:
-            return eniro.get_url(self.mt_counter, coord, layer, conf)
-        elif conf.map_service == MAP_SERVERS[NOKIA]:
-            return nokia.get_url(self.mt_counter, coord, layer, conf)
-        else:
-            return googleMaps.get_url(self.mt_counter, coord, layer, conf)
-
+        map_server = self.get_map_server(conf.map_service)
+        return map_server.get_url(self.mt_counter, coord, layer, conf)
+            
     def get_tile_from_coord(self, coord, layer, conf):
         href = self.get_url_from_coord(coord, layer, conf)
         if href:
