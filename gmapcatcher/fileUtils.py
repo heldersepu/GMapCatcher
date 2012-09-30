@@ -51,7 +51,8 @@ def write_file(strInfo, filePath, fileData):
     file.write("# This is the " + strInfo + "s file used by GMapCatcher.\n" +
         "#\n" +
         "# This file contains a list of Locations/Position.\n" +
-        "# Each entry should be kept on an individual line.\n" +
+        "# Each entry should be kept on an individual line,\n" +
+        "# and MUST have a unique name.\n" +
         "# The latitude, longitud and zoom should be TAB separated.\n" +
         "#\n" +
         "# Additionally, comments (such as these) may be inserted on\n" +
