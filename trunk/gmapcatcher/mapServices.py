@@ -11,26 +11,6 @@ import mapUtils
 import fileUtils
 import openanything
 import tilesRepo.Factory as trFactory
-
-import mapServers.googleMaps as googleMaps
-import mapServers.openStreetMaps as openStreetMaps
-import mapServers.cloudMade as cloudMade
-import mapServers.yahoo as yahoo
-import mapServers.informationFreeway as informationFreeway
-import mapServers.openCycleMap as openCycleMap
-import mapServers.googleMapMaker as googleMapMaker
-import mapServers.virtualEarth as virtualEarth
-import mapServers.yandex as yandex
-import mapServers.seznam as seznam
-import mapServers.seznamHiking as seznamHiking
-import mapServers.seznamCyclo as seznamCyclo
-import mapServers.seznamHist as seznamHist
-import mapServers.stamenMaps as stamenMaps
-import mapServers.refugesInfo as refugesInfo
-import mapServers.openSeaMap as openSeaMap
-import mapServers.eniro as eniro
-import mapServers.nokia as nokia
-
 from threading import Timer
 
 
@@ -89,42 +69,50 @@ class MapServ:
 
     ## Get the Map Server package
     def get_map_server(self, map_service):
+        map_server = None
         if map_service == MAP_SERVERS[VIRTUAL_EARTH]:
-            return virtualEarth
+            import mapServers.virtualEarth as map_server
         elif map_service == MAP_SERVERS[OSM]:
-            return openStreetMaps
+            import mapServers.openStreetMaps as map_server
         elif map_service == MAP_SERVERS[STAMEN]:
-            return stamenMaps
+            import mapServers.stamenMaps as map_server            
         elif map_service == MAP_SERVERS[REFUGES]:
-            return refugesInfo
+            import mapServers.refugesInfo as map_server
         elif map_service == MAP_SERVERS[CLOUDMADE]:
-            return cloudMade
+            import mapServers.cloudMade as map_server
         elif map_service == MAP_SERVERS[YAHOO]:
-            return yahoo
+            import mapServers.yahoo as map_server
         elif map_service == MAP_SERVERS[INFO_FREEWAY]:
-            return informationFreeway
+            import mapServers.informationFreeway as map_server
         elif map_service == MAP_SERVERS[OPENCYCLEMAP]:
-            return openCycleMap
+            import mapServers.openCycleMap as map_server
         elif map_service == MAP_SERVERS[GOOGLE_MAKER]:
-            return googleMapMaker
+            import mapServers.googleMapMaker as map_server
         elif map_service == MAP_SERVERS[YANDEX]:
-            return yandex
+            import mapServers.yandex as map_server
         elif map_service == MAP_SERVERS[SEZNAM]:
-            return seznam
+            import mapServers.seznam as map_server
         elif map_service == MAP_SERVERS[SEZNAM_HIKING]:
-            return seznamHiking
+            import mapServers.seznamHiking as map_server
         elif map_service == MAP_SERVERS[SEZNAM_CYCLO]:
-            return seznamCyclo
+            import mapServers.seznamCyclo as map_server
         elif map_service == MAP_SERVERS[SEZNAM_HIST]:
-            return seznamHist
+            import mapServers.seznamHist as map_server
         elif map_service == MAP_SERVERS[OPENSEAMAP]:
-            return openSeaMap
+            import mapServers.openSeaMap as map_server
         elif map_service == MAP_SERVERS[ENIRO]:
-            return eniro
+            import mapServers.eniro as map_server
         elif map_service == MAP_SERVERS[NOKIA]:
-            return nokia
-        else:
-            return googleMaps
+            import mapServers.nokia as map_server
+        elif map_service == MAP_SERVERS[SKYVECTOR_WORLD_VFR]:
+            import mapServers.WorldVFR as map_server
+        elif map_service == MAP_SERVERS[SKYVECTOR_WORLD_HI]:
+            import mapServers.WorldHI as map_server
+        elif map_service == MAP_SERVERS[SKYVECTOR_WORLD_LO]:
+            import mapServers.WorldLO as map_server    
+        elif map_service == MAP_SERVERS[GOOGLE]:
+            import mapServers.googleMaps as map_server
+        return map_server
         
     ## Get the URL for the given coordinates
     # In this function we point to the proper map service
