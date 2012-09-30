@@ -307,7 +307,7 @@ class TilesRepositoryRMaps(TilesRepository):
 
     def __init__(self, MapServ_inst, conf):
         TilesRepository.__init__(self, MapServ_inst, conf)
-        self.tile_cache = lrucache.LRUCache(1000)        
+        self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
         self.conf = conf
         self.configpath = conf.init_path

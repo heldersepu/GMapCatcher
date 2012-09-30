@@ -18,7 +18,7 @@ class WidMapServers():
         for intPos in range(len(MAP_SERVERS)):
             listStore.append([intPos, MAP_SERVERS[intPos], int(not str(intPos) in bad_map_servers)])
         listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        return listStore    
+        return listStore
 
     ## Handle the 'edited' event of the cells
     def __cell_edited(self, cell, row, new_text, model, col):
@@ -55,7 +55,6 @@ class WidMapServers():
         button.connect('clicked', self.btn_save_clicked, listStore)
         bbox.add(button)
         return bbox
-
 
     ## Put all the Widgets together
     def show(self, conf):

@@ -9,6 +9,7 @@ from gmapcatcher.mapConst import *
 
 known_layers = {}
 
+
 ## Returns a template URL for the GoogleMaps
 def layer_url_template(layer, conf):
     if layer not in known_layers:

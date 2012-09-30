@@ -12,6 +12,7 @@ from gmapcatcher.mapConst import *
 # list of instantiated repositories
 repositories = []
 
+
 # creates new repository with given path and type
 # public static
 def get_tile_repository(mapservice, conf):
@@ -21,11 +22,13 @@ def get_tile_repository(mapservice, conf):
         append_repository_to_list(repos, conf)
     return repos
 
+
 def append_repository_to_list(repos, conf):
     global repositories
-    repos_entry = {"repos": repos, "configpath": conf.init_path, "type": tilerepostype}
+    repos_entry = {"repos": repos, "configpath": conf.init_path, "type": conf.repository_type}
     repositories.append(repos_entry)
     return True
+
 
 def pick_repository_from_list(conf):
     """returns instance of repository from list or None"""
@@ -44,6 +47,7 @@ def pick_repository_from_list(conf):
                 # to remove finished
         idx = idx + 1
     return found_repos
+
 
 # private static
 def create_repos_inst(mapservice, conf):

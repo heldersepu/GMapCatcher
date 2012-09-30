@@ -62,7 +62,7 @@ class TreeView():
                 intCounter += 1
                 strNewName = strName + str(intCounter)
         return strNewName
-    
+
     ## Add a row to the list
     def btn_add_clicked(self, button, listStore, myTree):
         strName = self.check_name(' New', listStore)

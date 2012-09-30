@@ -30,20 +30,6 @@ class GPS:
         self.gps_updater = None
         self.gpsfix = None
         self.gps_points = list()
-        # self.gps_points = [
-        #     (61.052844, 28.096504),
-        #     (61.056832, 28.093758),
-        #     (61.056624, 28.107061),
-        #     (61.052595, 28.107920),
-        #     (61.047069, 28.115559),
-        #     (61.049894, 28.132639),
-        #     (61.053924, 28.159418),
-        #     (61.055129, 28.180532),
-        #     (61.056416, 28.194866),
-        #     (61.052678, 28.207741),
-        #     (61.053633, 28.219929),
-        #     (61.058285, 61.058285),
-        #     ]
         if self.mode != mapConst.GPS_DISABLED:
             self.startGPS()
 
@@ -102,9 +88,9 @@ class GPS:
         self.gpsfix = fix
         # if distance between points is greater than defined in config or first point, append to gps_points
         if fix.mode != mapConst.MODE_NO_FIX and \
-            (len(self.gps_points) == 0 or
-            mapUtils.countDistanceFromLatLon(self.gps_points[-1], (fix.latitude, fix.longitude)) > (float(self.conf.gps_track_interval) / 1000)):
-                self.gps_points.append((fix.latitude, fix.longitude))
+          (len(self.gps_points) == 0 or
+          mapUtils.countDistanceFromLatLon(self.gps_points[-1], (fix.latitude, fix.longitude)) > (float(self.conf.gps_track_interval) / 1000)):
+            self.gps_points.append((fix.latitude, fix.longitude))
         self.gps_callback()
 
     ## Load GPS marker image

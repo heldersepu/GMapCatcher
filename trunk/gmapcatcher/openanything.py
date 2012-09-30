@@ -11,6 +11,8 @@ __date__ = '$Date: 2004/04/16 21:16:24 $'
 __copyright__ = 'Copyright (c) 2004 Mark Pilgrim'
 __license__ = 'Python'
 
+import sys
+from urllib import urlencode
 import urllib2
 import urlparse
 import gzip

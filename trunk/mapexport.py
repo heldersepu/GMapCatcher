@@ -218,6 +218,7 @@ def mapPDF(pdffile, zoom, layer=2, coords=None, coord_center=None, coord_range=N
         img.save(filename, 'PNG')
         return filename
 
+
 def coordRange(coords):
     xr, yr = None, None
     for x, y in coords:
