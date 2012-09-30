@@ -22,7 +22,7 @@ from os.path import join, isdir
 class DLWindow(gtk.Window):
 
     def __init__(self, coord, kmx, kmy, layer, conf):
-
+        self.layers = []
         def _zoom(zoom0, zoom1):
             out_hbox = gtk.HBox(False, 50)
             out_hbox.set_border_width(10)
@@ -74,14 +74,31 @@ class DLWindow(gtk.Window):
             vbox.pack_start(hbox)
             return myFrame(" Area (km) ", vbox)
 
-        def _buttons(strFolder):
+        def download_rclick(self, event, menu):
+            if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
+                menu.popup(None, None, None, event.button, event.time)
+
+        def rclick_menu(active_layer, map_serv):
+            menu = gtk.Menu()
+            for layer in range(len(LAYER_NAMES)):
+                self.layers.append(gtk.CheckMenuItem(LAYER_NAMES[layer]))
+                if layer == active_layer:
+                    self.layers[-1].set_active(True)
+                else:
+                    self.layers[-1].set_sensitive(layer in MAP_SERVICES[map_serv]['layers'])
+                menu.append(self.layers[-1])
+            menu.show_all()
+            return menu
+
+        def _buttons(strFolder, layer, conf):
             hbbox = gtk.HButtonBox()
             hbbox.set_border_width(10)
             hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
-
+            menu = rclick_menu(layer, MAP_SERVERS.index(conf.map_service))
             gtk.stock_add([(gtk.STOCK_HARDDISK, "_Download", 0, 0, "")])
             self.b_download = gtk.Button(stock=gtk.STOCK_HARDDISK)
             self.b_download.connect('clicked', self.start_download, strFolder)
+            self.b_download.connect('event', download_rclick, menu)
             hbbox.pack_start(self.b_download)
 
             hbox = gtk.HBox()
@@ -104,7 +121,6 @@ class DLWindow(gtk.Window):
         self.conf = conf
         kmx = mapUtils.nice_round(kmx)
         kmy = mapUtils.nice_round(kmy)
-        self.layer = layer
         gtk.Window.__init__(self)
         lat0 = coord[0]
         lon0 = coord[1]
@@ -117,7 +133,7 @@ class DLWindow(gtk.Window):
         hbox.pack_start(_area(kmx, kmy))
         vbox.pack_start(hbox)
         vbox.pack_start(_zoom(zoom0, zoom1))
-        vbox.pack_start(_buttons(fldDown))
+        vbox.pack_start(_buttons(fldDown, layer, conf))
 
         self.pbar = gtk.ProgressBar()
         self.pbar.set_text(" ")
@@ -158,7 +174,6 @@ class DLWindow(gtk.Window):
             args.height = float(self.e_kmy.get_text())
             args.min_zl = self.s_zoom0.get_value_as_int()
             args.max_zl = self.s_zoom1.get_value_as_int()
-            layer = self.layer
         except ValueError:
             d = gtk.MessageDialog(self, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
                     gtk.BUTTONS_CLOSE, "Some field contain non-numbers")
@@ -170,13 +185,15 @@ class DLWindow(gtk.Window):
         self.b_open.set_sensitive(False)
         # Save the map info
         self.save_info(check_dir(strFolder), str(args))
-        self.pbar.set_text(" ")
-        self.processing = True
-        self.downloader.bulk_download((args.lat, args.lng, 15),
+        for layer in range(len(self.layers)):
+            self.pbar.set_text(" ")            
+            self.processing = True
+            if self.layers[layer].get_active():
+                self.downloader.bulk_download((args.lat, args.lng, 15),
                     (args.min_zl, args.max_zl), args.width, args.height,
                     layer, gui_callback(self.tile_received),
                     self.download_complete, False, self.conf)
-        self.processing = False
+            self.processing = False
 
     # Open a previously saved file and auto-populate the fields
     def do_open(self, w, strPath):
