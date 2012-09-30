@@ -926,16 +926,24 @@ class MainWindow(gtk.Window):
         # Space = 32   ReCenter the GPS
         elif keyval == 32:
             self.reCenter_gps = True
+        # Handle the numbers
+        elif 49 <= keyval <= 57:
+            try:
+                self.cmb_layer.set_active(keyval-49)
+            except:
+                pass
 
         # M = 77,109  S = 83,115  T = 84,116, H = 72,104
-        if keyval in [77, 109]:
-            self.cmb_layer.set_active(LAYER_MAP)
-        elif keyval in [83, 115]:
-            self.cmb_layer.set_active(LAYER_SAT)
-        elif keyval in [84, 116]:
-            self.cmb_layer.set_active(LAYER_TER)
-        elif keyval in [72, 104]:
-            self.cmb_layer.set_active(LAYER_HYB)
+        if not self.conf.oneDirPerMap:
+            if keyval in [77, 109]:
+                self.cmb_layer.set_active(LAYER_MAP)
+            elif keyval in [83, 115]:
+                self.cmb_layer.set_active(LAYER_SAT)
+            elif keyval in [84, 116]:
+                self.cmb_layer.set_active(LAYER_TER)
+            elif keyval in [72, 104]:
+                self.cmb_layer.set_active(LAYER_HYB)
+            
 
     ## Handles the Key pressing
     def key_press_event(self, w, event):
