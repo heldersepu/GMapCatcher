@@ -211,7 +211,6 @@ class MySettings():
         conf = parent.conf
         hbox.pack_start(_size(conf.init_width, conf.init_height))
         hbox.pack_start(_zoom(conf.init_zoom), False)
-        hbox.pack_start(_zoom(conf.init_zoom), False)
         hbox.pack_start(_units(conf.units))
         vbox.pack_start(hbox, False)
 
