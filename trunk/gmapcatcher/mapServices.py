@@ -59,6 +59,7 @@ class MapServ:
         return self.locations
 
     def search_location(self, location):
+        from mapServers import googleMaps
         location, coord = googleMaps.search_location(location)
         location = mapUtils.html_decode(location)
         if (location[:6] != "error="):
