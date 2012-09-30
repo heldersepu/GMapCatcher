@@ -252,6 +252,11 @@ class SQLite3Funcs():
 
 
 class TilesRepositorySQLite3(TilesRepository):
+    def get_db_filename(self):
+        if self.conf.oneDirPerMap:
+            return self.conf.map_service + '.db'
+        else:
+            return SQLITE3_REPOSITORY_FILE
 
     def __init__(self, MapServ_inst, conf):
         TilesRepository.__init__(self, MapServ_inst, conf)
@@ -261,7 +266,7 @@ class TilesRepositorySQLite3(TilesRepository):
         self.configpath = conf.init_path
         self.lock = Lock()
         self.missingPixbuf = mapPixbuf.missing()
-        self.sqlite3func = SQLite3Funcs(self.configpath, SQLITE3_REPOSITORY_FILE)
+        self.sqlite3func = SQLite3Funcs(self.configpath, self.get_db_filename())
 
     def finish(self):
         self.sqlite3func.finish()
@@ -270,7 +275,7 @@ class TilesRepositorySQLite3(TilesRepository):
 
     ## Sets new repository path to be used for storing tiles
     def set_repository_path(self, newpath):
-        self.sqlite3func.restart_thread(newpath, SQLITE3_REPOSITORY_FILE)
+        self.sqlite3func.restart_thread(newpath, self.get_db_filename())
 
     ## Returns the PixBuf of the tile
     # Uses a cache to optimise HDD read access
