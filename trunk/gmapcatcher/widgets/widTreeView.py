@@ -32,7 +32,7 @@ class TreeView():
     def __cell_edited(self, cell, row, new_text, model, col):
         try:
             if col == 0:
-                model[row][col] = new_text
+                model[row][col] = self.check_name(new_text, model, int(row))
             elif col == 3:
                 model[row][col] = int(new_text)
             else:
@@ -46,15 +46,27 @@ class TreeView():
             myTree.set_cursor(intPath)
             myTree.grab_focus()
 
+    ## Make sure the name is unique
+    def check_name(self, strName, listStore, skipRow=-1):
+        strNewName = strName
+        dupFound = True
+        intCounter = 0
+        while dupFound:
+            dupFound = False
+            for row in range(len(listStore)):
+                if (row != skipRow) and (listStore[row][0] == strNewName):
+                    print row != skipRow
+                    dupFound = True
+                    break
+            if dupFound:
+                intCounter += 1
+                strNewName = strName + str(intCounter)
+        return strNewName
+    
     ## Add a row to the list
     def btn_add_clicked(self, button, listStore, myTree):
-        strName = ' New'
+        strName = self.check_name(' New', listStore)
         listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        for row in listStore:
-            if row[0] == strName:
-                strName = strName + "1"
-            elif row[0][0] > strName[0]:
-                break
         iter = listStore.append([strName, 0, 0, MAP_MAX_ZOOM_LEVEL - 2])
         listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
         self.change_selection(myTree, listStore.get_path(iter))
