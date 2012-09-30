@@ -3,6 +3,7 @@
 # ComboBoxEntry widget used to collect data to search
 
 import gtk
+import re
 from gmapcatcher.mapConst import *
 
 

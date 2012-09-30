@@ -929,7 +929,7 @@ class MainWindow(gtk.Window):
         # Handle the numbers
         elif 49 <= keyval <= 57:
             try:
-                self.cmb_layer.set_active(keyval-49)
+                self.cmb_layer.set_active(keyval - 49)
             except:
                 pass
 
@@ -943,7 +943,6 @@ class MainWindow(gtk.Window):
                 self.cmb_layer.set_active(LAYER_TER)
             elif keyval in [72, 104]:
                 self.cmb_layer.set_active(LAYER_HYB)
-            
 
     ## Handles the Key pressing
     def key_press_event(self, w, event):

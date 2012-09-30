@@ -16,6 +16,7 @@ import gmapcatcher.widgets.mapPixbuf as mapPixbuf
 from threading import Lock
 from gmapcatcher.mapConst import *
 from tilesRepo import TilesRepository
+from tilesRepoSQLite3 import tileNotInRepository
 
 
 class TilesRepositoryFS(TilesRepository):

@@ -10,7 +10,7 @@ from gmapcatcher.mapConst import *
 from gmapcatcher.mapArgs import MapArgs
 from gmapcatcher.fileUtils import check_dir
 from gmapcatcher.mapDownloader import MapDownloader
-from customWidgets import lbl, myEntry, myFrame, SpinBtn, FileChooser
+from customWidgets import lbl, myEntry, myFrame, SpinBtn, FileChooser, legal_warning
 
 import mapPixbuf
 import gmapcatcher.mapUtils as mapUtils

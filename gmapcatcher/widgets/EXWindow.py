@@ -5,6 +5,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import os
 
 from gmapcatcher.mapConst import *
 from customWidgets import lbl, myEntry, myFrame, SpinBtn, FolderChooser

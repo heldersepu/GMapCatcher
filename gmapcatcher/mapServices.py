@@ -2,7 +2,6 @@
 # All the interaction with the map services
 
 import gtk
-import StringIO
 from mapConst import *
 from gobject import TYPE_STRING
 
@@ -75,7 +74,7 @@ class MapServ:
         elif map_service == MAP_SERVERS[OSM]:
             import mapServers.openStreetMaps as map_server
         elif map_service == MAP_SERVERS[STAMEN]:
-            import mapServers.stamenMaps as map_server            
+            import mapServers.stamenMaps as map_server
         elif map_service == MAP_SERVERS[REFUGES]:
             import mapServers.refugesInfo as map_server
         elif map_service == MAP_SERVERS[CLOUDMADE]:
@@ -109,11 +108,11 @@ class MapServ:
         elif map_service == MAP_SERVERS[SKYVECTOR_WORLD_HI]:
             import mapServers.WorldHI as map_server
         elif map_service == MAP_SERVERS[SKYVECTOR_WORLD_LO]:
-            import mapServers.WorldLO as map_server    
+            import mapServers.WorldLO as map_server
         elif map_service == MAP_SERVERS[GOOGLE]:
             import mapServers.googleMaps as map_server
         return map_server
-        
+
     ## Get the URL for the given coordinates
     # In this function we point to the proper map service
     def get_url_from_coord(self, coord, layer, conf):
@@ -121,7 +120,7 @@ class MapServ:
         self.mt_counter = self.mt_counter % NR_MTS
         map_server = self.get_map_server(conf.map_service)
         return map_server.get_url(self.mt_counter, coord, layer, conf)
-            
+
     def get_tile_from_coord(self, coord, layer, conf):
         href = self.get_url_from_coord(coord, layer, conf)
         if href:
@@ -187,7 +186,6 @@ class MapServ:
             callback(None, fileName)
         self.exThread = Timer(0, exportThread)
         self.exThread.start()
-
 
     def load_pixbuf(self, coord, layer, force_update):
         return self.tile_repository.load_pixbuf(coord, layer, force_update)

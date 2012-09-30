@@ -14,4 +14,4 @@ def layer_url_template(layer):
 
 ## Returns the URL to the nokia map tile
 def get_url(counter, coord, layer, conf):
-    return layer_url_template(layer) % (counter+1, MAP_MAX_ZOOM_LEVEL - coord[2], coord[0], coord[1])
+    return layer_url_template(layer) % (counter + 1, MAP_MAX_ZOOM_LEVEL - coord[2], coord[0], coord[1])

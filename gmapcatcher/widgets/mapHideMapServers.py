@@ -5,7 +5,6 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-from gmapcatcher.mapConst import *
 from widMapServers import WidMapServers
 
 
@@ -39,6 +38,7 @@ class MapHideMapServers():
                 (event.state & gtk.gdk.CONTROL_MASK) != 0 and \
                 event.keyval in [87, 119]:
             window.destroy()
+
 
 def main(parent):
     MapHideMapServers(parent)

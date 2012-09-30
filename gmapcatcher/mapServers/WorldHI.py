@@ -9,4 +9,4 @@ def layer_url_template():
 
 ## Returns the URL to the WorldHI tile
 def get_url(counter, coord, layer, conf):
-    return layer_url_template() % (counter % 2, (coord[2]-7)*2, coord[0], coord[1])
+    return layer_url_template() % (counter % 2, (coord[2] - 7) * 2, coord[0], coord[1])
