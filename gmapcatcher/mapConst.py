@@ -27,13 +27,17 @@ REFUGES = 14
 OPENSEAMAP = 15
 ENIRO = 16
 NOKIA = 17
+SKYVECTOR_WORLD_VFR = 18
+SKYVECTOR_WORLD_LO = 19
+SKYVECTOR_WORLD_HI = 20
 
 MAP_SERVERS = [
     "Google", "OpenStreetMap", "CloudMade", "Yahoo",
     "InformationFreeway", "OpenCycleMap", "Google Map Maker",
     "Virtual Earth", "Yandex",
     "Seznam", "Seznam Turistická", "Seznam Cyklo", "Seznam Historická",
-    "Stamen", "Refuges Europe", "OpenSeaMap", "Eniro", "Nokia"
+    "Stamen", "Refuges Europe", "OpenSeaMap", "Eniro", "Nokia",
+    "SkyVector World VFR","SkyVector World Lo","SkyVector World Hi"
 ]
 
 LAYER_MAP = 0
@@ -63,6 +67,9 @@ MAP_SERVICES = [
     {"ID": OPENSEAMAP,    "layers": [LAYER_MAP,LAYER_HYB]},
     {"ID": ENIRO,         "layers": [LAYER_MAP,LAYER_HYB]},
     {"ID": NOKIA,         "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER]},
+    {"ID": SKYVECTOR_WORLD_VFR,  "layers": [LAYER_MAP]},
+    {"ID": SKYVECTOR_WORLD_LO,   "layers": [LAYER_MAP]},
+    {"ID": SKYVECTOR_WORLD_HI,   "layers": [LAYER_MAP]},
 ]
 
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]
