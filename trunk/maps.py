@@ -131,12 +131,13 @@ class MainWindow(gtk.Window):
         cmb_model = self.cmb_layer.get_model()
         self.conf.map_service = MAP_SERVERS[cmb_model[index][1]]
         self.layer = cmb_model[index][2]
+        self.ctx_map.tile_repository.set_repository_path(self.conf.init_path)
         if self.visual_dlconfig.get('active', False) and not self.check_bulk_down():
             self.visual_dlconfig['active'] = False
         if self.gps and not self.gps_warning():
             self.gps.stop_all()
             self.gps = None
-        self.drawing_area.repaint()
+        self.refresh()
 
     ## Combo box dispatches operation and returns to default position - Operations - 1st item
     def on_operations_changed(self, w, index):
