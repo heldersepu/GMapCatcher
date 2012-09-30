@@ -1033,7 +1033,6 @@ class MainWindow(gtk.Window):
             self.status_bar.hide()
         else:
             self.status_bar.show()
-        return True
 
     ## Final actions before main_quit
     def on_delete(self, *args):
