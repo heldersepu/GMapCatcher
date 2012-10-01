@@ -21,9 +21,8 @@ from os.path import join, isdir
 
 class DLWindow(gtk.Window):
 
-    def __init__(self, mapsObj, coord, kmx, kmy, layer, conf):
+    def __init__(self, coord, kmx, kmy, layer, conf):
         self.layers = []
-        self.mapsObj = mapsObj
 
         def _zoom(zoom0, zoom1):
             out_hbox = gtk.HBox(False, 50)
@@ -188,7 +187,7 @@ class DLWindow(gtk.Window):
         # Save the map info
         self.save_info(check_dir(strFolder), str(args))
         for layer in range(len(self.layers)):
-            self.pbar.set_text(" ")            
+            self.pbar.set_text(" ")
             self.processing = True
             if self.layers[layer].get_active():
                 self.downloader.bulk_download((args.lat, args.lng, 15),
@@ -267,5 +266,4 @@ class DLWindow(gtk.Window):
     def on_delete(self, *params):
         if self.downloader:
             self.downloader.stop_all()
-        self.mapsObj.dlw = None
         return False
