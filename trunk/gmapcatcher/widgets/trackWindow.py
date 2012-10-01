@@ -21,11 +21,18 @@ class trackWindow(gtk.Window):
         self.set_title("GMapCatcher track control")
         self.set_border_width(10)
         self.add(vbox)
+        self.connect('key-press-event', self.key_press)
         self.connect('delete-event', self.on_delete)
         self.show_all()
         self.update_widgets()
 
-    def on_delete(self, widget, event):
+    def key_press(self, w, event):
+        if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]:
+            # W = 87,119
+            self.on_delete()
+            self.destroy()
+
+    def on_delete(self, widget=None, event=None):
         self.mapsObj.trackw = None
 
     def _createTrackCB(self, mapsObj):
