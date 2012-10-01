@@ -71,6 +71,15 @@ class trackWindow(gtk.Window):
         return hbbox
 
     def update_widgets(self):
+        for i in range(len(self.mapsObj.tracks)):
+            # If track number is larger than length of current cb_tracks
+            # it's new and checkbox needs to be added.
+            if i + 1 > len(self.cb_tracks):
+                self.cb_tracks.append(gtk.CheckButton(self.mapsObj.tracks[i]['name']))
+                self.cb_tracks[-1].set_active(True)
+                self.cb_tracks[-1].connect('toggled', self.showTracks)
+                self.cb_tracks[-1].show()
+                self.track_vbox.pack_start(self.cb_tracks[-1])
         hasTracks = len(self.cb_tracks) > 0
         self.no_tracks.set_visible(not hasTracks)
         self.b_export.set_sensitive(hasTracks)
@@ -85,12 +94,6 @@ class trackWindow(gtk.Window):
             self.mapsObj.tracks.extend(tracks)
             self.mapsObj.shown_tracks.extend(tracks)
             self.mapsObj.drawing_area.repaint()
-            for track in tracks:
-                self.cb_tracks.append(gtk.CheckButton(track['name']))
-                self.cb_tracks[-1].set_active(True)
-                self.cb_tracks[-1].connect('toggled', self.showTracks)
-                self.cb_tracks[-1].show()
-                self.track_vbox.pack_start(self.cb_tracks[-1])
         self.update_widgets()
 
     def exportTracks(self, w):
