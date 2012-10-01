@@ -96,7 +96,6 @@ def coords_to_tilepath(coords, zoom):
             res.add(tile[0])
             #print tile
         ltile = tile
-    print len(res)
     return res
 
 
