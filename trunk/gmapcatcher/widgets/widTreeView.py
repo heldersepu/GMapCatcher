@@ -13,7 +13,7 @@ class TreeView():
 
     ## Appends items to a list from the given file
     def __read_file(self, strInfo, strFilePath, listStore):
-        locations = fileUtils.read_file(strInfo, strFilePath, 100)
+        locations = fileUtils.read_file(strInfo, strFilePath)
         # add rows with text
         if locations:
             for strLoc in locations.keys():
