@@ -187,6 +187,7 @@ class MainWindow(gtk.Window):
             self.trackw = trackWindow(self)
             self.trackw.show()
         else:
+            self.trackw.update_widgets()
             self.trackw.present()
 
     def gps_window_clicked(self, w=None, pointer=None):
@@ -996,6 +997,7 @@ class MainWindow(gtk.Window):
                 self.status_bar.text("Ruler Mode - Click for Starting Point")
                 self.Ruler = not self.Ruler
             else:
+                rulerOff = False
                 if len(self.ruler_coord) > 1:
                     confirm = user_confirm(self, 'Do you want to use ruler as track?')
                     if len(self.ruler_coord) > 1 and confirm == gtk.RESPONSE_YES:
@@ -1003,16 +1005,16 @@ class MainWindow(gtk.Window):
                         self.tracks.append(track)
                         self.shown_tracks.append(track)
                         self.rulers += 1
-                        self.Ruler = not self.Ruler
+                        rulerOff = True
+                        if self.trackw:
+                            self.trackw.update_widgets()
                     elif confirm != gtk.RESPONSE_CANCEL:
-                        self.status_bar.text("Ruler Mode switched off")
-                        self.ruler_coord = list()
-                        self.drawing_area.repaint()
-                        self.drawing_area.da_set_cursor()
-                        self.Ruler = not self.Ruler
+                        rulerOff = True
                 else:
+                    rulerOff = True
+                if rulerOff:
                     self.status_bar.text("Ruler Mode switched off")
-                    self.ruler_coord = list()
+                    self.ruler_coord = []
                     self.drawing_area.repaint()
                     self.drawing_area.da_set_cursor()
                     self.Ruler = not self.Ruler
