@@ -961,6 +961,9 @@ class MainWindow(gtk.Window):
         # F2 = 65471
         elif event.keyval == 65471:
             self.show_export()
+        # F3 == 65472
+        elif event.keyval == 65472:
+            self.gps_window_clicked()
         # F4 = 65473
         elif event.keyval == 65473:
             fileName = FileChooser(mapUtils.getHome(), 'Select KML File to import')
