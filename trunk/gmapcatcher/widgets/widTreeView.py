@@ -55,7 +55,6 @@ class TreeView():
             dupFound = False
             for row in range(len(listStore)):
                 if (row != skipRow) and (listStore[row][0] == strNewName):
-                    print row != skipRow
                     dupFound = True
                     break
             if dupFound:
