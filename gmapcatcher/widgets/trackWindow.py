@@ -21,8 +21,12 @@ class trackWindow(gtk.Window):
         self.set_title("GMapCatcher track control")
         self.set_border_width(10)
         self.add(vbox)
+        self.connect('delete-event', self.on_delete)
         self.show_all()
         self.update_widgets()
+
+    def on_delete(self, widget, event):
+        self.mapsObj.trackw = None
 
     def _createTrackCB(self, mapsObj):
         frame = gtk.Frame()

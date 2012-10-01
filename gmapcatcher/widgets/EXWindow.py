@@ -22,7 +22,8 @@ class EXWindow(gtk.Window):
     repostype_id = REPOS_TYPE_FILES
     repository_temp_file = "repository_write_test.tmp"
 
-    def __init__(self, mapServ, coord, kmx, kmy, layer, conf):
+    def __init__(self, mapsObj, mapServ, coord, kmx, kmy, layer, conf):
+        self.mapsObj = mapsObj
 
         def _zoom(zoom0, zoom1):
             out_hbox = gtk.HBox(False, 50)
@@ -254,6 +255,6 @@ class EXWindow(gtk.Window):
 
         EXWindow.configpath = self.entry_custom_path.get_text()
         EXWindow.repostype_id = self.cmb_repos_type.get_active()
-
+        self.mapsObj.exw = None
         self.do_stop()
         return False
