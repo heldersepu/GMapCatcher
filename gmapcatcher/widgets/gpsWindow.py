@@ -27,10 +27,17 @@ class gpsWindow(gtk.Window):
         self.update_widgets()
         self.set_size_request(200, 300)
         self.show_all()
+        self.connect('key-press-event', self.key_press)
         self.connect('delete-event', self.on_delete)
         timeout_add_seconds(1, self.update_widgets)
 
-    def on_delete(self, widget, event):
+    def key_press(self, w, event):
+        if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]:
+            # W = 87,119
+            self.on_delete()
+            self.destroy()
+
+    def on_delete(self, widget=None, event=None):
         self.mapsObj.gpsw = None
 
     def _createLabels(self, font):
