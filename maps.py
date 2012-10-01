@@ -32,6 +32,7 @@ from gmapcatcher.widgets.customWidgets import gtk, gtk_menu, myToolTip, myFrame,
 from gmapcatcher.widgets.widDrawingArea import DrawingArea
 from gmapcatcher.widgets.widComboBoxLayer import ComboBoxLayer
 from gmapcatcher.widgets.widComboBoxEntry import ComboBoxEntry
+from gmapcatcher.widgets.widStatusBar import StatusBar
 from gmapcatcher.widgets.widCredits import OurCredits
 
 
@@ -253,9 +254,7 @@ class MainWindow(gtk.Window):
                 self.drawing_area.repaint()
                 # Update the status bar with the GPS Coordinates
                 if self.conf.statusbar_type == STATUS_GPS and not self.Ruler:
-                    self.status_bar.pop(self.status_bar_id)
-                    self.status_bar.push(self.status_bar_id,
-                                          "Latitude: " + str(round(self.gps.gpsfix.latitude, 6)) + " Longitude: " + str(round(self.gps.gpsfix.longitude, 6)))
+                    self.status_bar.coordinates(self.gps.gpsfix.latitude, self.gps.gpsfix.longitude)
             else:
                 self.gps_invalid()
         else:
@@ -271,8 +270,7 @@ class MainWindow(gtk.Window):
         self.gps_valid = False
         # Update the status bar with the GPS Coordinates
         if self.conf.statusbar_type == STATUS_GPS and not self.Ruler:
-            self.status_bar.pop(self.status_bar_id)
-            self.status_bar.push(self.status_bar_id, 'INVALID DATA FROM GPS')
+            self.status_bar.text('INVALID DATA FROM GPS')
 
     def hide_gps_invalid_messageBox(self, dialog):
         self.gps_invalid_visible = False
@@ -476,13 +474,6 @@ class MainWindow(gtk.Window):
 
         return self.drawing_area
 
-    def __create_statusbar(self):
-        sb = gtk.Statusbar()
-        sb.set_has_resize_grip(False)
-        self.status_bar_id = sb.get_context_id("init")
-        sb.push(self.status_bar_id, "gmapcatcher map viewer!")
-        return sb
-
     ## Zoom to the given pointer
     def do_zoom(self, zoom, doForce=False, dPointer=False):
         if (MAP_MIN_ZOOM_LEVEL <= zoom <= (MAP_MAX_ZOOM_LEVEL - 1)):
@@ -655,9 +646,9 @@ class MainWindow(gtk.Window):
                 z = mapUtils.convertUnits(UNIT_TYPE_KM, unit, z)
             self.draw_overlay()
             self.total_dist = self.total_dist + z
-            self.status_bar.push(self.status_bar_id, "Segment Distance = %.3f %s, Total distance = %.3f %s" % (z, DISTANCE_UNITS[unit], self.total_dist, DISTANCE_UNITS[unit]))
+            self.status_bar.distance(z, DISTANCE_UNITS[unit], self.total_dist)
         else:
-            self.status_bar.push(self.status_bar_id, "Click to second point to show ruler and distances")
+            self.status_bar.text("Click to second point to show ruler and distances")
 
     def remove_last_ruler_segment(self):
         l = len(self.ruler_coord)
@@ -674,9 +665,9 @@ class MainWindow(gtk.Window):
             self.drawing_area.repaint()
             new_l = len(self.ruler_coord)
             if new_l > 1:
-                self.status_bar.push(self.status_bar_id, "Total distance = %.3f km" % (self.total_dist))
+                self.status_bar.text("Total distance = %.3f km" % (self.total_dist))
             elif new_l == 1:
-                self.status_bar.push(self.status_bar_id, "Click to second point to show ruler and distances")
+                self.status_bar.text("Click to second point to show ruler and distances")
             else:
                 self.ruler_coord = list()
                 self.drawing_area.repaint()
@@ -684,7 +675,7 @@ class MainWindow(gtk.Window):
                 self.Ruler = not self.Ruler
         else:
             self.Ruler = not self.Ruler
-            self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
+            self.status_bar.push("Ruler Mode switched off")
             self.drawing_area.repaint()
 
     ## Handles Right & Double clicks events in the drawing_area
@@ -726,9 +717,9 @@ class MainWindow(gtk.Window):
                 self.visual_download()
             self.update_export()
 
-        if not self.Ruler and (self.conf.statusbar_type == STATUS_MOUSE or
-           (self.conf.statusbar_type == STATUS_GPS and not mapGPS.available)):
-            self.status_bar.pop(self.status_bar_id)
+        if self.conf.statusbar_type == STATUS_MOUSE and not self.Ruler:
+            coord = self.pointer_to_world_coord((event.x, event.y))
+            self.status_bar.coordinates(coord[0], coord[1])
 
     def view_credits(self, menuitem):
         w = OurCredits()
@@ -989,7 +980,7 @@ class MainWindow(gtk.Window):
                 self.total_dist = 0.00
                 self.ruler_coord = list()
                 self.drawing_area.da_set_cursor(gtk.gdk.PENCIL)
-                self.status_bar.push(self.status_bar_id, "Ruler Mode - Click for Starting Point")
+                self.status_bar.text("Ruler Mode - Click for Starting Point")
                 self.Ruler = not self.Ruler
             else:
                 confirm = user_confirm(self, 'Do you want to use ruler as track?')
@@ -1000,7 +991,7 @@ class MainWindow(gtk.Window):
                     self.rulers += 1
                     self.Ruler = not self.Ruler
                 elif confirm != gtk.RESPONSE_CANCEL:
-                    self.status_bar.push(self.status_bar_id, "Ruler Mode switched off")
+                    self.status_bar.text("Ruler Mode switched off")
                     self.ruler_coord = list()
                     self.drawing_area.repaint()
                     self.drawing_area.da_set_cursor()
@@ -1131,7 +1122,7 @@ class MainWindow(gtk.Window):
         self.top_panel = self.__create_top_paned()
         self.left_panel = self.__create_left_paned(self.conf.init_zoom)
         self.export_panel = self.__create_export_paned()
-        self.status_bar = self.__create_statusbar()
+        self.status_bar = StatusBar()
 
         ico = mapPixbuf.ico()
         if ico:
