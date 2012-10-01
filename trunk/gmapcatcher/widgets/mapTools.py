@@ -12,7 +12,7 @@ import widMyGPS
 from gmapcatcher.mapConst import *
 
 
-class MapTools():
+class mapTools(gtk.Window):
 
     def __create_notebook(self, parent):
         filePath = parent.ctx_map.configpath
@@ -48,27 +48,29 @@ class MapTools():
         # Set what page to start at
         return notebook
 
-    def __init__(self, parent, start_page):
-        win = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        win.set_border_width(10)
-        win.set_transient_for(parent)
-        win.set_size_request(600, 450)
-        win.set_destroy_with_parent(True)
-        win.set_title(" GMapCatcher Tools ")
-        win.connect('key-press-event', self.key_press_event, win)
+    def __init__(self, mapsObj, start_page):
+        gtk.Window.__init__(self)
+        self.set_border_width(10)
+        # self.set_transient_for(mapsObj)
+        self.set_size_request(600, 450)
+        self.set_destroy_with_parent(True)
+        self.set_title(" GMapCatcher Tools ")
+        self.connect('key-press-event', self.key_press_event, self)
+        self.connect('delete-event', self.on_delete)
+        self.mapsObj = mapsObj
 
-        myNotebook = self.__create_notebook(parent)
-        win.add(myNotebook)
-        win.show_all()
-        myNotebook.set_current_page(start_page)
+        self.myNotebook = self.__create_notebook(mapsObj)
+        self.add(self.myNotebook)
+        self.show_all()
+        self.myNotebook.set_current_page(start_page)
+
+    def on_delete(self, widget, event):
+        self.mapsObj.settingsw = None
 
     def key_press_event(self, widget, event, window):
         # W = 87,119; Esc = 65307
         if event.keyval == 65307 or \
                 (event.state & gtk.gdk.CONTROL_MASK) != 0 and \
                 event.keyval in [87, 119]:
+            self.mapsObj.settingsw = None
             window.destroy()
-
-
-def main(parent, start_page):
-    MapTools(parent, start_page)

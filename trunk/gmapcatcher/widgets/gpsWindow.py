@@ -27,7 +27,11 @@ class gpsWindow(gtk.Window):
         self.update_widgets()
         self.set_size_request(200, 300)
         self.show_all()
+        self.connect('delete-event', self.on_delete)
         timeout_add_seconds(1, self.update_widgets)
+
+    def on_delete(self, widget, event):
+        self.mapsObj.gpsw = None
 
     def _createLabels(self, font):
         texts = ['GPS time', 'Latitude', 'Longitude', 'Speed', 'Heading', 'Altitude']

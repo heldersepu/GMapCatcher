@@ -12,10 +12,10 @@ import signal
 import gobject
 import gmapcatcher.mapGPS as mapGPS
 import gmapcatcher.mapUtils as mapUtils
-import gmapcatcher.widgets.mapTools as mapTools
 import gmapcatcher.widgets.mapPixbuf as mapPixbuf
 
 from gmapcatcher.mapConst import *
+from gmapcatcher.widgets.mapTools import mapTools
 from gmapcatcher.gtkThread import gui_callback, webbrowser_open
 from gmapcatcher.mapConf import MapConf
 from gmapcatcher.mapMark import MyMarkers
@@ -162,7 +162,7 @@ class MainWindow(gtk.Window):
 
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         km_px = mapUtils.km_per_pixel(coord)
-        dlw = DLWindow(coord, km_px * rect.width, km_px * rect.height,
+        dlw = DLWindow(self, coord, km_px * rect.width, km_px * rect.height,
                         self.layer, self.conf)
         dlw.show()
 
@@ -178,17 +178,23 @@ class MainWindow(gtk.Window):
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         km_px = mapUtils.km_per_pixel(coord)
 
-        exw = EXWindow(self.ctx_map, coord, km_px * rect.width, km_px * rect.height,
-                        self.layer, self.conf)
+        exw = EXWindow(self, self.ctx_map, coord, km_px * rect.width, km_px * rect.height,
+                    self.layer, self.conf)
         exw.show()
 
     def track_control_clicked(self, w=None, pointer=None):
-        trackw = trackWindow(self)
-        trackw.show()
+        if not self.trackw:
+            self.trackw = trackWindow(self)
+            self.trackw.show()
+        else:
+            self.trackw.present()
 
     def gps_window_clicked(self, w=None, pointer=None):
-        gpsw = gpsWindow(self)
-        gpsw.show()
+        if not self.gpsw:
+            self.gpsw = gpsWindow(self)
+            self.gpsw.show()
+        else:
+            self.gpsw.present()
 
     def visual_download(self):
         if self.visual_dlconfig.get('active', False):
@@ -486,7 +492,11 @@ class MainWindow(gtk.Window):
     def menu_tools(self, w, strName):
         for intPos in range(len(TOOLS_MENU)):
             if strName.startswith(TOOLS_MENU[intPos]):
-                mapTools.main(self, intPos)
+                if not self.settingsw:
+                    self.settingsw = mapTools(self, intPos)
+                else:
+                    self.settingsw.myNotebook.set_current_page(intPos)
+                    self.settingsw.present()
                 return True
 
     ## All the actions for the menu items
@@ -983,14 +993,21 @@ class MainWindow(gtk.Window):
                 self.status_bar.text("Ruler Mode - Click for Starting Point")
                 self.Ruler = not self.Ruler
             else:
-                confirm = user_confirm(self, 'Do you want to use ruler as track?')
-                if len(self.ruler_coord) > 1 and confirm == gtk.RESPONSE_YES:
-                    track = {'name': 'Ruler %i' % self.rulers, 'coords': self.ruler_coord}
-                    self.tracks.append(track)
-                    self.shown_tracks.append(track)
-                    self.rulers += 1
-                    self.Ruler = not self.Ruler
-                elif confirm != gtk.RESPONSE_CANCEL:
+                if len(self.ruler_coord) > 1:
+                    confirm = user_confirm(self, 'Do you want to use ruler as track?')
+                    if len(self.ruler_coord) > 1 and confirm == gtk.RESPONSE_YES:
+                        track = {'name': 'Ruler %i' % self.rulers, 'coords': self.ruler_coord}
+                        self.tracks.append(track)
+                        self.shown_tracks.append(track)
+                        self.rulers += 1
+                        self.Ruler = not self.Ruler
+                    elif confirm != gtk.RESPONSE_CANCEL:
+                        self.status_bar.text("Ruler Mode switched off")
+                        self.ruler_coord = list()
+                        self.drawing_area.repaint()
+                        self.drawing_area.da_set_cursor()
+                        self.Ruler = not self.Ruler
+                else:
                     self.status_bar.text("Ruler Mode switched off")
                     self.ruler_coord = list()
                     self.drawing_area.repaint()
@@ -1109,6 +1126,11 @@ class MainWindow(gtk.Window):
         self.shown_tracks = []
         self.rulers = 1
         self.ruler_coord = []
+
+        # Initialize windows as None
+        self.gpsw = None
+        self.trackw = None
+        self.settingsw = None
 
         gtk.Window.__init__(self)
         try:
