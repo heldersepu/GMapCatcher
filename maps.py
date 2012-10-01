@@ -162,7 +162,7 @@ class MainWindow(gtk.Window):
 
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         km_px = mapUtils.km_per_pixel(coord)
-        dlw = DLWindow(self, coord, km_px * rect.width, km_px * rect.height,
+        dlw = DLWindow(coord, km_px * rect.width, km_px * rect.height,
                         self.layer, self.conf)
         dlw.show()
 
@@ -178,7 +178,7 @@ class MainWindow(gtk.Window):
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         km_px = mapUtils.km_per_pixel(coord)
 
-        exw = EXWindow(self, self.ctx_map, coord, km_px * rect.width, km_px * rect.height,
+        exw = EXWindow(self.ctx_map, coord, km_px * rect.width, km_px * rect.height,
                     self.layer, self.conf)
         exw.show()
 
