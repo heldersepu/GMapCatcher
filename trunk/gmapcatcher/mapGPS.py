@@ -79,7 +79,7 @@ class GPS:
 
     ## Get GPS position
     def get_location(self):
-        if self.mode != mapConst.GPS_DISABLED:
+        if self.mode != mapConst.GPS_DISABLED and self.gpsfix.latitude and self.gpsfix.longitude:
             return (self.gpsfix.latitude, self.gpsfix.longitude)
         return None
 

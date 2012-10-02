@@ -75,14 +75,19 @@ class gpsWindow(gtk.Window):
     def locationToClipboad(self, w=None):
         ## add GPS location latitude/longitude to clipboard
         clipboard = gtk.Clipboard()
-        if self.mapsObj.gps and self.mapsObj.gps.gpsfix:
+        if self.mapsObj.gps and self.mapsObj.gps.gpsfix and \
+          self.mapsObj.gps.gpsfix.latitude and self.mapsObj.gps.gpsfix.longitude:
             clipboard.set_text("Latitude=%.6f, Longitude=%.6f" %
                               (self.mapsObj.gps.gpsfix.latitude, self.mapsObj.gps.gpsfix.longitude))
         else:
             clipboard.set_text("No GPS location detected.")
 
     def update_widgets(self):
-        if self.mapsObj.gps and self.mapsObj.gps.gpsfix:
+        ## Check if gps exists by checking that fix exists and fix-time exists
+        # NMEA should include some kind of time always,
+        # although it might be seconds from GPS start, if now satellites is found.
+        # -> If time is found, GPS is operational.
+        if self.mapsObj.gps and self.mapsObj.gps.gpsfix and self.mapsObj.gps.gpsfix.time:
             if self.mapsObj.gps.gpsfix.mode > MODE_NO_FIX:
                 if self.mapsObj.gps.gpsfix.mode == MODE_2D:
                     text = 'FIX'
@@ -91,20 +96,23 @@ class gpsWindow(gtk.Window):
                 self.fix_label.set_text('<b><span foreground=\"green\">%s</span></b>' % text)
             else:
                 self.fix_label.set_text('<b><span foreground=\"red\">NO FIX</span></b>')
-            if self.mapsObj.gps.gpsfix.time != 0.0:
+            if self.mapsObj.gps.gpsfix.time:
                 gps_time = str(self.mapsObj.gps.gpsfix.time)
                 self.gps_values[0].set_text('%s:%s:%s' % (gps_time[0:2], gps_time[2:4], gps_time[4:6]))
-            else:
-                self.gps_values[0].set_text('0.0')
-            self.gps_values[1].set_text('%.6f' % self.mapsObj.gps.gpsfix.latitude)
-            self.gps_values[2].set_text('%.6f' % self.mapsObj.gps.gpsfix.longitude)
+            if self.mapsObj.gps.gpsfix.latitude:
+                self.gps_values[1].set_text('%.6f' % self.mapsObj.gps.gpsfix.latitude)
+            if self.mapsObj.gps.gpsfix.longitude:
+                self.gps_values[2].set_text('%.6f' % self.mapsObj.gps.gpsfix.longitude)
             speed_unit = self.mapsObj.conf.units
             speed = self.mapsObj.gps.gpsfix.speed
-            if speed_unit != UNIT_TYPE_NM:
-                speed = mapUtils.convertUnits(UNIT_TYPE_NM, speed_unit, speed)
-            self.gps_values[3].set_text('%.1f %s' % (speed, SPEED_UNITS[speed_unit]))
-            self.gps_values[4].set_text('%.1f' % self.mapsObj.gps.gpsfix.track)
-            self.gps_values[5].set_text('%.1f' % self.mapsObj.gps.gpsfix.altitude)
+            if speed:
+                if speed_unit != UNIT_TYPE_NM:
+                    speed = mapUtils.convertUnits(UNIT_TYPE_NM, speed_unit, speed)
+                self.gps_values[3].set_text('%.1f %s' % (speed, SPEED_UNITS[speed_unit]))
+            if self.mapsObj.gps.gpsfix.track:
+                self.gps_values[4].set_text('%.1f' % self.mapsObj.gps.gpsfix.track)
+            if self.mapsObj.gps.gpsfix.altitude:
+                self.gps_values[5].set_text('%.1f' % self.mapsObj.gps.gpsfix.altitude)
         else:
             self.fix_label.set_text('<span foreground=\"red\">No GPS detected</span>')
             for gps_value in self.gps_values:
