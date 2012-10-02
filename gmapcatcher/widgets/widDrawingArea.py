@@ -325,6 +325,10 @@ class DrawingArea(gtk.DrawingArea):
                         self.draw_arrow(screen_coord, gps.gpsfix.track)
             if conf.gps_track and len(gps.gps_points) > 1:
                 self.draw_gps_line(conf.units, gps.gps_points, zl, conf.gps_track_width)
+            if gps.gpsfix.mode == MODE_NO_FIX:
+                gc = self.style.black_gc
+                gc.set_rgb_fg_color(gtk.gdk.color_parse('#FF0000'))
+                self.write_text(gc, middle[0] - 160, 0, 'INVALID GPS DATA', 28)
 
         # Draw the downloading notification
         if downloading:
@@ -421,18 +425,21 @@ class DrawingArea(gtk.DrawingArea):
             if ini and end:
                 self.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
                 if dist_str:
-                    pangolayout = self.create_pango_layout("")
-                    pangolayout.set_text(dist_str)
-                    self.wr_pltxt(gc, end[0], end[1], pangolayout)
+                    self.write_text(gc, end[0], end[1], dist_str)
         return gc
 
+    ## Write text to point in screen coord -format
+    def write_text(self, gc, x, y, text, fontsize=10):
+        pangolayout = self.create_pango_layout("")
+        pangolayout.set_font_description(pango.FontDescription("sans normal %s" % fontsize))
+        pangolayout.set_text(text)
+        self.wr_pltxt(gc, x, y, pangolayout)
+
     ## Write text to point in (lat, lon) -format
-    def write_text(self, gc, zl, point, text):
+    def write_text_lat_lon(self, gc, zl, point, text):
         screen_coord = self.coord_to_screen(point[0], point[1], zl)
         if screen_coord:
-            pangolayout = self.create_pango_layout("")
-            pangolayout.set_text(text)
-            self.wr_pltxt(gc, screen_coord[0], screen_coord[1], pangolayout)
+            self.write_text(gc, screen_coord[0], screen_coord[1], text)
 
     def draw_ruler_lines(self, unit, points, zl, track_width):
         color = '#00FF00'
@@ -448,5 +455,5 @@ class DrawingArea(gtk.DrawingArea):
         for track in tracks:
             color = colors[i % len(colors)]
             gc = self.draw_line(unit, zl, track['coords'], color, track_width, draw_distance)
-            self.write_text(gc, zl, track['coords'][0], track['name'])
+            self.write_text_lat_lon(gc, zl, track['coords'][0], track['name'])
             i += 1

@@ -27,7 +27,7 @@ from gmapcatcher.widgets.DLWindow import DLWindow
 from gmapcatcher.widgets.EXWindow import EXWindow
 from gmapcatcher.widgets.gpsWindow import gpsWindow
 from gmapcatcher.widgets.trackWindow import trackWindow
-from gmapcatcher.widgets.customMsgBox import user_confirm, error_msg, error_msg_non_blocking
+from gmapcatcher.widgets.customMsgBox import user_confirm, error_msg
 from gmapcatcher.widgets.customWidgets import gtk, gtk_menu, myToolTip, myFrame, lbl, legal_warning, ProgressBar, SpinBtn, FileChooser
 from gmapcatcher.widgets.widDrawingArea import DrawingArea
 from gmapcatcher.widgets.widComboBoxLayer import ComboBoxLayer
@@ -269,19 +269,10 @@ class MainWindow(gtk.Window):
 
     def gps_invalid(self):
         if self.gps_valid:
-            if not self.gps_invalid_visible:
-                dialog = error_msg_non_blocking('Invalid GPS data', 'Invalid GPS data')
-                dialog.connect('response', lambda dialog, response: self.hide_gps_invalid_messageBox(dialog))
-                dialog.show()
-                self.gps_invalid_visible = True
-        self.gps_valid = False
-        # Update the status bar with the GPS Coordinates
-        if self.conf.statusbar_type == STATUS_GPS and not self.Ruler:
-            self.status_bar.text('INVALID DATA FROM GPS')
-
-    def hide_gps_invalid_messageBox(self, dialog):
-        self.gps_invalid_visible = False
-        dialog.destroy()
+            self.gps_valid = False
+            self.drawing_area.repaint()
+            if self.conf.statusbar_type == STATUS_GPS and not self.Ruler:
+                self.status_bar.text('INVALID DATA FROM GPS')
 
     ## Creates a comboBox that will contain the locations
     def __create_combo_box(self):
@@ -1079,13 +1070,13 @@ class MainWindow(gtk.Window):
               or self.gps.serial_port != self.conf.gps_serial_port \
               or self.gps.baudrate != self.conf.gps_serial_baudrate:
                 self.gps.stop_all()
-                self.gps_valid = False
+                self.gps_valid = True
                 self.gps = mapGPS.GPS(
                     self.gps_callback,
                     self.conf
                 )
         else:
-            self.gps_valid = False
+            self.gps_valid = True
             self.gps = mapGPS.GPS(
                 self.gps_callback,
                 self.conf
@@ -1122,7 +1113,6 @@ class MainWindow(gtk.Window):
         self.foreground = []
         self.save_gps = []
         self.gps = None
-        self.gps_invalid_visible = False
         self.enable_gps(True)
         self.downloading = 0
         self.visual_dlconfig = {}
