@@ -13,6 +13,8 @@ def user_confirm(parent, strMessage, buttons=gtk.BUTTONS_YES_NO):
             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
             gtk.MESSAGE_QUESTION, buttons, strMessage)
     dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
+    dialog.set_position(gtk.WIN_POS_CENTER)
+    dialog.set_keep_above(True)
     resp = dialog.run()
     dialog.destroy()
     return resp
@@ -23,6 +25,8 @@ def error_msg(parent, strMessage, buttons=gtk.BUTTONS_OK):
     dialog = gtk.MessageDialog(parent,
             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
             gtk.MESSAGE_ERROR, buttons, strMessage)
+    dialog.set_position(gtk.WIN_POS_CENTER)
+    dialog.set_keep_above(True)
     resp = dialog.run()
     dialog.destroy()
     return resp
@@ -36,6 +40,8 @@ def error_msg_non_blocking(strTitle, strMessage):
         type=gtk.MESSAGE_ERROR,
         buttons=gtk.BUTTONS_OK,
         message_format=strMessage)
+    dialog.set_position(gtk.WIN_POS_CENTER)
+    dialog.set_keep_above(True)
     dialog.set_title(strTitle)
     return dialog
 
