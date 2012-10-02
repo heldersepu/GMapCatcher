@@ -24,7 +24,8 @@ class gpsWindow(gtk.Window):
         self.set_title("GPS")
         self.set_border_width(10)
         self.update_widgets()
-        self.set_size_request(200, 300)
+        self.set_position(gtk.WIN_POS_CENTER)
+        self.set_size_request(250, 300)
         self.show_all()
         self.set_keep_above(True)
         self.connect('key-press-event', self.key_press)
@@ -83,7 +84,11 @@ class gpsWindow(gtk.Window):
     def update_widgets(self):
         if self.mapsObj.gps and self.mapsObj.gps.gpsfix:
             if self.mapsObj.gps.gpsfix.mode > MODE_NO_FIX:
-                self.fix_label.set_text('<b><span foreground=\"green\">FIX</span></b>')
+                if self.mapsObj.gps.gpsfix.mode == MODE_2D:
+                    text = 'FIX'
+                else:
+                    text = '3D FIX'
+                self.fix_label.set_text('<b><span foreground=\"green\">%s</span></b>' % text)
             else:
                 self.fix_label.set_text('<b><span foreground=\"red\">NO FIX</span></b>')
             if self.mapsObj.gps.gpsfix.time != 0.0:
