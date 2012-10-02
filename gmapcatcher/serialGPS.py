@@ -43,26 +43,18 @@ class gpsfix:
     def __init__(self):
         self.mode = MODE_NO_FIX
         self.time = ''
-        self.ept = float()
-        self.latitude = self.longitude = 0.0
-        self.epx = float()
-        self.epy = float()
-        self.altitude = float()         # Meters
-        self.epv = float()
-        self.track = float()            # Degrees from true north
-        self.speed = float()            # Knots
-        self.climb = float()            # Meters per second
-        self.epd = float()
-        self.eps = float()
-        self.epc = float()
-
-    def printFix(self):
-        print 'Mode: %i' % self.mode
-        print 'Time: %s' % self.time
-        print 'Lat/Lon: %.4f %.4f' % (self.latitude, self.longitude)
-        print 'Altitude: %.2f' % (self.altitude)
-        print 'Speed KN/KM: %f %f' % (self.speed, self.speed * 1.852)
-        print 'Heading: %f' % self.track
+        self.ept = None
+        self.latitude = self.longitude = None
+        self.epx = None
+        self.epy = None
+        self.altitude = None         # Meters
+        self.epv = None
+        self.track = None            # Degrees from true north
+        self.speed = None            # Knots
+        self.climb = None            # Meters per second
+        self.epd = None
+        self.eps = None
+        self.epc = None
 
 
 ## Serial port GPS -module for mapGPS.py
