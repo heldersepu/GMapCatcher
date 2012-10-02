@@ -1131,6 +1131,7 @@ class MainWindow(gtk.Window):
         self.shown_tracks = []
         self.rulers = 1
         self.ruler_coord = []
+        self.dragXY = None
 
         # Initialize windows as None
         self.gpsw = None
