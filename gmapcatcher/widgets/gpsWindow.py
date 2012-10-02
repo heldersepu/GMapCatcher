@@ -16,11 +16,10 @@ class gpsWindow(gtk.Window):
     def __init__(self, mapsObj):
         gtk.Window.__init__(self)
         self.mapsObj = mapsObj
-
         self.gps_values = []
-
         vbox = gtk.VBox(False)
         vbox.pack_start(self._createLabels(FontDescription("16")))
+        self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         self.add(vbox)
         self.set_title("GPS")
         self.set_border_width(10)
