@@ -133,6 +133,8 @@ class GPSUpdater(Thread):
             while not self.finished.is_set():
                 time.sleep(self.interval)
                 available = sergps.available
+                if not available:
+                    break
                 self.function(sergps.fix)
             sergps.stop()
         else:
