@@ -27,6 +27,7 @@ class gpsWindow(gtk.Window):
         self.update_widgets()
         self.set_size_request(200, 300)
         self.show_all()
+        self.set_keep_above(True)
         self.connect('key-press-event', self.key_press)
         self.connect('delete-event', self.on_delete)
         timeout_add_seconds(1, self.update_widgets)
