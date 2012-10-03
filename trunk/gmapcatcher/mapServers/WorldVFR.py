@@ -3,7 +3,7 @@
 
 
 max_zoom = 15
-min_zoom = 8
+min_zoom = 7
 
 ## Returns a template URL for the WorldVFR
 def layer_url_template():
