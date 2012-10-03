@@ -230,11 +230,11 @@ class MainWindow(gtk.Window):
                 tile = mapUtils.coord_to_tile((self.gps.gpsfix.latitude, self.gps.gpsfix.longitude, zl))
                 self.gps_valid = True
                 # The map should be centered around a new GPS location
-                if self.gps.mode == GPS_CENTER or self.reCenter_gps:
+                if not self.Ruler and (self.gps.mode == GPS_CENTER or self.reCenter_gps):
                     self.reCenter_gps = False
                     self.drawing_area.center = tile
                 # The map should be moved only to keep GPS location on the screen
-                elif self.gps.mode == GPS_ON_SCREEN:
+                elif self.gps.mode == GPS_ON_SCREEN and not self.Ruler:
                     rect = self.drawing_area.get_allocation()
                     xy = mapUtils.tile_coord_to_screen(
                         (tile[0][0], tile[0][1], zl), rect, self.drawing_area.center)
@@ -256,7 +256,7 @@ class MainWindow(gtk.Window):
                     else:
                         self.drawing_area.center = tile
                 # GPS update timeout, recenter GPS only after 3 sec idle
-                elif self.gps.mode == GPS_TIMEOUT:
+                elif self.gps.mode == GPS_TIMEOUT and not self.Ruler:
                     if (time.time() - self.gps_idle_time) > 3:
                         self.drawing_area.center = tile
 

@@ -42,7 +42,7 @@ def serialPortScan():
 class gpsfix:
     def __init__(self):
         self.mode = MODE_NO_FIX
-        self.time = ''
+        self.time = None
         self.ept = None
         self.latitude = self.longitude = None
         self.epx = None

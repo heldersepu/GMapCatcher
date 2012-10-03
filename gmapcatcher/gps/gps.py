@@ -181,12 +181,12 @@ class gps(gpsdata, gpsjson):
                     else:
                         def default(i, vbit=0, cnv=float):
                             if fields[i] == '?':
-                                return NaN
+                                return None
                             else:
                                 try:
                                     value = cnv(fields[i])
                                 except ValueError:
-                                    return NaN
+                                    return None
                                 self.valid |= vbit
                                 return value
                         # clear all valid bits that might be set again below
@@ -254,8 +254,8 @@ class gps(gpsdata, gpsjson):
             self.driver_mode = default("native", 0)
             self.baudrate    = default("bps", 0)
             self.serialmode  = default("serialmode", "8N1")
-            self.cycle       = default("cycle",    NaN)
-            self.mincycle    = default("mincycle", NaN)
+            self.cycle       = default("cycle",    None)
+            self.mincycle    = default("mincycle", None)
         elif self.data.get("class") == "TPV":
             self.valid = ONLINE_SET
             self.utc = default("time", None, TIME_SET)
@@ -265,23 +265,23 @@ class gps(gpsdata, gpsjson):
                     self.fix.time = self.utc
                 else:
                     self.fix.time = isotime(self.utc.encode("ascii"))
-            self.fix.ept =       default("ept",   NaN, TIMERR_SET)
-            self.fix.latitude =  default("lat",   NaN, LATLON_SET)
-            self.fix.longitude = default("lon",   NaN)
-            self.fix.altitude =  default("alt",   NaN, ALTITUDE_SET)
-            self.fix.epx =       default("epx",   NaN, HERR_SET)
-            self.fix.epy =       default("epy",   NaN, HERR_SET)
-            self.fix.epv =       default("epv",   NaN, VERR_SET)
-            self.fix.track =     default("track", NaN, TRACK_SET)
-            self.fix.speed =     default("speed", NaN, SPEED_SET)
-            self.fix.climb =     default("climb", NaN, CLIMB_SET)
-            self.fix.epd =       default("epd",   NaN)
-            self.fix.eps =       default("eps",   NaN, SPEEDERR_SET)
-            self.fix.epc =       default("epc",   NaN, CLIMBERR_SET)
+            self.fix.ept =       default("ept",   None, TIMERR_SET)
+            self.fix.latitude =  default("lat",   None, LATLON_SET)
+            self.fix.longitude = default("lon",   None)
+            self.fix.altitude =  default("alt",   None, ALTITUDE_SET)
+            self.fix.epx =       default("epx",   None, HERR_SET)
+            self.fix.epy =       default("epy",   None, HERR_SET)
+            self.fix.epv =       default("epv",   None, VERR_SET)
+            self.fix.track =     default("track", None, TRACK_SET)
+            self.fix.speed =     default("speed", None, SPEED_SET)
+            self.fix.climb =     default("climb", None, CLIMB_SET)
+            self.fix.epd =       default("epd",   None)
+            self.fix.eps =       default("eps",   None, SPEEDERR_SET)
+            self.fix.epc =       default("epc",   None, CLIMBERR_SET)
             self.fix.mode =      default("mode",  0,   MODE_SET)
         elif self.data.get("class") == "SKY":
             for attrp in ("x", "y", "v", "h", "p", "g"):
-                setattr(self, attrp+"dop", default(attrp+"dop", NaN, DOP_SET))
+                setattr(self, attrp+"dop", default(attrp+"dop", None, DOP_SET))
             if "satellites" in self.data.keys():
                 self.satellites = [] 
                 for sat in self.data['satellites']:
