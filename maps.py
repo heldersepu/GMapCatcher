@@ -697,7 +697,7 @@ class MainWindow(gtk.Window):
                 w.popup(None, None, None, event.button, event.time)
             # If window hasn't been dragged, it's possible to add marker or ruler
             # if the window has been dragged, just ignore it...
-            if self.dragXY == (event.x, event.y):
+            if abs(event.x - self.dragXY[0]) < 5 and abs(event.y - self.dragXY[1]) < 5:
                 # Ctrl + Click adds a marker
                 if (event.state & gtk.gdk.CONTROL_MASK):
                     self.add_marker((event.x, event.y))
