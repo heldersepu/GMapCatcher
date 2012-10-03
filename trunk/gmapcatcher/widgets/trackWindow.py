@@ -18,6 +18,11 @@ class trackWindow(gtk.Window):
         vbox = gtk.VBox(False)
         vbox.pack_start(self._createTrackCB(mapsObj))
         vbox.pack_start(self._createButtons())
+
+        self.cb_draw_distances = gtk.CheckButton('Draw distances')
+        self.cb_draw_distances.connect('toggled', self.toggleDistance)
+        vbox.pack_start(self.cb_draw_distances)
+
         self.set_title("GMapCatcher track control")
         self.set_border_width(10)
         self.add(vbox)
@@ -122,4 +127,8 @@ class trackWindow(gtk.Window):
             if self.cb_tracks[i].get_active():
                 tracksToShow.append(self.mapsObj.tracks[i])
         self.mapsObj.shown_tracks = tracksToShow
+        self.mapsObj.drawing_area.repaint()
+
+    def toggleDistance(self, *args, **kwargs):
+        self.mapsObj.draw_track_distance = self.cb_draw_distances.get_active()
         self.mapsObj.drawing_area.repaint()
