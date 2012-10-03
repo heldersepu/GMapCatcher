@@ -26,19 +26,35 @@ class gpsWindow(gtk.Window):
         self.__stop = False
         vbox = gtk.VBox(False)
         vbox.pack_start(self._createLabels(FontDescription("16")))
-        self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         self.add(vbox)
         self.set_title("GPS")
         self.set_border_width(10)
         self.update_widgets()
         self.set_position(gtk.WIN_POS_CENTER)
         self.set_size_request(250, 300)
-        self.show_all()
-        self.set_keep_above(True)
         self.connect('key-press-event', self.key_press)
         self.connect('delete-event', self.on_delete)
+        self.add_events(gtk.gdk.BUTTON_PRESS_MASK)
+        menu = self.rclick_menu()
+        self.connect('button_press_event', self.window_event, menu)
+        self.show_all()
+        self.set_keep_above(True)        
         timeout_add_seconds(1, self.update_widgets)
 
+    ## Handles the right click event
+    def window_event(self, w, event, menu):
+        if event.button == 3:
+            menu.popup(None, None, None, 1, event.time)
+            
+    ## Create a gtk Menu for the right click
+    def rclick_menu(self):
+        myMenu = gtk.Menu()
+        menu_item = gtk.MenuItem('copy GPS location to clipboard')
+        myMenu.append(menu_item)
+        menu_item.connect('activate', self.locationToClipboad)
+        menu_item.show()
+        return myMenu
+    
     def key_press(self, w, event):
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]:
             # W = 87,119
@@ -73,12 +89,6 @@ class gpsWindow(gtk.Window):
             label.modify_font(font)
             self.gps_values.append(label)
             table.attach(self.gps_values[-1], 1, 2, i + 1, i + 2)
-
-        i += 1
-        button = gtk.Button('copy GPS location to clipboard')
-        button.connect('clicked', self.locationToClipboad)
-        table.attach(button, 0, 2, i + 1, i + 2)
-
         return table
 
     def locationToClipboad(self, w=None):
