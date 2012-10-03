@@ -87,7 +87,7 @@ class GPS:
     def update(self, fix):
         self.gpsfix = fix
         # if distance between points is greater than defined in config or first point, append to gps_points
-        if fix.mode != mapConst.MODE_NO_FIX and \
+        if fix.mode != mapConst.MODE_NO_FIX and fix.latitude and fix.longitude and \
           (len(self.gps_points) == 0 or
           mapUtils.countDistanceFromLatLon(self.gps_points[-1], (fix.latitude, fix.longitude)) > (float(self.conf.gps_track_interval) / 1000)):
             self.gps_points.append((fix.latitude, fix.longitude))

@@ -225,7 +225,7 @@ class MainWindow(gtk.Window):
     ## Called when new coordinates are obtained from the GPS
     def gps_callback(self):
         if self.gps and self.gps.gpsfix:
-            if self.gps.gpsfix.mode != MODE_NO_FIX:
+            if self.gps.gpsfix.mode != MODE_NO_FIX and self.gps.gpsfix.latitude and self.gps.gpsfix.longitude:
                 zl = self.get_zoom()
                 tile = mapUtils.coord_to_tile((self.gps.gpsfix.latitude, self.gps.gpsfix.longitude, zl))
                 self.gps_valid = True
