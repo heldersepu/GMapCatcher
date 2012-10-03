@@ -26,7 +26,8 @@ class ComboBoxLayer(gtk.ComboBoxEntry):
             mapName = MAP_SERVERS[mapSrv['ID']]
             if self.conf.oneDirPerMap:
                 if not str(mapSrv['ID']) in bad_map_servers:
-                    store.add(mapName, mapSrv['ID'], mapSrv['layers'][0])
+                    if LAYER_MAP in mapSrv['layers']:
+                        store.add(mapName, mapSrv['ID'], mapSrv['layers'][0])
                     if mapName == self.conf.map_service:
                         currentMap = len(store) - 1
                     if (len(mapSrv['layers']) > 0):

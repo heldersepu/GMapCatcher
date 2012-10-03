@@ -64,7 +64,7 @@ MAP_SERVICES = [
     {"ID": SEZNAM_HIST,   "layers": [LAYER_SAT,LAYER_TER,LAYER_HYB]},
     {"ID": STAMEN,        "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER]},
     {"ID": REFUGES,       "layers": [LAYER_MAP,LAYER_SAT,LAYER_HYB]},
-    {"ID": OPENSEAMAP,    "layers": [LAYER_MAP,LAYER_HYB]},
+    {"ID": OPENSEAMAP,    "layers": [LAYER_HYB]},
     {"ID": ENIRO,         "layers": [LAYER_MAP,LAYER_HYB]},
     {"ID": NOKIA,         "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER]},
     {"ID": SKYVECTOR_WORLD_VFR,  "layers": [LAYER_MAP]},
