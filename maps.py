@@ -449,6 +449,7 @@ class MainWindow(gtk.Window):
         scale.set_size_request(30, -1)
         scale.set_increments(1, 1)
         scale.set_digits(0)
+        scale.set_range(self.map_min_zoom, self.map_max_zoom)
         scale.set_value(conf.init_zoom)
         scale.connect("change-value", self.scale_change_value)
         scale.show()
@@ -1107,6 +1108,8 @@ class MainWindow(gtk.Window):
         self.dlpixbuf = mapPixbuf.downloading()
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf)
+        self.map_min_zoom = self.ctx_map.get_min_zoom(self.conf.map_service)
+        self.map_max_zoom = self.ctx_map.get_max_zoom(self.conf.map_service)
 
         self.downloader = MapDownloader(self.ctx_map, self.conf.maxthreads)
         if self.conf.save_at_close and (LAYER_MAP <= self.conf.save_layer <= LAYER_HYB):
