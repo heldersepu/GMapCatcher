@@ -10,6 +10,9 @@ from gobject import timeout_add_seconds
 from pango import FontDescription
 from gmapcatcher.mapConst import *
 from gmapcatcher import mapUtils
+from datetime import datetime, timedelta
+import time
+from gmapcatcher.gps import misc
 
 
 class gpsWindow(gtk.Window):
@@ -17,6 +20,7 @@ class gpsWindow(gtk.Window):
         gtk.Window.__init__(self)
         self.mapsObj = mapsObj
         self.gps_values = []
+        self.__stop = False
         vbox = gtk.VBox(False)
         vbox.pack_start(self._createLabels(FontDescription("16")))
         self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
@@ -40,6 +44,8 @@ class gpsWindow(gtk.Window):
 
     def on_delete(self, widget=None, event=None):
         self.mapsObj.gpsw = None
+        self.__stop = True
+        self.destroy()
 
     def _createLabels(self, font):
         texts = ['GPS time', 'Latitude', 'Longitude', 'Speed', 'Heading', 'Altitude']
@@ -97,8 +103,25 @@ class gpsWindow(gtk.Window):
             else:
                 self.fix_label.set_text('<b><span foreground=\"red\">NO FIX</span></b>')
             if self.mapsObj.gps.gpsfix.time:
-                gps_time = str(self.mapsObj.gps.gpsfix.time)
-                self.gps_values[0].set_text('%s:%s:%s' % (gps_time[0:2], gps_time[2:4], gps_time[4:6]))
+                d = None
+                s = self.mapsObj.gps.gpsfix.time
+                offset = timedelta(seconds=time.timezone if (time.daylight == 0) else time.altzone)
+                if self.mapsObj.conf.gps_type == TYPE_GPSD:
+                    if not isinstance(s, int) and not isinstance(s, float):
+                        s = misc.isotime(self.mapsObj.gps.gpsfix.time)
+                    d = datetime.utcfromtimestamp(s)
+                    d = d - offset
+                else:
+                    if '.' in s:
+                        d = datetime.strptime(s, '%H%M%S.%f')
+                    else:
+                        d = datetime.strptime(s, '%H%M%S')
+                    d = d - offset
+                if d:
+                    gps_time = '%s:%s:%s' % (str(d.hour).rjust(2, '0'),
+                        str(d.minute).rjust(2, '0'), str(d.second).rjust(2, '0'))
+                    if gps_time:
+                        self.gps_values[0].set_text(gps_time)
             if self.mapsObj.gps.gpsfix.latitude:
                 self.gps_values[1].set_text('%.6f' % self.mapsObj.gps.gpsfix.latitude)
             if self.mapsObj.gps.gpsfix.longitude:
@@ -118,4 +141,7 @@ class gpsWindow(gtk.Window):
             for gps_value in self.gps_values:
                 gps_value.set_text('---')
         self.fix_label.set_use_markup(True)
-        return True
+        if self.__stop:
+            return False
+        else:
+            return True
