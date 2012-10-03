@@ -44,7 +44,7 @@ class MainWindow(gtk.Window):
     reCenter_gps = False
     showMarkers = True
     tPoint = {}
-    gps_idle_time = time.time()
+    gps_idle_time = 0
     # Variables for Ruler - F7 to activate/deactivate
     Ruler = 0
     total_dist = 0.00
