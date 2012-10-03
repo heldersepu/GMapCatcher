@@ -103,7 +103,6 @@ class SerialGPS(Thread):
 
     def stop(self):
         self.__stop.set()
-        self.join(5)
         if self.ser:
             self.ser.close()
 
