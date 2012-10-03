@@ -99,6 +99,7 @@ class SerialGPS(Thread):
             self.fix.mode = MODE_NO_FIX
             self.available = False
             print "Unable to open port"
+            self.stop()
 
     def stop(self):
         self.__stop.set()

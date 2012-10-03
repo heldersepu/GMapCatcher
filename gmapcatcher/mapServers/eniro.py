@@ -4,6 +4,10 @@
 from gmapcatcher.mapConst import *
 
 
+max_zoom = 9
+min_zoom = -1
+
+
 ## Returns a template URL for the Eniro
 def layer_url_template(counter, layer, conf):
     if layer == LAYER_HYB:
