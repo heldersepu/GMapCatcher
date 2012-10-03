@@ -444,7 +444,7 @@ class MainWindow(gtk.Window):
         return myFrame(" Export map to PNG image ", hbox)
 
     def __create_left_paned(self, conf):
-        scale = gtk.VScale()       
+        scale = gtk.VScale()
         scale.set_property("update-policy", gtk.UPDATE_DISCONTINUOUS)
         scale.set_size_request(30, -1)
         scale.set_increments(1, 1)
@@ -474,7 +474,7 @@ class MainWindow(gtk.Window):
 
     def scale_change_value(self, therange, scroll, value):
         self.do_zoom(int(round(value)))
-        
+
     ## Zoom to the given pointer
     def do_zoom(self, zoom, doForce=False, dPointer=False):
         if (self.map_min_zoom <= zoom <= (self.map_max_zoom)):
@@ -1035,7 +1035,7 @@ class MainWindow(gtk.Window):
         self.update_export()
         self.marker.refresh()
         self.update_cmb_gps()
-        self.drawing_area.repaint()        
+        self.drawing_area.repaint()
         if self.conf.statusbar_type == STATUS_NONE:
             self.status_bar.hide()
         else:
@@ -1107,7 +1107,7 @@ class MainWindow(gtk.Window):
         self.dlpixbuf = mapPixbuf.downloading()
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf)
-        
+
         self.downloader = MapDownloader(self.ctx_map, self.conf.maxthreads)
         if self.conf.save_at_close and (LAYER_MAP <= self.conf.save_layer <= LAYER_HYB):
             self.layer = self.conf.save_layer
