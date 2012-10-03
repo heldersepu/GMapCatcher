@@ -272,7 +272,7 @@ class DrawingArea(gtk.DrawingArea):
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None,
                     r_coord=[],
-                    tracks=None):
+                    tracks=None, draw_track_distance=False):
         self.set_scale_gc()
         self.set_visualdl_gc()
         rect = self.get_allocation()
@@ -339,7 +339,7 @@ class DrawingArea(gtk.DrawingArea):
             self.draw_visual_dlconfig(visual_dlconfig, middle, full, zl)
 
         if tracks:
-            self.draw_tracks(conf.units, tracks, zl, conf.gps_track_width)
+            self.draw_tracks(conf.units, tracks, zl, conf.gps_track_width, draw_track_distance)
 
     def draw_markers(self, zl, marker, coord, conf, pixDim):
         img = marker.get_marker_pixbuf(zl)
@@ -449,7 +449,7 @@ class DrawingArea(gtk.DrawingArea):
         color = '#FF0000'
         self.draw_line(unit, zl, points, color, track_width, False)
 
-    def draw_tracks(self, unit, tracks, zl, track_width, draw_distance=True):
+    def draw_tracks(self, unit, tracks, zl, track_width, draw_distance=False):
         colors = ["#4444FF", "#FFFF00", "#FF00FF"]
         i = 0
         for track in tracks:

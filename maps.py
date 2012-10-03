@@ -852,7 +852,7 @@ class MainWindow(gtk.Window):
                 self.ctx_map.get_locations(), self.entry.get_text(),
                 self.showMarkers, self.gps,
                 self.ruler_coord,
-                self.shown_tracks
+                self.shown_tracks, self.draw_track_distance
             )
 
     ## Handles the pressing of F11 & F12
@@ -1135,6 +1135,8 @@ class MainWindow(gtk.Window):
         self.gpsw = None
         self.trackw = None
         self.settingsw = None
+
+        self.draw_track_distance = False
 
         gtk.Window.__init__(self)
         try:
