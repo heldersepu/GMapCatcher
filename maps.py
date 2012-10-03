@@ -484,6 +484,7 @@ class MainWindow(gtk.Window):
             )
             self.scale.set_value(zoom)
             self.update_export()
+            self.gps_idle_time = time.time()
 
     def menu_tools(self, w, strName):
         for intPos in range(len(TOOLS_MENU)):
