@@ -15,6 +15,9 @@ import time
 from gmapcatcher.gps import misc
 
 
+offset = timedelta(seconds=time.timezone if (time.daylight == 0) else time.altzone)
+
+
 class gpsWindow(gtk.Window):
     def __init__(self, mapsObj):
         gtk.Window.__init__(self)
@@ -105,7 +108,6 @@ class gpsWindow(gtk.Window):
             if self.mapsObj.gps.gpsfix.time:
                 d = None
                 s = self.mapsObj.gps.gpsfix.time
-                offset = timedelta(seconds=time.timezone if (time.daylight == 0) else time.altzone)
                 if self.mapsObj.conf.gps_type == TYPE_GPSD:
                     if not isinstance(s, int) and not isinstance(s, float):
                         s = misc.isotime(self.mapsObj.gps.gpsfix.time)
