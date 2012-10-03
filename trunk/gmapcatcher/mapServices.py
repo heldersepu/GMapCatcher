@@ -122,6 +122,22 @@ class MapServ:
         map_server = self.get_map_server(conf.map_service)
         return map_server.get_url(self.mt_counter, coord, layer, conf)
 
+    ## Get the max zoom if defined in the map server
+    def get_max_zoom(self, map_service):
+        try:
+            map_server = self.get_map_server(map_service)
+            return map_server.max_zoom
+        except:
+            return MAP_MAX_ZOOM_LEVEL - 1
+            
+    ## Get the min zoom if defined in the map server
+    def get_min_zoom(self, map_service):
+        try:
+            map_server = self.get_map_server(map_service)
+            return map_server.min_zoom
+        except:
+            return MAP_MIN_ZOOM_LEVEL
+    
     def get_tile_from_coord(self, coord, layer, conf):
         href = self.get_url_from_coord(coord, layer, conf)
         if href:

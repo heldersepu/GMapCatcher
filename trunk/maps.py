@@ -48,6 +48,8 @@ class MainWindow(gtk.Window):
     # Variables for Ruler - F7 to activate/deactivate
     Ruler = 0
     total_dist = 0.00
+    map_min_zoom = MAP_MIN_ZOOM_LEVEL
+    map_max_zoom = MAP_MAX_ZOOM_LEVEL - 1
 
     ## Get the zoom level from the scale
     def get_zoom(self):
@@ -441,15 +443,13 @@ class MainWindow(gtk.Window):
 
         return myFrame(" Export map to PNG image ", hbox)
 
-    def __create_left_paned(self, init_zoom):
-        scale = gtk.VScale()
-        scale.set_range(MAP_MIN_ZOOM_LEVEL, MAP_MAX_ZOOM_LEVEL - 1)
-        # scale.set_inverted(True)
+    def __create_left_paned(self, conf):
+        scale = gtk.VScale()       
         scale.set_property("update-policy", gtk.UPDATE_DISCONTINUOUS)
         scale.set_size_request(30, -1)
         scale.set_increments(1, 1)
         scale.set_digits(0)
-        scale.set_value(init_zoom)
+        scale.set_value(conf.init_zoom)
         scale.connect("change-value", self.scale_change_value)
         scale.show()
         self.scale = scale
@@ -472,9 +472,12 @@ class MainWindow(gtk.Window):
 
         return self.drawing_area
 
+    def scale_change_value(self, therange, scroll, value):
+        self.do_zoom(int(round(value)))
+        
     ## Zoom to the given pointer
     def do_zoom(self, zoom, doForce=False, dPointer=False):
-        if (MAP_MIN_ZOOM_LEVEL <= zoom <= (MAP_MAX_ZOOM_LEVEL - 1)):
+        if (self.map_min_zoom <= zoom <= (self.map_max_zoom)):
             self.drawing_area.do_scale(
                 zoom, self.get_zoom(), doForce, dPointer
             )
@@ -500,7 +503,7 @@ class MainWindow(gtk.Window):
         elif strName == DA_MENU[CENTER_MAP]:
             self.do_zoom(self.get_zoom(), True, self.myPointer)
         elif strName == DA_MENU[RESET]:
-            self.do_zoom(MAP_MAX_ZOOM_LEVEL - 1)
+            self.do_zoom(self.map_max_zoom)
         elif strName == DA_MENU[BATCH_DOWN]:
             self.download_clicked(w, self.myPointer)
         elif strName == DA_MENU[EXPORT_MAP]:
@@ -551,8 +554,8 @@ class MainWindow(gtk.Window):
         self.export_pbar.off()
         #Set the zoom level
         zl = self.get_zoom()
-        if zl < (MAP_MIN_ZOOM_LEVEL + 2):
-            zl = MAP_MIN_ZOOM_LEVEL + 2
+        if zl < (self.map_min_zoom + 2):
+            zl = self.map_min_zoom + 2
         self.expZoom.set_value(zl - 2)
         self.do_zoom(zl, True, pointer)
 
@@ -793,9 +796,6 @@ class MainWindow(gtk.Window):
         if sz != 0 or zl != 0:
             self.drawing_area.repaint()
 
-    def scale_change_value(self, therange, scroll, value):
-        self.do_zoom(int(round(value)))
-
     def tile_received(self, tile_coord, layer, download=False):
         if download:
             self.downloading = self.downloader.qsize()
@@ -1026,13 +1026,16 @@ class MainWindow(gtk.Window):
 
     ## All the refresh operations
     def refresh(self, *args):
+        self.map_min_zoom = self.ctx_map.get_min_zoom(self.conf.map_service)
+        self.map_max_zoom = self.ctx_map.get_max_zoom(self.conf.map_service)
+        self.scale.set_range(self.map_min_zoom, self.map_max_zoom)
         if self.cmb_layer.child.get_text() == '':
             self.cmb_layer.combo_popup()
         self.enable_gps(False)
         self.update_export()
         self.marker.refresh()
         self.update_cmb_gps()
-        self.drawing_area.repaint()
+        self.drawing_area.repaint()        
         if self.conf.statusbar_type == STATUS_NONE:
             self.status_bar.hide()
         else:
@@ -1104,6 +1107,7 @@ class MainWindow(gtk.Window):
         self.dlpixbuf = mapPixbuf.downloading()
         self.marker = MyMarkers(self.conf.init_path)
         self.ctx_map = MapServ(self.conf)
+        
         self.downloader = MapDownloader(self.ctx_map, self.conf.maxthreads)
         if self.conf.save_at_close and (LAYER_MAP <= self.conf.save_layer <= LAYER_HYB):
             self.layer = self.conf.save_layer
@@ -1138,7 +1142,7 @@ class MainWindow(gtk.Window):
         self.connect('delete-event', self.on_delete)
 
         self.top_panel = self.__create_top_paned()
-        self.left_panel = self.__create_left_paned(self.conf.init_zoom)
+        self.left_panel = self.__create_left_paned(self.conf)
         self.export_panel = self.__create_export_paned()
         self.status_bar = StatusBar()
 
