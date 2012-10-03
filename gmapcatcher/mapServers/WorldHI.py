@@ -2,6 +2,9 @@
 # All the interaction with skyvector.net/tiles/304
 
 
+max_zoom = 15
+min_zoom = 8
+
 ## Returns a template URL for the WorldHI
 def layer_url_template():
     return 'http://t%i.skyvector.net/tiles/304/1210/%i/%i/%i.jpg'

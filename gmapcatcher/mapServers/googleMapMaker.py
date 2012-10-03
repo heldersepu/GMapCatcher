@@ -10,8 +10,7 @@ known_layers = {}
 ## Returns a template URL for the Google Map Maker
 def layer_url_template(layer):
     if layer not in known_layers:
-        known_layers[layer] = 'http://gt%d.google.com/mt/n=404&v=gwm.' + \
-                                parse_page() + '&x=%i&y=%i&zoom=%i'
+        known_layers[layer] = 'http://mt%d.google.com/vt/hl=x-local&x=%i&y=%i&zoom=%i'
     return known_layers[layer]
 
 

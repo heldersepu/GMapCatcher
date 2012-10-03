@@ -2,6 +2,9 @@
 # All the interaction with skyvector.net/tiles/302
 
 
+max_zoom = 15
+min_zoom = 8
+
 ## Returns a template URL for the WorldLO
 def layer_url_template():
     return 'http://t%i.skyvector.net/tiles/302/1210/%i/%i/%i.jpg'
