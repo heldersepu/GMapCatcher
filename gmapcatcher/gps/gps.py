@@ -67,19 +67,19 @@ WATCH_OLDSTYLE	= 0x020000	# force old-style streaming
 class gpsfix:
     def __init__(self):
         self.mode = MODE_NO_FIX
-        self.time = NaN
-        self.ept = NaN
-        self.latitude = self.longitude = 0.0
-        self.epx = NaN
-        self.epy = NaN
-        self.altitude = NaN         # Meters
-        self.epv = NaN
-        self.track = NaN            # Degrees from true north
-        self.speed = NaN            # Knots
-        self.climb = NaN            # Meters per second
-        self.epd = NaN
-        self.eps = NaN
-        self.epc = NaN
+        self.time = None
+        self.ept = None
+        self.latitude = self.longitude = None
+        self.epx = None
+        self.epy = None
+        self.altitude = None         # Meters
+        self.epv = None
+        self.track = None            # Degrees from true north
+        self.speed = None            # Knots
+        self.climb = None            # Meters per second
+        self.epd = None
+        self.eps = None
+        self.epc = None
 
 class gpsdata:
     "Position, track, velocity and status information returned by a GPS."
