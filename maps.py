@@ -55,6 +55,20 @@ class MainWindow(gtk.Window):
     def get_zoom(self):
         return int(self.scale.get_value())
 
+    ## Change value in the scale will change the zoom
+    def scale_change_value(self, therange, scroll, value):
+        self.do_zoom(int(round(value)), self.get_zoom())
+
+    ## Zoom to the given pointer
+    def do_zoom(self, zoom, current_zoom, doForce=False, dPointer=False):
+        if (self.map_min_zoom <= zoom <= (self.map_max_zoom)):
+            self.drawing_area.do_scale(
+                zoom, current_zoom, doForce, dPointer
+            )
+            self.scale.set_value(zoom)
+            self.update_export()
+            self.gps_idle_time = time.time()
+        
     ## Handles the events in the Tools buttons
     def tools_button_event(self, w, event):
         if event.type == gtk.gdk.BUTTON_PRESS:
@@ -106,9 +120,8 @@ class MainWindow(gtk.Window):
                 locations = self.ctx_map.get_locations()
             coord = locations[unicode(location)]
 
-        self.drawing_area.center = mapUtils.coord_to_tile(coord)
-        self.scale.set_value(coord[2])
-        self.do_zoom(coord[2], True)
+        self.drawing_area.center = mapUtils.coord_to_tile(coord)        
+        self.do_zoom(coord[2], coord[2], True)
 
     ## Handles the click in the offline check box
     def offline_clicked(self, w):
@@ -473,18 +486,6 @@ class MainWindow(gtk.Window):
 
         return self.drawing_area
 
-    def scale_change_value(self, therange, scroll, value):
-        self.do_zoom(int(round(value)))
-
-    ## Zoom to the given pointer
-    def do_zoom(self, zoom, doForce=False, dPointer=False):
-        if (self.map_min_zoom <= zoom <= (self.map_max_zoom)):
-            self.drawing_area.do_scale(
-                zoom, self.get_zoom(), doForce, dPointer
-            )
-            self.scale.set_value(zoom)
-            self.update_export()
-            self.gps_idle_time = time.time()
 
     def menu_tools(self, w, strName):
         for intPos in range(len(TOOLS_MENU)):
@@ -498,14 +499,15 @@ class MainWindow(gtk.Window):
 
     ## All the actions for the menu items
     def menu_item_response(self, w, strName):
+        zl = self.get_zoom()
         if strName == DA_MENU[ZOOM_IN]:
-            self.do_zoom(self.get_zoom() - 1, True, self.myPointer)
+            self.do_zoom(zl - 1, zl, True, self.myPointer)
         elif strName == DA_MENU[ZOOM_OUT]:
-            self.do_zoom(self.get_zoom() + 1, True, self.myPointer)
+            self.do_zoom(zl + 1, zl, True, self.myPointer)
         elif strName == DA_MENU[CENTER_MAP]:
-            self.do_zoom(self.get_zoom(), True, self.myPointer)
+            self.do_zoom(zl, zl, True, self.myPointer)
         elif strName == DA_MENU[RESET]:
-            self.do_zoom(self.map_max_zoom)
+            self.do_zoom(self.map_max_zoom, zl)
         elif strName == DA_MENU[BATCH_DOWN]:
             self.download_clicked(w, self.myPointer)
         elif strName == DA_MENU[EXPORT_MAP]:
@@ -559,21 +561,20 @@ class MainWindow(gtk.Window):
         if zl < (self.map_min_zoom + 2):
             zl = self.map_min_zoom + 2
         self.expZoom.set_value(zl - 2)
-        self.do_zoom(zl, True, pointer)
+        self.do_zoom(zl, zl, True, pointer)
 
     ## Update the Map Export Widgets
     def update_export(self, *args):
         self.visual_dlconfig["show_rectangle"] = False
         if self.export_panel.flags() & gtk.VISIBLE:
+            zl = self.get_zoom()
             # Convert given size to a tile size factor
             widthFact = int(self.sbWidth.get_value() / TILES_WIDTH)
             self.sbWidth.set_value(widthFact * TILES_WIDTH)
             heightFact = int(self.sbHeight.get_value() / TILES_HEIGHT)
             self.sbHeight.set_value(heightFact * TILES_HEIGHT)
             # Get Upper & Lower points
-            coord = mapUtils.tile_to_coord(
-                self.drawing_area.center, self.get_zoom()
-            )
+            coord = mapUtils.tile_to_coord(self.drawing_area.center, zl)
             tile = mapUtils.coord_to_tile(
                 (coord[0], coord[1], self.expZoom.get_value_as_int())
             )
@@ -596,25 +597,19 @@ class MainWindow(gtk.Window):
             self.entryLowerRight.set_text(str(highCoord[0]) + ", " + str(highCoord[1]))
 
             # Set the vars to draw rectangle
-            lowScreen = self.drawing_area.coord_to_screen(
-                lowCoord[0], lowCoord[1], self.get_zoom()
-            )
+            lowScreen = self.drawing_area.coord_to_screen(lowCoord[0], lowCoord[1], zl)
             if lowScreen:
                 self.visual_dlconfig["x_rect"] = lowScreen[0]
                 self.visual_dlconfig["y_rect"] = lowScreen[1]
-                highScreen = self.drawing_area.coord_to_screen(
-                    highCoord[0], highCoord[1], self.get_zoom()
-                )
+                highScreen = self.drawing_area.coord_to_screen(highCoord[0], highCoord[1], zl)
                 if highScreen:
                     self.visual_dlconfig["show_rectangle"] = True
-                    self.visual_dlconfig["width_rect"] = \
-                        highScreen[0] - lowScreen[0]
-                    self.visual_dlconfig["height_rect"] = \
-                        highScreen[1] - lowScreen[1]
+                    self.visual_dlconfig["width_rect"] = highScreen[0] - lowScreen[0]
+                    self.visual_dlconfig["height_rect"] = highScreen[1] - lowScreen[1]
                 else:
-                    self.do_zoom(self.get_zoom() + 1, True)
+                    self.do_zoom(zl + 1, zl, True)
             else:
-                self.do_zoom(self.get_zoom() + 1, True)
+                self.do_zoom(zl + 1, zl, True)
 
             self.drawing_area.repaint()
 
@@ -708,12 +703,13 @@ class MainWindow(gtk.Window):
 
         # Double-Click event Zoom In or Out
         elif event.type == gtk.gdk._2BUTTON_PRESS:
+            zl = self.get_zoom()
             # Alt + 2Click Zoom Out
             if (event.state & gtk.gdk.MOD1_MASK):
-                self.do_zoom(self.get_zoom() + 1, True, (event.x, event.y))
+                self.do_zoom(zl + 1, zl, True, (event.x, event.y))
             # 2Click Zoom In
             else:
-                self.do_zoom(self.get_zoom() - 1, True, (event.x, event.y))
+                self.do_zoom(zl - 1, zl, True, (event.x, event.y))
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
@@ -785,7 +781,8 @@ class MainWindow(gtk.Window):
             sz = intVal
         else:
             xyPointer = self.drawing_area.get_pointer()
-            self.do_zoom(self.get_zoom() + intVal, dPointer=xyPointer)
+            zl = self.get_zoom()
+            self.do_zoom(zl + intVal, zl, dPointer=xyPointer)
 
         self.visual_dlconfig["zl"] = self.visual_dlconfig.get('zl', -2) + zl
         self.visual_dlconfig['sz'] = self.visual_dlconfig.get('sz', 4) - sz
@@ -915,9 +912,9 @@ class MainWindow(gtk.Window):
         # Minus = [45,65453]   Zoom Out
         # Plus  = [43,65451]   Zoom In
         elif keyval in [45, 65453]:
-            self.do_zoom(zoom + 1, True)
+            self.do_zoom(zoom + 1, zoom, True)
         elif keyval in [43, 65451]:
-            self.do_zoom(zoom - 1, True)
+            self.do_zoom(zoom - 1, zoom, True)
 
         # Space = 32   ReCenter the GPS
         elif keyval == 32:
