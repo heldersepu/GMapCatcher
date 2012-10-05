@@ -69,22 +69,24 @@ class gpsWindow(gtk.Window):
         return myMenu
 
     def key_press(self, w, event):
-        if ((event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]):
+        ## if ctrl+w or F3
+        if ((event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]) or event.keyval == 65472:
             # W = 87,119
             self.hide()
-        elif event.keyval == 65472:
-            self.hide()
 
+    ## If window is closed with the close button
     def on_delete(self, widget=None, event=None):
         self.__stop = True
         self.mapsObj.gpsw = None
 
+    ## on show, move to previous place and start updater if stopped
     def on_show(self, widget=None, event=None):
         self.move(self.placement[0], self.placement[1])
         if self.__stop:
             self.__stop = False
             timeout_add_seconds(1, self.update_widgets)
 
+    ## on hide, stop updater
     def on_hide(self, widget=None, event=None):
         self.__stop = True
 
