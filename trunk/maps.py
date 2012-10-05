@@ -692,7 +692,7 @@ class MainWindow(gtk.Window):
             self.dragXY = (event.x, event.y)
         elif event.type == gtk.gdk.BUTTON_RELEASE:
             # Right-Click event shows the popUp menu
-            if event.button == 3:
+            if event.button == 3 and not (event.state & gtk.gdk.CONTROL_MASK):
                 self.myPointer = (event.x, event.y)
                 w.popup(None, None, None, event.button, event.time)
             # If window hasn't been dragged, it's possible to add marker or ruler
@@ -706,7 +706,7 @@ class MainWindow(gtk.Window):
                     self.add_ruler_segment(event)
 
         # Double-Click event Zoom In or Out
-        elif event.type == gtk.gdk._2BUTTON_PRESS:
+        elif event.type == gtk.gdk._2BUTTON_PRESS and not (event.state & gtk.gdk.CONTROL_MASK):
             zl = self.get_zoom()
             # Alt + 2Click Zoom Out
             if (event.state & gtk.gdk.MOD1_MASK):
