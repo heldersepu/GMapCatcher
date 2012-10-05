@@ -49,7 +49,7 @@ class ComboBoxLayer(gtk.ComboBoxEntry):
 
     ## Handles the pressing of keys
     def key_press_combo(self, w, event):
-        if event.keyval not in [65362, 65364, 65513, 65507, 65505]:
+        if event.keyval < 5000 or event.keyval in [65288, 65535]:
             self.combo_popup()
             return True
 
