@@ -39,13 +39,13 @@ class gpsWindow(gtk.Window):
         self.set_size_request(250, 300)
         self.connect('key-press-event', self.key_press)
         self.connect('delete-event', self.on_delete)
-        self.connect('show', self.on_show)
         self.connect('hide', self.on_hide)
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK)
         menu = self.rclick_menu()
         self.connect('button_press_event', self.window_event, menu)
         self.show_all()
         self.set_transient_for(mapsObj)
+        self.connect('show', self.on_show)
         timeout_add_seconds(1, self.update_widgets)
 
     ## Handles the right click event
@@ -76,6 +76,7 @@ class gpsWindow(gtk.Window):
 
     def on_delete(self, widget=None, event=None):
         self.__stop = True
+        self.mapsObj.gpsw = None
 
     def on_show(self, widget=None, event=None):
         self.move(self.placement[0], self.placement[1])
