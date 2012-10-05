@@ -35,6 +35,7 @@ class gpsWindow(gtk.Window):
         self.set_border_width(10)
         self.update_widgets()
         self.set_position(gtk.WIN_POS_CENTER)
+        self.set_gravity(gtk.gdk.GRAVITY_STATIC)
         self.placement = self.get_position()
         self.set_size_request(250, 300)
         self.connect('key-press-event', self.key_press)
