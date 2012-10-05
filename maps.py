@@ -211,7 +211,10 @@ class MainWindow(gtk.Window):
             self.gpsw = gpsWindow(self)
             self.gpsw.show()
         else:
-            self.gpsw.present()
+            if self.gpsw.get_visible():
+                self.gpsw.on_delete()
+            else:
+                self.gpsw.present()
 
     def visual_download(self):
         if self.visual_dlconfig.get('active', False):
