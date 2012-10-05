@@ -19,6 +19,10 @@ offset = timedelta(seconds=time.timezone if (time.daylight == 0) else time.altzo
 
 
 class gpsWindow(gtk.Window):
+    __gsignals__ = {
+        "configure-event": "override"
+        }
+
     def __init__(self, mapsObj):
         gtk.Window.__init__(self)
         self.mapsObj = mapsObj
@@ -31,20 +35,28 @@ class gpsWindow(gtk.Window):
         self.set_border_width(10)
         self.update_widgets()
         self.set_position(gtk.WIN_POS_CENTER)
+        self.placement = self.get_position()
         self.set_size_request(250, 300)
         self.connect('key-press-event', self.key_press)
         self.connect('delete-event', self.on_delete)
+        self.connect('show', self.on_show)
+        self.connect('hide', self.on_hide)
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK)
         menu = self.rclick_menu()
         self.connect('button_press_event', self.window_event, menu)
         self.show_all()
-        self.set_keep_above(True)
+        self.set_transient_for(mapsObj)
         timeout_add_seconds(1, self.update_widgets)
 
     ## Handles the right click event
     def window_event(self, w, event, menu):
         if event.button == 3:
             menu.popup(None, None, None, 1, event.time)
+
+    ## Sets placement coordinates when moved etc.
+    def do_configure_event(self, event):
+        self.placement = (event.x, event.y)
+        gtk.Window.do_configure_event(self, event)
 
     ## Create a gtk Menu for the right click
     def rclick_menu(self):
@@ -56,14 +68,23 @@ class gpsWindow(gtk.Window):
         return myMenu
 
     def key_press(self, w, event):
-        if ((event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]) or event.keyval == 65472:
+        if ((event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]):
             # W = 87,119
-            self.on_delete()
+            self.hide()
+        elif event.keyval == 65472:
+            self.hide()
 
     def on_delete(self, widget=None, event=None):
-        self.mapsObj.gpsw = None
         self.__stop = True
-        self.destroy()
+
+    def on_show(self, widget=None, event=None):
+        self.move(self.placement[0], self.placement[1])
+        if self.__stop:
+            self.__stop = False
+            timeout_add_seconds(1, self.update_widgets)
+
+    def on_hide(self, widget=None, event=None):
+        self.__stop = True
 
     def _createLabels(self, font):
         texts = ['GPS time', 'Latitude', 'Longitude', 'Speed', 'Heading', 'Altitude']
