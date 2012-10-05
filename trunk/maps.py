@@ -121,7 +121,6 @@ class MainWindow(gtk.Window):
                 self.combo.set_completion(self.ctx_map, self.confirm_clicked, self.conf)
                 locations = self.ctx_map.get_locations()
             coord = locations[unicode(location)]
-
         zl = self.do_zoom(coord[2], coord[2], True)
         self.drawing_area.center = mapUtils.coord_to_tile((coord[0],coord[1],zl))
 
@@ -1027,9 +1026,11 @@ class MainWindow(gtk.Window):
 
     ## All the refresh operations
     def refresh(self, *args):
+        zl = self.get_zoom()
         self.map_min_zoom = self.ctx_map.get_min_zoom(self.conf.map_service)
         self.map_max_zoom = self.ctx_map.get_max_zoom(self.conf.map_service)
         self.scale.set_range(self.map_min_zoom, self.map_max_zoom)
+        self.do_zoom(zl, zl, True)
         if self.cmb_layer.child.get_text() == '':
             self.cmb_layer.combo_popup()
         self.enable_gps(False)
