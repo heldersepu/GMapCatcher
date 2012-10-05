@@ -16,7 +16,7 @@ ternary = lambda a, b, c: (b, c)[not a]
 class DrawingArea(gtk.DrawingArea):
     center = ((0, 0), (128, 128))
     draging_start = (0, 0)
-    myThread = None
+    markerThread = None
     isPencil = False
 
     def __init__(self):
@@ -110,6 +110,7 @@ class DrawingArea(gtk.DrawingArea):
             (mct[0][0], mct[0][1], zl), self.get_allocation(), self.center
         )
         if xy:
+            # return (xy[0] + mct[1][0], xy[1] + mct[1][1])
             for x, y in xy:
                 return (x + mct[1][0], y + mct[1][1])
 
@@ -303,10 +304,10 @@ class DrawingArea(gtk.DrawingArea):
             if len(marker.positions) < 1000:
                 self.draw_markers(zl, marker, coord, conf, pixDim)
             else:
-                if (self.myThread is not None):
-                    self.myThread.cancel()
-                self.myThread = Timer(0.5, self.draw_markers_thread, [zl, marker, coord, conf, pixDim])
-                self.myThread.start()
+                if (self.markerThread is not None):
+                    self.markerThread.cancel()
+                self.markerThread = Timer(0.5, self.draw_markers_thread, [zl, marker, coord, conf, pixDim])
+                self.markerThread.start()
 
         # Draw the Ruler lines
         if len(r_coord) >= 1:
