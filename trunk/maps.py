@@ -61,14 +61,16 @@ class MainWindow(gtk.Window):
 
     ## Zoom to the given pointer
     def do_zoom(self, zoom, current_zoom, doForce=False, dPointer=False):
-        if (self.map_min_zoom <= zoom <= (self.map_max_zoom)):
-            self.drawing_area.do_scale(
-                zoom, current_zoom, doForce, dPointer
-            )
-            self.scale.set_value(zoom)
-            self.update_export()
-            self.gps_idle_time = time.time()
-        
+        if (zoom < self.map_min_zoom):
+            zoom = self.map_min_zoom
+        elif (zoom > self.map_max_zoom):
+            zoom = self.map_max_zoom
+        self.drawing_area.do_scale(zoom, current_zoom, doForce, dPointer)
+        self.scale.set_value(zoom)
+        self.update_export()
+        self.gps_idle_time = time.time()
+        return zoom
+
     ## Handles the events in the Tools buttons
     def tools_button_event(self, w, event):
         if event.type == gtk.gdk.BUTTON_PRESS:
@@ -120,8 +122,8 @@ class MainWindow(gtk.Window):
                 locations = self.ctx_map.get_locations()
             coord = locations[unicode(location)]
 
-        self.drawing_area.center = mapUtils.coord_to_tile(coord)        
-        self.do_zoom(coord[2], coord[2], True)
+        zl = self.do_zoom(coord[2], coord[2], True)
+        self.drawing_area.center = mapUtils.coord_to_tile((coord[0],coord[1],zl))
 
     ## Handles the click in the offline check box
     def offline_clicked(self, w):
