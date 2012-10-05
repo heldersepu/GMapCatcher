@@ -35,10 +35,10 @@ class trackWindow(gtk.Window):
         if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]:
             # W = 87,119
             self.on_delete()
-            self.destroy()
 
     def on_delete(self, widget=None, event=None):
         self.mapsObj.trackw = None
+        self.destroy()
 
     def _createTrackCB(self, mapsObj):
         frame = gtk.Frame()

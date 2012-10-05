@@ -38,14 +38,14 @@ class gpsWindow(gtk.Window):
         menu = self.rclick_menu()
         self.connect('button_press_event', self.window_event, menu)
         self.show_all()
-        self.set_keep_above(True)        
+        self.set_keep_above(True)
         timeout_add_seconds(1, self.update_widgets)
 
     ## Handles the right click event
     def window_event(self, w, event, menu):
         if event.button == 3:
             menu.popup(None, None, None, 1, event.time)
-            
+
     ## Create a gtk Menu for the right click
     def rclick_menu(self):
         myMenu = gtk.Menu()
@@ -54,12 +54,11 @@ class gpsWindow(gtk.Window):
         menu_item.connect('activate', self.locationToClipboad)
         menu_item.show()
         return myMenu
-    
+
     def key_press(self, w, event):
-        if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]:
+        if ((event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]) or event.keyval == 65472:
             # W = 87,119
             self.on_delete()
-            self.destroy()
 
     def on_delete(self, widget=None, event=None):
         self.mapsObj.gpsw = None
@@ -130,8 +129,7 @@ class gpsWindow(gtk.Window):
                         d = datetime.strptime(s, '%H%M%S')
                     d = d - offset
                 if d:
-                    gps_time = '%s:%s:%s' % (str(d.hour).rjust(2, '0'),
-                        str(d.minute).rjust(2, '0'), str(d.second).rjust(2, '0'))
+                    gps_time = '%02d:%02d:%02d' % (d.hour, d.minute, d.second)
                     if gps_time:
                         self.gps_values[0].set_text(gps_time)
             if self.mapsObj.gps.gpsfix.latitude:
