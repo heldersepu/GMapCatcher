@@ -427,6 +427,8 @@ class DrawingArea(gtk.DrawingArea):
                 self.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
                 if dist_str:
                     self.write_text(gc, end[0], end[1], dist_str)
+            elif ini or end:
+                print "One of the points is outside DA"
         return gc
 
     ## Write text to point in screen coord -format
