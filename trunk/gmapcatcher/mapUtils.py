@@ -145,25 +145,12 @@ def sig_figs(f, sf):
 
 
 ##  Convert from ((tile, zoom), rect, center) to screen coordinates
-def tile_coord_to_screen(tile_coord, rect, center):
-    world_tiles = tiles_on_level(tile_coord[2])
-    x_rollup = world_tiles * TILES_WIDTH
-    y_rollup = world_tiles * TILES_HEIGHT
-    dx = mod(rect.width // 2 - center[1][0] +
-        (tile_coord[0] - center[0][0]) * TILES_WIDTH, x_rollup)
-    dy = mod(rect.height // 2 - center[1][1] +
-        (tile_coord[1] - center[0][1]) * TILES_HEIGHT, y_rollup)
+def tile_coord_to_screen(tile_coord, rect, center, getGlobal=False):
+    dx = rect.width // 2 - center[1][0] + (tile_coord[0] - center[0][0]) * TILES_WIDTH
+    dy = rect.height // 2 - center[1][1] + (tile_coord[1] - center[0][1]) * TILES_HEIGHT
 
-    if dx + TILES_WIDTH >= x_rollup:
-        dx -= x_rollup
-    if dy + TILES_HEIGHT >= y_rollup:
-        dy -= y_rollup
-
-    if dx + TILES_WIDTH >= 0 and dx < rect.width and \
-            dy + TILES_HEIGHT >= 0 and dy < rect.height:
-        return [(xx, yy)
-            for xx in xrange(int(dx), rect.width, x_rollup)
-            for yy in xrange(int(dy), rect.height, y_rollup)]
+    if getGlobal or (-TILES_WIDTH <= dx <= rect.width and -TILES_HEIGHT <= dy <= rect.height):
+        return [(int(dx), int(dy))]
     else:
         return None
 

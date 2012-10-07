@@ -104,10 +104,10 @@ class DrawingArea(gtk.DrawingArea):
         self.queue_draw()
 
     ## Convert coord to screen
-    def coord_to_screen(self, x, y, zl):
+    def coord_to_screen(self, x, y, zl, getGlobal=False):
         mct = mapUtils.coord_to_tile((x, y, zl))
         xy = mapUtils.tile_coord_to_screen(
-            (mct[0][0], mct[0][1], zl), self.get_allocation(), self.center
+            (mct[0][0], mct[0][1], zl), self.get_allocation(), self.center, getGlobal
         )
         if xy:
             # return (xy[0] + mct[1][0], xy[1] + mct[1][1])
@@ -421,14 +421,12 @@ class DrawingArea(gtk.DrawingArea):
                     distance = mapUtils.convertUnits(UNIT_TYPE_KM, unit, distance)
                 total_distance += distance
                 dist_str = '%.3f %s \n%.3f %s' % (distance, DISTANCE_UNITS[unit], total_distance, DISTANCE_UNITS[unit])
-            ini = self.coord_to_screen(points[j][0], points[j][1], zl)
-            end = self.coord_to_screen(points[j + 1][0], points[j + 1][1], zl)
+            ini = self.coord_to_screen(points[j][0], points[j][1], zl, True)
+            end = self.coord_to_screen(points[j + 1][0], points[j + 1][1], zl, True)
             if ini and end:
                 self.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
                 if dist_str:
                     self.write_text(gc, end[0], end[1], dist_str)
-            elif ini or end:
-                print "One of the points is outside DA"
         return gc
 
     ## Write text to point in screen coord -format
