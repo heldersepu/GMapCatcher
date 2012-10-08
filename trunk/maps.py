@@ -34,6 +34,7 @@ from gmapcatcher.widgets.widComboBoxLayer import ComboBoxLayer
 from gmapcatcher.widgets.widComboBoxEntry import ComboBoxEntry
 from gmapcatcher.widgets.widStatusBar import StatusBar
 from gmapcatcher.widgets.widCredits import OurCredits
+from gmapcatcher.cmRoute import cmRoute
 
 
 class MainWindow(gtk.Window):
@@ -687,6 +688,37 @@ class MainWindow(gtk.Window):
                 self.status_bar.text("Ruler Mode switched off")
                 self.Ruler = not self.Ruler
 
+    def ruler_popup(self):
+        menu = gtk.Menu()
+        if len(self.ruler_coord) > 1:
+            item = gtk.MenuItem('Get CloudMade route from ruler points')
+            item.connect('activate', self.getCloudMadeRoute)
+        else:
+            item = gtk.MenuItem('Need more points for route')
+            item.set_sensitive(False)
+        menu.append(item)
+        menu.show_all()
+        return menu
+
+    def getCloudMadeRoute(self, w):
+        if self.cb_offline.get_active():
+            if error_msg(self, "Offline mode, cannot get route!" +
+                        "      Would you like to get online?",
+                        gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
+                self.combo.combo_popup()
+                return
+        self.cb_offline.set_active(False)
+        apikey = MapConf(None).cloudMade_API
+        start = self.ruler_coord[0]
+        end = self.ruler_coord[-1]
+        if len(self.ruler_coord) > 2:
+            transit_points = self.ruler_coord[1:-1]
+        cm = cmRoute(apikey, start, end, transit_points)
+        track = cm.getWaypoints()
+        if track:
+            self.tracks.append(track)
+            self.shown_tracks.append(track)
+
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
         ## Single click event
@@ -696,8 +728,12 @@ class MainWindow(gtk.Window):
         elif event.type == gtk.gdk.BUTTON_RELEASE:
             # Right-Click event shows the popUp menu
             if event.button == 3 and not (event.state & gtk.gdk.CONTROL_MASK):
-                self.myPointer = (event.x, event.y)
-                w.popup(None, None, None, event.button, event.time)
+                if not self.Ruler:
+                    self.myPointer = (event.x, event.y)
+                    w.popup(None, None, None, event.button, event.time)
+                else:
+                    menu = self.ruler_popup()
+                    menu.popup(None, None, None, event.button, event.time)
             # If window hasn't been dragged, it's possible to add marker or ruler
             # if the window has been dragged, just ignore it...
             if abs(event.x - self.dragXY[0]) < 5 and abs(event.y - self.dragXY[1]) < 5:
