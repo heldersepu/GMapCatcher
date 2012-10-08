@@ -45,6 +45,9 @@ class MySettings():
             self.s_center11 = SpinBtn(center[1][1], 0, 256, 32, 3)
             hbox.pack_start(self.s_center11, False)
             hbox.pack_start(lbl(" )) "), False)
+            button = gtk.Button("Use Current")
+            button.connect('clicked', btn_use_current, parent)
+            hbox.pack_start(button)
             return myFrame(" Center ", hbox)
 
         def _units(active):
@@ -55,6 +58,15 @@ class MySettings():
             self.cmb_unit_type.set_active(active)
             hbox.pack_start(self.cmb_unit_type)
             return myFrame(" Select units ", hbox)
+
+        def _offline(active):
+            hbox = gtk.HBox(False, 10)
+            self.cmb_start_offline = gtk.combo_box_new_text()
+            self.cmb_start_offline.append_text('no')
+            self.cmb_start_offline.append_text('yes')
+            self.cmb_start_offline.set_active(active)
+            hbox.pack_start(self.cmb_start_offline)
+            return myFrame(" Start offline ", hbox)
 
         def _status_save(conf):
             def status_combo(active_type_id):
@@ -135,8 +147,9 @@ class MySettings():
             conf.statusbar_type = self.cmb_status_type.get_active()
             conf.save_at_close = self.save_at_close_button.get_active()
             conf.units = self.cmb_unit_type.get_active()
+            conf.start_offline = self.cmb_start_offline.get_active()
 
-            if(os.pathsep == ';'):
+            if os.pathsep == ';':
                 # we have windows OS, filesystem is case insensitive
                 newPath = (self.entry_custom_path.get_text().lower()).strip()
                 oldPath = conf.init_path.lower().strip()
@@ -216,11 +229,7 @@ class MySettings():
 
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(_center(conf.init_center))
-        bbox = gtk.HButtonBox()
-        button = gtk.Button("Use Current")
-        button.connect('clicked', btn_use_current, parent)
-        bbox.add(button)
-        hbox.pack_start(bbox)
+        hbox.pack_start(_offline(conf.start_offline))
         vbox.pack_start(hbox, False)
 
         vbox1 = gtk.VBox(False, 10)
