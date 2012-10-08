@@ -273,7 +273,8 @@ class DrawingArea(gtk.DrawingArea):
                     marker=None, locations={}, entry_name="",
                     showMarkers=False, gps=None, gps_points=None,
                     r_coord=[],
-                    tracks=None, draw_track_distance=False):
+                    tracks=None, draw_track_distance=False,
+                    cur_coord=None):
         self.set_scale_gc()
         self.set_visualdl_gc()
         rect = self.get_allocation()
@@ -321,7 +322,7 @@ class DrawingArea(gtk.DrawingArea):
 
         # Draw scale
         if conf.scale_visible:
-            self.draw_scale(full, zl)
+            self.draw_scale(full, zl, cur_coord[0])
 
         # Draw cross in the center
         if conf.show_cross:
@@ -356,8 +357,8 @@ class DrawingArea(gtk.DrawingArea):
         except:
             pass
 
-    def draw_scale(self, full, zl):
-        scaledata = mapUtils.friendly_scale(zl)
+    def draw_scale(self, full, zl, latitude):
+        scaledata = mapUtils.friendly_scale(zl, latitude)
         # some 'dirty' rounding seems necessary :-)
         scaled = ternary(scaledata[1] % 10 == 9, scaledata[1] + 1, scaledata[1])
         scaled -= ternary(scaled % 10000 == 1000, 1000, 0)

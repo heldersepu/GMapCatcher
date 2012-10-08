@@ -110,14 +110,15 @@ def tilepath_bulk(tiles, size):
 
 ## Find scale of the picture in km per pixel
 def km_per_pixel(coord):
-    world_tiles = tiles_on_level(coord[2])
-    return 2 * math.pi * R_EARTH / world_tiles / TILES_WIDTH * math.cos(coord[0] * math.pi / 180.0)
+    osm_zoom = MAP_MAX_ZOOM_LEVEL - coord[2]
+    S = ((2 * math.pi * R_EARTH) * math.cos(math.radians(coord[0]))) / (2 ** (osm_zoom + 8))
+    return S
 
 
 ## should return a tuple of (60 <= pixels <= 125, nice round number of m
 #                            [% 1000 = 0 when nice round number of km])
-def friendly_scale(zoomlevel):
-    km = sig_figs(km_per_pixel((0, 0, zoomlevel)), 4)
+def friendly_scale(zoomlevel, latitude=0):
+    km = sig_figs(km_per_pixel((latitude, 0, zoomlevel)), 4)
     for i in range(0, 65):
         if (abs(km * (125 - i)) <= 0.025):
             return (i, int(km * i * 1000))
