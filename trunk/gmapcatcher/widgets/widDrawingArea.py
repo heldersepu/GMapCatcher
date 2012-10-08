@@ -359,7 +359,6 @@ class DrawingArea(gtk.DrawingArea):
 
     def draw_scale(self, full, zl, latitude, conf):
         scaledata = mapUtils.friendly_scale(zl, latitude, conf.units)
-        print scaledata[1]
         if scaledata[1] < 1:
             scalestr = "%.2f %s" % (scaledata[1], DISTANCE_UNITS[conf.units])
         elif scaledata[1] < 10:
