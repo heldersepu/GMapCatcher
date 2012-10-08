@@ -383,7 +383,8 @@ class MainWindow(gtk.Window):
         hbox = gtk.HBox(False, 10)
 
         self.cb_offline = gtk.CheckButton("Offlin_e")
-        self.cb_offline.set_active(True)
+        if self.conf.start_offline:
+            self.cb_offline.set_active(True)
         self.cb_offline.connect('clicked', self.offline_clicked)
         hbox.pack_start(self.cb_offline)
 
