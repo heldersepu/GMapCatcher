@@ -103,37 +103,38 @@ class MainWindow(gtk.Window):
             coord = (latitude, longitude, self.get_zoom())
         else:
             locations = self.ctx_map.get_locations()
-            if not location in locations.keys():
-                if self.cb_offline.get_active():
-                    if error_msg(self, "Offline mode, cannot do search!" +
-                                "      Would you like to get online?",
-                                gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
-                        self.combo.combo_popup()
-                        return
-                self.cb_offline.set_active(False)
-
-                search_locations = location.split('|')
-                found_locations = []
-                for l in search_locations:
+            keys = locations.keys()
+            found_locations = []
+            for l in location.split('|'):
+                found = False
+                for key in keys:
+                    if key.lower() == l.lower():
+                        found = key
+                        break
+                if not found:
+                    if self.cb_offline.get_active():
+                        if error_msg(self, "Offline mode, cannot do search!" +
+                                    "      Would you like to get online?",
+                                    gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
+                            return
+                    self.cb_offline.set_active(False)
                     location = self.ctx_map.search_location(l)
                     if (location[:6] == "error="):
                         error_msg(self, location[6:])
                         self.entry.grab_focus()
                         return
                     found_locations.append(location)
-                    self.combo.set_completion(self.ctx_map, self.confirm_clicked, self.conf)
-                locations = self.ctx_map.get_locations()
-
-                if len(found_locations) > 1:
-                    points = []
-                    for l in found_locations:
-                        coord = locations[unicode(l)]
-                        points.append(mapUtils.TrackPoint(coord[0], coord[1]))
-                    self.getCloudMadeRoute(None, points)
-                self.entry.set_text(unicode(found_locations[0]))
-                coord = locations[unicode(found_locations[0])]
-            else:
-                coord = locations[unicode(location)]
+                else:
+                    found_locations.append(key)
+            locations = self.ctx_map.get_locations()
+            if len(found_locations) > 1:
+                points = []
+                for l in found_locations:
+                    coord = locations[unicode(l)]
+                    points.append(mapUtils.TrackPoint(coord[0], coord[1]))
+                self.getCloudMadeRoute(None, points)
+            self.entry.set_text(unicode(found_locations[0]))
+            coord = locations[unicode(found_locations[0])]
         zl = self.do_zoom(coord[2], coord[2], True)
         self.drawing_area.center = mapUtils.coord_to_tile((coord[0], coord[1], zl))
 
