@@ -660,7 +660,7 @@ class MainWindow(gtk.Window):
             unit = self.conf.units
             if unit != UNIT_TYPE_KM:
                 z = mapUtils.convertUnits(UNIT_TYPE_KM, unit, z)
-            self.draw_overlay()
+            self.drawing_area.repaint()
             self.total_dist = self.total_dist + z
             self.status_bar.distance(z, DISTANCE_UNITS[unit], self.total_dist)
         else:

@@ -95,6 +95,7 @@ class SerialGPS(Thread):
                     self.__stop.set()
                     self.fix.mode == MODE_NO_FIX
                     self.available = False
+                    self.stop()
         except serial.SerialException:
             self.fix.mode = MODE_NO_FIX
             self.available = False
