@@ -322,7 +322,7 @@ class DrawingArea(gtk.DrawingArea):
 
         # Draw scale
         if conf.scale_visible:
-            self.draw_scale(full, zl, cur_coord[0])
+            self.draw_scale(full, zl, cur_coord[0], conf)
 
         # Draw cross in the center
         if conf.show_cross:
@@ -357,13 +357,15 @@ class DrawingArea(gtk.DrawingArea):
         except:
             pass
 
-    def draw_scale(self, full, zl, latitude):
-        scaledata = mapUtils.friendly_scale(zl, latitude)
-        # some 'dirty' rounding seems necessary :-)
-        scaled = ternary(scaledata[1] % 10 == 9, scaledata[1] + 1, scaledata[1])
-        scaled -= ternary(scaled % 10000 == 1000, 1000, 0)
-        scalestr = ternary(scaled > 9000,
-                str(scaled // 1000) + " km", str(scaled) + " m")
+    def draw_scale(self, full, zl, latitude, conf):
+        scaledata = mapUtils.friendly_scale(zl, latitude, conf.units)
+        print scaledata[1]
+        if scaledata[1] < 1:
+            scalestr = "%.2f %s" % (scaledata[1], DISTANCE_UNITS[conf.units])
+        elif scaledata[1] < 10:
+            scalestr = "%.1f %s" % (scaledata[1], DISTANCE_UNITS[conf.units])
+        else:
+            scalestr = "%.0f %s" % (scaledata[1], DISTANCE_UNITS[conf.units])
         self.scale_lo.set_text(scalestr)
         self.window.draw_line(self.scale_gc, 10, full[1] - 10, 10, full[1] - 15)
         self.window.draw_line(self.scale_gc, 10, full[1] - 10, scaledata[0] + 10, full[1] - 10)

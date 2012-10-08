@@ -115,14 +115,12 @@ def km_per_pixel(coord):
     return S
 
 
-## should return a tuple of (60 <= pixels <= 125, nice round number of m
-#                            [% 1000 = 0 when nice round number of km])
-def friendly_scale(zoomlevel, latitude=0):
-    km = sig_figs(km_per_pixel((latitude, 0, zoomlevel)), 4)
-    for i in range(0, 65):
-        if (abs(km * (125 - i)) <= 0.025):
-            return (i, int(km * i * 1000))
-    return (100, int(100000 * nice_round(km)))  # currently simplified
+## Returns tuple with scale length in pixels and configured units.
+def friendly_scale(zoomlevel, latitude=0, units=UNIT_TYPE_KM):
+    distance = sig_figs(km_per_pixel((latitude, 0, zoomlevel)), 4)
+    if units != UNIT_TYPE_KM:
+        distance = convertUnits(UNIT_TYPE_KM, units, distance)
+    return (150, distance * 150)
 
 
 ## Convert tuple-like string to real tuples
