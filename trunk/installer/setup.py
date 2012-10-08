@@ -23,8 +23,8 @@ if os.name == "posix":
         ],
         scripts = ['mapcatcher', 'mapdownloader'],
         packages = ['gmapcatcher', 'gmapcatcher.mapServers',
-                    'gmapcatcher.pyGPSD', 'gmapcatcher.pyGPSD.nmea',
-                    'gmapcatcher.pyGPSD.nmea.serial', 'gmapcatcher.tilesRepo']
+                    'gmapcatcher.tilesRepo', 'gmapcatcher.widgets',
+                    'gmapcatcher.gpxpy', 'gmapcatcher.gps']
     )
 else:
     import py2exe

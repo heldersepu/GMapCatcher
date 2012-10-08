@@ -8,7 +8,7 @@ Homepage: http://code.google.com/p/gmapcatcher
 
 Package: mapcatcher
 Architecture: all
-Depends: ${misc:Depends}, python (>= 2.5), ${python:Depends}, python-gtk2
+Depends: ${misc:Depends}, python (>= 2.5), ${python:Depends}, python-gtk2, python-serial
 XS-Python-Version: current, >= 2.5
 Description: GMapCatcher is an offline maps viewer.
  It downloads tiles automatically from many providers then displays
