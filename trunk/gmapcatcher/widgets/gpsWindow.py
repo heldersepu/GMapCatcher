@@ -10,12 +10,7 @@ from gobject import timeout_add_seconds
 from pango import FontDescription
 from gmapcatcher.mapConst import *
 from gmapcatcher import mapUtils
-from datetime import datetime, timedelta
-import time
-from gmapcatcher.gps import misc
-
-
-offset = timedelta(seconds=time.timezone if (time.daylight == 0) else time.altzone)
+from gmapcatcher.mapGPS import makeGPSTime
 
 
 class gpsWindow(gtk.Window):
@@ -140,23 +135,10 @@ class gpsWindow(gtk.Window):
             else:
                 self.fix_label.set_text('<b><span foreground=\"red\">NO FIX</span></b>')
             if self.mapsObj.gps.gpsfix.time:
-                d = None
-                s = self.mapsObj.gps.gpsfix.time
-                if self.mapsObj.conf.gps_type == TYPE_GPSD:
-                    if not isinstance(s, int) and not isinstance(s, float):
-                        s = misc.isotime(self.mapsObj.gps.gpsfix.time)
-                    d = datetime.utcfromtimestamp(s)
-                    d = d - offset
-                else:
-                    if '.' in s:
-                        d = datetime.strptime(s, '%H%M%S.%f')
-                    else:
-                        d = datetime.strptime(s, '%H%M%S')
-                    d = d - offset
+                d = makeGPSTime(self.mapsObj.gps.gpsfix.time, self.mapsObj.conf.gps_type, use_offset=True)
                 if d:
                     gps_time = '%02d:%02d:%02d' % (d.hour, d.minute, d.second)
-                    if gps_time:
-                        self.gps_values[0].set_text(gps_time)
+                    self.gps_values[0].set_text(gps_time)
             if self.mapsObj.gps.gpsfix.latitude:
                 self.gps_values[1].set_text('%.6f' % self.mapsObj.gps.gpsfix.latitude)
             if self.mapsObj.gps.gpsfix.longitude:
