@@ -103,7 +103,7 @@ class MainWindow(gtk.Window):
             coord = (latitude, longitude, self.get_zoom())
         else:
             locations = self.ctx_map.get_locations()
-            if (not location in locations.keys()):
+            if not location in locations.keys():
                 if self.cb_offline.get_active():
                     if error_msg(self, "Offline mode, cannot do search!" +
                                 "      Would you like to get online?",
@@ -112,16 +112,28 @@ class MainWindow(gtk.Window):
                         return
                 self.cb_offline.set_active(False)
 
-                location = self.ctx_map.search_location(location)
-                if (location[:6] == "error="):
-                    error_msg(self, location[6:])
-                    self.entry.grab_focus()
-                    return
-
-                self.entry.set_text(location)
-                self.combo.set_completion(self.ctx_map, self.confirm_clicked, self.conf)
+                search_locations = location.split('|')
+                found_locations = []
+                for l in search_locations:
+                    location = self.ctx_map.search_location(l)
+                    if (location[:6] == "error="):
+                        error_msg(self, location[6:])
+                        self.entry.grab_focus()
+                        return
+                    found_locations.append(location)
+                    self.combo.set_completion(self.ctx_map, self.confirm_clicked, self.conf)
                 locations = self.ctx_map.get_locations()
-            coord = locations[unicode(location)]
+
+                if len(found_locations) > 1:
+                    points = []
+                    for l in found_locations:
+                        coord = locations[unicode(l)]
+                        points.append(mapUtils.TrackPoint(coord[0], coord[1]))
+                    self.getCloudMadeRoute(None, points)
+                self.entry.set_text(unicode(found_locations[0]))
+                coord = locations[unicode(found_locations[0])]
+            else:
+                coord = locations[unicode(location)]
         zl = self.do_zoom(coord[2], coord[2], True)
         self.drawing_area.center = mapUtils.coord_to_tile((coord[0], coord[1], zl))
 
@@ -692,7 +704,7 @@ class MainWindow(gtk.Window):
         menu = gtk.Menu()
         if len(self.ruler_coord) > 1:
             item = gtk.MenuItem('Get CloudMade route from ruler points')
-            item.connect('activate', self.getCloudMadeRoute)
+            item.connect('activate', self.getCloudMadeRoute, self.ruler_coord)
         else:
             item = gtk.MenuItem('Need more points for route')
             item.set_sensitive(False)
@@ -700,21 +712,19 @@ class MainWindow(gtk.Window):
         menu.show_all()
         return menu
 
-    def getCloudMadeRoute(self, w):
+    def getCloudMadeRoute(self, w, points):
         if self.cb_offline.get_active():
             if error_msg(self, "Offline mode, cannot get route!" +
                         "      Would you like to get online?",
                         gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
-                self.combo.combo_popup()
                 return
         self.cb_offline.set_active(False)
-        apikey = MapConf(None).cloudMade_API
-        start = self.ruler_coord[0]
-        end = self.ruler_coord[-1]
+        start = points[0]
+        end = points[-1]
         transit_points = []
-        if len(self.ruler_coord) > 2:
-            transit_points = self.ruler_coord[1:-1]
-        cm = cmRoute(apikey, start, end, transit_points)
+        if len(points) > 2:
+            transit_points = points[1:-1]
+        cm = cmRoute(self.conf.cloudMade_API, start, end, transit_points)
         track = cm.getWaypoints()
         if track:
             self.tracks.append(track)
