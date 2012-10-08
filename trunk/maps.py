@@ -133,7 +133,8 @@ class MainWindow(gtk.Window):
                     coord = locations[unicode(l)]
                     points.append(mapUtils.TrackPoint(coord[0], coord[1]))
                 self.getCloudMadeRoute(None, points)
-            self.entry.set_text(unicode(found_locations[0]))
+            else:
+                self.entry.set_text(unicode(found_locations[0]))
             coord = locations[unicode(found_locations[0])]
         zl = self.do_zoom(coord[2], coord[2], True)
         self.drawing_area.center = mapUtils.coord_to_tile((coord[0], coord[1], zl))
