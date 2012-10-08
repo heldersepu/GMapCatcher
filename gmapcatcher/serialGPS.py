@@ -85,7 +85,10 @@ class SerialGPS(Thread):
         try:
             while not self.__stop.is_set():  # read buffer while stop is called
                 if self.ser:  # if the serial port connection exists...
-                    self.buf += self.ser.read(40)  # read 40 characters from port to buffer
+                    try:
+                        self.buf += self.ser.read(40)  # read 40 characters from port to buffer
+                    except TypeError:
+                        pass
                     if '\n' in self.buf:  # if the buffer includes row change
                         lines = self.buf.split('\n')  # split the buffer by lines
                         for line in lines[0:-1]:  # and for the lines (except the last one, that is probably not complete)

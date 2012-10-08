@@ -339,7 +339,7 @@ class DrawingArea(gtk.DrawingArea):
                         GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
                     if gps.gpsfix.speed >= 0.5:  # draw arrow only, if speed is over 0.5 knots
                         self.draw_arrow(screen_coord, gps.gpsfix.track)
-            if gps.gpsfix.mode == MODE_NO_FIX:
+            if gps.mode != GPS_DISABLED and gps.gpsfix.mode == MODE_NO_FIX:
                 gc = self.style.black_gc
                 gc.set_rgb_fg_color(gtk.gdk.color_parse('#FF0000'))
                 self.write_text(gc, middle[0] - 160, 0, 'INVALID GPS DATA', 28)
