@@ -43,9 +43,8 @@ class GPS:
                 self.gps_session = gps.gps()
                 self.gps_session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
                 self.gps_updater = GPSUpdater(self.type, self.update_rate, self.update, gps_session=self.gps_session)
-                if self.conf.gps_mode != mapConst.GPS_DISABLED:
+                if self.mode != mapConst.GPS_DISABLED:
                     self.gps_updater.start()
-                    self.set_mode(self.conf.gps_mode)
             except:
                 # No GPS connected
                 available = False
@@ -53,9 +52,8 @@ class GPS:
             print 'serial started'
             try:
                 self.gps_updater = GPSUpdater(self.type, self.update_rate, self.update, serial_port=self.serial_port, baudrate=self.baudrate)
-                if self.conf.gps_mode != mapConst.GPS_DISABLED:
+                if self.mode != mapConst.GPS_DISABLED:
                     self.gps_updater.start()
-                    self.set_mode(self.conf.gps_mode)
             except:
                 available = False
         else:
