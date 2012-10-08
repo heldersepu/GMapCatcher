@@ -683,14 +683,9 @@ class MainWindow(gtk.Window):
                 self.status_bar.text("Click to second point to show ruler and distances")
             else:
                 self.ruler_coord = []
-                self.drawing_area.repaint()
                 self.drawing_area.da_set_cursor()
+                self.status_bar.text("Ruler Mode switched off")
                 self.Ruler = not self.Ruler
-        else:
-            self.ruler_coord = []
-            self.Ruler = not self.Ruler
-            self.status_bar.text("Ruler Mode switched off")
-            self.drawing_area.repaint()
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
