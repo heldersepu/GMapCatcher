@@ -287,6 +287,11 @@ def openGPX():
             else:
                 tracks.append({'name': '%s - route' % f_name, 'coords': track_points})
             i += 1
+        waypoints = list()
+        for waypoint in gpx.waypoints:
+            waypoints.append(TrackPoint(waypoint.latitude, waypoint.longitude))
+        if len(waypoints) >= 1:
+            tracks.append({'name': '%s - waypoints' % f_name, 'coords': waypoints})
     return tracks
 
 
