@@ -271,7 +271,7 @@ class DrawingArea(gtk.DrawingArea):
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
                     downloading=False, visual_dlconfig={},
                     marker=None, locations={}, entry_name="",
-                    showMarkers=False, gps=None,
+                    showMarkers=False, gps=None, gps_points=None,
                     r_coord=[],
                     tracks=None, draw_track_distance=False):
         self.set_scale_gc()
@@ -324,12 +324,13 @@ class DrawingArea(gtk.DrawingArea):
                         GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
                     if gps.gpsfix.speed >= 0.5:  # draw arrow only, if speed is over 0.5 knots
                         self.draw_arrow(screen_coord, gps.gpsfix.track)
-            if conf.gps_track and len(gps.gps_points) > 1:
-                self.draw_gps_line(conf.units, gps.gps_points, zl, conf.gps_track_width)
             if gps.gpsfix.mode == MODE_NO_FIX:
                 gc = self.style.black_gc
                 gc.set_rgb_fg_color(gtk.gdk.color_parse('#FF0000'))
                 self.write_text(gc, middle[0] - 160, 0, 'INVALID GPS DATA', 28)
+
+        if conf.gps_track and len(gps_points) > 1:
+            self.draw_gps_line(conf.units, gps_points, zl, conf.gps_track_width)
 
         # Draw the downloading notification
         if downloading:
@@ -416,13 +417,13 @@ class DrawingArea(gtk.DrawingArea):
         total_distance = 0
         for j in range(len(points) - 1):
             if draw_distance:
-                distance = mapUtils.countDistanceFromLatLon(points[j], points[j + 1])
+                distance = mapUtils.countDistanceFromLatLon(points[j].getLatLon(), points[j + 1].getLatLon())
                 if unit != UNIT_TYPE_KM:
                     distance = mapUtils.convertUnits(UNIT_TYPE_KM, unit, distance)
                 total_distance += distance
                 dist_str = '%.3f %s \n%.3f %s' % (distance, DISTANCE_UNITS[unit], total_distance, DISTANCE_UNITS[unit])
-            ini = self.coord_to_screen(points[j][0], points[j][1], zl, True)
-            end = self.coord_to_screen(points[j + 1][0], points[j + 1][1], zl, True)
+            ini = self.coord_to_screen(points[j].latitude, points[j].longitude, zl, True)
+            end = self.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, zl, True)
             if ini and end:
                 self.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
                 if dist_str:
@@ -438,7 +439,7 @@ class DrawingArea(gtk.DrawingArea):
 
     ## Write text to point in (lat, lon) -format
     def write_text_lat_lon(self, gc, zl, point, text):
-        screen_coord = self.coord_to_screen(point[0], point[1], zl)
+        screen_coord = self.coord_to_screen(point.latitude, point.longitude, zl)
         if screen_coord:
             self.write_text(gc, screen_coord[0], screen_coord[1], text)
 

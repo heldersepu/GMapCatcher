@@ -88,7 +88,7 @@ class trackWindow(gtk.Window):
         hasTracks = len(self.cb_tracks) > 0
         self.no_tracks.set_visible(not hasTracks)
         self.b_export.set_sensitive(hasTracks)
-        if self.mapsObj.gps and len(self.mapsObj.gps.gps_points) > 0:
+        if self.mapsObj.gps and len(self.mapsObj.gps_points) > 1:
             self.b_gps_export.set_sensitive(True)
         else:
             self.b_gps_export.set_sensitive(False)
@@ -114,8 +114,8 @@ class trackWindow(gtk.Window):
             dialog.show()
 
     def exportGPS(self, w):
-        if self.mapsObj.gps and len(self.mapsObj.gps.gps_points) > 0:
-            saveGPX([self.mapsObj.gps.gps_points])
+        if self.mapsObj.gps and len(self.mapsObj.gps_points) > 1:
+            saveGPX([{'name': 'GPS track', 'coords': self.mapsObj.gps_points}])
         else:
             dialog = error_msg_non_blocking('No GPS points', 'No GPS points to save')
             dialog.connect('response', lambda dialog, response: dialog.destroy())

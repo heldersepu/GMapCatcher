@@ -11,7 +11,9 @@ import mapConst
 import widgets.mapPixbuf as mapPixbuf
 from threading import Event, Thread
 import time
-import mapUtils
+from datetime import datetime, timedelta
+from gmapcatcher.gps import misc
+offset = timedelta(seconds=time.timezone if (time.daylight == 0) else time.altzone)
 
 
 class GPS:
@@ -29,7 +31,6 @@ class GPS:
         self.baudrate = conf.gps_serial_baudrate
         self.gps_updater = None
         self.gpsfix = None
-        self.gps_points = list()
         if self.mode != mapConst.GPS_DISABLED:
             self.startGPS()
 
@@ -86,11 +87,6 @@ class GPS:
     ## Callback from the GPSUpdater
     def update(self, fix):
         self.gpsfix = fix
-        # if distance between points is greater than defined in config or first point, append to gps_points
-        if fix.mode != mapConst.MODE_NO_FIX and fix.latitude and fix.longitude and \
-          (len(self.gps_points) == 0 or
-          mapUtils.countDistanceFromLatLon(self.gps_points[-1], (fix.latitude, fix.longitude)) > (float(self.conf.gps_track_interval) / 1000)):
-            self.gps_points.append((fix.latitude, fix.longitude))
         self.gps_callback()
 
     ## Load GPS marker image
@@ -143,3 +139,21 @@ class GPSUpdater(Thread):
     def cancel(self):
         self.finished.set()
         self.join(3)
+
+
+def makeGPSTime(gps_time, gps_type, use_offset=False):
+    d = None
+    if gps_type == mapConst.TYPE_GPSD:
+        if not isinstance(gps_time, int) and not isinstance(gps_time, float):
+            gps_time = misc.isotime(gps_time)
+        d = datetime.utcfromtimestamp(gps_time)
+    else:
+        dNow = datetime.utcnow()
+        if '.' in gps_time:
+            d = datetime.strptime(gps_time, '%H%M%S.%f')
+        else:
+            d = datetime.strptime(gps_time, '%H%M%S')
+        d = d.replace(year=dNow.year, month=dNow.month, day=dNow.day)
+    if use_offset:
+        d = d - offset
+    return d

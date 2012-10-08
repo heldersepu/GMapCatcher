@@ -122,7 +122,7 @@ class MainWindow(gtk.Window):
                 locations = self.ctx_map.get_locations()
             coord = locations[unicode(location)]
         zl = self.do_zoom(coord[2], coord[2], True)
-        self.drawing_area.center = mapUtils.coord_to_tile((coord[0],coord[1],zl))
+        self.drawing_area.center = mapUtils.coord_to_tile((coord[0], coord[1], zl))
 
     ## Handles the click in the offline check box
     def offline_clicked(self, w):
@@ -281,6 +281,20 @@ class MainWindow(gtk.Window):
                 # Update the status bar with the GPS Coordinates
                 if self.conf.statusbar_type == STATUS_GPS and not self.Ruler:
                     self.status_bar.coordinates(self.gps.gpsfix.latitude, self.gps.gpsfix.longitude)
+
+                # Add to gps_points
+                if self.conf.gps_track and \
+                 (not len(self.gps_points) or
+                 mapUtils.countDistanceFromLatLon((self.gps_points[-1].latitude, self.gps_points[-1].longitude),
+                  (self.gps.gpsfix.latitude, self.gps.gpsfix.longitude)) > (float(self.conf.gps_track_interval) / 1000)):
+                    point = mapUtils.TrackPoint(latitude=self.gps.gpsfix.latitude, longitude=self.gps.gpsfix.longitude)
+                    if self.gps.gpsfix.altitude:
+                        point.altitude = self.gps.gpsfix.altitude
+                    if self.gps.gpsfix.speed:
+                        point.speed = self.gps.gpsfix.speed
+                    if self.gps.gpsfix.time:
+                        point.timestamp = mapGPS.makeGPSTime(self.gps.gpsfix.time, self.conf.gps_type)
+                    self.gps_points.append(point)
             else:
                 self.gps_invalid()
         else:
@@ -490,7 +504,6 @@ class MainWindow(gtk.Window):
 
         return self.drawing_area
 
-
     def menu_tools(self, w, strName):
         for intPos in range(len(TOOLS_MENU)):
             if strName.startswith(TOOLS_MENU[intPos]):
@@ -638,15 +651,12 @@ class MainWindow(gtk.Window):
         self.from_coord = self.pointer_to_world_coord((event.x, event.y))
         x = self.from_coord[0]
         y = self.from_coord[1]
-        self.ruler_coord.append((x, y))
+        self.ruler_coord.append(mapUtils.TrackPoint(x, y))
 
         l = len(self.ruler_coord)
 
         if l > 1:
-            z = mapUtils.countDistanceFromLatLon(
-                    (self.ruler_coord[l - 2][0], self.ruler_coord[l - 2][1]),
-                    (self.ruler_coord[l - 1][0], self.ruler_coord[l - 1][1])
-                )
+            z = mapUtils.countDistanceFromLatLon(self.ruler_coord[l - 2].getLatLon(), self.ruler_coord[l - 1].getLatLon())
             unit = self.conf.units
             if unit != UNIT_TYPE_KM:
                 z = mapUtils.convertUnits(UNIT_TYPE_KM, unit, z)
@@ -659,10 +669,7 @@ class MainWindow(gtk.Window):
     def remove_last_ruler_segment(self):
         l = len(self.ruler_coord)
         if l > 0:
-            z = mapUtils.countDistanceFromLatLon(
-                    (self.ruler_coord[l - 2][0], self.ruler_coord[l - 2][1]),
-                    (self.ruler_coord[l - 1][0], self.ruler_coord[l - 1][1])
-                )
+            z = mapUtils.countDistanceFromLatLon(self.ruler_coord[l - 2].getLatLon(), self.ruler_coord[l - 1].getLatLon())
             unit = self.conf.units
             if unit != UNIT_TYPE_KM:
                 z = mapUtils.convertUnits(UNIT_TYPE_KM, unit, z)
@@ -675,13 +682,14 @@ class MainWindow(gtk.Window):
             elif new_l == 1:
                 self.status_bar.text("Click to second point to show ruler and distances")
             else:
-                self.ruler_coord = list()
+                self.ruler_coord = []
                 self.drawing_area.repaint()
                 self.drawing_area.da_set_cursor()
                 self.Ruler = not self.Ruler
         else:
+            self.ruler_coord = []
             self.Ruler = not self.Ruler
-            self.status_bar.push("Ruler Mode switched off")
+            self.status_bar.text("Ruler Mode switched off")
             self.drawing_area.repaint()
 
     ## Handles Right & Double clicks events in the drawing_area
@@ -851,7 +859,7 @@ class MainWindow(gtk.Window):
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
                 self.downloading > 0, self.visual_dlconfig, self.marker,
                 self.ctx_map.get_locations(), self.entry.get_text(),
-                self.showMarkers, self.gps,
+                self.showMarkers, self.gps, self.gps_points,
                 self.ruler_coord,
                 self.shown_tracks, self.draw_track_distance
             )
@@ -1122,8 +1130,8 @@ class MainWindow(gtk.Window):
             self.layer = LAYER_MAP
         self.background = []
         self.foreground = []
-        self.save_gps = []
         self.gps = None
+        self.gps_points = []
         self.enable_gps(True)
         self.downloading = 0
         self.visual_dlconfig = {}

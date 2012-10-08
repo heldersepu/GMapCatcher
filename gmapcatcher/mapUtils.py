@@ -245,7 +245,15 @@ def saveGPX(trackSegments):
             gpx_segment = gpxpy.gpx.GPXTrackSegment()
             gpx_track.segments.append(gpx_segment)
             for p in trackSegment['coords']:
-                gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(p[0], p[1]))
+                point = gpxpy.gpx.GPXTrackPoint(p.latitude, p.longitude)
+                if p.altitude:
+                    point.elevation = p.altitude
+                if p.timestamp:
+                    point.time = p.timestamp
+                # GPXpy doesn't support speed (apparently)
+                # if p.speed:
+                #     point.speed = p.speed
+                gpx_segment.points.append(point)
         f = open(f_name, 'w')
         f.write(gpx.to_xml())
         f.close()
@@ -263,7 +271,7 @@ def openGPX():
             for segment in track.segments:
                 track_points = list()
                 for point in segment.points:
-                    track_points.append((point.latitude, point.longitude))
+                    track_points.append(TrackPoint(point.latitude, point.longitude))
                 if len(track.segments) > 1 or len(gpx.tracks) > 1:
                     tracks.append({'name': '%s - track %i' % (f_name, i), 'coords': track_points})
                     if len(track.segments) > 1:
@@ -274,7 +282,7 @@ def openGPX():
         for route in gpx.routes:
             track_points = list()
             for point in route.points:
-                track_points.append((point.latitude, point.longitude))
+                track_points.append(TrackPoint(point.latitude, point.longitude))
             if len(gpx.routes) > 1:
                 tracks.append({'name': '%s - route %i' % (f_name, i), 'coords': track_points})
             else:
@@ -304,3 +312,15 @@ def convertUnits(unit_from, unit_to, value):
         elif unit_to == UNIT_TYPE_MILE:
             return float(value) * 1.15077945
     return value
+
+
+class TrackPoint:
+    def __init__(self, latitude=None, longitude=None, timestamp=None, altitude=None, speed=None):
+        self.latitude = latitude
+        self.longitude = longitude
+        self.timestamp = timestamp
+        self.altitude = altitude
+        self.speed = speed
+
+    def getLatLon(self):
+        return (self.latitude, self.longitude)
