@@ -280,13 +280,15 @@ class DrawingArea(gtk.DrawingArea):
         middle = (rect.width / 2, rect.height / 2)
         full = (rect.width, rect.height)
 
-        # Draw cross in the center
-        if conf.show_cross:
-            self.draw_image(middle, crossPixbuf, 12, 12)
+        if tracks:
+            self.draw_tracks(conf.units, tracks, zl, conf.gps_track_width, draw_track_distance)
 
-        # Draw scale
-        if conf.scale_visible:
-            self.draw_scale(full, zl)
+        if conf.gps_track and len(gps_points) > 1:
+            self.draw_gps_line(conf.units, gps_points, zl, conf.gps_track_width)
+
+        # Draw the Ruler lines
+        if len(r_coord) >= 1:
+            self.draw_ruler_lines(conf.units, r_coord, zl, conf.gps_track_width)
 
         if showMarkers:
             pixDim = marker.get_pixDim(zl)
@@ -309,9 +311,21 @@ class DrawingArea(gtk.DrawingArea):
                 self.markerThread = Timer(0.5, self.draw_markers_thread, [zl, marker, coord, conf, pixDim])
                 self.markerThread.start()
 
-        # Draw the Ruler lines
-        if len(r_coord) >= 1:
-            self.draw_ruler_lines(conf.units, r_coord, zl, conf.gps_track_width)
+        # Draw the downloading notification
+        if downloading:
+            self.window.draw_pixbuf(
+                self.style.black_gc, dlpixbuf, 0, 0, 0, 0, -1, -1)
+
+        if visual_dlconfig != {}:
+            self.draw_visual_dlconfig(visual_dlconfig, middle, full, zl)
+
+        # Draw scale
+        if conf.scale_visible:
+            self.draw_scale(full, zl)
+
+        # Draw cross in the center
+        if conf.show_cross:
+            self.draw_image(middle, crossPixbuf, 12, 12)
 
         # Draw GPS position
         if gps and gps.gpsfix:
@@ -328,20 +342,6 @@ class DrawingArea(gtk.DrawingArea):
                 gc = self.style.black_gc
                 gc.set_rgb_fg_color(gtk.gdk.color_parse('#FF0000'))
                 self.write_text(gc, middle[0] - 160, 0, 'INVALID GPS DATA', 28)
-
-        if conf.gps_track and len(gps_points) > 1:
-            self.draw_gps_line(conf.units, gps_points, zl, conf.gps_track_width)
-
-        # Draw the downloading notification
-        if downloading:
-            self.window.draw_pixbuf(
-                self.style.black_gc, dlpixbuf, 0, 0, 0, 0, -1, -1)
-
-        if (visual_dlconfig != {}):
-            self.draw_visual_dlconfig(visual_dlconfig, middle, full, zl)
-
-        if tracks:
-            self.draw_tracks(conf.units, tracks, zl, conf.gps_track_width, draw_track_distance)
 
     def draw_markers(self, zl, marker, coord, conf, pixDim):
         img = marker.get_marker_pixbuf(zl)
