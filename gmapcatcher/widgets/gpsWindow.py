@@ -150,9 +150,9 @@ class gpsWindow(gtk.Window):
                     speed = mapUtils.convertUnits(UNIT_TYPE_NM, speed_unit, speed)
                 self.gps_values[3].set_text('%.1f %s' % (speed, SPEED_UNITS[speed_unit]))
             if self.mapsObj.gps.gpsfix.track:
-                self.gps_values[4].set_text('%.1f' % self.mapsObj.gps.gpsfix.track)
+                self.gps_values[4].set_text('%.1f°' % self.mapsObj.gps.gpsfix.track)
             if self.mapsObj.gps.gpsfix.altitude:
-                self.gps_values[5].set_text('%.1f' % self.mapsObj.gps.gpsfix.altitude)
+                self.gps_values[5].set_text('%.1fm' % self.mapsObj.gps.gpsfix.altitude)
         else:
             self.fix_label.set_text('<span foreground=\"red\">No GPS detected</span>')
             for gps_value in self.gps_values:
