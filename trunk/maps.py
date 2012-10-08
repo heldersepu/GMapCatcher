@@ -27,7 +27,7 @@ from gmapcatcher.widgets.DLWindow import DLWindow
 from gmapcatcher.widgets.EXWindow import EXWindow
 from gmapcatcher.widgets.gpsWindow import gpsWindow
 from gmapcatcher.widgets.trackWindow import trackWindow
-from gmapcatcher.widgets.customMsgBox import user_confirm, error_msg
+from gmapcatcher.widgets.customMsgBox import user_confirm, error_msg, error_msg_non_blocking
 from gmapcatcher.widgets.customWidgets import gtk, gtk_menu, myToolTip, myFrame, lbl, legal_warning, ProgressBar, SpinBtn, FileChooser
 from gmapcatcher.widgets.widDrawingArea import DrawingArea
 from gmapcatcher.widgets.widComboBoxLayer import ComboBoxLayer
@@ -551,6 +551,23 @@ class MainWindow(gtk.Window):
             self.mouse_location(self.myPointer)
         elif strName == DA_MENU[GPS_LOCATION]:
             self.gps_location()
+        elif strName == DA_MENU[GPS_DIRECTIONS]:
+            if self.gps and self.gps.mode != GPS_DISABLED:
+                if self.gps.gpsfix and self.gps.gpsfix.latitude and self.gps.gpsfix.longitude:
+                    coords = self.pointer_to_world_coord(self.myPointer)
+                    points = [
+                        mapUtils.TrackPoint(self.gps.gpsfix.latitude, self.gps.gpsfix.longitude),
+                        mapUtils.TrackPoint(coords[0], coords[1])
+                        ]
+                    self.getCloudMadeRoute(w, points)
+                else:
+                    dialog = error_msg_non_blocking('No GPS fix', 'No GPS fix.')
+                    dialog.connect('response', lambda dialog, response: dialog.destroy())
+                    dialog.show()
+            else:
+                dialog = error_msg_non_blocking('GPS disabled', 'GPS disabled.')
+                dialog.connect('response', lambda dialog, response: dialog.destroy())
+                dialog.show()
 
     ## utility function screen location of pointer to world coord
     def pointer_to_world_coord(self, pointer=None):
