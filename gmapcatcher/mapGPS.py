@@ -121,6 +121,8 @@ class GPSUpdater(Thread):
                         self.function(self.gps_session.fix)
                         self.lastUpdate = time.time()
             except StopIteration:
+                self.gps_session.fix.mode = mapConst.MODE_NO_FIX
+                self.function(self.gps_session.fix)
                 available = False
                 print "GPSD has terminated"
         elif self.gps_type == mapConst.TYPE_SERIAL and self.serial_port and self.baudrate:
