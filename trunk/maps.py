@@ -711,6 +711,7 @@ class MainWindow(gtk.Window):
         apikey = MapConf(None).cloudMade_API
         start = self.ruler_coord[0]
         end = self.ruler_coord[-1]
+        transit_points = []
         if len(self.ruler_coord) > 2:
             transit_points = self.ruler_coord[1:-1]
         cm = cmRoute(apikey, start, end, transit_points)

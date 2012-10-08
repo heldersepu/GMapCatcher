@@ -20,15 +20,15 @@ class cmRoute:
         # print self.apikey
 
     def buildUrl(self):
-        if self.transit_points:
+        if len(self.transit_points) > 0:
             transit_point_str = '['
             for point in self.transit_points:
                 transit_point_str += '%s,%s,' % (point.latitude, point.longitude)
             transit_point_str = transit_point_str.rstrip(',')
-            transit_point_str += ']'
+            transit_point_str += '],'
         else:
             transit_point_str = ''
-        url = 'http://routes.cloudmade.com/%s/api/0.3/%s,%s,%s,%s,%s/%s.gpx?lang=en' % (
+        url = 'http://routes.cloudmade.com/%s/api/0.3/%s,%s,%s%s,%s/%s.gpx?lang=en' % (
             self.apikey,
             self.start.latitude,
             self.start.longitude,
