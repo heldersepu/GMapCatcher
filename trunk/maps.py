@@ -844,6 +844,8 @@ class MainWindow(gtk.Window):
                                               TILES_WIDTH, TILES_HEIGHT)
 
     def draw_overlay(self):
+        rect = self.drawing_area.get_allocation()
+        center = (rect.width / 2, rect.height / 2)
         if self.export_panel.flags() & gtk.VISIBLE:
             self.drawing_area.draw_overlay(
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
@@ -856,7 +858,8 @@ class MainWindow(gtk.Window):
                 self.ctx_map.get_locations(), self.entry.get_text(),
                 self.showMarkers, self.gps, self.gps_points,
                 self.ruler_coord,
-                self.shown_tracks, self.draw_track_distance
+                self.shown_tracks, self.draw_track_distance,
+                self.pointer_to_world_coord(center)
             )
 
     ## Handles the pressing of F11 & F12
