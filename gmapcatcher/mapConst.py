@@ -95,9 +95,10 @@ EXPORT_MAP = 6
 ADD_MARKER = 7
 MOUSE_LOCATION = 9
 GPS_LOCATION = 10
+GPS_DIRECTIONS = 12
 DA_MENU = ["Zoom In", "Zoom Out", "Center map here", "Reset",
         "", "Batch Download", "Export Map", "Add Marker",
-        "", "Copy Location", "Copy GPS"]
+        "", "Copy Location", "Copy GPS", "", "Directions from GPS to here"]
 
 REPOS_TYPE_FILES = 0
 REPOS_TYPE_SQLITE3 = 1
