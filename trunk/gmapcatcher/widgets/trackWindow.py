@@ -51,7 +51,7 @@ class trackWindow(gtk.Window):
         alignment = gtk.Alignment(0.5, 0.5, 0, 0)
         self.track_vbox = gtk.VBox(False)
         for i in range(len(mapsObj.tracks)):
-            self.cb_tracks.append(gtk.CheckButton(mapsObj.tracks[i]['name']))
+            self.cb_tracks.append(gtk.CheckButton(mapsObj.tracks[i].name))
             self.cb_tracks[i].set_active(mapsObj.tracks[i] in mapsObj.shown_tracks)
             self.cb_tracks[i].connect('toggled', self.showTracks)
             self.track_vbox.pack_start(self.cb_tracks[i])
@@ -80,7 +80,7 @@ class trackWindow(gtk.Window):
             # If track number is larger than length of current cb_tracks
             # it's new and checkbox needs to be added.
             if i + 1 > len(self.cb_tracks):
-                self.cb_tracks.append(gtk.CheckButton(self.mapsObj.tracks[i]['name']))
+                self.cb_tracks.append(gtk.CheckButton(self.mapsObj.tracks[i].name))
                 self.cb_tracks[-1].set_active(True)
                 self.cb_tracks[-1].connect('toggled', self.showTracks)
                 self.cb_tracks[-1].show()
@@ -88,7 +88,7 @@ class trackWindow(gtk.Window):
         hasTracks = len(self.cb_tracks) > 0
         self.no_tracks.set_visible(not hasTracks)
         self.b_export.set_sensitive(hasTracks)
-        if self.mapsObj.gps and len(self.mapsObj.gps_points) > 1:
+        if self.mapsObj.gps and len(self.mapsObj.gps_track.points) > 1:
             self.b_gps_export.set_sensitive(True)
         else:
             self.b_gps_export.set_sensitive(False)

@@ -298,18 +298,22 @@ class MainWindow(gtk.Window):
                     self.status_bar.coordinates(self.gps.gpsfix.latitude, self.gps.gpsfix.longitude)
 
                 # Add to gps_points
-                if self.conf.gps_track and \
-                 (not len(self.gps_points) or
-                 mapUtils.countDistanceFromLatLon((self.gps_points[-1].latitude, self.gps_points[-1].longitude),
-                  (self.gps.gpsfix.latitude, self.gps.gpsfix.longitude)) > (float(self.conf.gps_track_interval) / 1000)):
-                    point = mapUtils.TrackPoint(latitude=self.gps.gpsfix.latitude, longitude=self.gps.gpsfix.longitude)
-                    if self.gps.gpsfix.altitude:
-                        point.altitude = self.gps.gpsfix.altitude
-                    if self.gps.gpsfix.speed:
-                        point.speed = self.gps.gpsfix.speed
-                    if self.gps.gpsfix.time:
-                        point.timestamp = mapGPS.makeGPSTime(self.gps.gpsfix.time, self.conf.gps_type)
-                    self.gps_points.append(point)
+                if self.conf.gps_track:
+                    distance = 0
+                    if len(self.gps_track.points):
+                        distance = mapUtils.countDistanceFromLatLon(
+                            (self.gps_track.points[-1].latitude, self.gps_track.points[-1].longitude),
+                            (self.gps.gpsfix.latitude, self.gps.gpsfix.longitude))
+                        self.gps_track.distance += distance
+                    if not len(self.gps_track.points) or distance > (float(self.conf.gps_track_interval) / 1000):
+                        point = mapUtils.TrackPoint(latitude=self.gps.gpsfix.latitude, longitude=self.gps.gpsfix.longitude)
+                        if self.gps.gpsfix.altitude:
+                            point.altitude = self.gps.gpsfix.altitude
+                        if self.gps.gpsfix.speed:
+                            point.speed = self.gps.gpsfix.speed
+                        if self.gps.gpsfix.time:
+                            point.timestamp = mapGPS.makeGPSTime(self.gps.gpsfix.time, self.conf.gps_type)
+                        self.gps_track.points.append(point)
             else:
                 self.gps_invalid()
         else:
@@ -925,7 +929,7 @@ class MainWindow(gtk.Window):
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
                 self.downloading > 0, self.visual_dlconfig, self.marker,
                 self.ctx_map.get_locations(), self.entry.get_text(),
-                self.showMarkers, self.gps, self.gps_points,
+                self.showMarkers, self.gps, self.gps_track,
                 self.ruler_coord,
                 self.shown_tracks, self.draw_track_distance,
                 self.pointer_to_world_coord(center)
@@ -1070,7 +1074,7 @@ class MainWindow(gtk.Window):
                 if len(self.ruler_coord) > 1:
                     confirm = user_confirm(self, 'Do you want to use ruler as track?')
                     if len(self.ruler_coord) > 1 and confirm == gtk.RESPONSE_YES:
-                        track = {'name': 'Ruler %i' % self.rulers, 'coords': self.ruler_coord}
+                        track = mapUtils.Track(self.ruler_coord, 'Ruler %i' % self.rulers)
                         self.tracks.append(track)
                         self.shown_tracks.append(track)
                         self.rulers += 1
@@ -1198,7 +1202,7 @@ class MainWindow(gtk.Window):
         self.background = []
         self.foreground = []
         self.gps = None
-        self.gps_points = []
+        self.gps_track = mapUtils.Track([], 'GPS track')
         self.enable_gps(True)
         self.downloading = 0
         self.visual_dlconfig = {}
