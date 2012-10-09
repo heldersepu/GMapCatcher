@@ -271,7 +271,7 @@ class DrawingArea(gtk.DrawingArea):
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
                     downloading=False, visual_dlconfig={},
                     marker=None, locations={}, entry_name="",
-                    showMarkers=False, gps=None, gps_points=None,
+                    showMarkers=False, gps=None, gps_track=None,
                     r_coord=[],
                     tracks=None, draw_track_distance=False,
                     cur_coord=None):
@@ -284,8 +284,8 @@ class DrawingArea(gtk.DrawingArea):
         if tracks:
             self.draw_tracks(conf.units, tracks, zl, conf.gps_track_width, draw_track_distance)
 
-        if conf.gps_track and len(gps_points) > 1:
-            self.draw_gps_line(conf.units, gps_points, zl, conf.gps_track_width)
+        if conf.gps_track and len(gps_track.points) > 1:
+            self.draw_gps_line(conf.units, gps_track, zl, conf.gps_track_width)
 
         # Draw the Ruler lines
         if len(r_coord) >= 1:
@@ -429,11 +429,11 @@ class DrawingArea(gtk.DrawingArea):
             if ini and end:
                 self.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
                 if dist_str:
-                    self.write_text(gc, end[0], end[1], dist_str)
+                    self.write_text(gc, end[0], end[1], dist_str, 10)
         return gc
 
     ## Write text to point in screen coord -format
-    def write_text(self, gc, x, y, text, fontsize=10):
+    def write_text(self, gc, x, y, text, fontsize=12):
         pangolayout = self.create_pango_layout("")
         pangolayout.set_font_description(pango.FontDescription("sans normal %s" % fontsize))
         pangolayout.set_text(text)
@@ -449,20 +449,21 @@ class DrawingArea(gtk.DrawingArea):
         color = '#00FF00'
         self.draw_line(unit, zl, points, color, track_width, True)
 
-    def draw_gps_line(self, unit, points, zl, track_width):
+    def draw_gps_line(self, unit, track, zl, track_width):
         color = '#FF0000'
-        self.draw_line(unit, zl, points, color, track_width, False)
+        gc = self.draw_line(unit, zl, track.points, color, track_width, False)
 
     def draw_tracks(self, unit, tracks, zl, track_width, draw_distance=False):
         colors = ["#4444FF", "#FFFF00", "#FF00FF"]
         i = 0
         for track in tracks:
             color = colors[i % len(colors)]
-            gc = self.draw_line(unit, zl, track['coords'], color, track_width, draw_distance)
-            if 'distance' in track:
-                distance = mapUtils.convertUnits(UNIT_TYPE_KM, unit, track['distance'])
-                text = '%s - %d %s' % (track['name'], distance, DISTANCE_UNITS[unit])
+            gc = self.draw_line(unit, zl, track.points, color, track_width, draw_distance)
+            if track.distance:
+                distance = mapUtils.convertUnits(UNIT_TYPE_KM, unit, track.distance)
+                text = '%s - %.2f %s' % (track.name, distance, DISTANCE_UNITS[unit])
             else:
-                text = track['name']
-            self.write_text_lat_lon(gc, zl, track['coords'][0], text)
+                text = track.name
+            self.write_text_lat_lon(gc, zl, track.points[0], '%s (start)' % text)
+            self.write_text_lat_lon(gc, zl, track.points[-1], '%s (end)' % text)
             i += 1

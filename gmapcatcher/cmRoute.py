@@ -3,7 +3,7 @@
 # CloudMade route information fetcher
 
 from mapConf import MapConf
-from mapUtils import TrackPoint
+from mapUtils import Track, TrackPoint
 import gpxpy
 import urllib2
 import re
@@ -55,7 +55,7 @@ class cmRoute:
         for waypoint in gpx.waypoints:
             waypoints.append(TrackPoint(waypoint.latitude, waypoint.longitude))
         if len(waypoints) >= 1:
-            return {'name': 'CloudMade waypoints', 'coords': waypoints, 'distance': distance}
+            return Track(waypoints, 'CloudMade waypoints', distance)
         return None
 
 

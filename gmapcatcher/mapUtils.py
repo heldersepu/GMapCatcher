@@ -215,14 +215,13 @@ def html_decode(string):
 
 
 def countDistanceFromLatLon(a, b):
-    R = 6371  # Mean radius of Earth in km
     dLat = math.radians(a[0] - b[0])
     dLon = math.radians(a[1] - b[1])
     lat1 = math.radians(a[0])
     lat2 = math.radians(b[0])
     a = math.sin(dLat / 2) * math.sin(dLat / 2) + math.sin(dLon / 2) * math.sin(dLon / 2) * math.cos(lat1) * math.cos(lat2)
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    d = float(R * c)
+    d = float(R_EARTH * c)
     return d
 
 
@@ -244,7 +243,7 @@ def saveGPX(trackSegments):
         for trackSegment in trackSegments:
             gpx_segment = gpxpy.gpx.GPXTrackSegment()
             gpx_track.segments.append(gpx_segment)
-            for p in trackSegment['coords']:
+            for p in trackSegment.points:
                 point = gpxpy.gpx.GPXTrackPoint(p.latitude, p.longitude)
                 if p.altitude:
                     point.elevation = p.altitude
@@ -275,11 +274,11 @@ def openGPX():
                 for point in segment.points:
                     track_points.append(TrackPoint(point.latitude, point.longitude))
                 if len(track.segments) > 1 or len(gpx.tracks) > 1:
-                    tracks.append({'name': '%s - track %i' % (f_name, i), 'coords': track_points})
+                    tracks.append(Track(track_points, '%s - track %i' % (f_name, i)))
                     if len(track.segments) > 1:
                         i += 1
                 else:
-                    tracks.append({'name': '%s - track' % f_name, 'coords': track_points})
+                    tracks.append(Track(track_points, '%s - track' % f_name))
             i += 1
         i = 0
         for route in gpx.routes:
@@ -287,15 +286,15 @@ def openGPX():
             for point in route.points:
                 track_points.append(TrackPoint(point.latitude, point.longitude))
             if len(gpx.routes) > 1:
-                tracks.append({'name': '%s - route %i' % (f_name, i), 'coords': track_points})
+                tracks.append(Track(track_points, '%s - route %i' % (f_name, i)))
             else:
-                tracks.append({'name': '%s - route' % f_name, 'coords': track_points})
+                tracks.append(Track(track_points, '%s - route' % f_name))
             i += 1
         waypoints = list()
         for waypoint in gpx.waypoints:
             waypoints.append(TrackPoint(waypoint.latitude, waypoint.longitude))
         if len(waypoints) >= 1:
-            tracks.append({'name': '%s - waypoints' % f_name, 'coords': waypoints})
+            tracks.append(Track(waypoints, '%s - waypoints' % f_name))
     return tracks
 
 
@@ -321,6 +320,17 @@ def convertUnits(unit_from, unit_to, value):
             return float(value) * 1.15077945
     return value
 
+class Track:
+    def __init__(self, points, name=None, distance=None):
+        self.points = points
+        self.name = name
+        if distance:
+            self.distance = distance
+        else:
+            distance = 0
+            for i in range(0, len(points) - 1):
+                distance += countDistanceFromLatLon(points[i].getLatLon(), points[i + 1].getLatLon())
+            self.distance = distance
 
 class TrackPoint:
     def __init__(self, latitude=None, longitude=None, timestamp=None, altitude=None, speed=None):
