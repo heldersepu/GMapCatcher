@@ -7,7 +7,7 @@ import pango
 import math
 import gmapcatcher.mapUtils as mapUtils
 from gmapcatcher.mapConst import *
-from threading import Timer
+from threading import Timer, Thread, Event
 
 ternary = lambda a, b, c: (b, c)[not a]
 
@@ -26,11 +26,17 @@ class DrawingArea(gtk.DrawingArea):
         self.scale_gc = False
         self.arrow_gc = False
 
+        self.TrackThreadInst = None
+
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK)
         self.connect('button-press-event', self.da_button_press)
 
         self.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         self.connect('button-release-event', self.da_button_release)
+
+    def stop(self):
+        if self.TrackThreadInst:
+            self.TrackThreadInst.stop()
 
     ## Change the mouse cursor over the drawing_area
     def da_set_cursor(self, dCursor=gtk.gdk.HAND1):
@@ -460,19 +466,97 @@ class DrawingArea(gtk.DrawingArea):
 
     def draw_gps_line(self, unit, track, zl, track_width):
         color = '#FF0000'
-        gc = self.draw_line(unit, zl, track.points, color, track_width, False)
+        self.draw_line(unit, zl, track.points, color, track_width, False)
 
     def draw_tracks(self, unit, tracks, zl, track_width, draw_distance=False):
-        colors = ["#4444FF", "#FFFF00", "#FF00FF"]
-        i = 0
-        for track in tracks:
-            color = colors[i % len(colors)]
-            gc = self.draw_line(unit, zl, track.points, color, track_width, draw_distance)
+        if not self.TrackThreadInst:
+            self.TrackThreadInst = self.TrackThread(self, unit, tracks, zl, track_width, draw_distance)
+            self.TrackThreadInst.start()
+        else:
+            self.TrackThreadInst.unit = unit
+            self.TrackThreadInst.tracks = tracks
+            self.TrackThreadInst.zl = zl
+            self.TrackThreadInst.track_width = track_width
+            self.TrackThreadInst.draw_distance = draw_distance
+            self.TrackThreadInst.update.set() # call update on TrackThread
+
+    class TrackThread(Thread):
+        def __init__(self, da, unit, tracks, zl, track_width, draw_distance=False):
+            Thread.__init__(self)
+            self.da = da
+            self.unit = unit
+            self.tracks = tracks
+            self.zl = zl
+            self.track_width = track_width
+            self.draw_distance = draw_distance
+            self.update = Event()
+            self.update.set()
+            self.__stop = Event()
+
+        def run(self):
+            while True:
+                self.update.wait()      # Wait for update signal to start updating
+                self.update.clear()     # Clear the signal straight away to allow stopping of the update
+                track_colors = ["#4444FF", "#FFFF00", "#FF00FF"]
+                i = 0
+                for track in self.tracks:
+                    track_color = track_colors[i % len(track_colors)]
+                    self.draw_line(track, track_color)
+                    i += 1
+                if self.__stop.is_set():    # If stop is set, break the loop (not working for some reason? :S)
+                    break
+
+        def stop(self):
+            print 'mjep, it\'s called...'
+            self.__stop.set()
+
+        def draw_line(self, track, track_color):
+            gc = self.da.style.black_gc
+            gc.line_width = self.track_width
+            gc.set_rgb_fg_color(gtk.gdk.color_parse(track_color))
+            dist_str = None
+            total_distance = 0
+
+            points = track.points
+
             if track.distance:
-                distance = mapUtils.convertUnits(UNIT_TYPE_KM, unit, track.distance)
-                text = '%s - %.2f %s' % (track.name, distance, DISTANCE_UNITS[unit])
+                distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, track.distance)
+                text = '%s - %.2f %s' % (track.name, distance, DISTANCE_UNITS[self.unit])
             else:
                 text = track.name
-            self.write_text_lat_lon(gc, zl, track.points[0], '%s (start)' % text)
-            self.write_text_lat_lon(gc, zl, track.points[-1], '%s (end)' % text)
-            i += 1
+            gtk.threads_enter()     # Precautions to tell GTK that we're drawing from a thread now
+            try:
+                self.da.write_text_lat_lon(gc, self.zl, track.points[0], '%s (start)' % text)
+                self.da.write_text_lat_lon(gc, self.zl, track.points[-1], '%s (end)' % text)
+            finally:
+                gtk.threads_leave() # And once we are finished, tell that as well...
+
+            def do_draw(ini, end):
+                gtk.threads_enter()
+                try:
+                    self.da.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
+                    if dist_str:
+                        self.da.write_text(gc, end[0], end[1], dist_str, 10)
+                finally:
+                    gtk.threads_leave()
+
+            for j in range(len(points) - 1):
+                # If update or __stop was set while we're in the loop, break
+                if self.update.is_set() or self.__stop.is_set():
+                    return
+                if self.draw_distance:
+                    distance = mapUtils.countDistanceFromLatLon(points[j].getLatLon(), points[j + 1].getLatLon())
+                    if self.unit != UNIT_TYPE_KM:
+                        distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, distance)
+                    total_distance += distance
+                    dist_str = '%.3f %s \n%.3f %s' % (distance, DISTANCE_UNITS[self.unit], total_distance, DISTANCE_UNITS[self.unit])
+                ini = self.da.coord_to_screen(points[j].latitude, points[j].longitude, self.zl)
+                end = self.da.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, self.zl)
+                if ini and end:
+                    do_draw(ini, end)
+                elif ini or end:
+                    if ini:
+                        end = self.da.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, self.zl, True)
+                    if end:
+                        ini = self.da.coord_to_screen(points[j].latitude, points[j].longitude, self.zl, True)
+                    do_draw(ini, end)
