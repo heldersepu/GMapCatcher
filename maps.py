@@ -129,10 +129,13 @@ class MainWindow(gtk.Window):
             locations = self.ctx_map.get_locations()
             if len(found_locations) > 1:
                 points = []
+                searchStr = ''
                 for l in found_locations:
                     coord = locations[unicode(l)]
                     points.append(mapUtils.TrackPoint(coord[0], coord[1]))
-                self.getCloudMadeRoute(None, points)
+                    searchStr += '%s - ' % l
+                searchStr = searchStr.rstrip(' - ')
+                self.getCloudMadeRoute(None, points, searchStr)
             else:
                 self.entry.set_text(unicode(found_locations[0]))
             coord = locations[unicode(found_locations[0])]
@@ -736,7 +739,7 @@ class MainWindow(gtk.Window):
         menu.show_all()
         return menu
 
-    def getCloudMadeRoute(self, w, points):
+    def getCloudMadeRoute(self, w, points, name=None):
         if self.cb_offline.get_active():
             if error_msg(self, "Offline mode, cannot get route!" +
                         "      Would you like to get online?",
@@ -748,7 +751,7 @@ class MainWindow(gtk.Window):
         transit_points = []
         if len(points) > 2:
             transit_points = points[1:-1]
-        cm = cmRoute(self.conf.cloudMade_API, start, end, transit_points)
+        cm = cmRoute(self.conf.cloudMade_API, start, end, transit_points, name=name)
         track = cm.getWaypoints()
         if track:
             self.tracks.append(track)
