@@ -411,12 +411,16 @@ class DrawingArea(gtk.DrawingArea):
 
     ## Draw line with zoomlevel, [points], color, width and optional distance string
     # returns used gc (to be used in write_text for example)
-    def draw_line(self, unit, zl, points, color, width, draw_distance=False):
+    def draw_line(self, unit, zl, points, color, width, draw_distance=False):        
         gc = self.style.black_gc
         gc.line_width = width
         gc.set_rgb_fg_color(gtk.gdk.color_parse(color))
         dist_str = None
         total_distance = 0
+        def do_draw(ini, end):
+            self.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
+            if dist_str:
+                self.write_text(gc, end[0], end[1], dist_str, 10)
         for j in range(len(points) - 1):
             if draw_distance:
                 distance = mapUtils.countDistanceFromLatLon(points[j].getLatLon(), points[j + 1].getLatLon())
@@ -424,12 +428,16 @@ class DrawingArea(gtk.DrawingArea):
                     distance = mapUtils.convertUnits(UNIT_TYPE_KM, unit, distance)
                 total_distance += distance
                 dist_str = '%.3f %s \n%.3f %s' % (distance, DISTANCE_UNITS[unit], total_distance, DISTANCE_UNITS[unit])
-            ini = self.coord_to_screen(points[j].latitude, points[j].longitude, zl, True)
-            end = self.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, zl, True)
+            ini = self.coord_to_screen(points[j].latitude, points[j].longitude, zl)
+            end = self.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, zl)
             if ini and end:
-                self.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
-                if dist_str:
-                    self.write_text(gc, end[0], end[1], dist_str, 10)
+                do_draw(ini, end)
+            elif ini or end:
+                if ini:
+                    end = self.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, zl, True)
+                if end:
+                    ini = self.coord_to_screen(points[j].latitude, points[j].longitude, zl, True)
+                do_draw(ini, end)
         return gc
 
     ## Write text to point in screen coord -format
