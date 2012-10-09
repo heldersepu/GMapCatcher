@@ -11,12 +11,13 @@ import re
 
 # http://routes.cloudmade.com/YOUR-API-KEY-GOES-HERE/api/0.3/start_point,[transit_point1,...,transit_pointN],end_point/route_type[/route_type_modifier].output_format[?lang=(Two letter ISO 3166-1 code)][&units=(km|miles)]
 class cmRoute:
-    def __init__(self, apikey, start, end, transit_points=None, route_type='car'):
+    def __init__(self, apikey, start, end, transit_points=None, route_type='car', name=None):
         self.apikey = apikey
         self.start = start
         self.end = end
         self.transit_points = transit_points
         self.route_type = route_type
+        self.name = name
         # print self.apikey
 
     def buildUrl(self):
@@ -55,7 +56,10 @@ class cmRoute:
         for waypoint in gpx.waypoints:
             waypoints.append(TrackPoint(waypoint.latitude, waypoint.longitude))
         if len(waypoints) >= 1:
-            return Track(waypoints, 'CloudMade waypoints', distance)
+            if self.name:
+                return Track(waypoints, self.name, distance)
+            else:
+                return Track(waypoints, 'CloudMade waypoints', distance)
         return None
 
 

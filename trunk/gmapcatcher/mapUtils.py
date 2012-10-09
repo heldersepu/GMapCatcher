@@ -327,10 +327,14 @@ class Track:
         if distance:
             self.distance = distance
         else:
-            distance = 0
-            for i in range(0, len(points) - 1):
-                distance += countDistanceFromLatLon(points[i].getLatLon(), points[i + 1].getLatLon())
-            self.distance = distance
+            self.recalculateDistance()
+
+    def recalculateDistance(self):
+        distance = 0
+        for i in range(0, len(self.points) - 1):
+            distance += countDistanceFromLatLon(self.points[i].getLatLon(), self.points[i + 1].getLatLon())
+        self.distance = distance
+        return self.distance
 
 class TrackPoint:
     def __init__(self, latitude=None, longitude=None, timestamp=None, altitude=None, speed=None):
