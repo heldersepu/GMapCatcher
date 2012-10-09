@@ -556,6 +556,7 @@ class MainWindow(gtk.Window):
             self.add_marker(self.myPointer)
         elif strName == DA_MENU[MOUSE_LOCATION]:
             self.mouse_location(self.myPointer)
+            self.drawing_area.TrackThreadInst.update.set()
         elif strName == DA_MENU[GPS_LOCATION]:
             self.gps_location()
         elif strName == DA_MENU[GPS_DIRECTIONS]:
@@ -1132,6 +1133,7 @@ class MainWindow(gtk.Window):
     def on_delete(self, *args):
         self.unfullscreen()
         self.unmaximize()
+        self.drawing_area.stop()
         sz = self.get_size()
         location = self.get_position()
         self.hide()
@@ -1144,7 +1146,6 @@ class MainWindow(gtk.Window):
         # If there was an update show it
         if self.update:
             self.update.finish()
-        gtk.gdk.threads_leave()
         if self.conf.save_at_close:
             self.conf.save_layer = self.layer
             self.conf.save_width = sz[0]
@@ -1284,8 +1285,14 @@ class MainWindow(gtk.Window):
 
 
 def main(conf_path):
+    # gobject.threads_init()
+    gtk.gdk.threads_init()
     MainWindow(config_path=conf_path)
+    
+    gtk.threads_enter()
     gtk.main()
+    gtk.threads_leave()
+
 
 if __name__ == "__main__":
     conf_path = None
