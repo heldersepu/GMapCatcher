@@ -280,7 +280,10 @@ class DrawingArea(gtk.DrawingArea):
         rect = self.get_allocation()
         middle = (rect.width / 2, rect.height / 2)
         full = (rect.width, rect.height)
-
+        
+        if (self.markerThread is not None):
+            self.markerThread.cancel()
+        
         if tracks:
             self.draw_tracks(conf.units, tracks, zl, conf.gps_track_width, draw_track_distance)
 
@@ -306,9 +309,7 @@ class DrawingArea(gtk.DrawingArea):
             # Draw the markers
             if len(marker.positions) < 1000:
                 self.draw_markers(zl, marker, coord, conf, pixDim)
-            else:
-                if (self.markerThread is not None):
-                    self.markerThread.cancel()
+            else:                
                 self.markerThread = Timer(0.5, self.draw_markers_thread, [zl, marker, coord, conf, pixDim])
                 self.markerThread.start()
 
