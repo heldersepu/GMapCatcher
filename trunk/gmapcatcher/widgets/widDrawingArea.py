@@ -459,5 +459,10 @@ class DrawingArea(gtk.DrawingArea):
         for track in tracks:
             color = colors[i % len(colors)]
             gc = self.draw_line(unit, zl, track['coords'], color, track_width, draw_distance)
-            self.write_text_lat_lon(gc, zl, track['coords'][0], track['name'])
+            if 'distance' in track:
+                distance = mapUtils.convertUnits(UNIT_TYPE_KM, unit, track['distance'])
+                text = '%s - %d %s' % (track['name'], distance, DISTANCE_UNITS[unit])
+            else:
+                text = track['name']
+            self.write_text_lat_lon(gc, zl, track['coords'][0], text)
             i += 1

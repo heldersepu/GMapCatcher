@@ -3,6 +3,7 @@
 # A group of map utilities
 
 import re
+import os
 import math
 from mapConst import *
 from widgets.customWidgets import FileChooser, FileSaveChooser
@@ -265,6 +266,8 @@ def openGPX():
         f = open(f_name, 'r')
         tracks = list()
         gpx = gpxpy.parse(f)
+        f.close()
+        f_name = os.path.basename(f_name)
         i = 1
         for track in gpx.tracks:
             for segment in track.segments:
@@ -278,6 +281,7 @@ def openGPX():
                 else:
                     tracks.append({'name': '%s - track' % f_name, 'coords': track_points})
             i += 1
+        i = 0
         for route in gpx.routes:
             track_points = list()
             for point in route.points:
