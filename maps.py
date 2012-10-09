@@ -749,6 +749,8 @@ class MainWindow(gtk.Window):
         if track:
             self.tracks.append(track)
             self.shown_tracks.append(track)
+        else:
+            error_msg(self, 'Failed to fetch route.')
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):

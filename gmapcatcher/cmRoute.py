@@ -6,10 +6,10 @@ from mapConf import MapConf
 from mapUtils import TrackPoint
 import gpxpy
 import urllib2
+import re
 
 
 # http://routes.cloudmade.com/YOUR-API-KEY-GOES-HERE/api/0.3/start_point,[transit_point1,...,transit_pointN],end_point/route_type[/route_type_modifier].output_format[?lang=(Two letter ISO 3166-1 code)][&units=(km|miles)]
-
 class cmRoute:
     def __init__(self, apikey, start, end, transit_points=None, route_type='car'):
         self.apikey = apikey
@@ -44,11 +44,18 @@ class cmRoute:
         r = urllib2.urlopen(url)
         data = r.read()
         gpx = gpxpy.parse(data)
+
+        distance = None
+        distance_re = re.compile('()(\\d+)(<\\/distance>)',re.IGNORECASE|re.DOTALL)
+        m = distance_re.search(data)
+        if m:
+            distance = int(m.group(2)) / 1000.
+
         waypoints = list()
         for waypoint in gpx.waypoints:
             waypoints.append(TrackPoint(waypoint.latitude, waypoint.longitude))
         if len(waypoints) >= 1:
-            return {'name': 'CloudMade waypoints', 'coords': waypoints}
+            return {'name': 'CloudMade waypoints', 'coords': waypoints, 'distance': distance}
         return None
 
 
