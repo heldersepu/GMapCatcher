@@ -90,7 +90,7 @@ class ComboBoxEntry(gtk.ComboBoxEntry):
 
     ## Automatically display after selecting
     def on_completion_match(self, completion, model, iter, confirm_clicked):
-        self.entry.set_text(model[iter][0])
+        self.child.set_text(model[iter][0])
         confirm_clicked(None)
 
     ## Match function for the auto-completion
