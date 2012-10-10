@@ -363,7 +363,7 @@ class DrawingArea(gtk.DrawingArea):
         # Draw GPS position
         if gps and gps.gpsfix:
             location = gps.get_location()
-            if location is not None and (zl <= conf.max_gps_zoom):
+            if location is not None:
                 img = gps.pixbuf
                 screen_coord = self.coord_to_screen(location[0], location[1], zl)
                 if screen_coord:
