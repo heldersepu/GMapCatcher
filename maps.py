@@ -295,7 +295,9 @@ class MainWindow(gtk.Window):
                     if (time.time() - self.gps_idle_time) > 3:
                         self.drawing_area.center = tile
 
-                self.drawing_area.repaint()
+                if (self.gps.gpsfix.latitude, self.gps.gpsfix.longitude) != self.last_gps_point:
+                    self.drawing_area.repaint()
+                self.last_gps_point = (self.gps.gpsfix.latitude, self.gps.gpsfix.longitude)
                 # Update the status bar with the GPS Coordinates
                 if self.conf.statusbar_type == STATUS_GPS and not self.Ruler:
                     self.status_bar.coordinates(self.gps.gpsfix.latitude, self.gps.gpsfix.longitude)
@@ -1207,6 +1209,7 @@ class MainWindow(gtk.Window):
         self.foreground = []
         self.gps = None
         self.gps_track = mapUtils.Track([], 'GPS track')
+        self.last_gps_point = (0, 0)
         self.enable_gps(True)
         self.downloading = 0
         self.visual_dlconfig = {}
