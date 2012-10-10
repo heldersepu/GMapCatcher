@@ -262,40 +262,41 @@ class MainWindow(gtk.Window):
         if self.gps and self.gps.gpsfix:
             if self.gps.gpsfix.mode != MODE_NO_FIX and self.gps.gpsfix.latitude and self.gps.gpsfix.longitude:
                 zl = self.get_zoom()
-                tile = mapUtils.coord_to_tile((self.gps.gpsfix.latitude, self.gps.gpsfix.longitude, zl))
-                self.gps_valid = True
-                # The map should be centered around a new GPS location
-                if not self.Ruler and (self.gps.mode == GPS_CENTER or self.reCenter_gps):
-                    self.reCenter_gps = False
-                    self.drawing_area.center = tile
-                # The map should be moved only to keep GPS location on the screen
-                elif self.gps.mode == GPS_ON_SCREEN and not self.Ruler:
-                    rect = self.drawing_area.get_allocation()
-                    xy = mapUtils.tile_coord_to_screen(
-                        (tile[0][0], tile[0][1], zl), rect, self.drawing_area.center)
-                    if xy:
-                        for x, y in xy:
-                            x = x + tile[1][0]
-                            y = y + tile[1][1]
-                            if not(0 < x < rect.width) or not(0 < y < rect.height):
-                                self.drawing_area.center = tile
-                            else:
-                                if GPS_IMG_SIZE[0] > x:
-                                    self.drawing_area.da_jump(1, zl, True)
-                                elif x > rect.width - GPS_IMG_SIZE[0]:
-                                    self.drawing_area.da_jump(3, zl, True)
-                                elif GPS_IMG_SIZE[1] > y:
-                                    self.drawing_area.da_jump(2, zl, True)
-                                elif y > rect.height - GPS_IMG_SIZE[1]:
-                                    self.drawing_area.da_jump(4, zl, True)
-                    else:
+                if zl <= self.conf.max_gps_zoom:
+                    tile = mapUtils.coord_to_tile((self.gps.gpsfix.latitude, self.gps.gpsfix.longitude, zl))
+                    self.gps_valid = True
+                    # The map should be centered around a new GPS location
+                    if not self.Ruler and (self.gps.mode == GPS_CENTER or self.reCenter_gps):
+                        self.reCenter_gps = False
                         self.drawing_area.center = tile
-                # GPS update timeout, recenter GPS only after 3 sec idle
-                elif self.gps.mode == GPS_TIMEOUT and not self.Ruler:
-                    if (time.time() - self.gps_idle_time) > 3:
-                        self.drawing_area.center = tile
+                    # The map should be moved only to keep GPS location on the screen
+                    elif self.gps.mode == GPS_ON_SCREEN and not self.Ruler:
+                        rect = self.drawing_area.get_allocation()
+                        xy = mapUtils.tile_coord_to_screen(
+                            (tile[0][0], tile[0][1], zl), rect, self.drawing_area.center)
+                        if xy:
+                            for x, y in xy:
+                                x = x + tile[1][0]
+                                y = y + tile[1][1]
+                                if not(0 < x < rect.width) or not(0 < y < rect.height):
+                                    self.drawing_area.center = tile
+                                else:
+                                    if GPS_IMG_SIZE[0] > x:
+                                        self.drawing_area.da_jump(1, zl, True)
+                                    elif x > rect.width - GPS_IMG_SIZE[0]:
+                                        self.drawing_area.da_jump(3, zl, True)
+                                    elif GPS_IMG_SIZE[1] > y:
+                                        self.drawing_area.da_jump(2, zl, True)
+                                    elif y > rect.height - GPS_IMG_SIZE[1]:
+                                        self.drawing_area.da_jump(4, zl, True)
+                        else:
+                            self.drawing_area.center = tile
+                    # GPS update timeout, recenter GPS only after 3 sec idle
+                    elif self.gps.mode == GPS_TIMEOUT and not self.Ruler:
+                        if (time.time() - self.gps_idle_time) > 3:
+                            self.drawing_area.center = tile
 
-                self.drawing_area.repaint()
+                    self.drawing_area.repaint()
                 # Update the status bar with the GPS Coordinates
                 if self.conf.statusbar_type == STATUS_GPS and not self.Ruler:
                     self.status_bar.coordinates(self.gps.gpsfix.latitude, self.gps.gpsfix.longitude)
