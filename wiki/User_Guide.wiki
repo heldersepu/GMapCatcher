@@ -131,7 +131,7 @@ GPS window shows the current GPS information, if available. Unit of speed is det
 
 http://gmapcatcher.googlecode.com/svn/wiki/images/gps_window.png
 
-== Settings ==
+= Settings =
 
 <wiki:comment>
 I guess this is pretty much wrong information by now?
@@ -139,7 +139,7 @@ I guess this is pretty much wrong information by now?
 All values in the tab Settings describe display properties when starting the programme. Therefore any change requires a restart of the programme in order to have effect.
 </wiki:comment>
 
-=== Main ===
+== Main ==
 
 http://gmapcatcher.googlecode.com/svn/wiki/images/settings_main.png
 
@@ -152,19 +152,19 @@ http://gmapcatcher.googlecode.com/svn/wiki/images/settings_main.png
   * 'Location Status' sets statusbar type. Type can be one off 'Off', 'Mouse' or 'GPS'.
   * 'Custom maps directory' sets where to save maps and in what format.
 
-=== Edit locations ===
+== Edit locations ==
 
 http://gmapcatcher.googlecode.com/svn/wiki/images/settings_locations.png
 
 Allows adding, deleting and editing of locations. All locations searched will be added here.
 
-=== Edit markers ===
+== Edit markers ==
 
 http://gmapcatcher.googlecode.com/svn/wiki/images/settings_markers.png
 
 Allows adding, deleting and editing of markers. You can add marker also by CTRL + left-clicking the map in the point where you want marker.
 
-=== Change Theme ===
+== Change Theme ==
 
 http://gmapcatcher.googlecode.com/svn/wiki/images/settings_theme.png
 
@@ -175,7 +175,7 @@ http://gmapcatcher.googlecode.com/svn/wiki/images/settings_theme.png
     * 'Select map servers' allows toggling displaying of the maps in map selection. You can disable map by entering 0 to 'status' and enable by entering '1'
   http://gmapcatcher.googlecode.com/svn/wiki/images/settings_map_servers.png
 
-=== GPS Options ===
+== GPS Options ==
 
 http://gmapcatcher.googlecode.com/svn/wiki/images/settings_gps.png
 
