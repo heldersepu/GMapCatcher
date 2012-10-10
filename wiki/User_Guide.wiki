@@ -171,8 +171,8 @@ http://gmapcatcher.googlecode.com/svn/wiki/images/settings_theme.png
   * 'Mark center of the map' allows adding a center point to the map window.
   * 'Map scales' selects whether to draw map scale
   * 'Map service' allows selecting of map service.
-  ** 'Use different folder per map service' allows using multiple maps without them interfering with each other. Also, when selected, map selection box in main window shows all the available map services instead of showing just map layers of selected map.
-  ** 'Select map servers' allows toggling displaying of the maps in map selection. You can disable map by entering 0 to 'status' and enable by entering '1'
+    * 'Use different folder per map service' allows using multiple maps without them interfering with each other. Also, when selected, map selection box in main window shows all the available map services instead of showing just map layers of selected map.
+    * 'Select map servers' allows toggling displaying of the maps in map selection. You can disable map by entering 0 to 'status' and enable by entering '1'
   http://gmapcatcher.googlecode.com/svn/wiki/images/settings_map_servers.png
 
 = Keyboard shortcuts =
