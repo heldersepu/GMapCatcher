@@ -486,13 +486,13 @@ class DrawingArea(gtk.DrawingArea):
             self.write_text(gc, screen_coord[0], screen_coord[1], text)
 
     def draw_ruler_lines(self, unit, points, zl, track_width):
-        color = '#00FF00'
+        color = 'green'
         self.draw_line(unit, zl, points, color, track_width, True)
 
     def draw_gps_line(self, unit, track, zl, track_width):
         if not self.gpsTrackInst:
-            self.set_gps_track_gc('#FF0000')
-            colors = ['#FF0000']
+            self.set_gps_track_gc('red')
+            colors = ['red']
             self.gpsTrackInst = self.TrackThread(self, self.gps_track_gc,
                 colors, unit, [track], zl, track_width, False, False)
             self.gpsTrackInst.start()
@@ -505,8 +505,8 @@ class DrawingArea(gtk.DrawingArea):
 
     def draw_tracks(self, unit, tracks, zl, track_width, draw_distance=False):
         if not self.trackThreadInst:
-            self.set_track_gc("#4444FF")
-            colors = ["#4444FF", "#FFFF00", "#FF00FF"]
+            self.set_track_gc('blue')
+            colors = ['purple', 'blue', 'yellow', 'pink', 'brown', 'orange', 'black']
             self.trackThreadInst = self.TrackThread(self, self.track_gc,
                 colors, unit, tracks, zl, track_width, True, draw_distance)
             self.trackThreadInst.start()
