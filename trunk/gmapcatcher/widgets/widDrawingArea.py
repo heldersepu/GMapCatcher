@@ -286,10 +286,10 @@ class DrawingArea(gtk.DrawingArea):
         rect = self.get_allocation()
         middle = (rect.width / 2, rect.height / 2)
         full = (rect.width, rect.height)
-        
+
         if (self.markerThread is not None):
             self.markerThread.cancel()
-        
+
         if tracks:
             self.draw_tracks(conf.units, tracks, zl, conf.gps_track_width, draw_track_distance)
 
@@ -315,7 +315,7 @@ class DrawingArea(gtk.DrawingArea):
             # Draw the markers
             if len(marker.positions) < 1000:
                 self.draw_markers(zl, marker, coord, conf, pixDim)
-            else:                
+            else:
                 self.markerThread = Timer(0.5, self.draw_markers_thread, [zl, marker, coord, conf, pixDim])
                 self.markerThread.start()
 
@@ -418,7 +418,7 @@ class DrawingArea(gtk.DrawingArea):
 
     ## Draw line with zoomlevel, [points], color, width and optional distance string
     # returns used gc (to be used in write_text for example)
-    def draw_line(self, unit, zl, points, color, width, draw_distance=False):        
+    def draw_line(self, unit, zl, points, color, width, draw_distance=False):
         gc = self.style.black_gc
         gc.line_width = width
         gc.set_rgb_fg_color(gtk.gdk.color_parse(color))
@@ -492,9 +492,10 @@ class DrawingArea(gtk.DrawingArea):
             self.update = Event()
             self.update.set()
             self.__stop = Event()
+            self.setDaemon(True)
 
         def run(self):
-            while True:
+            while not self.__stop.is_set():
                 self.update.wait()      # Wait for update signal to start updating
                 self.update.clear()     # Clear the signal straight away to allow stopping of the update
                 track_colors = ["#4444FF", "#FFFF00", "#FF00FF"]
@@ -503,8 +504,7 @@ class DrawingArea(gtk.DrawingArea):
                     track_color = track_colors[i % len(track_colors)]
                     self.draw_line(track, track_color)
                     i += 1
-                if self.__stop.is_set():    # If stop is set, break the loop (not working for some reason? :S)
-                    break
+            print 'stopped'
 
         def stop(self):
             print 'mjep, it\'s called...'
