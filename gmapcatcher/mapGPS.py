@@ -150,9 +150,15 @@ def makeGPSTime(gps_time, gps_type, use_offset=False):
     else:
         dNow = datetime.utcnow()
         if '.' in gps_time:
-            d = datetime.strptime(gps_time, '%H%M%S.%f')
+            try:
+                d = datetime.strptime(gps_time, '%H%M%S.%f')
+            except TypeError:
+                return
         else:
-            d = datetime.strptime(gps_time, '%H%M%S')
+            try:
+                d = datetime.strptime(gps_time, '%H%M%S')
+            except TypeError:
+                return
         d = d.replace(year=dNow.year, month=dNow.month, day=dNow.day)
     if use_offset:
         d = d - offset
