@@ -295,6 +295,7 @@ class MainWindow(gtk.Window):
                     if (time.time() - self.gps_idle_time) > 3:
                         self.drawing_area.center = tile
 
+                # Call repaint only if gps-location has changed
                 if (self.gps.gpsfix.latitude, self.gps.gpsfix.longitude) != self.last_gps_point:
                     self.drawing_area.repaint()
                 self.last_gps_point = (self.gps.gpsfix.latitude, self.gps.gpsfix.longitude)

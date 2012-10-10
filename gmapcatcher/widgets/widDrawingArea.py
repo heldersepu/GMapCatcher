@@ -40,6 +40,8 @@ class DrawingArea(gtk.DrawingArea):
     def stop(self):
         if self.trackThreadInst:
             self.trackThreadInst.stop()
+        if self.gpsTrackInst:
+            self.gpsTrackInst.stop()
 
     ## Change the mouse cursor over the drawing_area
     def da_set_cursor(self, dCursor=gtk.gdk.HAND1):
