@@ -100,19 +100,20 @@ The path shows segment length and the whole path length (up to that point) on ev
 === Download ===
 Within the following dialog an area and a zoom level to download a map section can be entered. The dialog stays alive during the download.
 
-    http://gmapcatcher.googlecode.com/svn/wiki/GMap-Download.jpg
+    http://gmapcatcher.googlecode.com/svn/wiki/images/download_window.png
 
 The centre of the downloaded area is defined by entering latitude and longitude. The size of the area by entering width and height. The maximum and minimum zoom level define the scale of the downloaded map tiles. The map type which is set in the drop down menu for 'map type selection' is used for the download.
 
   Action of buttons in bottom line of window:
     * left button: Start download
+    ** by right-clicking Start download, you can select the map layers to download.
     * middle button: Open menu to restart/continue a previous download
     * right button: Cancel current download.
 
   How to update and/or modify a downloaded area? If you have e.g. downloaded the complete US with zoom level 4, now you want to update the NY area with zoom level 2, then you open the Download Window, simply enter the coordinates for NY and set the zoom level to 2, the range width and height to 50km and start the download. Now the NY area is updated the rest remains the same and the complete US is still available for offline viewing with zoom level 4 while NY is available with zoom level 2.
 
 === Export map to image ===
-http://gmapcatcher.googlecode.com/svn/wiki/exportMap.PNG
+http://gmapcatcher.googlecode.com/svn/wiki/images/export_window.png
 
 === Track control ===
 Track control allows controlling of tracks shown in the map. Through this window you can also import and export tracks, as well as export GPS track. GMapCatcher uses GPX-files to store this information.
@@ -126,6 +127,7 @@ Below is Track control window being used to show one of the drawn ruler paths an
 http://gmapcatcher.googlecode.com/svn/wiki/images/track_control.png
 
 === GPS window ===
+GPS window shows the current GPS information, if available. Unit of speed is determined by unit selection in Settings.
 
 http://gmapcatcher.googlecode.com/svn/wiki/images/gps_window.png
 
@@ -142,7 +144,7 @@ All values in the tab Settings describe display properties when starting the pro
 || *Shortcut Key* || *Description* ||
 ||  F1            ||  Open help page ||
 ||  F2            ||  [http://code.google.com/p/gmapcatcher/wiki/User_Guide#Export_map_to_image Export map to image] ||
-||  F3            ||  Show GPS window ||
+||  F3            ||  Toggle GPS window ||
 ||  F4            ||  Import markers from KML file ||
 ||  F5            ||  Refresh ||
 ||  F6            ||  Hide/Show the visual path download zone ||
