@@ -33,10 +33,10 @@ def myFrame(strName, container, spacing=5):
 
 ## A Spin button that allows numbers only
 def SpinBtn(value=0, lower=MAP_MIN_ZOOM_LEVEL,
-            upper=MAP_MAX_ZOOM_LEVEL, step=1, maxChars=2):
+            upper=MAP_MAX_ZOOM_LEVEL, step=1, maxChars=2, isInt=True):
     a_zoom = gtk.Adjustment(value, lower, upper, step)
     spin = gtk.SpinButton(a_zoom)
-    spin.connect('insert-text', allow_only_numbers, maxChars)
+    spin.connect('insert-text', allow_only_numbers, maxChars, isInt)
     return spin
 
 

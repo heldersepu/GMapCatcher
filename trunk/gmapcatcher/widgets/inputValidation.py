@@ -9,7 +9,6 @@ def allow_only_numbers(entry, text, length, position, max, isInt=True):
     pos = entry.get_position()
     old = entry.get_text()
     new_text = old[:pos] + text + old[pos:]
-
     # Allow the minus as the first char
     if new_text == "-":
         return
@@ -22,6 +21,7 @@ def allow_only_numbers(entry, text, length, position, max, isInt=True):
             if isInt:
                 int(new_text)
             else:
+                new_text = new_text.replace(',', '.')
                 float(new_text)
         except Exception:
             entry.stop_emission('insert-text')

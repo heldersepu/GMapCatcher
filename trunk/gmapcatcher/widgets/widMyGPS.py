@@ -6,14 +6,14 @@
 import gtk
 from gmapcatcher.mapConst import *
 from gmapcatcher.serialGPS import serialPortScan, BAUDRATES, available as serialAvailable
-from customWidgets import myEntry, SpinBtn, myFrame, lbl
+from customWidgets import SpinBtn, myFrame, lbl
 
 
 ## This widget lets the user change GPS settings
 class MyGPS(gtk.VPaned):
     ## All the buttons at the bottom
     def btn_save_clicked(self, button, conf):
-        conf.gps_update_rate = self.e_gps_updt_rate.get_text()
+        conf.gps_update_rate = self.e_gps_updt_rate.get_value()
         conf.max_gps_zoom = self.s_gps_max_zoom.get_value_as_int()
         conf.gps_mode = self.cmb_gps_mode.get_active()
         conf.gps_type = self.cmb_gps_type.get_active()
@@ -49,7 +49,8 @@ class MyGPS(gtk.VPaned):
     def gps_updt_rate(self, gps_update_rate):
         hbox = gtk.HBox(False, 10)
         hbox.pack_start(lbl("GPS update rate in seconds: "))
-        self.e_gps_updt_rate = myEntry(str(gps_update_rate), 4, False)
+        self.e_gps_updt_rate = SpinBtn(gps_update_rate, 0.1, 100, 0.1, 5, False)
+        self.e_gps_updt_rate.set_digits(1)
         hbox.pack_start(self.e_gps_updt_rate)
         return hbox
 
