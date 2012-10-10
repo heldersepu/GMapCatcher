@@ -186,7 +186,7 @@ http://gmapcatcher.googlecode.com/svn/wiki/images/settings_gps.png
     * 'GPS update rate in seconds' allows selecting of GPS update rate
       * Determines how often the GPS location is set on map
       * Lower values use more CPU and also affect the flickering of tracks etc.
-    <wiki:comment>* 'Maximum zoom for GPS' *I have no idea what this does :D*</wiki:comment>
+    * 'Maximum zoom for GPS' sets maximum zoom to show GPS on. On zoom levels higher than this, GPS marker isn't shown and the map won't recenter.
     * 'Initial GPS mode' determines the GPS mode when starting GMapCatcher
 
   * 'GPS track' allows drawing of GPS track
