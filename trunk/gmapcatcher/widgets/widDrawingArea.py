@@ -582,37 +582,44 @@ class DrawingArea(gtk.DrawingArea):
                 finally:
                     gtk.threads_leave()
 
+            # Find drawing area limits
             rect = self.da.get_allocation()
-            top_left = mapUtils.pointer_to_coord(rect, (0, 0), self.da.center, self.zl)
-            bottom_right = mapUtils.pointer_to_coord(rect, (rect.x + rect.width, rect.y + rect.height), self.da.center, self.zl)
+            threshold = 1000    # Add some threshold (in pixels) to the area where points are accepted
+            top_left = mapUtils.pointer_to_coord(rect,
+                (rect.x - threshold, rect.y - threshold),
+                self.da.center, self.zl)
+            bottom_right = mapUtils.pointer_to_coord(rect,
+                ((rect.x + rect.width) + threshold, (rect.y + rect.height) + threshold),
+                self.da.center, self.zl)
+
             # Find drawable points
             drawable_points = list()
             for i in range(len(points)):
                 if self.update.is_set() or self.__stop.is_set():
                     return
-                if (bottom_right[0] < points[i].latitude < top_left[0]) and (top_left[1] < points[i].longitude < bottom_right[1]):
-                    drawable_points.append(i)
+                if (bottom_right[0] < points[i].latitude < top_left[0]) \
+                  and (top_left[1] < points[i].longitude < bottom_right[1]):
+                    drawable_points.append((1, self.da.coord_to_screen(points[i].latitude, points[i].longitude, self.zl, True)))
+            # Debug to test the threshold
+            print len(points), len(drawable_points)
 
-            for j in drawable_points:
+            for j in range(len(drawable_points) - 1):
                 # If update or __stop was set while we're in the loop, break
                 if self.update.is_set() or self.__stop.is_set():
                     return
-                # if self.draw_distance:
-                #     distance = mapUtils.countDistanceFromLatLon(points[j].getLatLon(), points[j + 1].getLatLon())
-                #     if self.unit != UNIT_TYPE_KM:
-                #         distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, distance)
-                #     total_distance += distance
-                #     dist_str = '%.3f %s \n%.3f %s' % (distance, DISTANCE_UNITS[self.unit], total_distance, DISTANCE_UNITS[self.unit])
-                ini = self.da.coord_to_screen(points[j].latitude, points[j].longitude, self.zl)
-                try:
-                    end = self.da.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, self.zl)
-                except IndexError:
-                    break
+                if self.draw_distance:
+                    distance = mapUtils.countDistanceFromLatLon(drawable_points[j][1], drawable_points[j + 1][1])
+                    if self.unit != UNIT_TYPE_KM:
+                        distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, distance)
+                    total_distance += distance
+                    dist_str = '%.3f %s \n%.3f %s' % (distance, DISTANCE_UNITS[self.unit], total_distance, DISTANCE_UNITS[self.unit])
+                ini = drawable_points[j][1]
+                end = drawable_points[j + 1][1]
                 if ini and end:
                     do_draw(ini, end)
-                elif ini or end:
-                    if ini:
-                        end = self.da.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, self.zl, True)
-                    if end:
-                        ini = self.da.coord_to_screen(points[j].latitude, points[j].longitude, self.zl, True)
-                    do_draw(ini, end)
+                # elif ini or end:
+                #     if ini:
+                #         end = self.da.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, self.zl, True)
+                #     if end:
+                #         ini = self.da.coord_to_screen(points[j].latitude, points[j].longitude, self.zl, True)
+                #     do_draw(ini, end)
