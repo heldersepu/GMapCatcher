@@ -14,6 +14,7 @@ class MyGPS(gtk.VPaned):
     ## All the buttons at the bottom
     def btn_save_clicked(self, button, conf):
         conf.gps_update_rate = self.e_gps_updt_rate.get_value()
+        conf.max_gps_zoom = self.s_gps_max_zoom.get_value_as_int()
         conf.gps_mode = self.cmb_gps_mode.get_active()
         conf.gps_type = self.cmb_gps_type.get_active()
         conf.gps_track = int(self.cb_gps_track.get_active())
@@ -27,6 +28,7 @@ class MyGPS(gtk.VPaned):
     def __action_buttons(self, conf):
         def btn_revert_clicked(button, conf):
             self.e_gps_updt_rate.set_text(str(conf.gps_update_rate))
+            self.s_gps_max_zoom.set_value(conf.max_gps_zoom)
             self.cmb_gps_mode.set_active(conf.gps_mode)
 
         bbox = gtk.HButtonBox()
@@ -52,6 +54,15 @@ class MyGPS(gtk.VPaned):
         hbox.pack_start(self.e_gps_updt_rate)
         return hbox
 
+    ## Option to change the GPS max zoom
+    def gps_max_zoom(self, max_gps_zoom):
+        hbox = gtk.HBox(False, 10)
+        hbox.pack_start(lbl("Maximum zoom for GPS: "))
+        self.s_gps_max_zoom = SpinBtn(max_gps_zoom,
+                MAP_MIN_ZOOM_LEVEL, MAP_MAX_ZOOM_LEVEL - 1)
+        hbox.pack_start(self.s_gps_max_zoom)
+        return hbox
+
     ## ComboBox to change the GPS mode
     def gps_mode_combo(self, gps_mode):
         hbox = gtk.HBox(False, 10)
@@ -68,6 +79,7 @@ class MyGPS(gtk.VPaned):
         sensitive = (w.get_active() > GPS_DISABLED)
         self.boxes[1].set_sensitive(sensitive)
         self.boxes[2].set_sensitive(sensitive)
+        self.boxes[3].set_sensitive(sensitive)
 
     ## ComboBox to change the GPS type
     def gps_type_combo(self):
@@ -139,7 +151,7 @@ class MyGPS(gtk.VPaned):
     def show(self, conf):
         def general_gps_box():
             self.boxes = [self.gps_type_combo(), self.gps_updt_rate(conf.gps_update_rate),
-                    self.gps_mode_combo(conf.gps_mode)]
+                    self.gps_max_zoom(conf.max_gps_zoom), self.gps_mode_combo(conf.gps_mode)]
             vbox = gtk.VBox(False, 5)
             for box in self.boxes:
                 hbox = gtk.HBox(False, 10)
