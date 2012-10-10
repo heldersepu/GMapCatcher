@@ -158,7 +158,6 @@ def tile_coord_to_screen(tile_coord, rect, center, getGlobal=False):
 ## Convert from screen pointer to tile
 def pointer_to_tile(rect, pointer, center, zl):
     da_center = (rect.width // 2, rect.height // 2)
-
     fix_tile = center[0]
     fix_offset = center[1][0] + (pointer[0] - da_center[0]), \
                  center[1][1] + (pointer[1] - da_center[1])
