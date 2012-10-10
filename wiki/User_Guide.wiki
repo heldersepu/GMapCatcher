@@ -133,10 +133,47 @@ http://gmapcatcher.googlecode.com/svn/wiki/images/gps_window.png
 
 == Settings ==
 
-All values in the tab Settings describe display properties when starting the programme. Therefore any change requires a restart of the programme in order to have effect.
+<wiki:comment>
+I guess this is pretty much wrong information by now?
 
-'Size' defines the display size of the GMapCatcher window. 'Zoom' defines the zoom level of the map section specified by the coordinates of the field 'Center', which is displayed on start up.
-'Language' defines the language of the map's labels (street, region, etc.), the language of the user interface remains unchanged. The button 'Use Currents' sets all values according to the current display.
+All values in the tab Settings describe display properties when starting the programme. Therefore any change requires a restart of the programme in order to have effect.
+</wiki:comment>
+
+=== Main ===
+
+http://gmapcatcher.googlecode.com/svn/wiki/images/settings_main.png
+
+  * 'Size' defines the display size of the GMapCatcher window. 'Zoom' defines the zoom level of the map section specified by the coordinates of the field 'Center', which is displayed on start up.
+  * The button 'Use Currents' sets all values according to the current display.
+
+  * 'Select units' determines the units shown on all of the map components. These include track lengths, GPS speed, map scale etc.
+  * 'Start offline' sets whether to go online or offline at start.
+  * 'Close settings' sets behaviour when closing the program. If 'Save view params' is set, the window location and size will be saved.
+  * 'Location Status' sets statusbar type. Type can be one off 'Off', 'Mouse' or 'GPS'.
+  * 'Custom maps directory' sets where to save maps and in what format.
+
+=== Edit locations ===
+
+http://gmapcatcher.googlecode.com/svn/wiki/images/settings_locations.png
+
+Allows adding, deleting and editing of locations. All locations searched will be added here.
+
+=== Edit markers ===
+
+http://gmapcatcher.googlecode.com/svn/wiki/images/settings_markers.png
+
+Allows adding, deleting and editing of markers. You can add marker also by CTRL + left-clicking the map in the point where you want marker.
+
+=== Change Theme ===
+
+http://gmapcatcher.googlecode.com/svn/wiki/images/settings_theme.png
+
+  * 'Mark center of the map' allows adding a center point to the map window.
+  * 'Map scales' selects whether to draw map scale
+  * 'Map service' allows selecting of map service.
+  ** 'Use different folder per map service' allows using multiple maps without them interfering with each other. Also, when selected, map selection box in main window shows all the available map services instead of showing just map layers of selected map.
+  ** 'Select map servers' allows toggling displaying of the maps in map selection. You can disable map by entering 0 to 'status' and enable by entering '1'
+  http://gmapcatcher.googlecode.com/svn/wiki/images/settings_map_servers.png
 
 = Keyboard shortcuts =
 
