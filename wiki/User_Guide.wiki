@@ -175,6 +175,27 @@ http://gmapcatcher.googlecode.com/svn/wiki/images/settings_theme.png
     * 'Select map servers' allows toggling displaying of the maps in map selection. You can disable map by entering 0 to 'status' and enable by entering '1'
   http://gmapcatcher.googlecode.com/svn/wiki/images/settings_map_servers.png
 
+=== GPS Options ===
+
+http://gmapcatcher.googlecode.com/svn/wiki/images/settings_gps.png
+
+  * 'GPS' allows setting of GPS behaviour
+    * 'GPS type' selects GPS type, possible choices are 'Off', 'GPSd' and 'Serial'.
+      * 'GPSd' connects to GPSd running on localhost (might change in future versions to allow for remote GPSd also).
+      * 'Serial' connects straight to NMEA-compatible GPS-device connected to serial (COM) -port.
+    * 'GPS update rate in seconds' allows selecting of GPS update rate
+      * Determines how often the GPS location is set on map
+      * Lower values use more CPU and also affect the flickering of tracks etc.
+    * 'Maximum zoom for GPS' *I have no idea what this does :D*
+    * 'Initial GPS mode' determines the GPS mode when starting GMapCatcher
+
+  * 'GPS track' allows drawing of GPS track
+    * 'Track width' sets the width of the track drawn. *Also affects rulers and tracks!*
+    * 'Point interval' sets the minimum distance from last point before adding a new one
+      * Values over 50 meters are recommended, as every point uses memory (72 bytes to be exact) and memory usage can grow very high on long trips otherwise.
+
+  * 'Serial' sets the serial port parameters for GPS
+
 = Keyboard shortcuts =
 
 == General ==
