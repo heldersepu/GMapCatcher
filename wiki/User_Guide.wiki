@@ -127,7 +127,7 @@ Below is Track control window being used to show one of the drawn ruler paths an
 http://gmapcatcher.googlecode.com/svn/wiki/images/track_control.png
 
 === GPS window ===
-GPS window shows the current GPS information, if available. Unit of speed is determined by unit selection in Settings.
+GPS window shows the current GPS information, if available. Unit of speed is determined by unit selection in [User_Guide#Settings].
 
 http://gmapcatcher.googlecode.com/svn/wiki/images/gps_window.png
 
