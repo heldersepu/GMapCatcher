@@ -25,6 +25,7 @@ class DrawingArea(gtk.DrawingArea):
         self.visualdl_gc = False
         self.scale_gc = False
         self.arrow_gc = False
+        self.track_gc = False
 
         self.TrackThreadInst = None
 
@@ -154,6 +155,16 @@ class DrawingArea(gtk.DrawingArea):
             self.scale_lo = pango.Layout(self.get_pango_context())
             self.scale_lo.set_font_description(
                 pango.FontDescription("sans normal 10"))
+
+    def set_track_gc(self, initial_color):
+        if not self.track_gc:
+            color = gtk.gdk.color_parse(initial_color)
+            self.track_gc = self.window.new_gc(
+                color, color, None, gtk.gdk.COPY,
+                gtk.gdk.SOLID, None, None, None,
+                gtk.gdk.CLIP_BY_CHILDREN, 0, 0, 0,
+                0, False, 1, gtk.gdk.LINE_SOLID,
+                gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_BEVEL)
 
     ## Set the graphics context for the gps arrow
     def set_arrow_gc(self):
@@ -492,6 +503,7 @@ class DrawingArea(gtk.DrawingArea):
             self.update = Event()
             self.update.set()
             self.__stop = Event()
+            self.da.set_track_gc("#4444FF")
             self.setDaemon(True)
 
         def run(self):
@@ -511,9 +523,8 @@ class DrawingArea(gtk.DrawingArea):
             self.__stop.set()
 
         def draw_line(self, track, track_color):
-            gc = self.da.style.black_gc
-            gc.line_width = self.track_width
-            gc.set_rgb_fg_color(gtk.gdk.color_parse(track_color))
+            self.da.track_gc.line_width = self.track_width
+            self.da.track_gc.set_rgb_fg_color(gtk.gdk.color_parse(track_color))
             dist_str = None
             total_distance = 0
 
@@ -526,17 +537,17 @@ class DrawingArea(gtk.DrawingArea):
                 text = track.name
             gtk.threads_enter()     # Precautions to tell GTK that we're drawing from a thread now
             try:
-                self.da.write_text_lat_lon(gc, self.zl, track.points[0], '%s (start)' % text)
-                self.da.write_text_lat_lon(gc, self.zl, track.points[-1], '%s (end)' % text)
+                self.da.write_text_lat_lon(self.da.track_gc, self.zl, track.points[0], '%s (start)' % text)
+                self.da.write_text_lat_lon(self.da.track_gc, self.zl, track.points[-1], '%s (end)' % text)
             finally:
                 gtk.threads_leave() # And once we are finished, tell that as well...
 
             def do_draw(ini, end):
                 gtk.threads_enter()
                 try:
-                    self.da.window.draw_line(gc, ini[0], ini[1], end[0], end[1])
+                    self.da.window.draw_line(self.da.track_gc, ini[0], ini[1], end[0], end[1])
                     if dist_str:
-                        self.da.write_text(gc, end[0], end[1], dist_str, 10)
+                        self.da.write_text(self.da.track_gc, end[0], end[1], dist_str, 10)
                 finally:
                     gtk.threads_leave()
 
