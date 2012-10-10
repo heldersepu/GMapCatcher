@@ -8,6 +8,7 @@ import math
 import gmapcatcher.mapUtils as mapUtils
 from gmapcatcher.mapConst import *
 from threading import Timer, Thread, Event
+import copy
 
 ternary = lambda a, b, c: (b, c)[not a]
 
@@ -499,10 +500,15 @@ class DrawingArea(gtk.DrawingArea):
                 colors, unit, [track], zl, track_width, False, False)
             self.gpsTrackInst.start()
         else:
+            update_all = False
+            if self.gpsTrackInst.zl != zl:
+                update_all = True
             self.gpsTrackInst.unit = unit
             self.gpsTrackInst.tracks = [track]
             self.gpsTrackInst.zl = zl
             self.gpsTrackInst.track_width = track_width
+            if update_all:
+                self.gpsTrackInst.update_all.set()
             self.gpsTrackInst.update.set()  # call update on TrackThread
 
     def draw_tracks(self, unit, tracks, zl, track_width, draw_distance=False):
@@ -510,14 +516,19 @@ class DrawingArea(gtk.DrawingArea):
             self.set_track_gc('blue')
             colors = ['purple', 'blue', 'yellow', 'pink', 'brown', 'orange', 'black']
             self.trackThreadInst = self.TrackThread(self, self.track_gc,
-                colors, unit, tracks, zl, track_width, True, draw_distance)
+                colors, unit, copy.copy(tracks), zl, track_width, True, draw_distance)
             self.trackThreadInst.start()
         else:
+            update_all = False
+            if self.trackThreadInst.zl != zl or self.trackThreadInst.tracks != tracks:
+                update_all = True
             self.trackThreadInst.unit = unit
-            self.trackThreadInst.tracks = tracks
+            self.trackThreadInst.tracks = copy.copy(tracks)
             self.trackThreadInst.zl = zl
             self.trackThreadInst.track_width = track_width
             self.trackThreadInst.draw_distance = draw_distance
+            if update_all:
+                self.trackThreadInst.update_all.set()
             self.trackThreadInst.update.set()  # call update on TrackThread
 
     class TrackThread(Thread):
@@ -532,8 +543,11 @@ class DrawingArea(gtk.DrawingArea):
             self.track_width = track_width
             self.draw_start_end = draw_start_end
             self.draw_distance = draw_distance
+            self.screen_coords = {}
             self.update = Event()
             self.update.set()
+            self.update_all = Event()
+            self.update_all.set()
             self.__stop = Event()
 
             self.setDaemon(True)
@@ -542,12 +556,21 @@ class DrawingArea(gtk.DrawingArea):
             while not self.__stop.is_set():
                 self.update.wait()      # Wait for update signal to start updating
                 self.update.clear()     # Clear the signal straight away to allow stopping of the update
+                if self.update_all.is_set():
+                    self.update_all.clear()
+                    rect = self.da.get_allocation()
+                    self.base_point = mapUtils.pointer_to_coord(rect, (0, 0), self.da.center, self.zl)
+                    for track in self.tracks:
+                        self.screen_coords[track] = []
+                        for i in range(len(track.points)):
+                            self.screen_coords[track].append(
+                                self.da.coord_to_screen(track.points[i].latitude, track.points[i].longitude, self.zl, True)
+                                )
                 i = 0
                 for track in self.tracks:
                     track_color = self.colors[i % len(self.colors)]
                     self.draw_line(track, track_color)
                     i += 1
-            print 'stopped'
 
         def stop(self):
             self.__stop.set()
@@ -555,10 +578,17 @@ class DrawingArea(gtk.DrawingArea):
         def draw_line(self, track, track_color):
             self.gc.line_width = self.track_width
             self.gc.set_rgb_fg_color(gtk.gdk.color_parse(track_color))
-            dist_str = None
-            # total_distance = 0
 
-            points = track.points
+            def do_draw(ini, end, dist_str=None):
+                gtk.threads_enter()
+                try:
+                    self.da.window.draw_line(self.gc, ini[0], ini[1], end[0], end[1])
+                    if dist_str:
+                        self.da.write_text(self.gc, end[0], end[1], dist_str, 10)
+                finally:
+                    gtk.threads_leave()
+
+            cur_coord = self.da.coord_to_screen(self.base_point[0], self.base_point[1], self.zl, True)
 
             if self.draw_start_end:
                 if track.distance:
@@ -568,58 +598,41 @@ class DrawingArea(gtk.DrawingArea):
                     text = track.name
                 gtk.threads_enter()     # Precautions to tell GTK that we're drawing from a thread now
                 try:
-                    self.da.write_text_lat_lon(self.gc, self.zl, track.points[0], '%s (start)' % text)
-                    self.da.write_text_lat_lon(self.gc, self.zl, track.points[-1], '%s (end)' % text)
+                    self.da.write_text(self.gc, self.screen_coords[track][0][0] + cur_coord[0],
+                        self.screen_coords[track][0][1] + cur_coord[1], '%s (start)' % text)
+                    self.da.write_text(self.gc, self.screen_coords[track][-1][0] + cur_coord[0],
+                        self.screen_coords[track][-1][1] + cur_coord[1], '%s (end)' % text)
                 finally:
                     gtk.threads_leave()  # And once we are finished, tell that as well...
 
-            def do_draw(ini, end):
-                gtk.threads_enter()
-                try:
-                    self.da.window.draw_line(self.gc, ini[0], ini[1], end[0], end[1])
-                    if dist_str:
-                        self.da.write_text(self.gc, end[0], end[1], dist_str, 10)
-                finally:
-                    gtk.threads_leave()
-
-            # Find drawing area limits
+            drawable_points = []
             rect = self.da.get_allocation()
-            threshold = 1000    # Add some threshold (in pixels) to the area where points are accepted
-            top_left = mapUtils.pointer_to_coord(rect,
-                (rect.x - threshold, rect.y - threshold),
-                self.da.center, self.zl)
-            bottom_right = mapUtils.pointer_to_coord(rect,
-                ((rect.x + rect.width) + threshold, (rect.y + rect.height) + threshold),
-                self.da.center, self.zl)
-
-            # Find drawable points
-            drawable_points = list()
-            for i in range(len(points)):
+            center = (rect.width / 2, rect.height / 2)
+            threshold = 1000  # in pixels
+            threshold_x = threshold + center[0]
+            threshold_y = threshold + center[1]
+            mod_x = cur_coord[0] - center[0]
+            mod_y = cur_coord[1] - center[1]
+            for j in range(len(self.screen_coords[track]) - 1):
                 if self.update.is_set() or self.__stop.is_set():
                     return
-                if (bottom_right[0] < points[i].latitude < top_left[0]) \
-                  and (top_left[1] < points[i].longitude < bottom_right[1]):
-                    drawable_points.append((1, self.da.coord_to_screen(points[i].latitude, points[i].longitude, self.zl, True)))
-            # Debug to test the threshold
-            print len(points), len(drawable_points)
+                if abs(self.screen_coords[track][j][0] + mod_x) < threshold_x \
+                  and abs(self.screen_coords[track][j][1] + mod_y) < threshold_y:
+                    drawable_points.append(j)
 
-            for j in range(len(drawable_points) - 1):
+            # Debug to see how many points were drawn
+            print len(self.screen_coords[track]), len(drawable_points)
+            dist_str = None
+            for j in drawable_points:
                 # If update or __stop was set while we're in the loop, break
                 if self.update.is_set() or self.__stop.is_set():
                     return
                 if self.draw_distance:
-                    distance = mapUtils.countDistanceFromLatLon(drawable_points[j][1], drawable_points[j + 1][1])
+                    distance = mapUtils.countDistanceFromLatLon(track.points[j].getLatLon(), track.points[j + 1].getLatLon())
                     if self.unit != UNIT_TYPE_KM:
                         distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, distance)
-                    total_distance += distance
-                    dist_str = '%.3f %s \n%.3f %s' % (distance, DISTANCE_UNITS[self.unit], total_distance, DISTANCE_UNITS[self.unit])
-                ini = drawable_points[j][1]
-                end = drawable_points[j + 1][1]
+                    dist_str = '%.3f %s' % (distance, DISTANCE_UNITS[self.unit])
+                ini = (self.screen_coords[track][j][0] + cur_coord[0], self.screen_coords[track][j][1] + cur_coord[1])
+                end = (self.screen_coords[track][j + 1][0] + cur_coord[0], self.screen_coords[track][j + 1][1] + cur_coord[1])
                 if ini and end:
-                    do_draw(ini, end)
-                # elif ini or end:
-                #     if ini:
-                #         end = self.da.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, self.zl, True)
-                #     if end:
-                #         ini = self.da.coord_to_screen(points[j].latitude, points[j].longitude, self.zl, True)
-                #     do_draw(ini, end)
+                    do_draw(ini, end, dist_str)
