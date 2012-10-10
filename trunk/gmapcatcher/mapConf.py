@@ -74,6 +74,7 @@ class MapConf():
         config.set(SECTION_MAP, 'maxthreads', self.maxthreads)
 
         config.add_section(SECTION_GPS)
+        config.set(SECTION_GPS, 'max_gps_zoom', self.max_gps_zoom)
         config.set(SECTION_GPS, 'gps_update_rate', self.gps_update_rate)
         config.set(SECTION_GPS, 'gps_increment', self.gps_increment)
         config.set(SECTION_GPS, 'gps_type', self.gps_type)
@@ -193,6 +194,8 @@ class MapConf():
         self.gps_serial_baudrate = read_config('gps_serial_baudrate', 9600, int, SECTION_GPS)
         ## Initial GPS mode, default is GPS_DISABLED
         self.gps_mode = read_config('gps_mode', GPS_DISABLED, int, SECTION_GPS)
+        ## Maximum zoom to show the GPS, default is 16
+        self.max_gps_zoom = read_config('max_gps_zoom', 16, int, SECTION_GPS)
 
     ## Write the configuration to the default file
     def save(self):
