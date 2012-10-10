@@ -1131,9 +1131,9 @@ class MainWindow(gtk.Window):
 
     ## Final actions before main_quit
     def on_delete(self, *args):
+        self.drawing_area.stop()
         self.unfullscreen()
         self.unmaximize()
-        self.drawing_area.stop()
         sz = self.get_size()
         location = self.get_position()
         self.hide()
@@ -1288,7 +1288,7 @@ def main(conf_path):
     # gobject.threads_init()
     gtk.gdk.threads_init()
     MainWindow(config_path=conf_path)
-    
+
     gtk.threads_enter()
     gtk.main()
     gtk.threads_leave()
