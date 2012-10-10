@@ -548,7 +548,6 @@ class DrawingArea(gtk.DrawingArea):
             print 'stopped'
 
         def stop(self):
-            print 'mjep, it\'s called...'
             self.__stop.set()
 
         def draw_line(self, track, track_color):
