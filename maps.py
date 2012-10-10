@@ -557,7 +557,6 @@ class MainWindow(gtk.Window):
             self.add_marker(self.myPointer)
         elif strName == DA_MENU[MOUSE_LOCATION]:
             self.mouse_location(self.myPointer)
-            self.drawing_area.TrackThreadInst.update.set()
         elif strName == DA_MENU[GPS_LOCATION]:
             self.gps_location()
         elif strName == DA_MENU[GPS_DIRECTIONS]:

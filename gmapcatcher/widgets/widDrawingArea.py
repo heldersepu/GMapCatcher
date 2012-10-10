@@ -556,7 +556,7 @@ class DrawingArea(gtk.DrawingArea):
             self.gc.line_width = self.track_width
             self.gc.set_rgb_fg_color(gtk.gdk.color_parse(track_color))
             dist_str = None
-            total_distance = 0
+            # total_distance = 0
 
             points = track.points
 
@@ -582,18 +582,32 @@ class DrawingArea(gtk.DrawingArea):
                 finally:
                     gtk.threads_leave()
 
-            for j in range(len(points) - 1):
+            rect = self.da.get_allocation()
+            top_left = mapUtils.pointer_to_coord(rect, (0, 0), self.da.center, self.zl)
+            bottom_right = mapUtils.pointer_to_coord(rect, (rect.x + rect.width, rect.y + rect.height), self.da.center, self.zl)
+            # Find drawable points
+            drawable_points = list()
+            for i in range(len(points)):
+                if self.update.is_set() or self.__stop.is_set():
+                    return
+                if (bottom_right[0] < points[i].latitude < top_left[0]) and (top_left[1] < points[i].longitude < bottom_right[1]):
+                    drawable_points.append(i)
+
+            for j in drawable_points:
                 # If update or __stop was set while we're in the loop, break
                 if self.update.is_set() or self.__stop.is_set():
                     return
-                if self.draw_distance:
-                    distance = mapUtils.countDistanceFromLatLon(points[j].getLatLon(), points[j + 1].getLatLon())
-                    if self.unit != UNIT_TYPE_KM:
-                        distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, distance)
-                    total_distance += distance
-                    dist_str = '%.3f %s \n%.3f %s' % (distance, DISTANCE_UNITS[self.unit], total_distance, DISTANCE_UNITS[self.unit])
+                # if self.draw_distance:
+                #     distance = mapUtils.countDistanceFromLatLon(points[j].getLatLon(), points[j + 1].getLatLon())
+                #     if self.unit != UNIT_TYPE_KM:
+                #         distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, distance)
+                #     total_distance += distance
+                #     dist_str = '%.3f %s \n%.3f %s' % (distance, DISTANCE_UNITS[self.unit], total_distance, DISTANCE_UNITS[self.unit])
                 ini = self.da.coord_to_screen(points[j].latitude, points[j].longitude, self.zl)
-                end = self.da.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, self.zl)
+                try:
+                    end = self.da.coord_to_screen(points[j + 1].latitude, points[j + 1].longitude, self.zl)
+                except IndexError:
+                    break
                 if ini and end:
                     do_draw(ini, end)
                 elif ini or end:
