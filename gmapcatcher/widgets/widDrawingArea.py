@@ -25,10 +25,10 @@ class DrawingArea(gtk.DrawingArea):
         self.visualdl_gc = False
         self.scale_gc = False
         self.arrow_gc = False
-        self.track_gc = {}
+        self.track_gc = False
         self.gps_track_gc = False
 
-        self.trackThreads = {}
+        self.trackThreadInst = None
         self.gpsTrackInst = None
 
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK)
@@ -38,9 +38,8 @@ class DrawingArea(gtk.DrawingArea):
         self.connect('button-release-event', self.da_button_release)
 
     def stop(self):
-        if self.trackThreads:
-            for track in self.trackThreads:
-                self.trackThreads[track].stop()
+        if self.trackThreadInst:
+            self.trackThreadInst.stop()
         if self.gpsTrackInst:
             self.gpsTrackInst.stop()
 
@@ -160,6 +159,16 @@ class DrawingArea(gtk.DrawingArea):
             self.scale_lo = pango.Layout(self.get_pango_context())
             self.scale_lo.set_font_description(
                 pango.FontDescription("sans normal 10"))
+
+    def set_track_gc(self, initial_color):
+        if not self.track_gc:
+            color = gtk.gdk.color_parse(initial_color)
+            self.track_gc = self.window.new_gc(
+                color, color, None, gtk.gdk.COPY,
+                gtk.gdk.SOLID, None, None, None,
+                gtk.gdk.CLIP_BY_CHILDREN, 0, 0, 0,
+                0, False, 1, gtk.gdk.LINE_SOLID,
+                gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_BEVEL)
 
     def set_gps_track_gc(self, initial_color):
         if not self.gps_track_gc:
@@ -485,9 +494,9 @@ class DrawingArea(gtk.DrawingArea):
     def draw_gps_line(self, unit, track, zl, track_width):
         if not self.gpsTrackInst:
             self.set_gps_track_gc('red')
-            color = 'red'
+            colors = ['red']
             self.gpsTrackInst = self.TrackThread(self, self.gps_track_gc,
-                color, unit, track, zl, track_width, False, False)
+                colors, unit, [track], zl, track_width, False, False)
             self.gpsTrackInst.start()
         else:
             self.gpsTrackInst.unit = unit
@@ -497,36 +506,28 @@ class DrawingArea(gtk.DrawingArea):
             self.gpsTrackInst.update.set()  # call update on TrackThread
 
     def draw_tracks(self, unit, tracks, zl, track_width, draw_distance=False):
-        colors = ['purple', 'blue', 'yellow', 'pink', 'brown', 'orange', 'black']
-        for track in tracks:
-            if not self.trackThreads or not track in self.trackThreads.keys():
-                color = gtk.gdk.color_parse(colors[len(self.trackThreads.keys()) % len(colors)])
-                self.track_gc[track] = self.window.new_gc(
-                    color, color, None, gtk.gdk.COPY,
-                    gtk.gdk.SOLID, None, None, None,
-                    gtk.gdk.CLIP_BY_CHILDREN, 0, 0, 0,
-                    0, False, 1, gtk.gdk.LINE_SOLID,
-                    gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_BEVEL)
-                self.track_gc[track].set_rgb_fg_color(color)
-                self.trackThreads[track] = self.TrackThread(self, self.track_gc[track],
-                    colors[len(self.trackThreads.keys()) % len(colors)], unit, track, zl, track_width, True, draw_distance)
-                self.trackThreads[track].start()
-            else:
-                self.trackThreads[track].unit = unit
-                self.trackThreads[track].track = track
-                self.trackThreads[track].zl = zl
-                self.trackThreads[track].track_width = track_width
-                self.trackThreads[track].draw_distance = draw_distance
-                self.trackThreads[track].update.set()  # call update on TrackThread
+        if not self.trackThreadInst:
+            self.set_track_gc('blue')
+            colors = ['purple', 'blue', 'yellow', 'pink', 'brown', 'orange', 'black']
+            self.trackThreadInst = self.TrackThread(self, self.track_gc,
+                colors, unit, tracks, zl, track_width, True, draw_distance)
+            self.trackThreadInst.start()
+        else:
+            self.trackThreadInst.unit = unit
+            self.trackThreadInst.tracks = tracks
+            self.trackThreadInst.zl = zl
+            self.trackThreadInst.track_width = track_width
+            self.trackThreadInst.draw_distance = draw_distance
+            self.trackThreadInst.update.set()  # call update on TrackThread
 
     class TrackThread(Thread):
-        def __init__(self, da, gc, color, unit, track, zl, track_width, draw_start_end=True, draw_distance=False):
+        def __init__(self, da, gc, colors, unit, tracks, zl, track_width, draw_start_end=True, draw_distance=False):
             Thread.__init__(self)
             self.da = da
             self.gc = gc
-            self.color = color
+            self.colors = colors
             self.unit = unit
-            self.track = track
+            self.tracks = tracks
             self.zl = zl
             self.track_width = track_width
             self.draw_start_end = draw_start_end
@@ -541,7 +542,11 @@ class DrawingArea(gtk.DrawingArea):
             while not self.__stop.is_set():
                 self.update.wait()      # Wait for update signal to start updating
                 self.update.clear()     # Clear the signal straight away to allow stopping of the update
-                self.draw_line(self.track, self.color)
+                i = 0
+                for track in self.tracks:
+                    track_color = self.colors[i % len(self.colors)]
+                    self.draw_line(track, track_color)
+                    i += 1
             print 'stopped'
 
         def stop(self):
@@ -549,6 +554,7 @@ class DrawingArea(gtk.DrawingArea):
 
         def draw_line(self, track, track_color):
             self.gc.line_width = self.track_width
+            self.gc.set_rgb_fg_color(gtk.gdk.color_parse(track_color))
             dist_str = None
             total_distance = 0
 
