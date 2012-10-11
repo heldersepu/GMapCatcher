@@ -1,9 +1,7 @@
 #labels Featured
 #sidebar TableOfContents
-=*User guide for GMapCatcher (trunk)*=
-<div class="qwer" style="position:fixed;right:10px;top:250px;">
+<font size="5">*User guide for GMapCatcher (trunk)*</font>
 <wiki:toc max_depth="3" />
-</div>
 
 = Overview =
 
