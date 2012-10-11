@@ -341,7 +341,7 @@ class DrawingArea(gtk.DrawingArea):
                 coord = (None, None, None)
 
             # Draw the markers
-            self.markerThread = Timer(0.25, self.draw_markers_thread, [zl, marker, coord, conf, pixDim])
+            self.markerThread = Timer(conf.overlay_delay, self.draw_markers_thread, [zl, marker, coord, conf, pixDim])
             self.markerThread.start()
 
         # Draw the downloading notification
@@ -534,7 +534,7 @@ class DrawingArea(gtk.DrawingArea):
             else:
                 if self.trackTimer:
                     self.trackTimer.cancel()
-                self.trackTimer = Timer(0.1, self.trackThreadInst.update.set)
+                self.trackTimer = Timer(conf.overlay_delay, self.trackThreadInst.update.set)
                 self.trackTimer.start()
 
     class TrackThread(Thread):
