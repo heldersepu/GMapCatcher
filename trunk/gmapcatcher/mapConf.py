@@ -72,6 +72,7 @@ class MapConf():
         config.set(SECTION_MAP, 'marker_font_color', self.marker_font_color)
         config.set(SECTION_MAP, 'marker_font_desc', self.marker_font_desc)
         config.set(SECTION_MAP, 'maxthreads', self.maxthreads)
+        config.set(SECTION_MAP, 'overlay_delay', self.overlay_delay)
 
         config.add_section(SECTION_GPS)
         config.set(SECTION_GPS, 'max_gps_zoom', self.max_gps_zoom)
@@ -175,6 +176,8 @@ class MapConf():
         self.marker_font_desc = read_config('marker_font_desc', 'normal', str, SECTION_MAP)
         ## Maximum number of threads to download maps
         self.maxthreads = read_config('maxthreads', 4, int, SECTION_MAP)
+        ## Time delay before drawing the map overlay
+        self.overlay_delay = read_config('overlay_delay', 0.1, float, SECTION_MAP)
 
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float, SECTION_GPS)
