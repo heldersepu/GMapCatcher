@@ -496,16 +496,16 @@ class DrawingArea(gtk.DrawingArea):
             self.set_gps_track_gc('red')
             colors = ['red']
             self.gpsTrackInst = self.TrackThread(self, self.gps_track_gc,
-                colors, unit, [track], zl, track_width, False, False)
+                colors, unit, [copy.deepcopy(track)], zl, track_width, False, False)
             self.gpsTrackInst.start()
         else:
             update_all = False
+            if len(self.gpsTrackInst.tracks[0].points) != len(track.points):
+                update_all = True
+                self.gpsTrackInst.tracks = [copy.deepcopy(track)]
             if self.gpsTrackInst.zl != zl:
                 update_all = True
             self.gpsTrackInst.unit = unit
-            if len(self.gpsTrackInst.tracks[0].points) != len(track.points):
-                update_all = True
-                self.gpsTrackInst.tracks = [track]
             self.gpsTrackInst.zl = zl
             self.gpsTrackInst.track_width = track_width
             if update_all:
