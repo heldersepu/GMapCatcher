@@ -7,7 +7,6 @@ import pango
 import gmapcatcher.mapUtils as mapUtils
 from gmapcatcher.mapConst import *
 from threading import Timer, Thread, Event
-import copy
 import time
 
 
@@ -133,22 +132,38 @@ class DrawingArea(gtk.DrawingArea):
             gc, screen_coord[0], screen_coord[1]
         )
 
+    def draw_gps_line(self, unit, track, zl, track_width):
+        if not self.gpsTrackInst:
+            self.set_gps_track_gc('red')
+            colors = ['red']
+            self.gpsTrackInst = self.TrackThread(self, self.gps_track_gc,
+                colors, unit, [track], zl, track_width, False, False)
+            self.gpsTrackInst.start()
+        else:
+            update_all = False
+            if self.gpsTrackInst.zl != zl:
+                update_all = True
+            self.gpsTrackInst.unit = unit
+            self.gpsTrackInst.zl = zl
+            self.gpsTrackInst.track_width = track_width
+            if update_all:
+                self.gpsTrackInst.update_all.set()
+            self.gpsTrackInst.update.set()  # call update on TrackThread
 
-
-    def draw_tracks(self, unit, tracks, zl, track_width, draw_distance=False):
+    def draw_tracks(self, conf, tracks, zl, track_width, draw_distance=False):
         if not self.trackThreadInst:
             self.set_track_gc('blue')
             colors = ['purple', 'blue', 'yellow', 'pink', 'brown', 'orange', 'black']
             self.trackThreadInst = self.TrackThread(self, self.track_gc,
-                colors, unit, copy.copy(tracks), zl, track_width, True, draw_distance)
+                colors, conf.units, tracks, zl, track_width, True, draw_distance)
             self.trackThreadInst.start()
         else:
             update_all = False
-            if self.trackThreadInst.zl != zl or self.trackThreadInst.tracks != tracks:
+            if self.trackThreadInst.zl != zl:
                 update_all = True
-            self.trackThreadInst.unit = unit
-            self.trackThreadInst.tracks = copy.copy(tracks)
+            self.trackThreadInst.unit = conf.units
             self.trackThreadInst.zl = zl
+            self.trackThreadInst.tracks = tracks
             self.trackThreadInst.track_width = track_width
             self.trackThreadInst.draw_distance = draw_distance
             if update_all:
@@ -159,28 +174,6 @@ class DrawingArea(gtk.DrawingArea):
                     self.trackTimer.cancel()
                 self.trackTimer = Timer(conf.overlay_delay, self.trackThreadInst.update.set)
                 self.trackTimer.start()
-
-    def draw_gps_line(self, unit, track, zl, track_width):
-        if not self.gpsTrackInst:
-            self.set_gps_track_gc('red')
-            colors = ['red']
-            self.gpsTrackInst = self.TrackThread(self, self.gps_track_gc,
-                colors, unit, [copy.deepcopy(track)], zl, track_width, False, False)
-            self.gpsTrackInst.start()
-        else:
-            update_all = False
-            if len(self.gpsTrackInst.tracks[0].points) != len(track.points):
-                update_all = True
-                self.gpsTrackInst.tracks = [copy.deepcopy(track)]
-            if self.gpsTrackInst.zl != zl:
-                update_all = True
-            self.gpsTrackInst.unit = unit
-            self.gpsTrackInst.zl = zl
-            self.gpsTrackInst.track_width = track_width
-            if update_all:
-                self.gpsTrackInst.update_all.set()
-            self.gpsTrackInst.update.set()  # call update on TrackThread
-
 
     class TrackThread(Thread):
         def __init__(self, da, gc, colors, unit, tracks, zl, track_width, draw_start_end=True, draw_distance=False):
@@ -208,18 +201,11 @@ class DrawingArea(gtk.DrawingArea):
                 self.update.wait()      # Wait for update signal to start updating
                 self.update.clear()     # Clear the signal straight away to allow stopping of the update
                 if self.update_all.is_set():
-                    print 'update_all'
-                    self.update_all.clear()
                     rect = self.da.get_allocation()
                     self.base_point = mapUtils.pointer_to_coord(rect, (0, 0), self.da.center, self.zl)
                     for track in self.tracks:
                         self.screen_coords[track] = []
-                        for i in range(len(track.points)):
-                            if self.update_all.is_set() or self.__stop.is_set():
-                                break
-                            self.screen_coords[track].append(
-                                self.da.coord_to_screen(track.points[i].latitude, track.points[i].longitude, self.zl, True)
-                                )
+                    self.update_all.clear()
                 i = 0
                 for track in self.tracks:
                     track_color = self.colors[i % len(self.colors)]
@@ -254,10 +240,28 @@ class DrawingArea(gtk.DrawingArea):
 
             start = time.time()
             dist_str = None
-            for j in range(len(self.screen_coords[track]) - 1):
+            for j in range(len(track.points) - 1):
                 # If update or __stop was set while we're in the loop, break
-                if self.update.is_set() or self.__stop.is_set():
+                if self.update.is_set() or self.update_all.is_set() or self.__stop.is_set():
                     return
+                # See if track is already in screen_coords
+                try:
+                    self.screen_coords[track]
+                except:
+                    # If not, add it
+                    self.screen_coords[track] = []
+                try:  # Check if j in screen_coords
+                    self.screen_coords[track][j]
+                except:  # If not, add it...
+                    temp = self.da.coord_to_screen(track.points[j].latitude, track.points[j].longitude, self.zl, True)
+                    cur_coord = self.da.coord_to_screen(self.base_point[0], self.base_point[1], self.zl, True)
+                    self.screen_coords[track].append((temp[0] - cur_coord[0], temp[1] - cur_coord[1]))
+                try:  # Check if j + 1 in screen_coords
+                    self.screen_coords[track][j + 1]
+                except:  # If not, add it...
+                    temp = self.da.coord_to_screen(track.points[j + 1].latitude, track.points[j + 1].longitude, self.zl, True)
+                    cur_coord = self.da.coord_to_screen(self.base_point[0], self.base_point[1], self.zl, True)
+                    self.screen_coords[track].append((temp[0] - cur_coord[0], temp[1] - cur_coord[1]))
                 if abs(self.screen_coords[track][j][0] + mod_x) < threshold_x \
                   and abs(self.screen_coords[track][j][1] + mod_y) < threshold_y:
                     if self.draw_distance:
