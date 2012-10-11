@@ -1,6 +1,7 @@
 #labels Featured
+#sidebar TableOfContents
 =*User guide for GMapCatcher (trunk)*=
-<wiki:toc max_depth="3" />
+
 
 = Overview =
 
