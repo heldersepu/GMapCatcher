@@ -340,11 +340,8 @@ class DrawingArea(gtk.DrawingArea):
                 coord = (None, None, None)
 
             # Draw the markers
-            if len(marker.positions) < 1000:
-                self.draw_markers(zl, marker, coord, conf, pixDim)
-            else:
-                self.markerThread = Timer(0.5, self.draw_markers_thread, [zl, marker, coord, conf, pixDim])
-                self.markerThread.start()
+            self.markerThread = Timer(0.25, self.draw_markers_thread, [zl, marker, coord, conf, pixDim])
+            self.markerThread.start()
 
         # Draw the downloading notification
         if downloading:
