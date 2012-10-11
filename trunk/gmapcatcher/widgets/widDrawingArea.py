@@ -198,7 +198,7 @@ class DrawingArea(mapDrawingArea.DrawingArea):
             self.markerThread.cancel()
 
         if tracks:
-            self.draw_tracks(conf.units, tracks, zl, conf.gps_track_width, draw_track_distance)
+            self.draw_tracks(conf, tracks, zl, conf.gps_track_width, draw_track_distance)
 
         if conf.gps_track and len(gps_track.points) > 1:
             self.draw_gps_line(conf.units, gps_track, zl, conf.gps_track_width)
