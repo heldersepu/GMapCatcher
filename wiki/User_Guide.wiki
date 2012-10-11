@@ -1,7 +1,5 @@
 #labels Featured
 =*User guide for GMapCatcher (trunk)*=
-==If you notice mistakes or undocumented features, please post a comment on this page or Issue 118.*==
-
 <wiki:toc max_depth="3" />
 
 = Overview =
