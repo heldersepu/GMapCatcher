@@ -9,6 +9,7 @@ import gmapcatcher.mapUtils as mapUtils
 from gmapcatcher.mapConst import *
 from threading import Timer, Thread, Event
 import copy
+import time
 
 ternary = lambda a, b, c: (b, c)[not a]
 
@@ -557,6 +558,7 @@ class DrawingArea(gtk.DrawingArea):
                 self.update.wait()      # Wait for update signal to start updating
                 self.update.clear()     # Clear the signal straight away to allow stopping of the update
                 if self.update_all.is_set():
+                    print 'update_all'
                     self.update_all.clear()
                     rect = self.da.get_allocation()
                     self.base_point = mapUtils.pointer_to_coord(rect, (0, 0), self.da.center, self.zl)
@@ -605,7 +607,6 @@ class DrawingArea(gtk.DrawingArea):
                 finally:
                     gtk.threads_leave()  # And once we are finished, tell that as well...
 
-            drawable_points = []
             rect = self.da.get_allocation()
             center = (rect.width / 2, rect.height / 2)
             threshold = 1000  # in pixels
@@ -613,26 +614,22 @@ class DrawingArea(gtk.DrawingArea):
             threshold_y = threshold + center[1]
             mod_x = cur_coord[0] - center[0]
             mod_y = cur_coord[1] - center[1]
+
+            start = time.time()
+            dist_str = None
             for j in range(len(self.screen_coords[track]) - 1):
+                # If update or __stop was set while we're in the loop, break
                 if self.update.is_set() or self.__stop.is_set():
                     return
                 if abs(self.screen_coords[track][j][0] + mod_x) < threshold_x \
                   and abs(self.screen_coords[track][j][1] + mod_y) < threshold_y:
-                    drawable_points.append(j)
-
-            # Debug to see how many points were drawn
-            print len(self.screen_coords[track]), len(drawable_points)
-            dist_str = None
-            for j in drawable_points:
-                # If update or __stop was set while we're in the loop, break
-                if self.update.is_set() or self.__stop.is_set():
-                    return
-                if self.draw_distance:
-                    distance = mapUtils.countDistanceFromLatLon(track.points[j].getLatLon(), track.points[j + 1].getLatLon())
-                    if self.unit != UNIT_TYPE_KM:
-                        distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, distance)
-                    dist_str = '%.3f %s' % (distance, DISTANCE_UNITS[self.unit])
-                ini = (self.screen_coords[track][j][0] + cur_coord[0], self.screen_coords[track][j][1] + cur_coord[1])
-                end = (self.screen_coords[track][j + 1][0] + cur_coord[0], self.screen_coords[track][j + 1][1] + cur_coord[1])
-                if ini and end:
-                    do_draw(ini, end, dist_str)
+                    if self.draw_distance:
+                        distance = mapUtils.countDistanceFromLatLon(track.points[j].getLatLon(), track.points[j + 1].getLatLon())
+                        if self.unit != UNIT_TYPE_KM:
+                            distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, distance)
+                        dist_str = '%.3f %s' % (distance, DISTANCE_UNITS[self.unit])
+                    ini = (self.screen_coords[track][j][0] + cur_coord[0], self.screen_coords[track][j][1] + cur_coord[1])
+                    end = (self.screen_coords[track][j + 1][0] + cur_coord[0], self.screen_coords[track][j + 1][1] + cur_coord[1])
+                    if ini and end:
+                        do_draw(ini, end, dist_str)
+            print 'drawing: %.3fs' % (time.time() - start)
