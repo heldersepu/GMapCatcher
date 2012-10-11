@@ -1,7 +1,7 @@
 #labels Featured
 #sidebar TableOfContents
 =*User guide for GMapCatcher (trunk)*=
-<div style="position:fixed;right:10px;top:250px;">
+<div class="qwer" style="position:fixed;right:10px;top:250px;">
 <wiki:toc max_depth="3" />
 </div>
 
