@@ -15,17 +15,15 @@ BAUDRATES = [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200]
 
 ## Scans available serial ports (COMx on Windows, tty[AMA, S, USB], rfcomm on Linux)
 def serialPortScan():
-    availableSerialPorts = []
+    availableSerialPorts = ['none']
     if platform.system() == 'Windows':
         for i in range(256):
             try:
                 COMport = serial.Serial(i)
                 availableSerialPorts.append(COMport.portstr)
                 COMport.close()
-            except serial.SerialException:
+            except:
                 pass
-        availableSerialPorts.sort()
-        return availableSerialPorts
     elif platform.system() == 'Linux':
         import os
         typicalPorts = ['ttyAMA', 'ttyS', 'ttyUSB', 'rfcomm']
@@ -34,8 +32,7 @@ def serialPortScan():
             for dev in devs:
                 if dev.startswith(port):
                     availableSerialPorts.append('/dev/%s' % dev)
-        availableSerialPorts.sort()
-        return availableSerialPorts
+    return availableSerialPorts
 
 
 ## GPSd-compatible gpsfix
