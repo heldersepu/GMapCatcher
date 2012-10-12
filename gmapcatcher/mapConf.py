@@ -153,8 +153,8 @@ class MapConf():
         self.init_center = read_config('center', ((1, 0), (9, 200)), str_to_tuple, SECTION_MAP)
         ## Show a small cross in the center of the map, default is False (0)
         self.show_cross = read_config('show_cross', 0, int, SECTION_MAP)
-        ## Map service to get images, default is Yahoo
-        self.map_service = read_config('map_service', MAP_SERVERS[YAHOO], str, SECTION_MAP)
+        ## Map service to get images, default is Nokia
+        self.map_service = read_config('map_service', MAP_SERVERS[NOKIA], str, SECTION_MAP)
         ## cloudMade API key
         self.cloudMade_API = read_config('cloudmade_api', '333d990d389d5e65a7714dd738b2fc77', str, SECTION_MAP)
         ## Initial style ID for the CloudMade maps
