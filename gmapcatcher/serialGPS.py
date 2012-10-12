@@ -112,6 +112,18 @@ class SerialGPS(Thread):
     def dataHandler(self, line):
         # print line  # for debug
         data = line.strip().split(',')
+
+        # $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A
+        # 1: Fix taken time, UTC
+        # 2: Status A=active or V=Void
+        # 3: Latitude
+        # 4: Latitude hemisphere
+        # 5: Longitude
+        # 6: Longitude hemisphere
+        # 7: Speed over the ground in knots
+        # 8: Track angle in degrees True
+        # 9: Date DDMMYY
+        # 10-11: Magnetic Variation
         if data[0] == '$GPRMC':
             try:
                 self.fix.time = data[1]
@@ -159,6 +171,19 @@ class SerialGPS(Thread):
             except:
                 pass
 
+        # $GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47
+        # 1: Fix taken time, UTC
+        # 2: Latitude
+        # 3: Latitude hemisphere
+        # 4: Longitude
+        # 5: Longitude hemisphere
+        # 6: Fix quality: 0 = invalid, 1 = GPS fix (SPS), 2 = DGPS fix
+        # 7: Number of satellites being tracked
+        # 8: Horizontal dilution of position
+        # 9-10: Altitude, Meters, above mean sea level
+        # 11-12: Height of geoid (mean sea level) above WGS84 ellipsoid
+        # 13: time in seconds since last DGPS update
+        # 14: DGPS station ID number
         elif data[0] == '$GPGGA':
             try:
                 self.fix.time = data[1]
@@ -173,7 +198,7 @@ class SerialGPS(Thread):
                     self.fix.latitude = -self.convertDegrees(float(data[2]))
                 except:
                     pass
-            else:
+            elif hemisphere:
                 try:
                     self.fix.latitude = self.convertDegrees(float(data[2]))
                 except:
@@ -187,16 +212,29 @@ class SerialGPS(Thread):
                     self.fix.longitude = -self.convertDegrees(float(data[4]))
                 except:
                     pass
-            else:
+            elif hemisphere:
                 try:
                     self.fix.longitude = self.convertDegrees(float(data[4]))
                 except:
                     pass
             try:
+                if int(data[6]) == 0:
+                    self.fix.mode = MODE_NO_FIX
+            except:
+                pass
+            try:
                 self.fix.altitude = float(data[9])
             except:
                 pass
 
+        # $GPGSA,A,3,04,05,,09,12,,,24,,,,,2.5,1.3,2.1*39
+        # 1: Auto selection of 2D or 3D fix (M = manual)
+        # 2: 3D fix - values include: 1 = no fix, 2 = 2D fix, 3 = 3D fix
+        # 3-14: PRNs of satellites used for fix (space for 12)
+        # 15: PDOP (dilution of precision)
+        # 16: Horizontal dilution of precision (HDOP)
+        # 17: Vertical dilution of precision (VDOP)
+        # 18: the checksum data, always begins with *
         elif data[0] == '$GPGSA':
             try:
                 self.fix.mode = int(data[2])
