@@ -118,6 +118,11 @@ class SerialGPS(Thread):
             except:
                 pass
             try:
+                if data[2] == 'V':  # If data is VOID, report as NO_FIX
+                    self.fix.mode = MODE_NO_FIX
+            except:
+                pass
+            try:
                 hemisphere = data[4]
             except:
                 hemisphere = None
@@ -126,7 +131,7 @@ class SerialGPS(Thread):
                     self.fix.latitude = -self.convertDegrees(float(data[3]))
                 except:
                     pass
-            else:
+            elif hemisphere:
                 try:
                     self.fix.latitude = self.convertDegrees(float(data[3]))
                 except:
@@ -140,7 +145,7 @@ class SerialGPS(Thread):
                     self.fix.longitude = -self.convertDegrees(float(data[5]))
                 except:
                     pass
-            else:
+            elif hemisphere:
                 try:
                     self.fix.longitude = self.convertDegrees(float(data[5]))
                 except:
