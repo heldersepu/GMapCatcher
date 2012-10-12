@@ -251,10 +251,14 @@ class DrawingArea(mapDrawingArea.DrawingArea):
                     if gps.gpsfix.speed >= 0.5:  # draw arrow only, if speed is over 0.5 knots
                         self.draw_arrow(screen_coord, gps.gpsfix.track)
             if gps.mode != GPS_DISABLED and gps.gpsfix.mode == MODE_NO_FIX:
-                gc = self.style.black_gc
-                gc.set_rgb_fg_color(gtk.gdk.color_parse('#FF0000'))
-                self.write_text(gc, middle[0] - 160, 0, 'INVALID GPS DATA', 28)
-
+                self.draw_message('INVALID GPS DATA')
+    
+    def draw_message(self, strMessage):
+        gc = self.style.black_gc
+        gc.set_rgb_fg_color(gtk.gdk.color_parse('#FF0000'))
+        self.write_text(gc, middle[0] - 160, 0, strMessage, 28)
+        print strMessage
+    
     def draw_markers(self, zl, marker, coord, conf, pixDim):
         img = marker.get_marker_pixbuf(zl)
         for string in marker.positions.keys():
