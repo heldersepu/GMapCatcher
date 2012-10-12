@@ -258,11 +258,10 @@ class DrawingArea(mapDrawingArea.DrawingArea):
         if len(strMessage) < 20:
             rect = self.get_allocation()
             middle = (rect.width / 2, rect.height / 2)
-            x = middle[0] - len(strMessage)*10
+            x = middle[0] - len(strMessage) * 10
         gc = self.style.black_gc
         gc.set_rgb_fg_color(gtk.gdk.color_parse('#FF0000'))
-        self.write_text(gc, x , 0, strMessage, 28)
-        print strMessage
+        self.write_text(gc, x, 0, strMessage, 28)
 
     def draw_markers(self, zl, marker, coord, conf, pixDim):
         img = marker.get_marker_pixbuf(zl)
@@ -378,4 +377,3 @@ class DrawingArea(mapDrawingArea.DrawingArea):
     def draw_ruler_lines(self, unit, points, zl, track_width):
         color = 'green'
         self.draw_line(unit, zl, points, color, track_width, True)
-
