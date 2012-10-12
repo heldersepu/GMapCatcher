@@ -252,13 +252,18 @@ class DrawingArea(mapDrawingArea.DrawingArea):
                         self.draw_arrow(screen_coord, gps.gpsfix.track)
             if gps.mode != GPS_DISABLED and gps.gpsfix.mode == MODE_NO_FIX:
                 self.draw_message('INVALID GPS DATA')
-    
+
     def draw_message(self, strMessage):
+        x = 5
+        if len(strMessage) < 20:
+            rect = self.get_allocation()
+            middle = (rect.width / 2, rect.height / 2)
+            x = middle[0] - len(strMessage)*10
         gc = self.style.black_gc
         gc.set_rgb_fg_color(gtk.gdk.color_parse('#FF0000'))
-        self.write_text(gc, middle[0] - 160, 0, strMessage, 28)
+        self.write_text(gc, x , 0, strMessage, 28)
         print strMessage
-    
+
     def draw_markers(self, zl, marker, coord, conf, pixDim):
         img = marker.get_marker_pixbuf(zl)
         for string in marker.positions.keys():
