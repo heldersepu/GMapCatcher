@@ -14,6 +14,7 @@ import gmapcatcher.mapGPS as mapGPS
 import gmapcatcher.mapUtils as mapUtils
 import gmapcatcher.widgets.mapPixbuf as mapPixbuf
 
+from threading import Timer
 from gmapcatcher.mapConst import *
 from gmapcatcher.widgets.mapTools import mapTools
 from gmapcatcher.gtkThread import gui_callback, webbrowser_open
@@ -101,44 +102,46 @@ class MainWindow(gtk.Window):
             latitude = -100
         if -180 <= longitude <= 180 and -90 <= latitude <= 90:
             coord = (latitude, longitude, self.get_zoom())
+            zl = self.do_zoom(coord[2], coord[2], True)
+            self.drawing_area.center = mapUtils.coord_to_tile((coord[0], coord[1], zl))
         else:
-            locations = self.ctx_map.get_locations()
-            keys = locations.keys()
-            found_locations = []
-            for l in location.split('|'):
-                found = False
-                for key in keys:
-                    if key.lower() == l.lower():
-                        found = key
-                        break
-                if not found:
-                    if self.cb_offline.get_active():
-                        if error_msg(self, "Offline mode, cannot do search!" +
-                                    "      Would you like to get online?",
-                                    gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
-                            return
-                    self.cb_offline.set_active(False)
-                    location = self.ctx_map.search_location(l)
-                    if (location[:6] == "error="):
-                        error_msg(self, location[6:])
-                        self.entry.grab_focus()
-                        return
-                    found_locations.append(location)
-                else:
-                    found_locations.append(key)
-            locations = self.ctx_map.get_locations()
-            if len(found_locations) > 1:
-                points = []
-                searchStr = ''
-                for l in found_locations:
-                    coord = locations[unicode(l)]
-                    points.append(mapUtils.TrackPoint(coord[0], coord[1]))
-                    searchStr += '%s - ' % l
-                searchStr = searchStr.rstrip(' - ')
-                self.getCloudMadeRoute(None, points, searchStr)
+            dThread = Timer(0, self.do_search)
+            dThread.start()
+
+    def do_search(self):
+        location = self.entry.get_text()
+        locations = self.ctx_map.get_locations()
+        keys = locations.keys()
+        found_locations = []
+        for l in location.split('|'):
+            found = False
+            for key in keys:
+                if key.lower() == l.lower():
+                    found = key
+                    break
+            if not found:
+                self.cb_offline.set_active(False)
+                location = self.ctx_map.search_location(l)
+                if (location[:6] == "error="):
+                    self.drawing_area.draw_message(location[6:])
+                    self.entry.grab_focus()
+                    return
+                found_locations.append(location)
             else:
-                self.entry.set_text(unicode(found_locations[0]))
-            coord = locations[unicode(found_locations[0])]
+                found_locations.append(key)
+        locations = self.ctx_map.get_locations()
+        if len(found_locations) > 1:
+            points = []
+            searchStr = ''
+            for l in found_locations:
+                coord = locations[unicode(l)]
+                points.append(mapUtils.TrackPoint(coord[0], coord[1]))
+                searchStr += '%s - ' % l
+            searchStr = searchStr.rstrip(' - ')
+            self.getCloudMadeRoute(None, points, searchStr)
+        else:
+            self.entry.set_text(unicode(found_locations[0]))
+        coord = locations[unicode(found_locations[0])]
         zl = self.do_zoom(coord[2], coord[2], True)
         self.drawing_area.center = mapUtils.coord_to_tile((coord[0], coord[1], zl))
 
