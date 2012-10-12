@@ -102,9 +102,9 @@ class MapConf():
         config.read(self.config_path)
 
         ## Initial window width, default is 550
-        self.init_width = read_config('width', 550, int)
+        self.init_width = read_config('width', 780, int)
         ## Initial window height, default is 450
-        self.init_height = read_config('height', 450, int)
+        self.init_height = read_config('height', 600, int)
 
         ## Directory path to the map images, default is "userProfile" folder
         self.init_path = DEFAULT_PATH
@@ -133,9 +133,9 @@ class MapConf():
         self.save_hlocation = read_config('save_hlocation', 0, int)
         self.save_vlocation = read_config('save_vlocation', 0, int)
         ## width when saved at close
-        self.save_width = read_config('save_width', 550, int)
+        self.save_width = read_config('save_width', 780, int)
         ## height when saved at close
-        self.save_height = read_config('save_height', 450, int)
+        self.save_height = read_config('save_height', 600, int)
         ## The match function to be used in the auto-completion of the entry
         self.match_func = read_config('match_func', ENTRY_SUB_MENU[0], str)
         ## List of map servers to hide
@@ -145,12 +145,12 @@ class MapConf():
         ## Start offline (default = Yes)
         self.start_offline = read_config('start_offline', 1, int)
 
-        ## Initial map zoom, default is MAP_MAX_ZOOM_LEVEL-1
-        self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL - 1, int, SECTION_MAP)
+        ## Initial map zoom, default is MAP_MAX_ZOOM_LEVEL-2
+        self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL - 2, int, SECTION_MAP)
         ## language setting, default is 'en'
         self.language = read_config('language', 'en', str, SECTION_MAP)
-        ## Initial map center, default is ((1,0), (9,200))
-        self.init_center = read_config('center', ((1, 0), (9, 200)), str_to_tuple, SECTION_MAP)
+        ## Initial map center, default is ((1, 1), (210, 170))
+        self.init_center = read_config('center', ((1, 1), (210, 170)), str_to_tuple, SECTION_MAP)
         ## Show a small cross in the center of the map, default is False (0)
         self.show_cross = read_config('show_cross', 0, int, SECTION_MAP)
         ## Map service to get images, default is Nokia
