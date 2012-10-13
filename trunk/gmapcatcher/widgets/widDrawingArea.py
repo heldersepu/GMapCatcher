@@ -200,7 +200,7 @@ class DrawingArea(mapDrawingArea.DrawingArea):
         if tracks:
             self.draw_tracks(conf, tracks, zl, conf.gps_track_width, draw_track_distance)
 
-        if conf.gps_track and len(gps_track.points) > 1:
+        if conf.gps_track and gps_track and len(gps_track.points) > 1:
             self.draw_gps_line(conf.units, gps_track, zl, conf.gps_track_width)
 
         # Draw the Ruler lines
@@ -232,7 +232,7 @@ class DrawingArea(mapDrawingArea.DrawingArea):
             self.draw_visual_dlconfig(visual_dlconfig, middle, full, zl)
 
         # Draw scale
-        if conf.scale_visible:
+        if conf.scale_visible and cur_coord:
             self.draw_scale(full, zl, cur_coord[0], conf)
 
         # Draw cross in the center
