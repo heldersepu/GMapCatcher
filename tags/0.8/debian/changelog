@@ -1,0 +1,11 @@
+mapcatcher (0.8.0.0-1) unstable; urgency=low
+
+  * Update to r1451
+
+ -- Kimmo Huoman <kipenroskaposti@gmail.com>  Mon, 08 Oct 2012 20:02:40 +0300
+
+mapcatcher (0.7.5.0-1) unstable; urgency=low
+
+  * Initial release (closes: #589254)
+
+ -- Mark Benjamin <MarkieB.lists.20090330@gmail.com>  Sun, 22 Aug 2010 20:33:40 +0200

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=GMapCatcher
+Version=0.7.5
+GenericName=Offline Map Viewer
+Comment=Download maps, view whenever you need to, view gps
+Type=Application
+Exec=mapcatcher
+Terminal=false
+StartupNotify=true
+Icon=mapcatcher
+Categories=GNOME;Application;Network;Viewer;

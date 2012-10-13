@@ -1,0 +1,65 @@
+.\" Copyright (c) 2010 Mark Benjamin <mapcatcher.code.Markie1@dfgh.net>
+.\" Fri 16 Jul 2010 11:43 AM
+.\"
+.\" This is free documentation; you may redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.TH MAPCATCHER 1 2010-07-16 "Linux" "Linux Programmer's Manual"
+.SH NAME
+mapcatcher - the debian distribution of the GMapCatcher offline map viewer
+.SH DESCRIPTION
+GMapCatcher downloads tiles automatically from many providers then displays
+them using a custom GUI. User may view maps offline. GMapCatcher is
+independent of map providers' javascript so should work even though 
+the scripts may change. It also provides a downloading tool. See
+.I mapdownloader(1)
+.SH INTERFACE
+when you view maps while connected to the internet, GMapCatcher
+downloads map tiles as needed; 'force update' allows re-downloading of
+tiles
+.P
+when in offline mode, tiles you have already downloaded 
+- then automatically saved - are visible; scroll to change zoom level
+.P
+the 'bulk download' window allows you to download all map tiles for
+an area you set, between zoom levels you set
+.P
+the 'visual path download' feature allows you to download all map tiles in a
+region of the screen, at up to a zoom level you set, to allow you to
+map a specific path - ctrl-scroll / shift scroll to change its parameters
+.P
+keyboard shortcuts, additional mouse features, etcetera are documented at
+.P
+http://code.google.com/p/gmapcatcher/wiki/User_Guide
+.SH SUGGESTIONS AND BUG REPORTS
+should be notified at http://code.google.com/p/gmapcatcher/issues
+.SH Authors and Copyright Conditions
+the Authors of the gmapcatcher project are listed at
+.P
+http://code.google.com/p/gmapcatcher/people/list
+.P
+this manpage is copyright Mark Benjamin 2010
+.SH INFO
+.I mapcatcher 
+project.
+A description of the project, as well as
+how to report bugs,may be found at
+.P
+.I http://code.google.com/p/gmapcatcher

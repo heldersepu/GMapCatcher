@@ -1,0 +1,29 @@
+Python NMEA Toolkit
+
+A native python interface to NMEA (currently just GPS) devices.
+
+Copyright (c) 2008, Tim Savage
+
+-- About -----------
+
+The toolkit includes the tools record.py and playback.py these tools can be
+used to "record" and "playback" GPS data. The playback includes a simple time
+sync to attempt to maintain a accurate playback.
+
+There is support for both serialport (includes most USB GPS's that use serial
+emulation over USB) and tcpport datasources. Use the TCP port to access a
+playback of a GPS data.
+
+This project is hosted on Google Code
+
+http://code.google.com/p/python-gpsd/
+
+
+-- Installation ----
+
+See INSTALL for the steps required to install this toolkit
+
+
+-- Licence ---------
+
+See LICENSE for a copy of the valid license
