@@ -1,3 +1,20 @@
+October 12 2012    H.S    <HelderSepu@gmail.com>
+    * 0.8.0.0 - At revision: 1524
+    * Read GPS NMEA sentences (Issue 77)
+    * Export GPS traces (GPX) (Issue 79)
+    * Avoid restarting GMapCatcher when GPSd restarts (Issue 98)
+    * Draw tracks on the map (Issue 101)
+    * Get Directions (Issue 103)
+    * Add Check box to download Terrain,Satellite or Map (Issue 109)
+    * Create one db file per map service. (Issue 207)
+    * Add new GPSd protocol (Issue 209) 
+    * Fix Incorrect scale (Issue 281)
+    * Fix GPS heading arrow (Issue 332)
+    * Fix issue with markers when given same name (Issue 335)
+    * Add Nokia maps (Issue 336)
+    * Add skyvector maps (Issue 337)
+    * Show more GPS data (Issue 338)
+
 April 28 2012    H.S    <HelderSepu@gmail.com>
     * 0.7.7.2 - At revision: 1240
     * Add measuring method to find the distance between two points (Issue 277)
