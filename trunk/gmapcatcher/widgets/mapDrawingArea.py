@@ -240,22 +240,24 @@ class DrawingArea(gtk.DrawingArea):
 
             start = time.time()
             dist_str = None
+
+            # See if track is already in screen_coords
+            try:
+                self.screen_coords[track]
+            except:
+                # If not, add it
+                self.screen_coords[track] = []
+            try:  # Check if first point is in screen_coords
+                self.screen_coords[track][0]
+            except:  # If not, add it...
+                temp = self.da.coord_to_screen(track.points[0].latitude, track.points[0].longitude, self.zl, True)
+                cur_coord = self.da.coord_to_screen(self.base_point[0], self.base_point[1], self.zl, True)
+                self.screen_coords[track].append((temp[0] - cur_coord[0], temp[1] - cur_coord[1]))
+
             for j in range(len(track.points) - 1):
                 # If update or __stop was set while we're in the loop, break
                 if self.update.is_set() or self.update_all.is_set() or self.__stop.is_set():
                     return
-                # See if track is already in screen_coords
-                try:
-                    self.screen_coords[track]
-                except:
-                    # If not, add it
-                    self.screen_coords[track] = []
-                try:  # Check if j in screen_coords
-                    self.screen_coords[track][j]
-                except:  # If not, add it...
-                    temp = self.da.coord_to_screen(track.points[j].latitude, track.points[j].longitude, self.zl, True)
-                    cur_coord = self.da.coord_to_screen(self.base_point[0], self.base_point[1], self.zl, True)
-                    self.screen_coords[track].append((temp[0] - cur_coord[0], temp[1] - cur_coord[1]))
                 try:  # Check if j + 1 in screen_coords
                     self.screen_coords[track][j + 1]
                 except:  # If not, add it...
