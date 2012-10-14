@@ -948,7 +948,7 @@ class MainWindow(gtk.Window):
                 self.get_zoom(), self.conf, self.crossPixbuf, self.dlpixbuf,
                 self.downloading > 0, self.visual_dlconfig, self.marker,
                 self.ctx_map.get_locations(), self.entry.get_text(),
-                self.showMarkers, self.gps, self.gps_track,
+                self.showMarkers, self.gps,
                 self.ruler_coord,
                 self.shown_tracks, self.draw_track_distance,
                 self.pointer_to_world_coord(center)
@@ -1143,6 +1143,13 @@ class MainWindow(gtk.Window):
             self.status_bar.hide()
         else:
             self.status_bar.show()
+        if self.conf.gps_track and not self.gps_track in self.tracks:
+            self.tracks.insert(0, self.gps_track)
+            self.shown_tracks.insert(0, self.gps_track)
+        elif not self.conf.gps_track and self.gps_track in self.tracks:
+            self.tracks.remove(self.gps_track)
+            if self.gps_track in self.shown_tracks:
+                self.shown_tracks.remove(self.gps_track)
 
     ## Final actions before main_quit
     def on_delete(self, *args):
@@ -1227,7 +1234,9 @@ class MainWindow(gtk.Window):
         self.visual_dlconfig = {}
         self.hide_dlfeedback = False
         self.tracks = []
-        self.shown_tracks = []
+        if self.conf.gps_track:
+            self.tracks.append(self.gps_track)
+        self.shown_tracks = self.tracks
         self.rulers = 1
         self.ruler_coord = []
         self.dragXY = None

@@ -7,7 +7,6 @@ import pango
 import gmapcatcher.mapUtils as mapUtils
 from gmapcatcher.mapConst import *
 from threading import Timer, Thread, Event
-import time
 
 
 ## This widget esxpands gtk.DrawingArea
@@ -20,7 +19,6 @@ class DrawingArea(gtk.DrawingArea):
     scale_gc = False
     arrow_gc = False
     track_gc = False
-    gps_track_gc = False
     trackThreadInst = None
     trackTimer = None
     gpsTrackInst = None
@@ -94,16 +92,6 @@ class DrawingArea(gtk.DrawingArea):
                 0, False, 1, gtk.gdk.LINE_SOLID,
                 gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_BEVEL)
 
-    def set_gps_track_gc(self, initial_color):
-        if not self.gps_track_gc:
-            color = gtk.gdk.color_parse(initial_color)
-            self.gps_track_gc = self.window.new_gc(
-                color, color, None, gtk.gdk.COPY,
-                gtk.gdk.SOLID, None, None, None,
-                gtk.gdk.CLIP_BY_CHILDREN, 0, 0, 0,
-                0, False, 1, gtk.gdk.LINE_SOLID,
-                gtk.gdk.CAP_ROUND, gtk.gdk.JOIN_BEVEL)
-
     ## Set the graphics context for the gps arrow
     def set_arrow_gc(self):
         if not self.arrow_gc:
@@ -132,30 +120,11 @@ class DrawingArea(gtk.DrawingArea):
             gc, screen_coord[0], screen_coord[1]
         )
 
-    def draw_gps_line(self, unit, track, zl, track_width):
-        if not self.gpsTrackInst:
-            self.set_gps_track_gc('red')
-            colors = ['red']
-            self.gpsTrackInst = self.TrackThread(self, self.gps_track_gc,
-                colors, unit, [track], zl, track_width, False, False)
-            self.gpsTrackInst.start()
-        else:
-            update_all = False
-            if self.gpsTrackInst.zl != zl:
-                update_all = True
-            self.gpsTrackInst.unit = unit
-            self.gpsTrackInst.zl = zl
-            self.gpsTrackInst.track_width = track_width
-            if update_all:
-                self.gpsTrackInst.update_all.set()
-            self.gpsTrackInst.update.set()  # call update on TrackThread
-
     def draw_tracks(self, conf, tracks, zl, track_width, draw_distance=False):
         if not self.trackThreadInst:
             self.set_track_gc('blue')
-            colors = ['purple', 'blue', 'yellow', 'pink', 'brown', 'orange', 'black']
             self.trackThreadInst = self.TrackThread(self, self.track_gc,
-                colors, conf.units, tracks, zl, track_width, True, draw_distance)
+                conf.units, tracks, zl, track_width, draw_distance)
             self.trackThreadInst.start()
         else:
             update_all = False
@@ -176,16 +145,15 @@ class DrawingArea(gtk.DrawingArea):
                 self.trackTimer.start()
 
     class TrackThread(Thread):
-        def __init__(self, da, gc, colors, unit, tracks, zl, track_width, draw_start_end=True, draw_distance=False):
+        def __init__(self, da, gc, unit, tracks, zl, track_width, draw_distance=False):
             Thread.__init__(self)
             self.da = da
             self.gc = gc
-            self.colors = colors
+            self.colors = ['purple', 'blue', 'yellow', 'pink', 'brown', 'orange', 'black']
             self.unit = unit
             self.tracks = tracks
             self.zl = zl
             self.track_width = track_width
-            self.draw_start_end = draw_start_end
             self.draw_distance = draw_distance
             self.screen_coords = {}
             self.update = Event()
@@ -208,14 +176,16 @@ class DrawingArea(gtk.DrawingArea):
                     self.update_all.clear()
                 i = 0
                 for track in self.tracks:
-                    track_color = self.colors[i % len(self.colors)]
-                    self.draw_line(track, track_color)
-                    i += 1
+                    if track.name == 'GPS track':
+                        self.draw_line(track, 'red', False)
+                    else:
+                        self.draw_line(track, self.colors[i % len(self.colors)])
+                        i += 1
 
         def stop(self):
             self.__stop.set()
 
-        def draw_line(self, track, track_color):
+        def draw_line(self, track, track_color, draw_start_end=True):
             self.gc.line_width = self.track_width
             self.gc.set_rgb_fg_color(gtk.gdk.color_parse(track_color))
 
@@ -238,7 +208,6 @@ class DrawingArea(gtk.DrawingArea):
             mod_x = cur_coord[0] - center[0]
             mod_y = cur_coord[1] - center[1]
 
-            start = time.time()
             dist_str = None
 
             # See if track is already in screen_coords
@@ -250,9 +219,12 @@ class DrawingArea(gtk.DrawingArea):
             try:  # Check if first point is in screen_coords
                 self.screen_coords[track][0]
             except:  # If not, add it...
-                temp = self.da.coord_to_screen(track.points[0].latitude, track.points[0].longitude, self.zl, True)
-                cur_coord = self.da.coord_to_screen(self.base_point[0], self.base_point[1], self.zl, True)
-                self.screen_coords[track].append((temp[0] - cur_coord[0], temp[1] - cur_coord[1]))
+                try:
+                    temp = self.da.coord_to_screen(track.points[0].latitude, track.points[0].longitude, self.zl, True)
+                    cur_coord = self.da.coord_to_screen(self.base_point[0], self.base_point[1], self.zl, True)
+                    self.screen_coords[track].append((temp[0] - cur_coord[0], temp[1] - cur_coord[1]))
+                except IndexError:  # No points in track -> nothing to do
+                    return
 
             for j in range(len(track.points) - 1):
                 # If update or __stop was set while we're in the loop, break
@@ -275,9 +247,8 @@ class DrawingArea(gtk.DrawingArea):
                     end = (self.screen_coords[track][j + 1][0] + cur_coord[0], self.screen_coords[track][j + 1][1] + cur_coord[1])
                     if ini and end:
                         do_draw(ini, end, dist_str)
-            print 'drawing: %.3fs' % (time.time() - start)
 
-            if self.draw_start_end:
+            if draw_start_end:
                 if track.distance:
                     distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, track.distance)
                     text = '%s - %.2f %s' % (track.name, distance, DISTANCE_UNITS[self.unit])
