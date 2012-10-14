@@ -771,16 +771,16 @@ class MainWindow(gtk.Window):
             self.dragXY = (event.x, event.y)
         elif event.type == gtk.gdk.BUTTON_RELEASE:
             # Find nearest marker...
-        	# Check if left-clicked, mouse status bar is on, is not in ruler mode and map not dragged     
+            # Check if left-clicked, mouse status bar is on, is not in ruler mode and map not dragged
             if event.button == 1 and self.conf.statusbar_type == STATUS_MOUSE and not self.Ruler \
-            and abs(event.x - self.dragXY[0]) < 5 and abs(event.y - self.dragXY[1]) < 5:                  
-                coord = self.pointer_to_world_coord((event.x, event.y))                                   
-                markerDisp2_list = []                                                                     
-                for markerName in self.marker.positions.keys():                                           
-                    # Calculate the angular displacement squared of the mouse coord to the marker coords  
-                    markerDisp2 = (self.marker.positions[markerName][0] - coord[0])**2 + (self.marker.positions[markerName][1] - coord[1])**2 
-                    markerDisp2_list.append((markerDisp2, markerName))                                    
-                self.status_bar.text("Nearest marker:    " + str(sorted(markerDisp2_list)[0][1]))         
+              and abs(event.x - self.dragXY[0]) < 5 and abs(event.y - self.dragXY[1]) < 5:
+                coord = self.pointer_to_world_coord((event.x, event.y))
+                markerDisp2_list = []
+                for markerName in self.marker.positions.keys():
+                    # Calculate the angular displacement squared of the mouse coord to the marker coords
+                    markerDisp2 = (self.marker.positions[markerName][0] - coord[0]) ** 2 + (self.marker.positions[markerName][1] - coord[1]) ** 2
+                    markerDisp2_list.append((markerDisp2, markerName))
+                self.status_bar.text("Nearest marker:    " + str(sorted(markerDisp2_list)[0][1]))
 
             # Right-Click event shows the popUp menu
             elif event.button == 3 and not (event.state & gtk.gdk.CONTROL_MASK):
