@@ -94,7 +94,7 @@ class MyGPS(gtk.VPaned):
 
     ## Settings for GPS track:
     def gps_track_settings(self, gps_track, track_width, track_interval):
-        self.cb_gps_track = gtk.CheckButton('Draw GPS track')
+        self.cb_gps_track = gtk.CheckButton('Log GPS track')
         self.cb_gps_track.set_active(gps_track)
         self.sb_gps_track_width = SpinBtn(track_width, 1, 20, 1, 2)
         self.sb_gps_track_interval = SpinBtn(track_interval, 1, 1000, 10, 4)

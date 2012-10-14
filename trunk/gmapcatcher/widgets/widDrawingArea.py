@@ -184,7 +184,7 @@ class DrawingArea(mapDrawingArea.DrawingArea):
     def draw_overlay(self, zl, conf, crossPixbuf, dlpixbuf,
                     downloading=False, visual_dlconfig={},
                     marker=None, locations={}, entry_name="",
-                    showMarkers=False, gps=None, gps_track=None,
+                    showMarkers=False, gps=None,
                     r_coord=[],
                     tracks=None, draw_track_distance=False,
                     cur_coord=None):
@@ -199,9 +199,6 @@ class DrawingArea(mapDrawingArea.DrawingArea):
 
         if tracks:
             self.draw_tracks(conf, tracks, zl, conf.gps_track_width, draw_track_distance)
-
-        if conf.gps_track and gps_track and len(gps_track.points) > 1:
-            self.draw_gps_line(conf.units, gps_track, zl, conf.gps_track_width)
 
         # Draw the Ruler lines
         if len(r_coord) >= 1:
@@ -248,7 +245,7 @@ class DrawingArea(mapDrawingArea.DrawingArea):
                 if screen_coord:
                     self.draw_image(screen_coord, img,
                         GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
-                    if gps.gpsfix.speed >= 0.5:  # draw arrow only, if speed is over 0.5 knots
+                    if gps.gpsfix.track and gps.gpsfix.speed >= 0.5:  # draw arrow only, if speed is over 0.5 knots
                         self.draw_arrow(screen_coord, gps.gpsfix.track)
             if gps.mode != GPS_DISABLED and gps.gpsfix.mode == MODE_NO_FIX:
                 self.draw_message('INVALID GPS DATA')
