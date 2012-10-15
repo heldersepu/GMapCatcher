@@ -3,6 +3,7 @@
 
 import os
 import re
+import codecs
 from time import time
 
 
@@ -52,7 +53,7 @@ def write_file(strInfo, filePath, fileData):
         print '  ' + filePath
         return
 
-    file.write("# This is the " + strInfo + "s file used by GMapCatcher.\n" +
+    file.write(codecs.BOM_UTF8+"# This is the " + strInfo + "s file used by GMapCatcher.\n" +
         "#\n" +
         "# This file contains a list of Locations/Position.\n" +
         "# Each entry should be kept on an individual line,\n" +
