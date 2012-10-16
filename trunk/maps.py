@@ -1143,13 +1143,17 @@ class MainWindow(gtk.Window):
             self.status_bar.hide()
         else:
             self.status_bar.show()
-        if self.conf.gps_track and not self.gps_track in self.tracks:
-            self.tracks.insert(0, self.gps_track)
-            self.shown_tracks.insert(0, self.gps_track)
-        elif not self.conf.gps_track and self.gps_track in self.tracks:
-            self.tracks.remove(self.gps_track)
+        if self.gps and self.gps.mode != GPS_DISABLED and self.conf.gps_track:
+            if not self.gps_track in self.tracks:
+                self.tracks.insert(0, self.gps_track)
+            if not self.gps_track in self.shown_tracks:
+                self.shown_tracks.insert(0, self.gps_track)
+        if not self.conf.gps_track:
+            if self.gps_track in self.tracks:
+                self.tracks.remove(self.gps_track)
             if self.gps_track in self.shown_tracks:
                 self.shown_tracks.remove(self.gps_track)
+            self.gps_track.points = []  # Releasing memory...
 
     ## Final actions before main_quit
     def on_delete(self, *args):
@@ -1235,7 +1239,7 @@ class MainWindow(gtk.Window):
         self.hide_dlfeedback = False
         self.tracks = []
         self.shown_tracks = []
-        if self.conf.gps_track:
+        if self.conf.gps_track and self.conf.gps_mode != GPS_DISABLED:
             self.tracks.append(self.gps_track)
             self.shown_tracks.append(self.gps_track)
         self.rulers = 1
