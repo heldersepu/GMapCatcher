@@ -7,6 +7,7 @@ import pango
 import gmapcatcher.mapUtils as mapUtils
 from gmapcatcher.mapConst import *
 from threading import Timer, Thread, Event
+import time
 
 
 ## This widget esxpands gtk.DrawingArea
@@ -177,18 +178,16 @@ class DrawingArea(gtk.DrawingArea):
                 i = 0
                 for track in self.tracks:
                     if track.name == 'GPS track':
-                        self.draw_line(track, 'red', False)
+                        self.draw_line(track, 'red', self.zl, False)
                     else:
-                        self.draw_line(track, self.colors[i % len(self.colors)])
+                        self.draw_line(track, self.colors[i % len(self.colors)], self.zl)
                         i += 1
 
         def stop(self):
             self.__stop.set()
 
-        def draw_line(self, track, track_color, draw_start_end=True):
-            self.gc.line_width = self.track_width
-            self.gc.set_rgb_fg_color(gtk.gdk.color_parse(track_color))
-
+        def draw_line(self, track, track_color, zl, draw_start_end=True):
+            coord_to_screen_f = self.da.coord_to_screen
             def do_draw(ini, end, dist_str=None):
                 gtk.threads_enter()
                 try:
@@ -198,7 +197,14 @@ class DrawingArea(gtk.DrawingArea):
                 finally:
                     gtk.threads_leave()
 
-            cur_coord = self.da.coord_to_screen(self.base_point[0], self.base_point[1], self.zl, True)
+            def coord_to_screen(c):
+                temp = coord_to_screen_f(c.latitude, c.longitude, zl, True)
+                cur_coord = coord_to_screen_f(self.base_point[0], self.base_point[1], zl, True)
+                return (temp[0] - cur_coord[0], temp[1] - cur_coord[1])
+
+            self.gc.line_width = self.track_width
+            self.gc.set_rgb_fg_color(gtk.gdk.color_parse(track_color))
+            cur_coord = coord_to_screen_f(self.base_point[0], self.base_point[1], zl, True)
 
             rect = self.da.get_allocation()
             center = (rect.width / 2, rect.height / 2)
@@ -210,41 +216,32 @@ class DrawingArea(gtk.DrawingArea):
 
             dist_str = None
 
+            start = time.time()
             # See if track is already in screen_coords
             try:
                 self.screen_coords[track]
             except:
                 # If not, add it
                 self.screen_coords[track] = []
-            try:  # Check if first point is in screen_coords
-                self.screen_coords[track][0]
-            except:  # If not, add it...
-                try:
-                    temp = self.da.coord_to_screen(track.points[0].latitude, track.points[0].longitude, self.zl, True)
-                    cur_coord = self.da.coord_to_screen(self.base_point[0], self.base_point[1], self.zl, True)
-                    self.screen_coords[track].append((temp[0] - cur_coord[0], temp[1] - cur_coord[1]))
-                except IndexError:  # No points in track -> nothing to do
-                    return
 
-            for j in range(len(track.points) - 1):
+            screen_coords = self.screen_coords[track]
+            if len(self.screen_coords[track]) < len(track.points):
+                # Calculate screen_coords for points which aren't in it already
+                screen_coords.extend(map(coord_to_screen, track.points[len(screen_coords):]))
+
+            for j in range(len(screen_coords) - 1):
                 # If update or __stop was set while we're in the loop, break
                 if self.update.is_set() or self.update_all.is_set() or self.__stop.is_set():
                     return
-                try:  # Check if j + 1 in screen_coords
-                    self.screen_coords[track][j + 1]
-                except:  # If not, add it...
-                    temp = self.da.coord_to_screen(track.points[j + 1].latitude, track.points[j + 1].longitude, self.zl, True)
-                    cur_coord = self.da.coord_to_screen(self.base_point[0], self.base_point[1], self.zl, True)
-                    self.screen_coords[track].append((temp[0] - cur_coord[0], temp[1] - cur_coord[1]))
-                if abs(self.screen_coords[track][j][0] + mod_x) < threshold_x \
-                  and abs(self.screen_coords[track][j][1] + mod_y) < threshold_y:
+                if abs(screen_coords[j][0] + mod_x) < threshold_x \
+                  and abs(screen_coords[j][1] + mod_y) < threshold_y:
                     if self.draw_distance:
                         distance = mapUtils.countDistanceFromLatLon(track.points[j].getLatLon(), track.points[j + 1].getLatLon())
                         if self.unit != UNIT_TYPE_KM:
                             distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, distance)
                         dist_str = '%.3f %s' % (distance, DISTANCE_UNITS[self.unit])
-                    ini = (self.screen_coords[track][j][0] + cur_coord[0], self.screen_coords[track][j][1] + cur_coord[1])
-                    end = (self.screen_coords[track][j + 1][0] + cur_coord[0], self.screen_coords[track][j + 1][1] + cur_coord[1])
+                    ini = (screen_coords[j][0] + cur_coord[0], screen_coords[j][1] + cur_coord[1])
+                    end = (screen_coords[j + 1][0] + cur_coord[0], screen_coords[j + 1][1] + cur_coord[1])
                     if ini and end:
                         do_draw(ini, end, dist_str)
 
@@ -256,9 +253,10 @@ class DrawingArea(gtk.DrawingArea):
                     text = track.name
                 gtk.threads_enter()     # Precautions to tell GTK that we're drawing from a thread now
                 try:
-                    self.da.write_text(self.gc, self.screen_coords[track][0][0] + cur_coord[0],
-                        self.screen_coords[track][0][1] + cur_coord[1], '%s (start)' % text)
-                    self.da.write_text(self.gc, self.screen_coords[track][-1][0] + cur_coord[0],
-                        self.screen_coords[track][-1][1] + cur_coord[1], '%s (end)' % text)
+                    self.da.write_text(self.gc, screen_coords[0][0] + cur_coord[0],
+                        screen_coords[0][1] + cur_coord[1], '%s (start)' % text)
+                    self.da.write_text(self.gc, screen_coords[-1][0] + cur_coord[0],
+                        screen_coords[-1][1] + cur_coord[1], '%s (end)' % text)
                 finally:
                     gtk.threads_leave()  # And once we are finished, tell that as well...
+            print '%.3f' % (time.time() - start)
