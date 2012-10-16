@@ -1234,9 +1234,10 @@ class MainWindow(gtk.Window):
         self.visual_dlconfig = {}
         self.hide_dlfeedback = False
         self.tracks = []
+        self.shown_tracks = []
         if self.conf.gps_track:
             self.tracks.append(self.gps_track)
-        self.shown_tracks = self.tracks
+            self.shown_tracks.append(self.gps_track)
         self.rulers = 1
         self.ruler_coord = []
         self.dragXY = None
