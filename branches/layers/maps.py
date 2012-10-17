@@ -1330,6 +1330,7 @@ class MainWindow(gtk.Window):
         event_box.add(pixmap)
         event_box.set_events(gtk.gdk.BUTTON_PRESS_MASK)
         event_box.connect("button_press_event", test)
+        event_box.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(0.5, 1.0, 0.5, 0))
         event_box.show()
         self.Layout.put(event_box, 180, 100)
 
