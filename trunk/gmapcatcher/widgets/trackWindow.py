@@ -109,7 +109,7 @@ class trackWindow(gtk.Window):
             dialog.show()
 
     def showTracks(self, w):
-        tracksToShow = list()
+        tracksToShow = []
         for i in range(len(self.mapsObj.tracks)):
             if self.cb_tracks[i].get_active():
                 tracksToShow.append(self.mapsObj.tracks[i])

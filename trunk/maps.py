@@ -1146,8 +1146,8 @@ class MainWindow(gtk.Window):
         if self.gps and self.gps.mode != GPS_DISABLED and self.conf.gps_track:
             if not self.gps_track in self.tracks:
                 self.tracks.insert(0, self.gps_track)
-            if not self.gps_track in self.shown_tracks:
-                self.shown_tracks.insert(0, self.gps_track)
+                if not self.gps_track in self.shown_tracks:
+                    self.shown_tracks.insert(0, self.gps_track)
         if not self.conf.gps_track:
             if self.gps_track in self.tracks:
                 self.tracks.remove(self.gps_track)
