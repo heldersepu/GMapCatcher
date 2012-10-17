@@ -150,6 +150,7 @@ class MainWindow(gtk.Window):
         self.drawing_area.repaint()
         if not self.cb_offline.get_active():
             self.do_check_for_updates()
+        self.addlayer()
 
     ## Start checking if there is an update
     def do_check_for_updates(self):
@@ -528,8 +529,14 @@ class MainWindow(gtk.Window):
 
         menu = gtk_menu(DA_MENU, self.menu_item_response)
         da.connect_object("event", self.da_click_events, menu)
-
-        return self.drawing_area
+        da.show()
+        
+        fixed = gtk.Layout()
+        da.set_size_request(200, 200)
+        
+        fixed.put(da, 10, 10)
+        fixed.show()
+        return fixed
 
     def menu_tools(self, w, strName):
         for intPos in range(len(TOOLS_MENU)):
@@ -744,11 +751,6 @@ class MainWindow(gtk.Window):
         return menu
 
     def getCloudMadeRoute(self, w, points, name=None):
-        if self.cb_offline.get_active():
-            if error_msg(self, "Offline mode, cannot get route!" +
-                        "      Would you like to get online?",
-                        gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
-                return
         self.cb_offline.set_active(False)
         start = points[0]
         end = points[-1]
@@ -856,6 +858,7 @@ class MainWindow(gtk.Window):
         self.drawing_area.repaint()
 
     def expose_cb(self, drawing_area, event):
+        print "expose_cb"
         online = not self.cb_offline.get_active() and not self.hide_dlfeedback
         self.hide_dlfeedback = False
         force_update = self.cb_forceupdate.get_active()
@@ -1215,7 +1218,7 @@ class MainWindow(gtk.Window):
             elif (panePos > intPos + 2):
                 pane.set_position(intPos + 2)
 
-    def __init__(self, parent=None, config_path=None):
+    def __init__(self, parent=None, config_path=None):        
         self.conf = MapConf(config_path)
         self.crossPixbuf = mapPixbuf.cross()
         self.dlpixbuf = mapPixbuf.downloading()
@@ -1274,8 +1277,10 @@ class MainWindow(gtk.Window):
         hpaned = gtk.HPaned()
         hpaned.connect("notify", self.pane_notify, 30)
         hpaned.pack1(self.left_panel, False, True)
-        hpaned.pack2(self.__create_right_paned(), True, True)
-
+        self.fixed = self.__create_right_paned()
+        hpaned.pack2(self.fixed, True, True)
+        hpaned.show()
+        
         inner_vp = gtk.VPaned()
         inner_vp.pack1(hpaned, True, True)
         inner_vp.pack2(self.export_panel, False, False)
@@ -1311,7 +1316,15 @@ class MainWindow(gtk.Window):
         self.entry.grab_focus()
         if self.conf.auto_refresh > 0:
             gobject.timeout_add(self.conf.auto_refresh, self.refresh)
+        
 
+    def addlayer(self):
+        style = self.get_style()
+        gdk_pixmap, mask = gtk.create_pixmap_from_xpm_d(
+            self.get_window(), style.bg[gtk.STATE_NORMAL], WheelbarrowFull_xpm)
+        pixmap = gtk.Pixmap(gdk_pixmap, mask)
+        pixmap.show()
+        self.fixed.put(pixmap, 180, 100)
 
 def main(conf_path):
     # gobject.threads_init()
