@@ -68,6 +68,8 @@ class gpsWindow(gtk.Window):
         if ((event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [87, 119]) or event.keyval == 65472:
             # W = 87,119
             self.hide()
+        else:
+            self.mapsObj.key_press_event(w, event)
 
     ## If window is closed with the close button
     def on_delete(self, widget=None, event=None):

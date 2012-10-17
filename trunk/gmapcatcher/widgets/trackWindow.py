@@ -37,6 +37,8 @@ class trackWindow(gtk.Window):
             self.on_delete()
         elif event.keyval == 65477:
             self.on_delete()
+        else:
+            self.mapsObj.key_press_event(w, event)
 
     def on_delete(self, widget=None, event=None):
         self.mapsObj.trackw = None
