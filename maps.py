@@ -531,12 +531,12 @@ class MainWindow(gtk.Window):
         da.connect_object("event", self.da_click_events, menu)
         da.show()
         
-        fixed = gtk.Layout()
-        da.set_size_request(200, 200)
+        Layout = gtk.Layout()
+        da.set_size_request(500, 400)
         
-        fixed.put(da, 10, 10)
-        fixed.show()
-        return fixed
+        Layout.put(da, 10, 10)
+        Layout.show()
+        return Layout
 
     def menu_tools(self, w, strName):
         for intPos in range(len(TOOLS_MENU)):
@@ -1277,8 +1277,8 @@ class MainWindow(gtk.Window):
         hpaned = gtk.HPaned()
         hpaned.connect("notify", self.pane_notify, 30)
         hpaned.pack1(self.left_panel, False, True)
-        self.fixed = self.__create_right_paned()
-        hpaned.pack2(self.fixed, True, True)
+        self.Layout = self.__create_right_paned()
+        hpaned.pack2(self.Layout, True, True)
         hpaned.show()
         
         inner_vp = gtk.VPaned()
@@ -1319,12 +1319,19 @@ class MainWindow(gtk.Window):
         
 
     def addlayer(self):
+        def test(*args):
+            print "WheelbarrowFull_xpm"
         style = self.get_style()
         gdk_pixmap, mask = gtk.create_pixmap_from_xpm_d(
             self.get_window(), style.bg[gtk.STATE_NORMAL], WheelbarrowFull_xpm)
         pixmap = gtk.Pixmap(gdk_pixmap, mask)
         pixmap.show()
-        self.fixed.put(pixmap, 180, 100)
+        event_box = gtk.EventBox()
+        event_box.add(pixmap)
+        event_box.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+        event_box.connect("button_press_event", test)
+        event_box.show()
+        self.Layout.put(event_box, 180, 100)
 
 def main(conf_path):
     # gobject.threads_init()
