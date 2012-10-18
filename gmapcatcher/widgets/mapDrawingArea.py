@@ -7,7 +7,7 @@ import pango
 import gmapcatcher.mapUtils as mapUtils
 from gmapcatcher.mapConst import *
 from threading import Timer, Thread, Event
-import time
+# import time
 
 
 ## This widget esxpands gtk.DrawingArea
@@ -188,6 +188,7 @@ class DrawingArea(gtk.DrawingArea):
 
         def draw_line(self, track, track_color, zl, draw_start_end=True):
             coord_to_screen_f = self.da.coord_to_screen
+
             def do_draw(ini, end, dist_str=None):
                 gtk.threads_enter()
                 try:
@@ -216,7 +217,7 @@ class DrawingArea(gtk.DrawingArea):
 
             dist_str = None
 
-            start = time.time()
+            # start = time.time()
             # See if track is already in screen_coords
             try:
                 self.screen_coords[track]
@@ -259,4 +260,4 @@ class DrawingArea(gtk.DrawingArea):
                         screen_coords[-1][1] + cur_coord[1], '%s (end)' % text)
                 finally:
                     gtk.threads_leave()  # And once we are finished, tell that as well...
-            print '%.3f' % (time.time() - start)
+            # print '%.3f' % (time.time() - start)

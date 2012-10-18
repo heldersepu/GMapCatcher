@@ -52,6 +52,7 @@ class MainWindow(gtk.Window):
     total_dist = 0.00
     map_min_zoom = MAP_MIN_ZOOM_LEVEL
     map_max_zoom = MAP_MAX_ZOOM_LEVEL - 1
+    map_skip_zooms = []
 
     ## Get the zoom level from the scale
     def get_zoom(self):
@@ -63,10 +64,19 @@ class MainWindow(gtk.Window):
 
     ## Zoom to the given pointer
     def do_zoom(self, zoom, current_zoom, doForce=False, dPointer=False):
-        if (zoom < self.map_min_zoom):
+        if zoom < self.map_min_zoom:
             zoom = self.map_min_zoom
-        elif (zoom > self.map_max_zoom):
+        elif zoom > self.map_max_zoom:
             zoom = self.map_max_zoom
+        while zoom in self.map_skip_zooms:
+            if zoom < current_zoom:
+                zoom -= 1
+                if zoom == self.map_min_zoom:
+                    break
+            else:
+                zoom += 1
+                if zoom == self.map_max_zoom:
+                    break
         self.drawing_area.do_scale(zoom, current_zoom, doForce, dPointer)
         self.scale.set_value(zoom)
         self.update_export()
@@ -1130,6 +1140,7 @@ class MainWindow(gtk.Window):
         zl = self.get_zoom()
         self.map_min_zoom = self.ctx_map.get_min_zoom(self.conf.map_service)
         self.map_max_zoom = self.ctx_map.get_max_zoom(self.conf.map_service)
+        self.map_skip_zooms = self.ctx_map.get_skip_zooms(self.conf.map_service)
         self.scale.set_range(self.map_min_zoom, self.map_max_zoom)
         self.do_zoom(zl, zl, True)
         if self.cmb_layer.child.get_text() == '':
