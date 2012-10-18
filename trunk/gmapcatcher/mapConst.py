@@ -5,7 +5,7 @@
 import os
 
 NAME = "GMapCatcher"
-VERSION = "0.8.0.0"
+VERSION = "0.8.0.1"
 VERSION_NAME = ""
 WEB_ADDRESS = "http://code.google.com/p/gmapcatcher/"
 
