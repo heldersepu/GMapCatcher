@@ -532,7 +532,7 @@ class MainWindow(gtk.Window):
         da.show()
         
         Layout = gtk.Layout()
-        da.set_size_request(500, 400)
+        da.set_size_request(200, 400)
         
         Layout.put(da, 10, 10)
         Layout.show()
@@ -1327,14 +1327,14 @@ class MainWindow(gtk.Window):
         pixmap = gtk.Pixmap(gdk_pixmap, mask)
         pixmap.show()
 
-        event_box = gtk.EventBox()
-        event_box.set_visible_window(False)
-        event_box.add(pixmap)
-        event_box.set_events(gtk.gdk.BUTTON_PRESS_MASK)
-        event_box.connect("button_press_event", test)
-        event_box.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(0.5, 1.0, 0.5, 0))
-        event_box.show()
-        self.Layout.put(event_box, 180, 100)
+        # event_box = gtk.EventBox()
+        # event_box.set_visible_window(False)
+        # event_box.add(pixmap)
+        # event_box.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+        # event_box.connect("button_press_event", test)
+        # event_box.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(0.5, 1.0, 0.5, 0))
+        # event_box.show()
+        # self.Layout.put(event_box, 180, 100)
         self.Layout.put(pixmap, 180, 100)
 
 def main(conf_path):
