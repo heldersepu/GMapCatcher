@@ -875,7 +875,7 @@ class MainWindow(gtk.Window):
             self.drawing_area.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
             online=online, force_update=force_update,
-            conf=self.conf,
+            conf=self.conf, hybrid_background=self.ctx_map.get_hybrid_background(self.conf.map_service)
         )
         self.downloading = self.downloader.qsize()
         self.draw_overlay()
@@ -910,8 +910,8 @@ class MainWindow(gtk.Window):
             if self.downloading <= 0:
                 self.hide_dlfeedback = True
                 self.drawing_area.repaint()
-        hybridsat = (self.layer == LAYER_HYB and layer == LAYER_SAT)
-        if (self.layer == layer or hybridsat) and self.get_zoom() == tile_coord[2]:
+        hybridbackground = (self.layer == LAYER_HYB and layer == self.ctx_map.get_hybrid_background(self.conf.map_service))
+        if (self.layer == layer or hybridbackground) and self.get_zoom() == tile_coord[2]:
             da = self.drawing_area
             rect = da.get_allocation()
             xy = mapUtils.tile_coord_to_screen(tile_coord, rect, self.drawing_area.center)
@@ -926,13 +926,13 @@ class MainWindow(gtk.Window):
                         self.background.remove(tile_coord)
                 # keep the background tile list up to date - add background
                 # tile to list unless we're all set to add foreground overlay
-                if hybridsat and tile_coord not in self.foreground:
+                if hybridbackground and tile_coord not in self.foreground:
                     self.background.append(tile_coord)
 
                 gc = da.style.black_gc
                 force_update = self.cb_forceupdate.get_active()
                 img = self.ctx_map.load_pixbuf(tile_coord, layer, force_update)
-                if hybridsat:
+                if hybridbackground:
                     img2 = self.ctx_map.load_pixbuf(tile_coord, LAYER_HYB,
                                                     force_update)
                 for x, y in xy:
@@ -940,7 +940,7 @@ class MainWindow(gtk.Window):
                                           TILES_WIDTH, TILES_HEIGHT)
                     # here we [re-]add foreground overlay providing
                     # it is already in memory
-                    if hybridsat and tile_coord in self.foreground:
+                    if hybridbackground and tile_coord in self.foreground:
                         self.foreground.remove(tile_coord)
                         da.window.draw_pixbuf(gc, img2, 0, 0, x, y,
                                               TILES_WIDTH, TILES_HEIGHT)

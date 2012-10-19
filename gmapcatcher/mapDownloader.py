@@ -133,10 +133,10 @@ class MapDownloader:
     # @return number of tiles queued for download
     def query_tile(self, coord, layer, callback,
                     online=True, force_update=False,
-                    conf=None):
+                    conf=None, hybrid_background=LAYER_SAT):
         ret = 0
         if layer == LAYER_HYB:
-            ret += self.query_tile(coord, LAYER_SAT, callback,
+            ret += self.query_tile(coord, hybrid_background, callback,
                     online, force_update, conf)
 
         #print "query_tile(",coord,layer,callback,online,force_update,")"
