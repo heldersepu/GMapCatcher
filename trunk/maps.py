@@ -910,7 +910,8 @@ class MainWindow(gtk.Window):
             if self.downloading <= 0:
                 self.hide_dlfeedback = True
                 self.drawing_area.repaint()
-        hybridbackground = (self.layer >= LAYER_HYB and layer == self.ctx_map.get_hybrid_background(self.layer, self.conf.map_service))
+        hybridbackground_layer = self.ctx_map.get_hybrid_background(self.layer, self.conf.map_service)
+        hybridbackground = (self.layer >= LAYER_HYB and layer == hybridbackground_layer)
         if (self.layer == layer or hybridbackground) and self.get_zoom() == tile_coord[2]:
             da = self.drawing_area
             rect = da.get_allocation()
@@ -933,7 +934,7 @@ class MainWindow(gtk.Window):
                 force_update = self.cb_forceupdate.get_active()
                 img = self.ctx_map.load_pixbuf(tile_coord, layer, force_update)
                 if hybridbackground:
-                    img2 = self.ctx_map.load_pixbuf(tile_coord, LAYER_HYB,
+                    img2 = self.ctx_map.load_pixbuf(tile_coord, hybridbackground_layer,
                                                     force_update)
                 for x, y in xy:
                     da.window.draw_pixbuf(gc, img, 0, 0, x, y,
