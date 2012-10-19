@@ -3,6 +3,7 @@
 # Place to keep all constants
 
 import os
+import locale
 
 NAME = "GMapCatcher"
 VERSION = "0.8.0.1"
@@ -146,7 +147,7 @@ SECTION_GPS = 'gps'
 SECTION_MAP = 'map'
 R_EARTH = 6371.
 
-USER_PATH = os.path.expanduser("~")
+USER_PATH = unicode(os.path.expanduser("~"),locale.getpreferredencoding())
 DEFAULT_PATH = os.path.join(USER_PATH, ".GMapCatcher")
 
 LANGUAGES = ["en", "es", "zh"]
