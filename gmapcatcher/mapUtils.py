@@ -233,7 +233,7 @@ def countBearingFromLatLon(a, b):
 
 
 def saveGPX(trackSegments):
-    f_name = FileSaveChooser(getHome(), strTitle="Select File")
+    f_name = FileSaveChooser(USER_PATH, strTitle="Select File")
     if f_name:
         gpx = gpxpy.gpx.GPX()
         gpx_track = gpxpy.gpx.GPXTrack()
@@ -259,7 +259,7 @@ def saveGPX(trackSegments):
 
 def openGPX():
     tracks = None
-    f_name = FileChooser(getHome(), strTitle="Select File")
+    f_name = FileChooser(USER_PATH, strTitle="Select File")
     if f_name:
         f = open(f_name, 'r')
         tracks = list()
@@ -297,10 +297,6 @@ def openGPX():
     return tracks
 
 
-def getHome():
-    return os.getenv('USERPROFILE') or os.getenv('HOME')
-
-
 def convertUnits(unit_from, unit_to, value):
     if unit_from == UNIT_TYPE_KM:
         if unit_to == UNIT_TYPE_MILE:
@@ -319,6 +315,7 @@ def convertUnits(unit_from, unit_to, value):
             return float(value) * 1.15077945
     return value
 
+
 class Track:
     def __init__(self, points, name=None, distance=None):
         self.points = points
@@ -334,6 +331,7 @@ class Track:
             distance += countDistanceFromLatLon(self.points[i].getLatLon(), self.points[i + 1].getLatLon())
         self.distance = distance
         return self.distance
+
 
 class TrackPoint:
     def __init__(self, latitude=None, longitude=None, timestamp=None, altitude=None, speed=None):
