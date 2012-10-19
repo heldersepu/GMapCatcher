@@ -429,6 +429,13 @@ class MainWindow(gtk.Window):
         self.cmb_layer_container.pack_start(self.cmb_layer)
 
         bbox.pack_start(self.cmb_layer_container, False, False, 0)
+
+        self.scale_opacity = gtk.HScale(gtk.Adjustment(value=0.0, lower=0.0, upper=1.0, step_incr=0.1, page_incr=0.1, page_size=0.1))
+        self.scale_opacity.set_value(0.0)
+        self.scale_opacity.connect('change-value', self.scale_opacity_change_value)
+        self.scale_opacity.show()
+        bbox.pack_start(self.scale_opacity)
+
         hbox.add(bbox)
         return hbox
 
@@ -438,6 +445,12 @@ class MainWindow(gtk.Window):
             self.cmb_gps.show()
         else:
             self.cmb_gps.hide()
+
+    def scale_opacity_change_value(self, therange, scroll, value):
+        if value > 0.9:
+            value = 0.9
+        self.opacity = round(value, 1)
+        self.drawing_area.repaint()
 
     def __create_top_paned(self):
         vbox = gtk.VBox(False, 5)
@@ -871,6 +884,7 @@ class MainWindow(gtk.Window):
         force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
         zl = self.get_zoom()
+        self.drawing_area.cr = drawing_area.window.cairo_create()
         self.downloader.query_region_around_point(
             self.drawing_area.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
@@ -962,7 +976,8 @@ class MainWindow(gtk.Window):
                 self.showMarkers, self.gps,
                 self.ruler_coord,
                 self.shown_tracks, self.draw_track_distance,
-                self.pointer_to_world_coord(center)
+                self.pointer_to_world_coord(center),
+                self.opacity
             )
 
     ## Handles the pressing of F11 & F12
@@ -1235,6 +1250,8 @@ class MainWindow(gtk.Window):
         self.ctx_map = MapServ(self.conf)
         self.map_min_zoom = self.ctx_map.get_min_zoom(self.conf.map_service)
         self.map_max_zoom = self.ctx_map.get_max_zoom(self.conf.map_service)
+
+        self.opacity = 0.0
 
         self.downloader = MapDownloader(self.ctx_map, self.conf.maxthreads)
         if self.conf.save_at_close and (LAYER_MAP <= self.conf.save_layer <= LAYER_CHA):
