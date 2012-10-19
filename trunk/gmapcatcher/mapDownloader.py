@@ -135,7 +135,7 @@ class MapDownloader:
                     online=True, force_update=False,
                     conf=None, hybrid_background=LAYER_SAT):
         ret = 0
-        if layer == LAYER_HYB:
+        if layer == LAYER_HYB or layer == LAYER_CHA:
             ret += self.query_tile(coord, hybrid_background, callback,
                     online, force_update, conf)
 

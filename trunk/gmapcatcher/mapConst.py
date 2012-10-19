@@ -45,8 +45,9 @@ LAYER_MAP = 0
 LAYER_SAT = 1
 LAYER_TER = 2
 LAYER_HYB = 3
-LAYER_NAMES = ["Map", "Satellite", "Terrain", "Hybrid"]
-LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles", "hyb_tiles"]
+LAYER_CHA = 4
+LAYER_NAMES = ["Map", "Satellite", "Terrain", "Hybrid", "Chart"]
+LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles", "hyb_tiles", "chart_tiles"]
 
 FIRST_LAYER_ID = 0
 MAP_SERVICES = [
@@ -65,8 +66,8 @@ MAP_SERVICES = [
     {"ID": SEZNAM_HIST,   "layers": [LAYER_SAT, LAYER_TER, LAYER_HYB]},
     {"ID": STAMEN,        "layers": [LAYER_MAP, LAYER_SAT, LAYER_TER]},
     {"ID": REFUGES,       "layers": [LAYER_MAP, LAYER_SAT, LAYER_HYB]},
-    {"ID": OPENSEAMAP,    "layers": [LAYER_HYB]},
-    {"ID": ENIRO,         "layers": [LAYER_MAP, LAYER_HYB]},
+    {"ID": OPENSEAMAP,    "layers": [LAYER_CHA]},
+    {"ID": ENIRO,         "layers": [LAYER_MAP, LAYER_SAT, LAYER_TER, LAYER_HYB, LAYER_CHA]},
     {"ID": NOKIA,         "layers": [LAYER_MAP, LAYER_SAT, LAYER_TER]},
     {"ID": SKYVECTOR_WORLD_VFR,  "layers": [LAYER_MAP]},
     {"ID": SKYVECTOR_WORLD_LO,   "layers": [LAYER_MAP]},

@@ -875,7 +875,7 @@ class MainWindow(gtk.Window):
             self.drawing_area.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
             online=online, force_update=force_update,
-            conf=self.conf, hybrid_background=self.ctx_map.get_hybrid_background(self.conf.map_service)
+            conf=self.conf, hybrid_background=self.ctx_map.get_hybrid_background(self.layer, self.conf.map_service)
         )
         self.downloading = self.downloader.qsize()
         self.draw_overlay()
@@ -910,7 +910,7 @@ class MainWindow(gtk.Window):
             if self.downloading <= 0:
                 self.hide_dlfeedback = True
                 self.drawing_area.repaint()
-        hybridbackground = (self.layer == LAYER_HYB and layer == self.ctx_map.get_hybrid_background(self.conf.map_service))
+        hybridbackground = (self.layer >= LAYER_HYB and layer == self.ctx_map.get_hybrid_background(self.layer, self.conf.map_service))
         if (self.layer == layer or hybridbackground) and self.get_zoom() == tile_coord[2]:
             da = self.drawing_area
             rect = da.get_allocation()
@@ -918,7 +918,7 @@ class MainWindow(gtk.Window):
             if xy:
                 # here we keep a list of all foreground tiles that turn up
                 # when there is no corresponding background tile yet
-                if layer == LAYER_HYB:
+                if layer == LAYER_HYB or layer == LAYER_CHA:
                     if tile_coord not in self.background:
                         self.foreground.append(tile_coord)
                     else:
@@ -1236,7 +1236,7 @@ class MainWindow(gtk.Window):
         self.map_max_zoom = self.ctx_map.get_max_zoom(self.conf.map_service)
 
         self.downloader = MapDownloader(self.ctx_map, self.conf.maxthreads)
-        if self.conf.save_at_close and (LAYER_MAP <= self.conf.save_layer <= LAYER_HYB):
+        if self.conf.save_at_close and (LAYER_MAP <= self.conf.save_layer <= LAYER_CHA):
             self.layer = self.conf.save_layer
         else:
             self.layer = LAYER_MAP
