@@ -1323,16 +1323,19 @@ class MainWindow(gtk.Window):
             print "WheelbarrowFull_xpm"
         style = self.get_style()
         gdk_pixmap, mask = gtk.create_pixmap_from_xpm_d(
-            self.get_window(), style.bg[gtk.STATE_NORMAL], WheelbarrowFull_xpm)
+            self.get_window(), None, WheelbarrowFull_xpm)
         pixmap = gtk.Pixmap(gdk_pixmap, mask)
         pixmap.show()
+
         event_box = gtk.EventBox()
+        event_box.set_visible_window(False)
         event_box.add(pixmap)
         event_box.set_events(gtk.gdk.BUTTON_PRESS_MASK)
         event_box.connect("button_press_event", test)
         event_box.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(0.5, 1.0, 0.5, 0))
         event_box.show()
         self.Layout.put(event_box, 180, 100)
+        self.Layout.put(pixmap, 180, 100)
 
 def main(conf_path):
     # gobject.threads_init()
