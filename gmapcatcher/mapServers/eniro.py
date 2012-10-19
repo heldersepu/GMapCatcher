@@ -7,7 +7,7 @@ from gmapcatcher.mapConst import *
 max_zoom = 9
 min_zoom = -1
 skip_zooms = [8]
-HYBRID_BACKGROUND = LAYER_MAP
+hybrid_background = LAYER_MAP
 
 
 ## Returns a template URL for the Eniro
