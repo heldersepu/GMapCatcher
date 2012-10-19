@@ -248,17 +248,18 @@ class DrawingArea(mapDrawingArea.DrawingArea):
                     if gps.gpsfix.track and gps.gpsfix.speed >= 0.5:  # draw arrow only, if speed is over 0.5 knots
                         self.draw_arrow(screen_coord, gps.gpsfix.track)
             if gps.mode != GPS_DISABLED and gps.gpsfix.mode == MODE_NO_FIX:
-                self.draw_message('INVALID GPS DATA')
+                self.draw_message('INVALID GPS DATA', middle[0] - 150, 0, 'red')
 
-    def draw_message(self, strMessage):
-        x = 5
-        if len(strMessage) < 20:
-            rect = self.get_allocation()
-            middle = (rect.width / 2, rect.height / 2)
-            x = middle[0] - len(strMessage) * 10
-        gc = self.style.black_gc
-        gc.set_rgb_fg_color(gtk.gdk.color_parse('#FF0000'))
-        self.write_text(gc, x, 0, strMessage, 28)
+    def draw_message(self, strMessage, x=0, y=0, colorStr='black'):
+        color = gtk.gdk.color_parse(colorStr)
+        gc = self.window.new_gc(
+            color, color, None, gtk.gdk.COPY,
+            gtk.gdk.SOLID, None, None, None,
+            gtk.gdk.INCLUDE_INFERIORS,
+            0, 0, 0, 0, True, 3, gtk.gdk.LINE_DOUBLE_DASH,
+            gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_ROUND)
+        gc.set_rgb_fg_color(color)
+        self.write_text(gc, x, y, strMessage, 28)
 
     def draw_markers(self, zl, marker, coord, conf, pixDim):
         img = marker.get_marker_pixbuf(zl)
