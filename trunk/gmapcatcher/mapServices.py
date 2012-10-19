@@ -149,7 +149,7 @@ class MapServ:
     def get_hybrid_background(self, map_service):
         try:
             map_server = self.get_map_server(map_service)
-            return map_server.HYBRID_BACKGROUND
+            return map_server.hybrid_background
         except:
             return LAYER_SAT
 

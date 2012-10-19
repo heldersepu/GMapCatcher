@@ -3,7 +3,7 @@
 
 from gmapcatcher.mapConst import *
 
-HYBRID_BACKGROUND = LAYER_MAP
+hybrid_background = LAYER_MAP
 
 
 ## Returns a template URL for the OpenSeaMap
