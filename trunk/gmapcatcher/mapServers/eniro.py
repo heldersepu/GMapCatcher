@@ -7,6 +7,7 @@ from gmapcatcher.mapConst import *
 max_zoom = 9
 min_zoom = -1
 skip_zooms = [8]
+HYBRID_BACKGROUND = LAYER_MAP
 
 
 ## Returns a template URL for the Eniro
@@ -17,7 +18,7 @@ def layer_url_template(counter, layer, conf):
         return 'http://ed-map-fi.wide.basefarm.net/ol_tiles/fi/maps/%i/%i/%i.png'
 
 
-## Returns the URL to the OpenSeaMap tile
+## Returns the URL to the Eniro tile
 def get_url(counter, coord, layer, conf):
     template = layer_url_template(counter, layer, conf)
     if template:

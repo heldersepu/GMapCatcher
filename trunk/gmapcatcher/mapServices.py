@@ -146,6 +146,13 @@ class MapServ:
         except:
             return []
 
+    def get_hybrid_background(self, map_service):
+        try:
+            map_server = self.get_map_server(map_service)
+            return map_server.HYBRID_BACKGROUND
+        except:
+            return LAYER_SAT
+
     def get_tile_from_coord(self, coord, layer, conf):
         href = self.get_url_from_coord(coord, layer, conf)
         if href:
