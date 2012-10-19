@@ -38,7 +38,7 @@ MAP_SERVERS = [
     "Virtual Earth", "Yandex",
     "Seznam", "Seznam Turistická", "Seznam Cyklo", "Seznam Historická",
     "Stamen", "Refuges Europe", "OpenSeaMap", "Eniro", "Nokia",
-    "SkyVector World VFR","SkyVector World Lo","SkyVector World Hi"
+    "SkyVector World VFR", "SkyVector World Lo", "SkyVector World Hi"
 ]
 
 LAYER_MAP = 0
@@ -50,24 +50,24 @@ LAYER_DIRS = ["tiles", "sat_tiles", "ter_tiles", "hyb_tiles"]
 
 FIRST_LAYER_ID = 0
 MAP_SERVICES = [
-    {"ID": GOOGLE,        "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER,LAYER_HYB]},
+    {"ID": GOOGLE,        "layers": [LAYER_MAP, LAYER_SAT, LAYER_TER, LAYER_HYB]},
     {"ID": OSM,           "layers": [LAYER_MAP]},
     {"ID": CLOUDMADE,     "layers": [LAYER_MAP]},
-    {"ID": YAHOO,         "layers": [LAYER_MAP,LAYER_SAT,LAYER_HYB]},
+    {"ID": YAHOO,         "layers": [LAYER_MAP, LAYER_SAT, LAYER_HYB]},
     {"ID": INFO_FREEWAY,  "layers": [LAYER_MAP]},
     {"ID": OPENCYCLEMAP,  "layers": [LAYER_MAP]},
     {"ID": GOOGLE_MAKER,  "layers": [LAYER_MAP]},
-    {"ID": VIRTUAL_EARTH, "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER]},
+    {"ID": VIRTUAL_EARTH, "layers": [LAYER_MAP, LAYER_SAT, LAYER_TER]},
     {"ID": YANDEX,        "layers": [LAYER_MAP]},
-    {"ID": SEZNAM,        "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER,LAYER_HYB]},   
-    {"ID": SEZNAM_HIKING, "layers": [LAYER_SAT,LAYER_TER,LAYER_HYB]},
-    {"ID": SEZNAM_CYCLO,  "layers": [LAYER_SAT,LAYER_TER,LAYER_HYB]},
-    {"ID": SEZNAM_HIST,   "layers": [LAYER_SAT,LAYER_TER,LAYER_HYB]},
-    {"ID": STAMEN,        "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER]},
-    {"ID": REFUGES,       "layers": [LAYER_MAP,LAYER_SAT,LAYER_HYB]},
+    {"ID": SEZNAM,        "layers": [LAYER_MAP, LAYER_SAT, LAYER_TER, LAYER_HYB]},
+    {"ID": SEZNAM_HIKING, "layers": [LAYER_SAT, LAYER_TER, LAYER_HYB]},
+    {"ID": SEZNAM_CYCLO,  "layers": [LAYER_SAT, LAYER_TER, LAYER_HYB]},
+    {"ID": SEZNAM_HIST,   "layers": [LAYER_SAT, LAYER_TER, LAYER_HYB]},
+    {"ID": STAMEN,        "layers": [LAYER_MAP, LAYER_SAT, LAYER_TER]},
+    {"ID": REFUGES,       "layers": [LAYER_MAP, LAYER_SAT, LAYER_HYB]},
     {"ID": OPENSEAMAP,    "layers": [LAYER_HYB]},
-    {"ID": ENIRO,         "layers": [LAYER_MAP,LAYER_HYB]},
-    {"ID": NOKIA,         "layers": [LAYER_MAP,LAYER_SAT,LAYER_TER]},
+    {"ID": ENIRO,         "layers": [LAYER_MAP, LAYER_HYB]},
+    {"ID": NOKIA,         "layers": [LAYER_MAP, LAYER_SAT, LAYER_TER]},
     {"ID": SKYVECTOR_WORLD_VFR,  "layers": [LAYER_MAP]},
     {"ID": SKYVECTOR_WORLD_LO,   "layers": [LAYER_MAP]},
     {"ID": SKYVECTOR_WORLD_HI,   "layers": [LAYER_MAP]},
@@ -147,7 +147,7 @@ SECTION_GPS = 'gps'
 SECTION_MAP = 'map'
 R_EARTH = 6371.
 
-USER_PATH = unicode(os.path.expanduser("~"),locale.getpreferredencoding())
+USER_PATH = unicode(os.path.expanduser("~"), locale.getpreferredencoding())
 DEFAULT_PATH = os.path.join(USER_PATH, ".GMapCatcher")
 
 LANGUAGES = ["en", "es", "zh"]

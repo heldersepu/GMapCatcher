@@ -1069,7 +1069,7 @@ class MainWindow(gtk.Window):
             self.gps_window_clicked()
         # F4 = 65473
         elif event.keyval == 65473:
-            fileName = FileChooser(mapUtils.getHome(), 'Select KML File to import')
+            fileName = FileChooser(USER_PATH, 'Select KML File to import')
             if fileName:
                 kmlResponse = kml_to_markers(fileName, self.marker)
                 if kmlResponse:
