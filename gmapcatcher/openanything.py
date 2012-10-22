@@ -18,12 +18,10 @@ import urlparse
 import gzip
 import mimetypes
 from StringIO import StringIO
-from mapConst import *
-#from django.template.defaultfilters import urlencode
+from mapConf import MapConf
 
-
-#USER_AGENT = 'OpenAnything/%s +http://diveintopython.org/http_web_services/' % __version__
-USER_AGENT = '%s/%s +%s' % (NAME, VERSION, WEB_ADDRESS)
+conf = MapConf(None)
+USER_AGENT = '%s/%s +%s' % (conf.name, conf.version, conf.web_address)
 
 
 class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
