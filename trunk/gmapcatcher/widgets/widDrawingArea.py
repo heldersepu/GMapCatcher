@@ -187,7 +187,7 @@ class DrawingArea(mapDrawingArea.DrawingArea):
                     showMarkers=False, gps=None,
                     r_coord=[],
                     tracks=None, draw_track_distance=False,
-                    cur_coord=None, opacity=0.0):
+                    cur_coord=None):
         self.set_scale_gc()
         self.set_visualdl_gc()
         rect = self.get_allocation()
@@ -237,8 +237,8 @@ class DrawingArea(mapDrawingArea.DrawingArea):
             self.draw_image(middle, crossPixbuf, 12, 12)
 
         # "make the damn thing not so bright" -overlay
-        if opacity != 0.0:
-            self.cr.set_source_rgba(0, 0, 0, opacity)
+        if conf.opacity != 0.0:
+            self.cr.set_source_rgba(0, 0, 0, conf.opacity)
             self.cr.rectangle(0, 0, rect.width, rect.height)
             self.cr.fill()
 

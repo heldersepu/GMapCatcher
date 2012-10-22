@@ -427,15 +427,7 @@ class MainWindow(gtk.Window):
         self.cmb_layer = ComboBoxLayer(self.conf)
         self.cmb_layer.connect('changed', self.layer_changed)
         self.cmb_layer_container.pack_start(self.cmb_layer)
-
         bbox.pack_start(self.cmb_layer_container, False, False, 0)
-
-        self.scale_opacity = gtk.HScale(gtk.Adjustment(value=0.0, lower=0.0, upper=1.0, step_incr=0.1, page_incr=0.1, page_size=0.1))
-        self.scale_opacity.set_value(0.0)
-        self.scale_opacity.connect('change-value', self.scale_opacity_change_value)
-        self.scale_opacity.show()
-        bbox.pack_start(self.scale_opacity)
-
         hbox.add(bbox)
         return hbox
 
@@ -449,7 +441,7 @@ class MainWindow(gtk.Window):
     def scale_opacity_change_value(self, therange, scroll, value):
         if value > 0.9:
             value = 0.9
-        self.opacity = round(value, 1)
+        self.conf.opacity = round(value, 1)
         self.drawing_area.repaint()
 
     def __create_top_paned(self):
@@ -525,6 +517,7 @@ class MainWindow(gtk.Window):
         return myFrame(" Export map to PNG image ", hbox)
 
     def __create_left_paned(self, conf):
+        vbox = gtk.VBox(False, 5)
         scale = gtk.VScale()
         scale.set_property("update-policy", gtk.UPDATE_DISCONTINUOUS)
         scale.set_size_request(30, -1)
@@ -534,8 +527,16 @@ class MainWindow(gtk.Window):
         scale.set_value(conf.init_zoom)
         scale.connect("change-value", self.scale_change_value)
         scale.show()
+        vbox.pack_start(scale)
         self.scale = scale
-        return scale
+
+        oScale = gtk.HScale(gtk.Adjustment(0.0, 0.0, 1.0, 0.1, 0.1, 0.1))
+        oScale.set_value(conf.opacity)
+        oScale.set_draw_value(False)
+        oScale.connect('change-value', self.scale_opacity_change_value)
+        oScale.show()
+        vbox.pack_start(oScale, False, True)
+        return vbox
 
     def __create_right_paned(self):
         da = DrawingArea()
@@ -976,8 +977,7 @@ class MainWindow(gtk.Window):
                 self.showMarkers, self.gps,
                 self.ruler_coord,
                 self.shown_tracks, self.draw_track_distance,
-                self.pointer_to_world_coord(center),
-                self.opacity
+                self.pointer_to_world_coord(center)
             )
 
     ## Handles the pressing of F11 & F12
@@ -1250,8 +1250,6 @@ class MainWindow(gtk.Window):
         self.ctx_map = MapServ(self.conf)
         self.map_min_zoom = self.ctx_map.get_min_zoom(self.conf.map_service)
         self.map_max_zoom = self.ctx_map.get_max_zoom(self.conf.map_service)
-
-        self.opacity = 0.0
 
         self.downloader = MapDownloader(self.ctx_map, self.conf.maxthreads)
         if self.conf.save_at_close and (LAYER_MAP <= self.conf.save_layer <= LAYER_CHA):
