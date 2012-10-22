@@ -87,6 +87,11 @@ class MapConf():
         config.set(SECTION_GPS, 'gps_serial_baudrate', self.gps_serial_baudrate)
         config.set(SECTION_GPS, 'gps_mode', self.gps_mode)
 
+        config.add_section(SECTION_AGENT)
+        config.set(SECTION_AGENT, 'name', self.name)
+        config.set(SECTION_AGENT, 'version', self.version)
+        config.set(SECTION_AGENT, 'web_address', self.web_address)
+
         configfile = open(self.config_path, 'wb')
         config.write(configfile)
 
@@ -202,6 +207,13 @@ class MapConf():
         self.gps_mode = read_config('gps_mode', GPS_DISABLED, int, SECTION_GPS)
         ## Maximum zoom to show the GPS, default is 16
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int, SECTION_GPS)
+
+        ## User agent name
+        self.name = read_config('name', NAME, str, SECTION_AGENT)
+        ## User agent version
+        self.version = read_config('version', VERSION, str, SECTION_AGENT)
+        ## User agent webaddress
+        self.web_address = read_config('web_address', WEB_ADDRESS, str, SECTION_AGENT)
 
     ## Write the configuration to the default file
     def save(self):

@@ -8,7 +8,7 @@ import locale
 NAME = "GMapCatcher"
 VERSION = "0.8.0.1"
 VERSION_NAME = ""
-WEB_ADDRESS = "http://code.google.com/p/gmapcatcher/"
+WEB_ADDRESS = "http://GMapCatcher.GoogleCode.com"
 
 GOOGLE = 0
 OSM = 1
@@ -146,6 +146,7 @@ UNIT_TYPE_NM = 2
 SECTION_INIT = 'init'
 SECTION_GPS = 'gps'
 SECTION_MAP = 'map'
+SECTION_AGENT = 'agent'
 R_EARTH = 6371.
 
 USER_PATH = unicode(os.path.expanduser("~"), locale.getpreferredencoding())
