@@ -7,7 +7,7 @@ min_zoom = 8
 
 ## Returns a template URL for the WorldHI
 def layer_url_template():
-    return 'http://t%i.skyvector.net/tiles/304/1210/%i/%i/%i.jpg'
+    return 'http://t%i.skyvector.net/tiles/304/1211/%i/%i/%i.jpg'
 
 
 ## Returns the URL to the WorldHI tile
