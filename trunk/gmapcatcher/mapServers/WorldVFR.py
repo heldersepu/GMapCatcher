@@ -7,7 +7,7 @@ min_zoom = 7
 
 ## Returns a template URL for the WorldVFR
 def layer_url_template():
-    return 'http://t%i.skyvector.net/tiles/301/1210/%i/%i/%i.jpg'
+    return 'http://t%i.skyvector.net/tiles/301/1211/%i/%i/%i.jpg'
 
 
 ## Returns the URL to the WorldVFR tile

@@ -7,7 +7,7 @@ min_zoom = 7
 
 ## Returns a template URL for the WorldLO
 def layer_url_template():
-    return 'http://t%i.skyvector.net/tiles/302/1210/%i/%i/%i.jpg'
+    return 'http://t%i.skyvector.net/tiles/302/1211/%i/%i/%i.jpg'
 
 
 ## Returns the URL to the WorldLO tile
