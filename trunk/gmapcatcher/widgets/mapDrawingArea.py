@@ -22,6 +22,8 @@ class DrawingArea(gtk.DrawingArea):
     track_gc = False
     trackThreadInst = None
     trackTimer = None
+    markerThreadInst = None
+    markerTimer = None
     gpsTrackInst = None
 
     def __init__(self):
@@ -145,6 +147,22 @@ class DrawingArea(gtk.DrawingArea):
                 self.trackTimer = Timer(conf.overlay_delay, self.trackThreadInst.update.set)
                 self.trackTimer.start()
 
+    def draw_markers(self, zl, marker, coord, conf, pixDim):
+         # zl, marker, coord, conf, pixDim
+        if not self.markerThreadInst:
+            self.markerThreadInst = self.MarkerThread(self, zl, marker, coord, conf, pixDim)
+            self.markerThreadInst.start()
+        else:
+            self.markerThreadInst.zl = zl
+            self.markerThreadInst.marker = marker
+            self.markerThreadInst.coord = coord
+            self.markerThreadInst.conf = conf
+            # self.markerThreadInst.pixDim = pixDim
+            if self.markerTimer:
+                self.markerTimer.cancel()
+            self.markerTimer = Timer(conf.overlay_delay, self.markerThreadInst.update.set)
+            self.markerTimer.start()
+
     class TrackThread(Thread):
         def __init__(self, da, gc, unit, tracks, zl, track_width, draw_distance=False):
             Thread.__init__(self)
@@ -261,3 +279,35 @@ class DrawingArea(gtk.DrawingArea):
                 finally:
                     gtk.threads_leave()  # And once we are finished, tell that as well...
             # print '%.3f' % (time.time() - start)
+
+    class MarkerThread(Thread):
+        def __init__(self, da, zl, marker, coord, conf, pixDim):
+            Thread.__init__(self)
+            self.da = da
+            self.update = Event()
+            self.update.set()
+            self.__stop = Event()
+            self.zl = zl
+            self.marker = marker
+            self.coord = coord
+            self.conf = conf
+            self.pixDim = pixDim
+            self.img = self.marker.get_marker_pixbuf(zl)
+
+        def run(self):
+            while not self.__stop.is_set():
+                self.update.wait()
+                self.update.clear()
+                self.draw_markers()
+
+        def draw_markers(self):
+            for string in self.marker.positions.keys():
+                if self.update.is_set():
+                    break
+                mpos = self.marker.positions[string]
+                if (self.zl <= mpos[2]) and (mpos[0], mpos[1]) != (self.coord[0], self.coord[1]):
+                    gtk.threads_enter()
+                    try:
+                        self.da.draw_marker(self.conf, mpos, self.zl, self.img, self.pixDim, string)
+                    finally:
+                        gtk.threads_leave()

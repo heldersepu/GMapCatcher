@@ -8,7 +8,6 @@ import pango
 import math
 import gmapcatcher.mapUtils as mapUtils
 from gmapcatcher.mapConst import *
-from threading import Timer
 
 
 ## This widget is where the map is drawn
@@ -216,9 +215,7 @@ class DrawingArea(mapDrawingArea.DrawingArea):
             else:
                 coord = (None, None, None)
 
-            # Draw the markers
-            self.markerThread = Timer(conf.overlay_delay, self.draw_markers_thread, [zl, marker, coord, conf, pixDim])
-            self.markerThread.start()
+            self.draw_markers(zl, marker, coord, conf, pixDim)
 
         # Draw the downloading notification
         if downloading:
@@ -279,19 +276,6 @@ class DrawingArea(mapDrawingArea.DrawingArea):
             gtk.gdk.CAP_NOT_LAST, gtk.gdk.JOIN_ROUND)
         gc.set_rgb_fg_color(color)
         self.write_text(gc, x, y, strMessage, 28)
-
-    def draw_markers(self, zl, marker, coord, conf, pixDim):
-        img = marker.get_marker_pixbuf(zl)
-        for string in marker.positions.keys():
-            mpos = marker.positions[string]
-            if (zl <= mpos[2]) and (mpos[0], mpos[1]) != (coord[0], coord[1]):
-                self.draw_marker(conf, mpos, zl, img, pixDim, string)
-
-    def draw_markers_thread(self, *args):
-        try:
-            self.draw_markers(args[0], args[1], args[2], args[3], args[4])
-        except:
-            pass
 
     def draw_scale(self, full, zl, latitude, conf):
         scaledata = mapUtils.friendly_scale(zl, latitude, conf.units)
