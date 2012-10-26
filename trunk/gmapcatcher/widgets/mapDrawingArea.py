@@ -24,7 +24,6 @@ class DrawingArea(gtk.DrawingArea):
     trackTimer = None
     markerThreadInst = None
     markerTimer = None
-    gpsTrackInst = None
 
     def __init__(self):
         super(DrawingArea, self).__init__()
@@ -34,8 +33,6 @@ class DrawingArea(gtk.DrawingArea):
             self.trackThreadInst.stop()
         if self.markerThreadInst:
             self.markerThreadInst.stop()
-        if self.gpsTrackInst:
-            self.gpsTrackInst.stop()
 
     ## Repaint the drawing area
     def repaint(self):
