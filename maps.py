@@ -94,11 +94,11 @@ class MainWindow(gtk.Window):
     ## Search for the location in the Entry box
     def confirm_clicked(self, button):
         location = self.entry.get_text()
-        if (0 == len(location)):
+        if 0 == len(location):
             error_msg(self, "Need location")
             self.entry.grab_focus()
             return
-        if (location == ComboBoxEntry.DEFAULT_TEXT):
+        if location == ComboBoxEntry.DEFAULT_TEXT:
             self.combo.clean_entry()
             return
         p = re.compile('(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:lon)?g?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', re.IGNORECASE)
@@ -530,9 +530,10 @@ class MainWindow(gtk.Window):
         vbox.pack_start(scale)
         self.scale = scale
 
-        oScale = gtk.HScale(gtk.Adjustment(0.0, 0.0, 1.0, 0.1, 0.1, 0.1))
+        oScale = gtk.VScale(gtk.Adjustment(0.0, 0.0, 1.0, 0.1, 0.1, 0.1))
         oScale.set_value(conf.opacity)
         oScale.set_draw_value(False)
+        oScale.set_size_request(30, 120)
         oScale.connect('change-value', self.scale_opacity_change_value)
         oScale.show()
         vbox.pack_start(oScale, False, True)
