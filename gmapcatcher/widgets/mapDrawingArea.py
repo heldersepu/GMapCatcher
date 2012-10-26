@@ -32,6 +32,8 @@ class DrawingArea(gtk.DrawingArea):
     def stop(self):
         if self.trackThreadInst:
             self.trackThreadInst.stop()
+        if self.markerThreadInst:
+            self.markerThreadInst.stop()
         if self.gpsTrackInst:
             self.gpsTrackInst.stop()
 
@@ -203,6 +205,7 @@ class DrawingArea(gtk.DrawingArea):
 
         def stop(self):
             self.__stop.set()
+            self.update.set()
 
         def draw_line(self, track, track_color, zl, draw_start_end=True):
             coord_to_screen_f = self.da.coord_to_screen
@@ -299,6 +302,10 @@ class DrawingArea(gtk.DrawingArea):
                 self.update.wait()
                 self.update.clear()
                 self.draw_markers()
+
+        def stop(self):
+            self.__stop.set()
+            self.update.set()
 
         def draw_markers(self):
             for string in self.marker.positions.keys():
