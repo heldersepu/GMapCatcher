@@ -243,24 +243,24 @@ class DrawingArea(mapDrawingArea.DrawingArea):
         if gps and gps.gpsfix:
             location = gps.get_location()
             if location is not None and zl <= conf.max_gps_zoom:
-                # img = gps.pixbuf
+                img = gps.pixbuf
                 screen_coord = self.coord_to_screen(location[0], location[1], zl)
                 if screen_coord:
-                    # Draw the circle
-                    self.cr.set_source_rgba(1, 0, 0, 0.5)
-                    self.cr.set_line_width(4)
-                    self.cr.arc(screen_coord[0], screen_coord[1], 15, 0, 2 * math.pi)
-                    self.cr.stroke_preserve()
+                    # # Draw the circle
+                    # self.cr.set_source_rgba(1, 0, 0, 0.5)
+                    # self.cr.set_line_width(4)
+                    # self.cr.arc(screen_coord[0], screen_coord[1], 15, 0, 2 * math.pi)
+                    # self.cr.stroke_preserve()
 
-                    # Draw "target lines"
-                    self.cr.set_line_width(2)
-                    self.cr.move_to(screen_coord[0], screen_coord[1] - 15)
-                    self.cr.rel_line_to(0, 30)
-                    self.cr.move_to(screen_coord[0] - 15, screen_coord[1])
-                    self.cr.rel_line_to(30, 0)
-                    self.cr.stroke()
-                    # self.draw_image(screen_coord, img,
-                    #     GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
+                    # # Draw "target lines"
+                    # self.cr.set_line_width(2)
+                    # self.cr.move_to(screen_coord[0], screen_coord[1] - 15)
+                    # self.cr.rel_line_to(0, 30)
+                    # self.cr.move_to(screen_coord[0] - 15, screen_coord[1])
+                    # self.cr.rel_line_to(30, 0)
+                    # self.cr.stroke()
+                    self.draw_image(screen_coord, img,
+                        GPS_IMG_SIZE[0], GPS_IMG_SIZE[1])
                     if gps.gpsfix.track and gps.gpsfix.speed >= 0.5:  # draw arrow only, if speed is over 0.5 knots
                         self.draw_arrow(screen_coord, gps.gpsfix.track)
             if gps.mode != GPS_DISABLED and gps.gpsfix.mode == MODE_NO_FIX:
