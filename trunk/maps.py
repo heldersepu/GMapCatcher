@@ -438,10 +438,8 @@ class MainWindow(gtk.Window):
         else:
             self.cmb_gps.hide()
 
-    def scale_opacity_change_value(self, therange, scroll, value):
-        if value > 0.9:
-            value = 0.9
-        self.conf.opacity = round(value, 1)
+    def scale_opacity_change_value(self, w, *args):
+        self.conf.opacity = round(w.get_value()/10, 1)
         self.drawing_area.repaint()
 
     def __create_top_paned(self):
@@ -526,17 +524,12 @@ class MainWindow(gtk.Window):
         scale.set_range(self.map_min_zoom, self.map_max_zoom)
         scale.set_value(conf.init_zoom)
         scale.connect("change-value", self.scale_change_value)
-        scale.show()
         vbox.pack_start(scale)
         self.scale = scale
-
-        oScale = gtk.VScale(gtk.Adjustment(0.0, 0.0, 1.0, 0.1, 0.1, 0.1))
-        oScale.set_value(conf.opacity)
-        oScale.set_draw_value(False)
-        oScale.set_size_request(30, 120)
-        oScale.connect('change-value', self.scale_opacity_change_value)
-        oScale.show()
-        vbox.pack_start(oScale, False, True)
+        
+        oSpin = SpinBtn(conf.opacity*10, 0, 9,1,1)
+        oSpin.connect('value-changed', self.scale_opacity_change_value)        
+        vbox.pack_start(oSpin, False, True)
         return vbox
 
     def __create_right_paned(self):
