@@ -306,7 +306,7 @@ class DrawingArea(gtk.DrawingArea):
 
         def draw_markers(self):
             for string in self.marker.positions.keys():
-                if self.update.is_set():
+                if self.update.is_set() or self.__stop.is_set():
                     break
                 mpos = self.marker.positions[string]
                 if (self.zl <= mpos[2]) and (mpos[0], mpos[1]) != (self.coord[0], self.coord[1]):
