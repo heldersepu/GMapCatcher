@@ -110,6 +110,8 @@ class MapServ:
             import mapServers.WorldHI as map_server
         elif map_service == MAP_SERVERS[SKYVECTOR_WORLD_LO]:
             import mapServers.WorldLO as map_server
+        elif map_service == MAP_SERVERS[MAPS_FOR_FREE]:
+            import mapServers.maps4free as map_server
         elif map_service == MAP_SERVERS[GOOGLE]:
             import mapServers.googleMaps as map_server
         return map_server
