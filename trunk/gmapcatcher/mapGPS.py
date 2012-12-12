@@ -13,7 +13,11 @@ from threading import Event, Thread
 import time
 from datetime import datetime, timedelta
 from gmapcatcher.gps import misc
-offset = timedelta(seconds=time.timezone if (time.daylight == 0) else time.altzone)
+
+if time.localtime().tm_isdst:
+    offset = timedelta(seconds=time.altzone)
+else:
+    offset = timedelta(seconds=time.timezone)
 
 
 class GPS:
