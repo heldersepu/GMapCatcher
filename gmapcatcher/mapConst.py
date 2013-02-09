@@ -6,7 +6,7 @@ import os
 import locale
 
 NAME = "GMapCatcher"
-VERSION = "0.8.0.1"
+VERSION = "0.8.0.2"
 VERSION_NAME = ""
 WEB_ADDRESS = "http://GMapCatcher.GoogleCode.com"
 
