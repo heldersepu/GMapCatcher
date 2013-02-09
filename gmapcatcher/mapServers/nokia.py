@@ -7,9 +7,9 @@ from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 ## Returns a template URL for the Yahoo mas
 def layer_url_template(layer):
     map_server_query = ["normal", "hybrid", "terrain"]
-    return 'http://%i.maps.nlp.nokia.com/maptile/2.1/maptile/a2e328a0c5/' + \
+    return 'http://%i.maps.nlp.nokia.com/maptile/2.1/maptile/newest/' + \
         map_server_query[layer] + \
-        '.day/%i/%i/%i/256/png8?token=r0sR1DzqDkS6sDnh902FWQ&lg=ENG'
+        '.day/%i/%i/%i/256/png8?app_id=SqE1xcSngCd3m4a1zEGb&token=r0sR1DzqDkS6sDnh902FWQ&lg=ENG'
 
 
 ## Returns the URL to the nokia map tile
