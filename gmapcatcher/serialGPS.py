@@ -52,6 +52,7 @@ class gpsfix:
         self.epd = None
         self.eps = None
         self.epc = None
+        self.satellites = 0          # Not in GPSd
 
 
 ## Serial port GPS -module for mapGPS.py
@@ -220,6 +221,10 @@ class SerialGPS(Thread):
             try:
                 if int(data[6]) == 0:
                     self.fix.mode = MODE_NO_FIX
+            except:
+                pass
+            try:
+                self.fix.satellites = int(data[7])
             except:
                 pass
             try:
