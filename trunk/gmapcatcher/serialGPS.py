@@ -13,7 +13,8 @@ from mapConst import MODE_NO_FIX
 BAUDRATES = [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200]
 
 
-## Scans available serial ports (COMx on Windows, tty[AMA, S, USB], rfcomm on Linux)
+## Scans available serial ports
+## (COMx on Windows, tty[AMA, S, USB], rfcomm on Linux)
 def serialPortScan():
     availableSerialPorts = ['none']
     if platform.system() == 'Windows':
@@ -69,7 +70,10 @@ class SerialGPS(Thread):
         self.__stop = Event()
         self.available = False
         try:
-            self.ser = serial.Serial(port=self.port, baudrate=self.baudrate, timeout=self.timeout)
+            self.ser = serial.Serial(
+                port=self.port,
+                baudrate=self.baudrate,
+                timeout=self.timeout)
             self.ser.flushInput()
             self.available = True
         except serial.SerialException:
@@ -81,17 +85,26 @@ class SerialGPS(Thread):
 
     def run(self):
         try:
-            while not self.__stop.is_set():  # read buffer while stop is called
-                if self.ser:  # if the serial port connection exists...
+            # read buffer while stop is called
+            while not self.__stop.is_set():
+                # if the serial port connection exists...
+                if self.ser:
                     try:
-                        self.buf += self.ser.read(40)  # read 40 characters from port to buffer
+                        # read 40 characters from port to buffer
+                        self.buf += self.ser.read(40)
                     except TypeError:
                         pass
-                    if '\n' in self.buf:  # if the buffer includes row change
-                        lines = self.buf.split('\n')  # split the buffer by lines
-                        for line in lines[0:-1]:  # and for the lines (except the last one, that is probably not complete)
-                            self.dataHandler(line)  # handle data
-                        self.buf = lines[-1]  # set the buffer to only include the last line
+                    # if the buffer includes row change
+                    if '\n' in self.buf:
+                        # split the buffer by lines
+                        lines = self.buf.split('\n')
+                        # and for the lines
+                        # (except the last one, that is probably not complete)
+                        for line in lines[0:-1]:
+                            # handle data
+                            self.dataHandler(line)
+                        # set the buffer to only include the last line
+                        self.buf = lines[-1]
                 else:
                     self.__stop.set()
                     self.fix.mode == MODE_NO_FIX
@@ -139,7 +152,8 @@ class SerialGPS(Thread):
                 hemisphere = data[4]
             except:
                 hemisphere = None
-            if hemisphere == 'S':  # if on the southern hemisphere, latitude is negative
+            # if on the southern hemisphere, latitude is negative
+            if hemisphere == 'S':
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[3]))
                 except:
@@ -153,7 +167,8 @@ class SerialGPS(Thread):
                 hemisphere = data[6]
             except:
                 hemisphere = None
-            if hemisphere == 'W':  # if on the western hemisphere, longitude is negative
+            # if on the western hemisphere, longitude is negative
+            if hemisphere == 'W':
                 try:
                     self.fix.longitude = -self.convertDegrees(float(data[5]))
                 except:
@@ -194,7 +209,8 @@ class SerialGPS(Thread):
                 hemisphere = data[3]
             except:
                 hemisphere = None
-            if hemisphere == 'S':  # if on the southern hemisphere, latitude is negative
+            # if on the southern hemisphere, latitude is negative
+            if hemisphere == 'S':
                 try:
                     self.fix.latitude = -self.convertDegrees(float(data[2]))
                 except:
@@ -208,7 +224,8 @@ class SerialGPS(Thread):
                 hemisphere = data[5]
             except:
                 hemisphere = None
-            if hemisphere == 'W':  # if on the western hemisphere, longitude is negative
+            # if on the western hemisphere, longitude is negative
+            if hemisphere == 'W':
                 try:
                     self.fix.longitude = -self.convertDegrees(float(data[4]))
                 except:
