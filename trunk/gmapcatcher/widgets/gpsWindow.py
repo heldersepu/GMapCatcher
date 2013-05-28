@@ -89,6 +89,8 @@ class gpsWindow(gtk.Window):
 
     def _createLabels(self, font):
         texts = ['GPS time', 'Latitude', 'Longitude', 'Speed', 'Heading', 'Altitude']
+        if self.mapsObj.conf.gps_type == TYPE_SERIAL:
+            texts.append('Satellites')
         table = gtk.Table(len(texts) + 2, 2)
         table.set_col_spacings(5)
         table.set_row_spacings(5)
@@ -155,6 +157,8 @@ class gpsWindow(gtk.Window):
                 self.gps_values[4].set_text('%.1f°' % self.mapsObj.gps.gpsfix.track)
             if self.mapsObj.gps.gpsfix.altitude:
                 self.gps_values[5].set_text('%.1fm' % self.mapsObj.gps.gpsfix.altitude)
+            if self.mapsObj.conf.gps_type == TYPE_SERIAL:
+                self.gps_values[6].set_text('%i' % self.mapsObj.gps.gpsfix.satellites)
         else:
             self.fix_label.set_text('<span foreground=\"red\">No GPS detected</span>')
             for gps_value in self.gps_values:
