@@ -264,7 +264,9 @@ class SerialGPS(Thread):
                 pass
 
     def convertDegrees(self, degrees):
-        return float(int(floor(degrees / 100)) + (degrees / 100 - int(floor(degrees / 100))) / 60 * 100)
+        return float(
+            int(floor(degrees / 100)) +
+            (degrees / 100 - int(floor(degrees / 100))) / 60 * 100)
 
 if __name__ == '__main__':
     import time
