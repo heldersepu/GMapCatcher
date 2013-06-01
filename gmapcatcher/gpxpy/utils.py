@@ -14,32 +14,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
+import sys as mod_sys
 import xml.sax.saxutils as mod_saxutils
 
-def to_xml(tag, attributes={}, content=None, default=None, escape=False):
+PYTHON_VERSION = mod_sys.version.split(' ')[0]
+
+def to_xml(tag, attributes=None, content=None, default=None, escape=False):
+    attributes = attributes or {}
     result = '\n<%s' % tag
 
-    if not content and default:
+    if content is None and default:
         content = default
 
     if attributes:
         for attribute in attributes.keys():
             result += ' %s="%s"' % (attribute, attributes[attribute])
-    if content:
+
+    if content is None:
+        result += '/>'
+    else:
         if escape:
             result += '>%s</%s>' % (mod_saxutils.escape(content), tag)
         else:
             result += '>%s</%s>' % (content, tag)
-    elif content == '':
-        result += '></%s>' % tag
-    else:
-        result += '/>'
 
-    result += ''
-
-    if isinstance(result, unicode):
-        result = result.encode('utf-8')
+    result = make_str(result)
 	
     return result
 
@@ -47,32 +46,30 @@ def is_numeric(object):
     try:
         float(object)
         return True
-    except:
+    except TypeError:
+        return False
+    except ValueError:
         return False
 
-def to_number(str, default=0):
-    if not str:
-        return None
-    return float(str)
+def to_number(s, default=0):
+    try:
+        return float(s)
+    except TypeError:
+        pass
+    except ValueError:
+        pass
+    return default
 
-def find_first_node(node, child_node_name):
-    if not node or not child_node_name:
-        return None
-    child_nodes = node.childNodes
-    for child_node in child_nodes:
-        if child_node.nodeName == child_node_name:
-            return child_node
-    return None
 
 # Hash utilities:
 
 def __hash(obj):
     result = 0
 
-    if obj == None:
+    if obj is None:
         return result
     elif isinstance(obj, dict):
-        raise Error('__hash_single_object for dict not yet implemented')
+        raise RuntimeError('__hash_single_object for dict not yet implemented')
     elif isinstance(obj, list) or isinstance(obj, tuple):
         return hash_list_or_tuple(obj)
 
@@ -95,3 +92,9 @@ def hash_object(obj, *attributes):
     return result
 
 
+def make_str(s):
+    """ Convert a str or unicode object into a str type. """
+    if PYTHON_VERSION[0] == '2':
+        if isinstance(s, unicode):
+            return s.encode("utf-8")
+    return str(s)
