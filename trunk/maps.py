@@ -324,11 +324,11 @@ class MainWindow(gtk.Window):
                         self.gps_track.distance += distance
                     if not len(self.gps_track.points) or distance > (float(self.conf.gps_track_interval) / 1000):
                         point = mapUtils.TrackPoint(latitude=self.gps.gpsfix.latitude, longitude=self.gps.gpsfix.longitude)
-                        if self.gps.gpsfix.altitude:
+                        if self.gps.gpsfix.altitude is not None:
                             point.altitude = self.gps.gpsfix.altitude
-                        if self.gps.gpsfix.speed:
+                        if self.gps.gpsfix.speed is not None:
                             point.speed = self.gps.gpsfix.speed
-                        if self.gps.gpsfix.time:
+                        if self.gps.gpsfix.time is not None:
                             point.timestamp = mapGPS.makeGPSTime(self.gps.gpsfix.time, self.conf.gps_type)
                         self.gps_track.points.append(point)
             else:
