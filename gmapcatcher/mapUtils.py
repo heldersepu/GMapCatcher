@@ -9,7 +9,7 @@ from mapConst import *
 from widgets.customWidgets import FileChooser, FileSaveChooser
 from time import gmtime, strftime
 from htmlentitydefs import name2codepoint
-from gmapcatcher import gpxpy
+from gmapcatcher.gpxpy import gpx, parse
 
 
 def tiles_on_level(zoom_level):
@@ -235,25 +235,24 @@ def countBearingFromLatLon(a, b):
 def saveGPX(trackSegments):
     f_name = FileSaveChooser(USER_PATH, strTitle="Select File")
     if f_name:
-        gpx = gpxpy.gpx.GPX()
-        gpx_track = gpxpy.gpx.GPXTrack()
+        gpx_export = gpx.GPX()
+        gpx_track = gpx.GPXTrack()
         gpx_track.name = NAME + ' Tracks'
-        gpx.tracks.append(gpx_track)
+        gpx_export.tracks.append(gpx_track)
         for trackSegment in trackSegments:
-            gpx_segment = gpxpy.gpx.GPXTrackSegment()
+            gpx_segment = gpx.GPXTrackSegment()
             gpx_track.segments.append(gpx_segment)
             for p in trackSegment.points:
-                point = gpxpy.gpx.GPXTrackPoint(p.latitude, p.longitude)
+                point = gpx.GPXTrackPoint(p.latitude, p.longitude)
                 if p.altitude:
                     point.elevation = p.altitude
                 if p.timestamp:
                     point.time = p.timestamp
-                # GPXpy doesn't support speed (apparently)
-                # if p.speed:
-                #     point.speed = p.speed
+                if p.speed:
+                    point.speed = p.speed
                 gpx_segment.points.append(point)
         f = open(f_name, 'w')
-        f.write(gpx.to_xml())
+        f.write(gpx_export.to_xml())
         f.close()
 
 
@@ -263,16 +262,16 @@ def openGPX():
     if f_name:
         f = open(f_name, 'r')
         tracks = list()
-        gpx = gpxpy.parse(f)
+        gpx_import = parse(f)
         f.close()
         f_name = os.path.basename(f_name)
         i = 1
-        for track in gpx.tracks:
+        for track in gpx_import.tracks:
             for segment in track.segments:
                 track_points = list()
                 for point in segment.points:
                     track_points.append(TrackPoint(point.latitude, point.longitude))
-                if len(track.segments) > 1 or len(gpx.tracks) > 1:
+                if len(track.segments) > 1 or len(gpx_import.tracks) > 1:
                     tracks.append(Track(track_points, '%s - track %i' % (f_name, i)))
                     if len(track.segments) > 1:
                         i += 1
@@ -280,17 +279,17 @@ def openGPX():
                     tracks.append(Track(track_points, '%s - track' % f_name))
             i += 1
         i = 0
-        for route in gpx.routes:
+        for route in gpx_import.routes:
             track_points = list()
             for point in route.points:
                 track_points.append(TrackPoint(point.latitude, point.longitude))
-            if len(gpx.routes) > 1:
+            if len(gpx_import.routes) > 1:
                 tracks.append(Track(track_points, '%s - route %i' % (f_name, i)))
             else:
                 tracks.append(Track(track_points, '%s - route' % f_name))
             i += 1
         waypoints = list()
-        for waypoint in gpx.waypoints:
+        for waypoint in gpx_import.waypoints:
             waypoints.append(TrackPoint(waypoint.latitude, waypoint.longitude))
         if len(waypoints) >= 1:
             tracks.append(Track(waypoints, '%s - waypoints' % f_name))
