@@ -1,7 +1,7 @@
 February 09 2013    H.S    <HelderSepu@gmail.com>
-    * 0.8.0.2 - At revision: 1566
+    * 0.8.0.2 - At revision: 1568
     * Draw markers in a real thread. (Issue 347)
-    * ... work in progress ...    
+    * Fix issue with Nokia Maps
 
 October 12 2012    H.S    <HelderSepu@gmail.com>
     * 0.8.0.0 - At revision: 1524

@@ -3,6 +3,7 @@
 # All the interaction with google.com
 
 import re
+import io
 import urllib
 import gmapcatcher.openanything as openanything
 from gmapcatcher.mapConst import *
@@ -22,6 +23,8 @@ def layer_url_template(layer, conf):
             print "Trying to fetch http://maps.google.com/maps but failed"
             return None
         html = oa['data']
+        with io.open('google.htm', 'w') as file:
+            file.write(unicode(html))
 
         known_layers[layer] = parse_start_page(layer, html, conf)
     return known_layers[layer]
