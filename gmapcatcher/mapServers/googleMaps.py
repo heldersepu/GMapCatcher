@@ -56,7 +56,7 @@ def parse_start_page(layer, html, conf):
     # List of patterns add more as needed
     paList = [
         '<div id=inlineTiles' + hybrid + ' dir=ltr>' +
-        '<img src="http://([a-z]{2,3})[0-9].google.com/(.+?)&'
+        '<img src="http.://([a-z]{3,4})[0-9].google.com/(.+?)&'
     ]
     for srtPattern in paList:
         p = re.compile(srtPattern)
