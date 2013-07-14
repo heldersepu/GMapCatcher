@@ -139,7 +139,10 @@ def fetch(source, etag=None, lastmodified=None, agent=USER_AGENT, post_data=None
         result['url'] = f.url
         result['status'] = 200
     if hasattr(f, 'status'):
-        result['status'] = f.status
+        if f.status == 302:
+            result['status'] = 200
+        else:
+            result['status'] = f.status
     f.close()
     return result
 
