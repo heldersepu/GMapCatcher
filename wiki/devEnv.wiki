@@ -14,11 +14,8 @@
          <tr align="left"><th> + PyGTK all-in-one </th><th> http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/</th></tr>
          <tr align="left"><th> + PIL </th><th> http://www.pythonware.com/products/pil/</th></tr>
          <tr align="left"><th> + pyserial </th><th> http://sourceforge.net/projects/pyserial/</th></tr>
-         <tr align="left"><th> + lxml </th><th> https://pypi.python.org/pypi/lxml/2.2.8</th></tr>
+        </table>
 
-
-
-        </table><br>
         If you want to build the win installer you need:
         <table cellspacing=10>
          <tr align="left"><th> - py2exe   </th><th> http://www.py2exe.org/</th></tr>
