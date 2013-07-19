@@ -418,13 +418,13 @@ class GPXTrack:
         for track_segment in self.segments:
             bounds = track_segment.get_bounds()
 
-            if not mod_utils.is_numeric(min_lat) or bounds.min_latitude < min_lat:
+            if not mod_utils.is_numeric(min_lat) or (bounds.min_latitude and bounds.min_latitude < min_lat):
                 min_lat = bounds.min_latitude
-            if not mod_utils.is_numeric(max_lat) or bounds.max_latitude > max_lat:
+            if not mod_utils.is_numeric(max_lat) or (bounds.max_latitude and bounds.max_latitude > max_lat):
                 max_lat = bounds.max_latitude
-            if not mod_utils.is_numeric(min_lon) or bounds.min_longitude < min_lon:
+            if not mod_utils.is_numeric(min_lon) or (bounds.min_longitude and bounds.min_longitude < min_lon):
                 min_lon = bounds.min_longitude
-            if not mod_utils.is_numeric(max_lon) or bounds.max_longitude > max_lon:
+            if not mod_utils.is_numeric(max_lon) or (bounds.max_longitude and bounds.max_longitude > max_lon):
                 max_lon = bounds.max_longitude
 
         return Bounds(min_lat, max_lat, min_lon, max_lon)
@@ -625,6 +625,16 @@ class GPXTrack:
         result = True
         for track_segment in self.segments:
             result = result and track_segment.has_times()
+
+        return result
+
+    def has_elevations(self):
+        if not self.segments:
+            return None
+
+        result = True
+        for track_segment in self.segments:
+            result = result and track_segment.has_elevations()
 
         return result
 
@@ -1074,17 +1084,31 @@ class GPXTrackSegment:
             # ... or otherwise one empty track segment would change the entire 
             # track's "has_times" status!
 
-        has_first = self.points[0]
-        has_last = self.points[-1]
-
         found = 0
         for track_point in self.points:
             if track_point.time:
                 found += 1
 
-        found = float(found) / float(len(self.points))
+        return len(self.points) > 2 and float(found) / float(len(self.points)) > .75
 
-        return has_first and found > .75 and has_last
+    def has_elevations(self):
+        """ 
+        Returns if points in this segment contains timestamps.
+
+        At least the first, last points and 75% of others must have times fot this 
+        method to return true.
+        """
+        if not self.points:
+            return True
+            # ... or otherwise one empty track segment would change the entire 
+            # track's "has_times" status!
+
+        found = 0
+        for track_point in self.points:
+            if track_point.elevation:
+                found += 1
+
+        return len(self.points) > 2 and float(found) / float(len(self.points)) > .75
 
     def __hash__(self):
         return mod_utils.hash_object(self, 'points')
@@ -1573,6 +1597,17 @@ class GPX:
         result = True
         for track in self.tracks:
             result = result and track.has_times()
+
+        return result
+
+    def has_elevations(self):
+        """ See GPXTrackSegment.has_times() """
+        if not self.tracks:
+            return None
+
+        result = True
+        for track in self.tracks:
+            result = result and track.has_elevations()
 
         return result
 
