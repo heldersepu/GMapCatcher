@@ -1,3 +1,9 @@
+July 18 2013    H.S    <HelderSepu@gmail.com>
+    * 0.8.0.3 - At revision: 1581
+    * Fix issue with Stamen Maps
+    * Fix issue with google searches
+    * Start support for Win 8
+
 February 09 2013    H.S    <HelderSepu@gmail.com>
     * 0.8.0.2 - At revision: 1568
     * Draw markers in a real thread. (Issue 347)
