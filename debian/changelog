@@ -1,3 +1,9 @@
+mapcatcher (0.8.0.3-1) unstable; urgency=low
+
+  * Update to r1582
+
+ -- Kimmo Huoman <kipenroskaposti@gmail.com>  Mon, 19 Jul 2013 09:15:00 +0300
+
 mapcatcher (0.8.0.0-1) unstable; urgency=low
 
   * Update to r1451
