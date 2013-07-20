@@ -28,20 +28,11 @@ if os.name == "posix":
     )
 else:
     import py2exe
-    DLL_EXCLUDES = [ 'libgdk-win32-2.0-0.dll',
-                 'libgobject-2.0-0.dll',
-                 'libgdk_pixbuf-2.0-0.dll',
+    DLL_EXCLUDES = [ 
                  'KERNELBASE.dll',
                  'MSIMG32.dll',
                  'NSI.dll',
                  'USP10.dll',
-                 'intl.dll',
-                 'freetype6.dll',
-                 'libcairo-2.dll',
-                 'libexpat-1.dll',
-                 'libglib-2.0-0.dll',
-                 'libgmodule-2.0-0.dll',
-                 'libpango-1.0-0.dll',
                  'DNSAPI.dll',
                  'API-MS-Win-Core-SysInfo-L1-1-0.dll',
                  'API-MS-Win-Core-Misc-L1-1-0.dll',
