@@ -42,7 +42,6 @@ else:
                  'libglib-2.0-0.dll',
                  'libgmodule-2.0-0.dll',
                  'libpango-1.0-0.dll',
-                 'sqlite3.dll',
                  'DNSAPI.dll',
                  'API-MS-Win-Core-SysInfo-L1-1-0.dll',
                  'API-MS-Win-Core-Misc-L1-1-0.dll',
