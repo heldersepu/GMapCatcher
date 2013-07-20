@@ -1,3 +1,7 @@
+July 18 2013    H.S    <HelderSepu@gmail.com>
+    * 0.8.0.4 - At revision: 1590
+    * Fix issue in py2exe that created problems in Win 8
+
 July 19 2013    K.H    <kipenroskaposti@gmail.com>
     * 0.8.0.4 - At revision: 1585
     * Update gpxpy
