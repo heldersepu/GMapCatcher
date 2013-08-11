@@ -29,10 +29,11 @@ from gmapcatcher.widgets.EXWindow import EXWindow
 from gmapcatcher.widgets.gpsWindow import gpsWindow
 from gmapcatcher.widgets.trackWindow import trackWindow
 from gmapcatcher.widgets.customMsgBox import user_confirm, error_msg, error_msg_non_blocking
-from gmapcatcher.widgets.customWidgets import gtk, gtk_menu, myToolTip, myFrame, lbl, legal_warning, ProgressBar, SpinBtn, FileChooser
+from gmapcatcher.widgets.customWidgets import gtk, gtk_menu, myToolTip, myFrame, lbl, legal_warning, SpinBtn, FileChooser
 from gmapcatcher.widgets.widDrawingArea import DrawingArea
 from gmapcatcher.widgets.widComboBoxLayer import ComboBoxLayer
 from gmapcatcher.widgets.widComboBoxEntry import ComboBoxEntry
+from gmapcatcher.widgets.widMapExport import MapExport
 from gmapcatcher.widgets.widStatusBar import StatusBar
 from gmapcatcher.widgets.widCredits import OurCredits
 from gmapcatcher.cmRoute import cmRoute
@@ -352,7 +353,7 @@ class MainWindow(gtk.Window):
     def operations_sub_menu(self):
         importm = gtk.MenuItem("Operations")
         imenu = gtk.Menu()
-        SUB_MENU = ["Download", "Export map", "Track control", "GPS window"]
+        SUB_MENU = ["Download", "Export map tiles", "Track control", "GPS window"]
         for i in range(len(SUB_MENU)):
             menu_item = gtk.MenuItem(SUB_MENU[i])
             menu_item.connect('activate', self.on_operations_changed, i)
@@ -450,69 +451,7 @@ class MainWindow(gtk.Window):
         vbox.set_size_request(-1, 89)
         return myFrame(" Query ", vbox, 0)
 
-    def __create_export_paned(self):
-        vboxCoord = gtk.VBox(False, 5)
-        vboxCoord.set_border_width(10)
 
-        self.entryUpperLeft = gtk.Entry()
-        self.entryUpperLeft.connect("key-release-event", self.update_export)
-        self.entryLowerRight = gtk.Entry()
-        self.entryLowerRight.connect("key-release-event", self.update_export)
-
-        hbox = gtk.HBox(False)
-        vbox = gtk.VBox(False, 5)
-        vbox.pack_start(lbl("  Upper Left: "))
-        vbox.pack_start(lbl(" Lower Right: "))
-        hbox.pack_start(vbox, False, True)
-        vbox = gtk.VBox(False, 5)
-        vbox.pack_start(self.entryUpperLeft)
-        vbox.pack_start(self.entryLowerRight)
-        hbox.pack_start(vbox)
-        vboxCoord.pack_start(myFrame(" Corners' coordinates ", hbox))
-
-        vboxInput = gtk.VBox(False, 5)
-        vboxInput.set_border_width(10)
-        vbox = gtk.VBox(False, 20)
-        vbox.set_border_width(10)
-        hboxSize = gtk.HBox(False, 20)
-        hbox = gtk.HBox(False, 5)
-        hbox.pack_start(lbl("Width / Height: "), False, True)
-        self.sbWidth = SpinBtn(TILES_WIDTH * 4, TILES_WIDTH, 99999, TILES_WIDTH, 5)
-        self.sbWidth.connect("value-changed", self.update_export)
-        hbox.pack_start(self.sbWidth, False, True)
-        hbox.pack_start(lbl("/"), False, True)
-        self.sbHeight = SpinBtn(TILES_HEIGHT * 3, TILES_HEIGHT, 99999, TILES_HEIGHT, 5)
-        self.sbHeight.connect("value-changed", self.update_export)
-        hbox.pack_start(self.sbHeight, False, True)
-        hboxSize.pack_start(hbox)
-        vbox.pack_start(hboxSize)
-
-        hboxZoom = gtk.HBox(False, 5)
-        hboxZoom.pack_start(lbl("    Zoom Level: "), False, True)
-        self.expZoom = SpinBtn(self.get_zoom())
-        self.expZoom.connect("value-changed", self.update_export)
-        hboxZoom.pack_start(self.expZoom, False, True)
-        vbox.pack_start(hboxZoom)
-
-        button = gtk.Button(stock='gtk-ok')
-        button.connect('clicked', self.do_export)
-
-        hboxInput = gtk.HBox(False, 5)
-        hboxInput.pack_start(vbox)
-        bbox = gtk.HButtonBox()
-        bbox.add(button)
-        hboxInput.pack_start(bbox)
-        vboxInput.pack_start(myFrame(" Image settings ", hboxInput))
-
-        self.export_box = gtk.HBox(False, 5)
-        self.export_box.pack_start(vboxCoord)
-        self.export_box.pack_start(vboxInput)
-        self.export_pbar = ProgressBar(" Exporting... ")
-        hbox = gtk.HBox(False, 5)
-        hbox.pack_start(self.export_box)
-        hbox.pack_start(self.export_pbar)
-
-        return myFrame(" Export map to PNG image ", hbox)
 
     def __create_left_paned(self, conf):
         vbox = gtk.VBox(False, 5)
@@ -634,12 +573,12 @@ class MainWindow(gtk.Window):
         self.visual_dltool.set_active(False)
         self.top_panel.hide()
         self.export_panel.show()
-        self.export_pbar.off()
+        self.export_panel.export_pbar.off()
         #Set the zoom level
         zl = self.get_zoom()
         if zl < (self.map_min_zoom + 2):
             zl = self.map_min_zoom + 2
-        self.expZoom.set_value(zl - 2)
+        self.export_panel.expZoom.set_value(zl - 2)
         self.do_zoom(zl, zl, True, pointer)
 
     ## Update the Map Export Widgets
@@ -648,14 +587,14 @@ class MainWindow(gtk.Window):
         if self.export_panel.flags() & gtk.VISIBLE:
             zl = self.get_zoom()
             # Convert given size to a tile size factor
-            widthFact = int(self.sbWidth.get_value() / TILES_WIDTH)
-            self.sbWidth.set_value(widthFact * TILES_WIDTH)
-            heightFact = int(self.sbHeight.get_value() / TILES_HEIGHT)
-            self.sbHeight.set_value(heightFact * TILES_HEIGHT)
+            widthFact = int(self.export_panel.sbWidth.get_value() / TILES_WIDTH)
+            self.export_panel.sbWidth.set_value(widthFact * TILES_WIDTH)
+            heightFact = int(self.export_panel.sbHeight.get_value() / TILES_HEIGHT)
+            self.export_panel.sbHeight.set_value(heightFact * TILES_HEIGHT)
             # Get Upper & Lower points
             coord = mapUtils.tile_to_coord(self.drawing_area.center, zl)
             tile = mapUtils.coord_to_tile(
-                (coord[0], coord[1], self.expZoom.get_value_as_int())
+                (coord[0], coord[1], self.export_panel.expZoom.get_value_as_int())
             )
             self.tPoint['xLow'] = tile[0][0] - int(widthFact / 2)
             self.tPoint['xHigh'] = tile[0][0] + (widthFact - int(widthFact / 2))
@@ -664,16 +603,16 @@ class MainWindow(gtk.Window):
 
             lowCoord = mapUtils.tile_to_coord(
                 ((self.tPoint['xLow'], self.tPoint['yLow']),
-                 (0, 0)), self.expZoom.get_value_as_int()
+                 (0, 0)), self.export_panel.expZoom.get_value_as_int()
             )
-            self.entryUpperLeft.set_text(str(lowCoord[0]) + ", " + str(lowCoord[1]))
+            self.export_panel.entryUpperLeft.set_text(str(lowCoord[0]) + ", " + str(lowCoord[1]))
             self.tPoint['FileName'] = "coord=%.6f,%.6f_zoom=%d.png" % lowCoord
 
             highCoord = mapUtils.tile_to_coord(
                 ((self.tPoint['xHigh'], self.tPoint['yHigh']),
-                 (0, 0)), self.expZoom.get_value_as_int()
+                 (0, 0)), self.export_panel.expZoom.get_value_as_int()
             )
-            self.entryLowerRight.set_text(str(highCoord[0]) + ", " + str(highCoord[1]))
+            self.export_panel.entryLowerRight.set_text(str(highCoord[0]) + ", " + str(highCoord[1]))
 
             # Set the vars to draw rectangle
             lowScreen = self.drawing_area.coord_to_screen(lowCoord[0], lowCoord[1], zl)
@@ -693,19 +632,19 @@ class MainWindow(gtk.Window):
             self.drawing_area.repaint()
 
     def export_done(self, text):
-        self.export_pbar.off()
-        self.export_box.show()
+        self.export_panel.export_pbar.off()
+        self.export_panel.export_box.show()
         #error_msg(self, "Export completed \n\n" + text)
 
     ## Export tiles to one big map
     def do_export(self, button):
-        self.export_box.hide()
-        self.export_pbar.on()
+        self.export_panel.export_box.hide()
+        self.export_panel.export_pbar.on()
         self.update_export()
         self.ctx_map.do_export(
-            self.tPoint, self.expZoom.get_value_as_int(), self.layer,
+            self.tPoint, self.export_panel.expZoom.get_value_as_int(), self.layer,
             not self.cb_offline.get_active(), self.conf,
-            (self.sbWidth.get_value_as_int(), self.sbHeight.get_value_as_int()),
+            (self.export_panel.sbWidth.get_value_as_int(), self.export_panel.sbHeight.get_value_as_int()),
             gui_callback(self.export_done)
         )
 
@@ -990,7 +929,7 @@ class MainWindow(gtk.Window):
         # F12 = 65481
         elif keyval == 65481:
             self.export_panel.hide()
-            self.export_pbar.off()
+            self.export_panel.export_pbar.off()
             if self.get_border_width() > 0:
                 self.left_panel.hide()
                 self.top_panel.hide()
@@ -1004,7 +943,7 @@ class MainWindow(gtk.Window):
         elif keyval == 65307:
             self.unfullscreen()
             self.export_panel.hide()
-            self.export_pbar.off()
+            self.export_panel.export_pbar.off()
             self.left_panel.show()
             self.top_panel.show()
             self.set_border_width(10)
@@ -1285,7 +1224,13 @@ class MainWindow(gtk.Window):
 
         self.top_panel = self.__create_top_paned()
         self.left_panel = self.__create_left_paned(self.conf)
-        self.export_panel = self.__create_export_paned()
+        self.export_panel = MapExport()
+        self.export_panel.entryLowerRight.connect("key-release-event", self.update_export)
+        self.export_panel.entryUpperLeft.connect("key-release-event", self.update_export)
+        self.export_panel.sbHeight.connect("value-changed", self.update_export)
+        self.export_panel.sbWidth.connect("value-changed", self.update_export)
+        self.export_panel.expZoom.connect("value-changed", self.update_export)
+        self.export_panel.button.connect('clicked', self.do_export)
         self.status_bar = StatusBar()
 
         ico = mapPixbuf.ico()
