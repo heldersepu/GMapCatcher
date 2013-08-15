@@ -21,7 +21,7 @@ from os.path import join, isdir
 
 class DLWindow(gtk.Window):
 
-    def __init__(self, coord, kmx, kmy, layer, conf):
+    def __init__(self, coord, kmx, kmy, layer, conf, force_update):
         self.layers = []
 
         def _zoom(zoom0, zoom1):
@@ -120,6 +120,7 @@ class DLWindow(gtk.Window):
         fldDown = join(conf.init_path, 'download')
         print "DLWindow(", coord, kmx, kmy, layer, ')'
         self.conf = conf
+        self.force_update = force_update
         kmx = mapUtils.nice_round(kmx)
         kmy = mapUtils.nice_round(kmy)
         gtk.Window.__init__(self)
@@ -193,7 +194,7 @@ class DLWindow(gtk.Window):
                 self.downloader.bulk_download((args.lat, args.lng, 15),
                     (args.min_zl, args.max_zl), args.width, args.height,
                     layer, gui_callback(self.tile_received),
-                    self.download_complete, False, self.conf)
+                    self.download_complete, self.force_update, self.conf)
             self.processing = False
 
     # Open a previously saved file and auto-populate the fields
