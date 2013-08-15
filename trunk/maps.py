@@ -211,7 +211,7 @@ class MainWindow(gtk.Window):
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         km_px = mapUtils.km_per_pixel(coord)
         dlw = DLWindow(coord, km_px * rect.width, km_px * rect.height,
-                        self.layer, self.conf)
+                        self.layer, self.conf, self.cb_forceupdate.get_active())
         dlw.show()
 
     def export_clicked(self, w, pointer=None):
