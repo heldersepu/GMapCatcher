@@ -212,8 +212,7 @@ class MapDownloader:
         return ret
 
     def bulk_download(self, coord, zoomlevels, kmx, kmy, layer, tile_callback,
-                      completion_callback, force_update=False, conf=None,
-                      nodups=True):
+                      completion_callback, force_update=False, conf=None):
         dlon = mapUtils.km_to_lon(mapUtils.nice_round(kmx), coord[0])
         dlat = mapUtils.km_to_lat(mapUtils.nice_round(kmy))
         if zoomlevels[0] > zoomlevels[1]:
