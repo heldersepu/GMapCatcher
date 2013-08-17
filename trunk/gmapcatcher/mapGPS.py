@@ -118,7 +118,7 @@ class GPSUpdater(Thread):
         global available
         if self.gps_type == mapConst.TYPE_GPSD and self.gps_session:
             try:
-                while not self.finished.is_set():
+                while not self.finished.isSet():
                     self.gps_session.next()
                     if time.time() - self.lastUpdate > self.interval:
                         self.function(self.gps_session.fix)
@@ -131,7 +131,7 @@ class GPSUpdater(Thread):
         elif self.gps_type == mapConst.TYPE_SERIAL and self.serial_port and self.baudrate:
             sergps = serialGPS.SerialGPS(self.serial_port, self.baudrate)
             sergps.start()
-            while not self.finished.is_set():
+            while not self.finished.isSet():
                 time.sleep(self.interval)
                 available = sergps.available
                 if not available:
