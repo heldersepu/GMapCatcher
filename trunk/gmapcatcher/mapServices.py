@@ -185,12 +185,12 @@ class MapServ:
         return self.tile_repository.is_tile_in_local_repos(coord, layer)
 
     ## Combine tiles to one big map
-    def do_combine(self, tPoint, zoom, layer, online, conf, size):
+    def do_combine(self, tPoint, zoom, layer, online, conf, size, mode="RGBA"):
         try:
             from PIL import Image
 
             # Initialise the image
-            result = Image.new("RGBA", size)
+            result = Image.new(mode, size)
             x = 0
             for i in range(tPoint['xLow'], tPoint['xHigh']):
                 y = 0
@@ -200,7 +200,7 @@ class MapServ:
                         width, height = pb.get_width(), pb.get_height()
 
                         result.paste(
-                            Image.fromstring("RGB", (width, height), pb.get_pixels()),
+                            Image.fromstring(mode, (width, height), pb.get_pixels()),
                             (x * TILES_WIDTH, y * TILES_HEIGHT)
                         )
                     y += 1
@@ -209,13 +209,14 @@ class MapServ:
             result.save(fileName)
             return fileName
         except Exception, inst:
+            print str(inst)
             return str(inst)
 
     ## Export tiles to one big map
-    def do_export(self, tPoint, zoom, layer, online, conf, size, callback):
+    def do_export(self, tPoint, zoom, layer, online, conf, size, mode, callback):
         def exportThread():
             fileName = self.do_combine(
-                tPoint, zoom, layer, online, conf, size
+                tPoint, zoom, layer, online, conf, size, mode
             )
             callback(None, fileName)
         self.exThread = Timer(0, exportThread)
