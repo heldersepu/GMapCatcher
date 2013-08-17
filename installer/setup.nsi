@@ -82,9 +82,10 @@ Function OnCheckbox
     ${EndIf}
 FunctionEnd
 Function .onInstSuccess
-	${If} $boolCHECKBOX != "False"
+	Delete "$INSTDIR\DNSAPI.DLL"
+    ${If} $boolCHECKBOX != "False"
         Exec "$INSTDIR\maps.exe"
-    ${EndIf}
+    ${EndIf}    
 FunctionEnd
 
 ;--------------------------------
