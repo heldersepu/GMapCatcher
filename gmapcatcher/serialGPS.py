@@ -86,7 +86,7 @@ class SerialGPS(Thread):
     def run(self):
         try:
             # read buffer while stop is called
-            while not self.__stop.is_set():
+            while not self.__stop.isSet():
                 # if the serial port connection exists...
                 if self.ser:
                     try:

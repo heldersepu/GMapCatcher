@@ -183,10 +183,10 @@ class DrawingArea(gtk.DrawingArea):
             self.setDaemon(True)
 
         def run(self):
-            while not self.__stop.is_set():
+            while not self.__stop.isSet():
                 self.update.wait()      # Wait for update signal to start updating
                 self.update.clear()     # Clear the signal straight away to allow stopping of the update
-                if self.update_all.is_set():
+                if self.update_all.isSet():
                     rect = self.da.get_allocation()
                     self.base_point = mapUtils.pointer_to_coord(rect, (0, 0), self.da.center, self.zl)
                     for track in self.tracks:
@@ -250,7 +250,7 @@ class DrawingArea(gtk.DrawingArea):
 
             for j in range(len(screen_coords) - 1):
                 # If update or __stop was set while we're in the loop, break
-                if self.update.is_set() or self.update_all.is_set() or self.__stop.is_set():
+                if self.update.isSet() or self.update_all.isSet() or self.__stop.isSet():
                     return
                 if abs(screen_coords[j][0] + mod_x) < threshold_x \
                   and abs(screen_coords[j][1] + mod_y) < threshold_y:
@@ -295,7 +295,7 @@ class DrawingArea(gtk.DrawingArea):
             self.img = self.marker.get_marker_pixbuf(zl)
 
         def run(self):
-            while not self.__stop.is_set():
+            while not self.__stop.isSet():
                 self.update.wait()
                 self.update.clear()
                 self.draw_markers()
@@ -306,7 +306,7 @@ class DrawingArea(gtk.DrawingArea):
 
         def draw_markers(self):
             for string in self.marker.positions.keys():
-                if self.update.is_set() or self.__stop.is_set():
+                if self.update.isSet() or self.__stop.isSet():
                     break
                 mpos = self.marker.positions[string]
                 if (self.zl <= mpos[2]) and (mpos[0], mpos[1]) != (self.coord[0], self.coord[1]):
