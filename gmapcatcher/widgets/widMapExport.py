@@ -3,6 +3,7 @@
 # MapExport widget used to display map export objects
 
 
+import os
 import gtk
 import gmapcatcher.fileUtils as fileUtils
 from gmapcatcher.widgets.customWidgets import myFrame, lbl, ProgressBar, SpinBtn
@@ -38,7 +39,7 @@ class MapExport(gtk.Frame):
         vbox.set_border_width(10)
         hboxSize = gtk.HBox(False, 20)
         hbox = gtk.HBox(False, 5)
-        hbox.pack_start(lbl("Width / Height: "), False, True)
+        hbox.pack_start(lbl("Width / Height:"), False, True)
         self.sbWidth = SpinBtn(TILES_WIDTH * 4, TILES_WIDTH, 99999, TILES_WIDTH, 5)
         hbox.pack_start(self.sbWidth, False, True)
         hbox.pack_start(lbl("/"), False, True)
@@ -48,10 +49,22 @@ class MapExport(gtk.Frame):
         vbox.pack_start(hboxSize)
 
         hboxZoom = gtk.HBox(False, 5)
-        hboxZoom.pack_start(lbl("    Zoom Level: "), False, True)
+        hboxZoom.pack_start(lbl("    Zoom Level:"), False, True)
         self.expZoom = SpinBtn(6)
         hboxZoom.pack_start(self.expZoom, False, True)
-        vbox.pack_start(hboxZoom)
+        self.mode = gtk.combo_box_new_text()
+        self.mode.append_text("L")
+        self.mode.append_text("RGB")
+        self.mode.append_text("RGBA")
+        self.mode.append_text("RGBX")
+        self.mode.append_text("CMYK")
+        if os.name == "posix":
+            self.mode.set_active(2)
+        else:
+            self.mode.set_active(1)
+        hboxZoom.pack_start(lbl("    Mode:"), False, True)
+        hboxZoom.pack_start(self.mode, False, True)
+        vbox.pack_start(hboxZoom)        
 
         self.button = gtk.Button(stock='gtk-ok')        
         hboxInput = gtk.HBox(False, 5)

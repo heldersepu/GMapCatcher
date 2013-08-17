@@ -645,6 +645,7 @@ class MainWindow(gtk.Window):
             self.tPoint, self.export_panel.expZoom.get_value_as_int(), self.layer,
             not self.cb_offline.get_active(), self.conf,
             (self.export_panel.sbWidth.get_value_as_int(), self.export_panel.sbHeight.get_value_as_int()),
+            self.export_panel.mode.get_active_text(),
             gui_callback(self.export_done)
         )
 
