@@ -5,6 +5,7 @@ available = True
 try:
     import gps
     import serialGPS
+    from gmapcatcher.gps import misc
 except:
     available = False
 import mapConst
@@ -12,7 +13,7 @@ import widgets.mapPixbuf as mapPixbuf
 from threading import Event, Thread
 import time
 from datetime import datetime, timedelta
-from gmapcatcher.gps import misc
+
 
 if time.localtime().tm_isdst:
     offset = timedelta(seconds=time.altzone)
