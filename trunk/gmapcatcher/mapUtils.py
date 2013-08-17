@@ -9,7 +9,10 @@ from mapConst import *
 from widgets.customWidgets import FileChooser, FileSaveChooser
 from time import gmtime, strftime
 from htmlentitydefs import name2codepoint
-from gmapcatcher.gpxpy import gpx, parse
+try:
+    from gmapcatcher.gpxpy import gpx, parse
+except:
+    pass
 
 
 def tiles_on_level(zoom_level):
