@@ -87,3 +87,6 @@ class MapExport(gtk.Frame):
         vFbox.pack_start(hbox)        
         self.add(vFbox)
         self.set_label(" Export map to PNG image ")
+
+    def image_size(self):
+        return (self.sbWidth.get_value_as_int(), self.sbHeight.get_value_as_int())
