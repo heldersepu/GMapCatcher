@@ -197,12 +197,9 @@ class MapServ:
                 for j in range(tPoint['yLow'], tPoint['yHigh']):
                     if self.get_tile((i, j, zoom), layer, online, False, conf):
                         pb = self.load_pixbuf((i, j, zoom), layer, False)
-                        width, height = pb.get_width(), pb.get_height()
-
-                        result.paste(
-                            Image.fromstring(mode, (width, height), pb.get_pixels()),
-                            (x * TILES_WIDTH, y * TILES_HEIGHT)
-                        )
+                        pb.save("temp.png", "png")
+                        im = Image.open("temp.png")
+                        result.paste(im, (x * TILES_WIDTH, y * TILES_HEIGHT))
                     y += 1
                 x += 1
             fileName = tPoint['FileName']
