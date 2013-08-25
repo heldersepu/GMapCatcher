@@ -210,7 +210,7 @@ class MapServ:
             return fileName
         except Exception, inst:
             print str(inst)
-            return str(inst)
+            return 'error=' + str(inst)
 
     ## Export tiles to one big map
     def do_export(self, tPoint, zoom, layer, online, conf, size, mode, callback):
