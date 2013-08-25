@@ -632,9 +632,12 @@ class MainWindow(gtk.Window):
             self.drawing_area.repaint()
 
     def export_done(self, text):
+        if (text[:6] == "error="):
+            rect = self.drawing_area.get_allocation()
+            self.drawing_area.draw_message(text[6:], 10, rect.height / 2, 'red')
+            time.sleep(2) 
         self.export_panel.export_pbar.off()
         self.export_panel.export_box.show()
-        #error_msg(self, "Export completed \n\n" + text)
 
     ## Export tiles to one big map
     def do_export(self, button):
