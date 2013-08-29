@@ -6,6 +6,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import os
+import copy
 
 from gmapcatcher.mapConst import *
 from customWidgets import lbl, myEntry, myFrame, SpinBtn, FolderChooser
@@ -188,7 +189,7 @@ class EXWindow(gtk.Window):
     def on_b_export_clicked(self, b_export, window):
         # Creating our own gmap
         drepos_path = window.entry_custom_path.get_text()
-        # drepos_type = window.cmb_repos_type.get_active()
+        drepos_type = window.cmb_repos_type.get_active()
 
         if not self.check_write_access_dir(drepos_path):
             gmsg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, "Error while trying to modify to selected repository '" + drepos_path + "'")
@@ -199,7 +200,10 @@ class EXWindow(gtk.Window):
         self.b_stop.set_sensitive(True)
         self.b_export.set_sensitive(False)
 
-        self.drepos = trFactory.get_tile_repository(self.mapServ, self.conf)
+        drepos_conf = copy.deepcopy(self.conf)
+        drepos_conf.init_path = drepos_path
+        drepos_conf.repository_type = drepos_type
+        self.drepos = trFactory.get_tile_repository(self.mapServ, drepos_conf)
 
         lat = float(self.e_lat0.get_text())
         lng = float(self.e_lon0.get_text())
