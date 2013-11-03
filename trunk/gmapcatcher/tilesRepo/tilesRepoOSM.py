@@ -34,8 +34,8 @@ class TilesRepositoryOSM(TilesRepository):
         TilesRepository.finish(self)
 
     ## Sets new repository path to be used for storing tiles
-    def set_repository_path(self, newpath):
-        self.configpath = newpath
+    def set_repository_path(self, conf):
+        self.configpath = conf.init_path
 
     ## check if we have locally downloaded tile
     def is_tile_in_local_repos(self, coord, layer):
