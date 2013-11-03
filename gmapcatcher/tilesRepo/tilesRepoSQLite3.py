@@ -274,8 +274,8 @@ class TilesRepositorySQLite3(TilesRepository):
         TilesRepository.finish(self)
 
     ## Sets new repository path to be used for storing tiles
-    def set_repository_path(self, newpath):
-        self.sqlite3func.restart_thread(newpath, self.get_db_filename())
+    def set_repository_path(self, conf):
+        self.sqlite3func.restart_thread(conf.init_path, self.get_db_filename())
 
     ## Returns the PixBuf of the tile
     # Uses a cache to optimise HDD read access

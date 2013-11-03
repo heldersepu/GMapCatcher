@@ -23,7 +23,7 @@ class TilesRepositoryMGMaps(TilesRepository):
 
     def __init__(self, MapServ_inst, conf):
         TilesRepository.__init__(self, MapServ_inst, conf)
-        self.set_repository_path(conf.init_path)
+        self.set_repository_path(conf)
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
         self.lock = Lock()
@@ -34,9 +34,9 @@ class TilesRepositoryMGMaps(TilesRepository):
         TilesRepository.finish(self)
 
     ## Sets new repository path to be used for storing tiles
-    def set_repository_path(self, newpath):
-        self.configpath = newpath
-        self.create_conf_file(newpath)
+    def set_repository_path(self, conf):
+        self.configpath = conf.init_path
+        self.create_conf_file(conf.init_path)
 
     ## check if we have locally downloaded tile
     def is_tile_in_local_repos(self, coord, layer):

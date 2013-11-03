@@ -51,5 +51,5 @@ class TilesRepository:
     def is_tile_in_local_repos(self, coord, layer):
         raise NotImplementedException()
 
-    def set_repository_path(self, newpath):
+    def set_repository_path(self, conf):
         raise NotImplementedException()

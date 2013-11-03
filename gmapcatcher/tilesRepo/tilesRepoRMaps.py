@@ -310,7 +310,7 @@ class TilesRepositoryRMaps(TilesRepository):
         self.tile_cache = lrucache.LRUCache(1000)
         self.mapServ_inst = MapServ_inst
         self.conf = conf
-        self.configpath = conf.init_path
+        self.configpath = os.path.join(conf.init_path, conf.map_service)
         self.lock = Lock()
         self.missingPixbuf = mapPixbuf.missing()
         self.sqlite3func = RMapsFuncs(self.configpath, RMAPS_REPOSITORY_FILE_FORMAT)
@@ -321,7 +321,8 @@ class TilesRepositoryRMaps(TilesRepository):
         TilesRepository.finish(self)
 
     ## Sets new repository path to be used for storing tiles
-    def set_repository_path(self, newpath):
+    def set_repository_path(self, conf):
+        newpath = os.path.join(conf.init_path, conf.map_service)
         self.sqlite3func.restart_thread(newpath, RMAPS_REPOSITORY_FILE_FORMAT)
 
     ## Returns the PixBuf of the tile
