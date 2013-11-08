@@ -30,7 +30,7 @@
          * View the HEAD revision directly at http://code.google.com/p/gmapcatcher/source/browse/#svn/trunk
          * Check out a working copy using [http://tortoisesvn.net/downloads TortoiseSVN]
 
-         [http://tortoisesvn.net/downloads http://gmapcatcher.googlecode.com/svn/wiki/TortoiseCheckout.png] {{{tsvn:http://gmapcatcher.googlecode.com/svn/trunk}}}
+         [http://tortoisesvn.net/downloads.html http://gmapcatcher.googlecode.com/svn/wiki/TortoiseCheckout.png] {{{tsvn:http://gmapcatcher.googlecode.com/svn/trunk}}}
 
 </br></br>
 
