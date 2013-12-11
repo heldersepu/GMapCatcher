@@ -1181,13 +1181,20 @@ class MainWindow(gtk.Window):
             elif (panePos > intPos + 2):
                 pane.set_position(intPos + 2)
 
-    def load_tracks(self, tracks):
+    def load_tracks(self):
+        tracks = fileUtils.get_tracks()
         if (len(tracks) > 0):
             for track in tracks:
                 dtrack = openGPX(track)
                 if dtrack:
                     self.tracks.extend(dtrack)
-                    self.shown_tracks.extend(dtrack)            
+                    self.shown_tracks.extend(dtrack)
+            self.refresh()
+
+    def focus_in_event(self, w, event):
+        self.refresh()
+        dThread = Timer(1, self.load_tracks)
+        dThread.start()
 
     def __init__(self, parent=None, config_path=None):
         self.conf = MapConf(config_path)
@@ -1270,7 +1277,7 @@ class MainWindow(gtk.Window):
         vbox.pack_start(self.status_bar, False, False, 0)
         self.add(vbox)
 
-        self.connect('focus-in-event', self.refresh)
+        self.connect('focus-in-event', self.focus_in_event)
         self.set_title(" GMapCatcher ")
         self.set_border_width(10)
         self.set_size_request(450, 450)
@@ -1291,7 +1298,6 @@ class MainWindow(gtk.Window):
         self.entry.grab_focus()
         if self.conf.auto_refresh > 0:
             gobject.timeout_add(self.conf.auto_refresh, self.refresh)
-        self.load_tracks(fileUtils.get_tracks())
 
 
 def main(conf_path):
