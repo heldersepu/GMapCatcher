@@ -133,6 +133,17 @@ def get_themes():
     return myThemes
 
 
+## Returns all the available tracks
+def get_tracks():
+    tracksPath = './tracks'
+    myTracks = []
+    if os.path.isdir(tracksPath):
+        for l in os.listdir(tracksPath):
+            #if os.path.isdir(tracksPath + l):
+            myTracks += [tracksPath + '/' + l]
+    return myTracks
+
+
 ## Checks if a directory exist if not it will be created
 def check_dir(strPath, strSubPath=None):
     if (strSubPath is not None):
