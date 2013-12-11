@@ -259,9 +259,10 @@ def saveGPX(trackSegments):
         f.close()
 
 
-def openGPX():
+def openGPX(f_name = None):
     tracks = None
-    f_name = FileChooser(USER_PATH, strTitle="Select File")
+    if (f_name is None):
+        f_name = FileChooser(USER_PATH, strTitle="Select File")    
     if f_name:
         f = open(f_name, 'r')
         tracks = list()

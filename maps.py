@@ -12,10 +12,12 @@ import signal
 import gobject
 import gmapcatcher.mapGPS as mapGPS
 import gmapcatcher.mapUtils as mapUtils
+import gmapcatcher.fileUtils as fileUtils
 import gmapcatcher.widgets.mapPixbuf as mapPixbuf
 
 from threading import Timer
 from gmapcatcher.mapConst import *
+from gmapcatcher.mapUtils import openGPX
 from gmapcatcher.widgets.mapTools import mapTools
 from gmapcatcher.gtkThread import gui_callback, webbrowser_open
 from gmapcatcher.mapConf import MapConf
@@ -465,9 +467,9 @@ class MainWindow(gtk.Window):
         scale.connect("change-value", self.scale_change_value)
         vbox.pack_start(scale)
         self.scale = scale
-        
+
         oSpin = SpinBtn(conf.opacity*10, 0, 9,1,1)
-        oSpin.connect('value-changed', self.scale_opacity_change_value)        
+        oSpin.connect('value-changed', self.scale_opacity_change_value)
         vbox.pack_start(oSpin, False, True)
         return vbox
 
@@ -635,7 +637,7 @@ class MainWindow(gtk.Window):
         if (text[:6] == "error="):
             rect = self.drawing_area.get_allocation()
             self.drawing_area.draw_message(text[6:], 10, rect.height / 2, 'red')
-            time.sleep(2) 
+            time.sleep(2)
         self.export_panel.export_pbar.off()
         self.export_panel.export_box.show()
 
@@ -1179,6 +1181,14 @@ class MainWindow(gtk.Window):
             elif (panePos > intPos + 2):
                 pane.set_position(intPos + 2)
 
+    def load_tracks(self, tracks):
+        if (len(tracks) > 0):
+            for track in tracks:
+                dtrack = openGPX(track)
+                if dtrack:
+                    self.tracks.extend(dtrack)
+                    self.shown_tracks.extend(dtrack)            
+
     def __init__(self, parent=None, config_path=None):
         self.conf = MapConf(config_path)
         self.crossPixbuf = mapPixbuf.cross()
@@ -1281,6 +1291,7 @@ class MainWindow(gtk.Window):
         self.entry.grab_focus()
         if self.conf.auto_refresh > 0:
             gobject.timeout_add(self.conf.auto_refresh, self.refresh)
+        self.load_tracks(fileUtils.get_tracks())
 
 
 def main(conf_path):
