@@ -125,8 +125,8 @@ class DrawingArea(gtk.DrawingArea):
     def draw_tracks(self, conf, tracks, zl, track_width, draw_distance=False):
         if not self.trackThreadInst:
             self.set_track_gc('blue')
-            self.trackThreadInst = self.TrackThread(self, self.track_gc,
-                conf.units, tracks, zl, track_width, draw_distance)
+            self.trackThreadInst = self.TrackThread(self, self.track_gc, conf.units, 
+                tracks, zl, track_width, conf.draw_track_start_end, draw_distance)
             self.trackThreadInst.start()
         else:
             update_all = False
@@ -163,7 +163,7 @@ class DrawingArea(gtk.DrawingArea):
             self.markerTimer.start()
 
     class TrackThread(Thread):
-        def __init__(self, da, gc, unit, tracks, zl, track_width, draw_distance=False):
+        def __init__(self, da, gc, unit, tracks, zl, track_width, draw_start_end, draw_distance):
             Thread.__init__(self)
             self.da = da
             self.gc = gc
@@ -172,6 +172,7 @@ class DrawingArea(gtk.DrawingArea):
             self.tracks = tracks
             self.zl = zl
             self.track_width = track_width
+            self.draw_start_end = draw_start_end
             self.draw_distance = draw_distance
             self.screen_coords = {}
             self.update = Event()
@@ -204,7 +205,7 @@ class DrawingArea(gtk.DrawingArea):
             self.__stop.set()
             self.update.set()
 
-        def draw_line(self, track, track_color, zl, draw_start_end=True):
+        def draw_line(self, track, track_color, zl):
             coord_to_screen_f = self.da.coord_to_screen
 
             def do_draw(ini, end, dist_str=None):
@@ -264,7 +265,7 @@ class DrawingArea(gtk.DrawingArea):
                     if ini and end:
                         do_draw(ini, end, dist_str)
 
-            if draw_start_end:
+            if self.draw_start_end:
                 if track.distance:
                     distance = mapUtils.convertUnits(UNIT_TYPE_KM, self.unit, track.distance)
                     text = '%s - %.2f %s' % (track.name, distance, DISTANCE_UNITS[self.unit])
