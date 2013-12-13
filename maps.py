@@ -743,7 +743,8 @@ class MainWindow(gtk.Window):
                     # Calculate the angular displacement squared of the mouse coord to the marker coords
                     markerDisp2 = (self.marker.positions[markerName][0] - coord[0]) ** 2 + (self.marker.positions[markerName][1] - coord[1]) ** 2
                     markerDisp2_list.append((markerDisp2, markerName))
-                self.status_bar.text("Nearest marker:    " + str(sorted(markerDisp2_list)[0][1]))
+                if (len(markerDisp2_list) > 0):
+                    self.status_bar.text("Nearest marker:    " + str(sorted(markerDisp2_list)[0][1]))
 
             # Right-Click event shows the popUp menu
             elif event.button == 3 and not (event.state & gtk.gdk.CONTROL_MASK):
