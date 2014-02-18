@@ -124,10 +124,11 @@ def gtk_menu(listItems, activate_action):
     myMenu = gtk.Menu()
     for thestr in listItems:
         # An empty item inserts a separator
-        if thestr == "":
-            menu_items = gtk.MenuItem()
-        else:
-            menu_items = gtk.MenuItem(thestr)
+        if thestr != "-":
+            if thestr == "":
+                menu_items = gtk.MenuItem()
+            else:
+                menu_items = gtk.MenuItem(thestr)
         myMenu.append(menu_items)
         menu_items.connect("activate", activate_action, thestr)
         menu_items.show()

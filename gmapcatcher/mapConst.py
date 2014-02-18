@@ -39,7 +39,7 @@ MAP_SERVERS = [
     "Virtual Earth", "Yandex",
     "Seznam", "Seznam Turistická", "Seznam Cyklo", "Seznam Historická",
     "Stamen", "Refuges Europe", "OpenSeaMap", "Eniro", "Nokia",
-    "SkyVector World VFR", "SkyVector World Lo", "SkyVector World Hi", 
+    "SkyVector World VFR", "SkyVector World Lo", "SkyVector World Hi",
     "Maps-For-Free"
 ]
 
@@ -104,6 +104,8 @@ GPS_DIRECTIONS = 12
 DA_MENU = ["Zoom In", "Zoom Out", "Center map here", "Reset",
         "", "Batch Download", "Export Map", "Add Marker",
         "", "Copy Location", "Copy GPS", "", "Directions from GPS to here"]
+DA_MENU_LIM = ["Zoom In", "Zoom Out", "Center map here", "Reset",
+        "", "-", "-", "Add Marker", "-", "-", "-", "-", "-"]
 
 REPOS_TYPE_FILES = 0
 REPOS_TYPE_SQLITE3 = 1

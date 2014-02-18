@@ -485,7 +485,10 @@ class MainWindow(gtk.Window):
         da.add_events(gtk.gdk.POINTER_MOTION_MASK)
         da.connect('motion-notify-event', self.da_motion)
 
-        menu = gtk_menu(DA_MENU, self.menu_item_response)
+        if self.conf.limited:
+            menu = gtk_menu(DA_MENU_LIM, self.menu_item_response)
+        else:
+            menu = gtk_menu(DA_MENU, self.menu_item_response)
         da.connect_object("event", self.da_click_events, menu)
 
         return self.drawing_area
@@ -1094,7 +1097,7 @@ class MainWindow(gtk.Window):
                 self.drawing_area.repaint()
                 self.drawing_area.da_set_cursor()
                 self.Ruler = not self.Ruler
-            
+
     ## All the refresh operations
     def refresh(self, *args):
         zl = self.get_zoom()
