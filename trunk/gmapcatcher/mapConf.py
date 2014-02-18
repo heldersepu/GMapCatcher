@@ -55,6 +55,7 @@ class MapConf():
         config.set(SECTION_INIT, 'hide_map_servers', self.hide_map_servers)
         config.set(SECTION_INIT, 'units', self.units)
         config.set(SECTION_INIT, 'start_offline', self.start_offline)
+        config.set(SECTION_INIT, 'limited', self.limited)
 
         config.add_section(SECTION_MAP)
         config.set(SECTION_MAP, 'zoom', self.init_zoom)
@@ -151,6 +152,8 @@ class MapConf():
         self.units = read_config('units', 0, int)
         ## Start offline (default = Yes)
         self.start_offline = read_config('start_offline', 1, int)
+        ## limited capabilities (default = No)
+        self.limited = read_config('limited', 0, int)
 
         ## Initial map zoom, default is MAP_MAX_ZOOM_LEVEL-2
         self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL - 2, int, SECTION_MAP)
@@ -188,7 +191,7 @@ class MapConf():
         ## Initial map opacity
         self.opacity = read_config('opacity', 0.0, float, SECTION_MAP)
         ## Initial map opacity
-        self.draw_track_start_end = read_config('draw_track_start_end', 0, int, SECTION_MAP)        
+        self.draw_track_start_end = read_config('draw_track_start_end', 0, int, SECTION_MAP)
 
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float, SECTION_GPS)

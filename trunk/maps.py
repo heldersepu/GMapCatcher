@@ -932,31 +932,31 @@ class MainWindow(gtk.Window):
                 self.unfullscreen()
                 self.set_decorated(True)
                 self.set_keep_above(False)
-
-        # F12 = 65481
-        elif keyval == 65481:
-            self.export_panel.hide()
-            self.export_panel.export_pbar.off()
-            if self.get_border_width() > 0:
-                self.left_panel.hide()
-                self.top_panel.hide()
-                self.set_border_width(0)
-            else:
+        elif not self.conf.limited:
+            # F12 = 65481
+            if keyval == 65481:
+                self.export_panel.hide()
+                self.export_panel.export_pbar.off()
+                if self.get_border_width() > 0:
+                    self.left_panel.hide()
+                    self.top_panel.hide()
+                    self.set_border_width(0)
+                else:
+                    self.left_panel.show()
+                    self.top_panel.show()
+                    self.set_border_width(10)
+                self.update_export()
+            # ESC = 65307
+            elif keyval == 65307:
+                self.unfullscreen()
+                self.export_panel.hide()
+                self.export_panel.export_pbar.off()
                 self.left_panel.show()
                 self.top_panel.show()
                 self.set_border_width(10)
-            self.update_export()
-        # ESC = 65307
-        elif keyval == 65307:
-            self.unfullscreen()
-            self.export_panel.hide()
-            self.export_panel.export_pbar.off()
-            self.left_panel.show()
-            self.top_panel.show()
-            self.set_border_width(10)
-            self.set_keep_above(False)
-            self.set_decorated(True)
-            self.update_export()
+                self.set_keep_above(False)
+                self.set_decorated(True)
+                self.update_export()
 
     ## Handles the keyboard navigation
     def navigation(self, keyval, zoom):
@@ -1010,87 +1010,91 @@ class MainWindow(gtk.Window):
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
-        # Q = 113,81 W = 87,119
-        if (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [113, 81, 87, 119]:
-            self.on_delete()
-            self.destroy()
-        # F1 = 65471  Help
-        elif event.keyval == 65470:
-            webbrowser_open(WEB_ADDRESS)
-        # F2 = 65471
-        elif event.keyval == 65471:
-            self.show_export()
-        # F3 == 65472
-        elif event.keyval == 65472:
-            self.gps_window_clicked()
-        # F4 = 65473
-        elif event.keyval == 65473:
-            fileName = FileChooser(USER_PATH, 'Select KML File to import')
-            if fileName:
-                kmlResponse = kml_to_markers(fileName, self.marker)
-                if kmlResponse:
-                    error_msg(self, "There was an error importing: \n" +
-                        "\n" + str(type(kmlResponse)) +
-                        "\n" + str(kmlResponse))
         # F5 = 65474
         elif event.keyval == 65474:
             self.refresh()
-        # F6 = 65475
-        elif event.keyval == 65475:
-            if not(self.export_panel.flags() & gtk.VISIBLE):
-                self.visual_dlconfig['active'] = \
-                    not self.visual_dlconfig.get('active', False)
-                self.visual_dltool.set_active(
-                        self.visual_dlconfig.get('active', False))
-                if not self.visual_dlconfig.get('downloader', False):
-                    self.visual_dlconfig['downloader'] = \
-                            MapDownloader(self.ctx_map, self.conf.maxthreads)
-                self.drawing_area.repaint()
-        # F7 = 65476 for Ruler
-        elif event.keyval == 65476:
-            if not self.Ruler:
-                self.total_dist = 0.00
-                self.ruler_coord = list()
-                self.drawing_area.da_set_cursor(gtk.gdk.PENCIL)
-                self.status_bar.text("Ruler Mode - Click for Starting Point")
-                self.Ruler = not self.Ruler
-            else:
-                rulerOff = False
-                if len(self.ruler_coord) > 1:
-                    confirm = user_confirm(self, 'Do you want to use ruler as track?')
-                    if len(self.ruler_coord) > 1 and confirm == gtk.RESPONSE_YES:
-                        track = mapUtils.Track(self.ruler_coord, 'Ruler %i' % self.rulers)
-                        self.tracks.append(track)
-                        self.shown_tracks.append(track)
-                        self.rulers += 1
-                        rulerOff = True
-                        if self.trackw:
-                            self.trackw.update_widgets()
-                    elif confirm != gtk.RESPONSE_CANCEL:
-                        rulerOff = True
-                else:
-                    rulerOff = True
-                if rulerOff:
-                    self.status_bar.text("Ruler Mode switched off")
-                    self.ruler_coord = []
+        # Q = 113,81 W = 87,119
+        elif (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [113, 81, 87, 119]:
+            self.on_delete()
+            self.destroy()
+        elif not self.conf.limited:
+            # F1 = 65471  Help
+            if event.keyval == 65470:
+                webbrowser_open(WEB_ADDRESS)
+            # F2 = 65471
+            elif event.keyval == 65471:
+                self.show_export()
+            # F3 == 65472
+            elif event.keyval == 65472:
+                self.gps_window_clicked()
+            # F4 = 65473
+            elif event.keyval == 65473:
+                fileName = FileChooser(USER_PATH, 'Select KML File to import')
+                if fileName:
+                    kmlResponse = kml_to_markers(fileName, self.marker)
+                    if kmlResponse:
+                        error_msg(self, "There was an error importing: \n" +
+                            "\n" + str(type(kmlResponse)) +
+                            "\n" + str(kmlResponse))
+            # F6 = 65475
+            elif event.keyval == 65475:
+                if not(self.export_panel.flags() & gtk.VISIBLE):
+                    self.visual_dlconfig['active'] = \
+                        not self.visual_dlconfig.get('active', False)
+                    self.visual_dltool.set_active(
+                            self.visual_dlconfig.get('active', False))
+                    if not self.visual_dlconfig.get('downloader', False):
+                        self.visual_dlconfig['downloader'] = \
+                                MapDownloader(self.ctx_map, self.conf.maxthreads)
                     self.drawing_area.repaint()
-                    self.drawing_area.da_set_cursor()
-                    self.Ruler = not self.Ruler
-        # F8 = 65477
-        elif event.keyval == 65477:
-            self.track_control_clicked()
-        # F9 = 65478
-        elif event.keyval == 65478:
-            self.showMarkers = not self.showMarkers
-            self.drawing_area.repaint()
-        # if Ruler is active, delete (65535) removes last element from ruler
-        elif event.keyval == 65535 and self.Ruler:
-            self.remove_last_ruler_segment()
+            # F7 = 65476 for Ruler
+            elif event.keyval == 65476:
+                self.doRuler()
+            # F8 = 65477
+            elif event.keyval == 65477:
+                self.track_control_clicked()
+            # F9 = 65478
+            elif event.keyval == 65478:
+                self.showMarkers = not self.showMarkers
+                self.drawing_area.repaint()
+            # if Ruler is active, delete (65535) removes last element from ruler
+            elif event.keyval == 65535 and self.Ruler:
+                self.remove_last_ruler_segment()
 
         # All Navigation Keys when in FullScreen
-        elif self.get_border_width() == 0:
+        if self.get_border_width() == 0:
             self.navigation(event.keyval, self.get_zoom())
 
+    def doRuler(self):
+        if not self.Ruler:
+            self.total_dist = 0.00
+            self.ruler_coord = list()
+            self.drawing_area.da_set_cursor(gtk.gdk.PENCIL)
+            self.status_bar.text("Ruler Mode - Click for Starting Point")
+            self.Ruler = not self.Ruler
+        else:
+            rulerOff = False
+            if len(self.ruler_coord) > 1:
+                confirm = user_confirm(self, 'Do you want to use ruler as track?')
+                if len(self.ruler_coord) > 1 and confirm == gtk.RESPONSE_YES:
+                    track = mapUtils.Track(self.ruler_coord, 'Ruler %i' % self.rulers)
+                    self.tracks.append(track)
+                    self.shown_tracks.append(track)
+                    self.rulers += 1
+                    rulerOff = True
+                    if self.trackw:
+                        self.trackw.update_widgets()
+                elif confirm != gtk.RESPONSE_CANCEL:
+                    rulerOff = True
+            else:
+                rulerOff = True
+            if rulerOff:
+                self.status_bar.text("Ruler Mode switched off")
+                self.ruler_coord = []
+                self.drawing_area.repaint()
+                self.drawing_area.da_set_cursor()
+                self.Ruler = not self.Ruler
+            
     ## All the refresh operations
     def refresh(self, *args):
         zl = self.get_zoom()
@@ -1290,13 +1294,18 @@ class MainWindow(gtk.Window):
         self.combo.default_entry()
         self.drawing_area.center = self.conf.init_center
         self.show_all()
+        if self.conf.limited:
+            self.left_panel.hide()
+            self.top_panel.hide()
+            self.set_border_width(0)
         if self.conf.save_at_close:
             self.move(self.conf.save_hlocation, self.conf.save_vlocation)
         if self.conf.statusbar_type == STATUS_NONE:
             self.status_bar.hide()
         self.export_panel.hide()
         self.drawing_area.da_set_cursor()
-        self.entry.grab_focus()
+        if not self.conf.limited:
+            self.entry.grab_focus()
         if self.conf.auto_refresh > 0:
             gobject.timeout_add(self.conf.auto_refresh, self.refresh)
 
