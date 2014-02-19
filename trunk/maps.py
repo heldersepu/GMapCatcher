@@ -1302,7 +1302,7 @@ class MainWindow(gtk.Window):
             self.top_panel.hide()
             self.set_border_width(0)
             self.maximize()
-        if self.conf.save_at_close:
+        elif self.conf.save_at_close:
             self.move(self.conf.save_hlocation, self.conf.save_vlocation)
         if self.conf.statusbar_type == STATUS_NONE:
             self.status_bar.hide()
