@@ -7,7 +7,7 @@ import gtk
 
 ## This is the status bar widget 
 class StatusBar(gtk.Statusbar):
-    DEFAULT_TEXT = "GMapCatcher map viewer!"
+    DEFAULT_TEXT = ""
     context_id = None
 
     def __init__(self):
@@ -24,7 +24,7 @@ class StatusBar(gtk.Statusbar):
         self.push(self.context_id, strText)
 
     def coordinates(self, lat, lon):
-        self.text("Latitude: " + str(round(lat, 6)) + " Longitude: " + str(round(lon, 6)))
+        self.text("     Lat: " + str(round(lat, 6)) + "  Lon: " + str(round(lon, 6)))
 
     def distance(self, z, dUnits, total_dist):
         self.text("Segment Distance = %.3f %s, Total distance = %.3f %s" % (z, dUnits, total_dist, dUnits))
