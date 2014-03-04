@@ -76,6 +76,8 @@ class MapConf():
         config.set(SECTION_MAP, 'overlay_delay', self.overlay_delay)
         config.set(SECTION_MAP, 'opacity', self.opacity)
         config.set(SECTION_MAP, 'draw_track_start_end', self.draw_track_start_end)
+        config.set(SECTION_MAP, 'max_zoom', self.max_zoom)
+        config.set(SECTION_MAP, 'min_zoom', self.min_zoom)
 
         config.add_section(SECTION_GPS)
         config.set(SECTION_GPS, 'max_gps_zoom', self.max_gps_zoom)
@@ -133,7 +135,7 @@ class MapConf():
         ## Statusbar type, default is STATUS_NONE
         self.statusbar_type = read_config('statusbar_type', STATUS_NONE, int)
         ## save width/height/layer/location at close, default is SAVE_AT_CLOSE
-        self.save_at_close = read_config('save_at_close', 0, int)
+        self.save_at_close = read_config('save_at_close', 1, int)
         ## layer when saved at close
         self.save_layer = read_config('save_layer', LAYER_SAT, int)
         ## location when saved at close
@@ -191,6 +193,8 @@ class MapConf():
         self.opacity = read_config('opacity', 0.0, float, SECTION_MAP)
         ## Initial map opacity
         self.draw_track_start_end = read_config('draw_track_start_end', 0, int, SECTION_MAP)
+        self.max_zoom = read_config('max_zoom', MAP_MAX_ZOOM_LEVEL - 2, int, SECTION_MAP)
+        self.min_zoom = read_config('min_zoom', MAP_MIN_ZOOM_LEVEL, int, SECTION_MAP)
 
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float, SECTION_GPS)
@@ -218,7 +222,7 @@ class MapConf():
         ## User agent version
         self.version = read_config('version', VERSION, str, SECTION_AGENT)
         ## User agent webaddress
-        self.web_address = read_config('web_address', '', str, SECTION_AGENT)
+        self.web_address = read_config('web_address', 'http://www.aleppoltd.com/', str, SECTION_AGENT)
 
     ## Write the configuration to the default file
     def save(self):
