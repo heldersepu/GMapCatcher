@@ -1,0 +1,6 @@
+# You can change the GMapCatcher theme here!
+#
+#gtk-theme-name = "Industrial"
+#gtk-theme-name = "XFCE-4.2"
+
+gtk-theme-name = "Clearlooks"

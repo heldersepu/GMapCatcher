@@ -1,0 +1,42 @@
+Index: control
+===================================================================
+--- control	(revision 912)
++++ control	(working copy)
+@@ -2,15 +2,15 @@
+ Section: web
+ Priority: optional
+ Maintainer: Mark Benjamin <MarkieB.lists.20090330@gmail.com>
+-Build-Depends: cdbs, debhelper (>= 7), python (>= 2.5), python-support (>= 0.5.3)
+-Standards-Version: 3.9.0
++Build-Depends: cdbs, debhelper (>= 6), python (>= 2.5), python-support (>= 0.5.3)
++Standards-Version: 3.7.3
+ Homepage: http://code.google.com/p/gmapcatcher
+ 
+ Package: mapcatcher
+ Architecture: all
+ Depends: ${misc:Depends}, python (>= 2.5), ${python:Depends}, python-gtk2
+ XS-Python-Version: current, >= 2.5
+-Description: GMapCatcher is an offline maps viewer.
++Description: GMapCatcher is an offline maps viewer
+  It downloads tiles automatically from many providers then displays
+  them using a custom GUI. User may view maps offline. GMapCatcher is
+  independent of map providers' javascript so should work even though 
+Index: compat
+===================================================================
+--- compat	(revision 912)
++++ compat	(working copy)
+@@ -1 +1 @@
+-7
++6
+Index: changelog
+===================================================================
+--- changelog	(revision 912)
++++ changelog	(working copy)
+@@ -1,5 +1,5 @@
+-mapcatcher (0.7.5.0-1) unstable; urgency=low
++mapcatcher (0.7.5.0-0) unstable; urgency=low
+ 
+-  * Initial release (closes: #589254)
++  * Initial release (closes: #0)
+ 
+  -- Mark Benjamin <MarkieB.lists.20090330@gmail.com>  Sun, 22 Aug 2010 20:33:40 +0200

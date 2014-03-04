@@ -1,0 +1,17 @@
+Source: mapcatcher
+Section: web
+Priority: optional
+Maintainer: Mark Benjamin <MarkieB.lists.20090330@gmail.com>
+Build-Depends: cdbs, debhelper (>= 7), python (>= 2.5), python-support (>= 0.5.3)
+Standards-Version: 3.9.0
+Homepage: http://code.google.com/p/gmapcatcher
+
+Package: mapcatcher
+Architecture: all
+Depends: ${misc:Depends}, python (>= 2.5), ${python:Depends}, python-gtk2, python-serial, python-lxml
+XS-Python-Version: current, >= 2.5
+Description: GMapCatcher is an offline maps viewer.
+ It downloads tiles automatically from many providers then displays
+ them using a custom GUI. User may view maps offline. GMapCatcher is
+ independent of map providers' javascript so should work even though 
+ the scripts may change. It also provides a downloading tool. 

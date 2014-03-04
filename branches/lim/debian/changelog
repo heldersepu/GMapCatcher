@@ -1,0 +1,23 @@
+mapcatcher (0.8.0.4-1) unstable; urgency=low
+
+  * Update to r1585
+
+ -- Kimmo Huoman <kipenroskaposti@gmail.com>  Fri, 19 Jul 2013 11:15:00 +0300
+
+mapcatcher (0.8.0.3-1) unstable; urgency=low
+
+  * Update to r1582
+
+ -- Kimmo Huoman <kipenroskaposti@gmail.com>  Fri, 19 Jul 2013 09:15:00 +0300
+
+mapcatcher (0.8.0.0-1) unstable; urgency=low
+
+  * Update to r1451
+
+ -- Kimmo Huoman <kipenroskaposti@gmail.com>  Mon, 08 Oct 2012 20:02:40 +0300
+
+mapcatcher (0.7.5.0-1) unstable; urgency=low
+
+  * Initial release (closes: #589254)
+
+ -- Mark Benjamin <MarkieB.lists.20090330@gmail.com>  Sun, 22 Aug 2010 20:33:40 +0200
