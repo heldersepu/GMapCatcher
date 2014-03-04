@@ -5,10 +5,10 @@
 import os
 import locale
 
-NAME = "GMapCatcher"
-VERSION = "0.8.0.5"
+NAME = "Aleppo"
+VERSION = "1.0"
 VERSION_NAME = ""
-WEB_ADDRESS = "http://GMapCatcher.GoogleCode.com"
+WEB_ADDRESS = "http://www.aleppoltd.com/"
 
 GOOGLE = 0
 OSM = 1
@@ -155,7 +155,7 @@ SECTION_AGENT = 'agent'
 R_EARTH = 6371.
 
 USER_PATH = unicode(os.path.expanduser("~"), locale.getpreferredencoding())
-DEFAULT_PATH = os.path.join(USER_PATH, ".GMapCatcher")
+DEFAULT_PATH = os.path.join(USER_PATH, ".Aleppo")
 
 LANGUAGES = ["en", "es", "zh"]
 

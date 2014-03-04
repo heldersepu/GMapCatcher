@@ -18,7 +18,7 @@ class MapConf():
         # the config file must be found at DEFAULT_PATH
         configpath = DEFAULT_PATH
         fileUtils.check_dir(configpath)
-        configpath = os.path.join(configpath, 'gmapcatcher-lim.conf')
+        configpath = os.path.join(configpath, 'AleppoMap.conf')
         return configpath
 
     ## Initialise all variables.
@@ -125,16 +125,15 @@ class MapConf():
         ## Repository type - filebased / sqlite3
         self.repository_type = read_config('repository_type', 0, int)
         ## URL with the latest version used for the notification updates.
-        self.version_url = read_config('version_url',
-            'http://gmapcatcher.googlecode.com/svn/wiki/version.wiki', str)
+        self.version_url = read_config('version_url', '', str)
         ## Whether or not to check for updates, default is True (1)
-        self.check_for_updates = read_config('check_for_updates', 1, int)
+        self.check_for_updates = read_config('check_for_updates', 0, int)
         ## oneDirPerMap setting, default is False
         self.oneDirPerMap = read_config('oneDirPerMap', 0, int)
         ## Statusbar type, default is STATUS_NONE
         self.statusbar_type = read_config('statusbar_type', STATUS_NONE, int)
         ## save width/height/layer/location at close, default is SAVE_AT_CLOSE
-        self.save_at_close = read_config('save_at_close', 1, int)
+        self.save_at_close = read_config('save_at_close', 0, int)
         ## layer when saved at close
         self.save_layer = read_config('save_layer', LAYER_SAT, int)
         ## location when saved at close
@@ -156,17 +155,17 @@ class MapConf():
         self.limited = read_config('limited', 1, int)
 
         ## Initial map zoom, default is MAP_MAX_ZOOM_LEVEL-2
-        self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL - 3, int, SECTION_MAP)
+        self.init_zoom = read_config('zoom', 6, int, SECTION_MAP)
         ## language setting, default is 'en'
         self.language = read_config('language', 'en', str, SECTION_MAP)
         ## Initial map center, default is ((1, 1), (210, 170))
-        self.init_center = read_config('center', ((3, 3), (200, 100)), str_to_tuple, SECTION_MAP)
+        self.init_center = read_config('center', ((1222, 831), (152, 33)), str_to_tuple, SECTION_MAP)
         ## Show a small cross in the center of the map, default is False (0)
         self.show_cross = read_config('show_cross', 0, int, SECTION_MAP)
         ## Map service to get images, default is Nokia
         self.map_service = read_config('map_service', MAP_SERVERS[NOKIA], str, SECTION_MAP)
         ## cloudMade API key
-        self.cloudMade_API = read_config('cloudmade_api', '333d990d389d5e65a7714dd738b2fc77', str, SECTION_MAP)
+        self.cloudMade_API = read_config('cloudmade_api', '', str, SECTION_MAP)
         ## Initial style ID for the CloudMade maps
         self.cloudMade_styleID = read_config('cloudmade_styleid', 1, int, SECTION_MAP)
         ## Visibility of the scale
@@ -215,11 +214,11 @@ class MapConf():
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int, SECTION_GPS)
 
         ## User agent name
-        self.name = read_config('name', NAME, str, SECTION_AGENT)
+        self.name = read_config('name', 'Aleppo', str, SECTION_AGENT)
         ## User agent version
         self.version = read_config('version', VERSION, str, SECTION_AGENT)
         ## User agent webaddress
-        self.web_address = read_config('web_address', WEB_ADDRESS, str, SECTION_AGENT)
+        self.web_address = read_config('web_address', '', str, SECTION_AGENT)
 
     ## Write the configuration to the default file
     def save(self):
