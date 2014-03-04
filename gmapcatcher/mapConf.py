@@ -18,7 +18,7 @@ class MapConf():
         # the config file must be found at DEFAULT_PATH
         configpath = DEFAULT_PATH
         fileUtils.check_dir(configpath)
-        configpath = os.path.join(configpath, 'gmapcatcher.conf')
+        configpath = os.path.join(configpath, 'gmapcatcher-lim.conf')
         return configpath
 
     ## Initialise all variables.
@@ -136,7 +136,7 @@ class MapConf():
         ## save width/height/layer/location at close, default is SAVE_AT_CLOSE
         self.save_at_close = read_config('save_at_close', 1, int)
         ## layer when saved at close
-        self.save_layer = read_config('save_layer', LAYER_MAP, int)
+        self.save_layer = read_config('save_layer', LAYER_SAT, int)
         ## location when saved at close
         self.save_hlocation = read_config('save_hlocation', 0, int)
         self.save_vlocation = read_config('save_vlocation', 0, int)
@@ -153,14 +153,14 @@ class MapConf():
         ## Start offline (default = Yes)
         self.start_offline = read_config('start_offline', 1, int)
         ## limited capabilities (default = No)
-        self.limited = read_config('limited', 0, int)
+        self.limited = read_config('limited', 1, int)
 
         ## Initial map zoom, default is MAP_MAX_ZOOM_LEVEL-2
-        self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL - 2, int, SECTION_MAP)
+        self.init_zoom = read_config('zoom', MAP_MAX_ZOOM_LEVEL - 3, int, SECTION_MAP)
         ## language setting, default is 'en'
         self.language = read_config('language', 'en', str, SECTION_MAP)
         ## Initial map center, default is ((1, 1), (210, 170))
-        self.init_center = read_config('center', ((1, 1), (210, 170)), str_to_tuple, SECTION_MAP)
+        self.init_center = read_config('center', ((3, 3), (200, 100)), str_to_tuple, SECTION_MAP)
         ## Show a small cross in the center of the map, default is False (0)
         self.show_cross = read_config('show_cross', 0, int, SECTION_MAP)
         ## Map service to get images, default is Nokia

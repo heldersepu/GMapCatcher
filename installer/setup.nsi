@@ -1,4 +1,4 @@
-!define PRODUCT_NAME "GMapCatcher"
+!define PRODUCT_NAME "GMapCatcher-Lim"
 !define PRODUCT_VERSION "0.8.0.5"
 !define PRODUCT_WEB_SITE "http://code.google.com/p/gmapcatcher/"
 !include nsDialogs.nsh
@@ -7,7 +7,7 @@
 Name "${PRODUCT_NAME}"
 
 ; The file to write
-OutFile "${PRODUCT_NAME}-${PRODUCT_VERSION}.exe"
+OutFile "${PRODUCT_NAME}.exe"
 
 ; Set the compression algorithm
 SetCompressor /FINAL /SOLID lzma
@@ -138,7 +138,7 @@ Section "${PRODUCT_NAME} (required)"
     WriteUninstaller "uninstall.exe"
 
     ; Change the permissions of the install directory
-    AccessControl::GrantOnFile "$INSTDIR" "(BU)" "FullAccess"
+    ;AccessControl::GrantOnFile "$INSTDIR" "(BU)" "FullAccess"
 
     ; Move the ".GMapCatcher" folder to the %UserProfile% (if it does not already exist)
     ; Change the permissions of the ".GMapCatcher" folder
@@ -149,7 +149,7 @@ Section "${PRODUCT_NAME} (required)"
 
     IfFileExists "$PROFILE\.GMapCatcher\*.*" +3 0
         Rename "$INSTDIR\.GMapCatcher\*.*" "$PROFILE\.GMapCatcher"
-        AccessControl::GrantOnFile "$PROFILE\.GMapCatcher" "(BU)" "FullAccess"
+        ;AccessControl::GrantOnFile "$PROFILE\.GMapCatcher" "(BU)" "FullAccess"
 
     CopyFiles /SILENT "$INSTDIR\.GMapCatcher\*.*" "$PROFILE\.GMapCatcher" 1024
 
