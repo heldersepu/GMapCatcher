@@ -67,18 +67,18 @@ class MainWindow(gtk.Window):
 
     ## Zoom to the given pointer
     def do_zoom(self, zoom, current_zoom, doForce=False, dPointer=False):
-        if zoom < self.map_min_zoom:
-            zoom = self.map_min_zoom
-        elif zoom > self.map_max_zoom:
-            zoom = self.map_max_zoom
+        if zoom < self.conf.min_zoom:
+            zoom = self.conf.min_zoom
+        elif zoom > self.conf.max_zoom:
+            zoom = self.conf.max_zoom
         while zoom in self.map_skip_zooms:
             if zoom < current_zoom:
                 zoom -= 1
-                if zoom == self.map_min_zoom:
+                if zoom == self.conf.min_zoom:
                     break
             else:
                 zoom += 1
-                if zoom == self.map_max_zoom:
+                if zoom == self.conf.max_zoom:
                     break
         self.drawing_area.do_scale(zoom, current_zoom, doForce, dPointer)
         self.scale.set_value(zoom)
@@ -386,9 +386,6 @@ class MainWindow(gtk.Window):
         self.credits_menuitem.connect('activate', self.view_credits)
         self.credits_menuitem.show()
         button.connect_object("event", self.tools_button_event, menu)
-        button.props.has_tooltip = True
-        button.connect("query-tooltip", myToolTip, "Tools",
-                    "Set of tools to customise GMapCatcher", "marker.png")
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
@@ -1286,7 +1283,7 @@ class MainWindow(gtk.Window):
         self.add(vbox)
 
         self.connect('focus-in-event', self.focus_in_event)
-        self.set_title(" GMapCatcher ")
+        self.set_title(" Aleppo Systems ")
         self.set_border_width(10)
         self.set_size_request(450, 450)
         if self.conf.save_at_close:

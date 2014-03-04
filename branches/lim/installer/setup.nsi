@@ -1,6 +1,6 @@
-!define PRODUCT_NAME "GMapCatcher-Lim"
-!define PRODUCT_VERSION "0.8.0.5"
-!define PRODUCT_WEB_SITE "http://code.google.com/p/gmapcatcher/"
+!define PRODUCT_NAME "Aleppo_Map"
+!define PRODUCT_VERSION "1.0"
+!define PRODUCT_WEB_SITE "http://www.aleppoltd.com/"
 !include nsDialogs.nsh
 
 ; The name of the installer
@@ -27,7 +27,7 @@ RequestExecutionLevel admin
 ;Version Information
 VIProductVersion "${PRODUCT_VERSION}"
 VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
-VIAddVersionKey "Comments" "GMapCatcher is an offline map viewer. It downloads map tiles automatically, display them using a specific GUI. User can view maps offline."
+VIAddVersionKey "Comments" ""
 VIAddVersionKey "LegalCopyright" "${PRODUCT_WEB_SITE}"
 VIAddVersionKey "FileDescription" "Offline Map Viewer"
 VIAddVersionKey "FileVersion" "${PRODUCT_VERSION}"
@@ -57,9 +57,9 @@ Function finalPage
 
 	nsDialogs::Create 1018
 	Pop $0
-	${NSD_CreateLabel} 75u 30u 80% 8u "GMapCatcher was succesfully installed on your computer."
+	${NSD_CreateLabel} 75u 30u 80% 8u "Aleppo Map was succesfully installed on your computer."
 	Pop $0
-	${NSD_CreateCheckbox} 80u 50u 50% 8u "Run GMapCatcher v${PRODUCT_VERSION}"
+	${NSD_CreateCheckbox} 80u 50u 50% 8u "Run Aleppo Map v${PRODUCT_VERSION}"
 	Pop $CHECKBOX
     SendMessage $CHECKBOX ${BM_SETCHECK} ${BST_CHECKED} 0
     GetFunctionAddress $1 OnCheckbox
@@ -94,7 +94,7 @@ Function un.finalPage
 
 	nsDialogs::Create 1018
 	Pop $0
-	${NSD_CreateLabel} 50u 30u 80% 8u "GMapCatcher was uninstalled from your computer."
+	${NSD_CreateLabel} 50u 30u 80% 8u "Aleppo Map was uninstalled from your computer."
 	Pop $0
 	${NSD_CreateCheckbox} 60u 50u 50% 8u "Remove all downloaded images"
 	Pop $CHECKBOX
@@ -137,21 +137,8 @@ Section "${PRODUCT_NAME} (required)"
     WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "NoRepair" 1
     WriteUninstaller "uninstall.exe"
 
-    ; Change the permissions of the install directory
-    ;AccessControl::GrantOnFile "$INSTDIR" "(BU)" "FullAccess"
 
-    ; Move the ".GMapCatcher" folder to the %UserProfile% (if it does not already exist)
-    ; Change the permissions of the ".GMapCatcher" folder
-    IfFileExists "$PROFILE\.googlemaps\gmapcatcher.conf" 0 +4
-        DetailPrint "Renaming .googlemaps to .GMapCatcher"
-        Rename "$PROFILE\.googlemaps\gmapcatcher.conf" "$PROFILE\.googlemaps\gmapcatcher.conf.old"
-        Rename "$PROFILE\.googlemaps\*.*" "$PROFILE\.GMapCatcher"
-
-    IfFileExists "$PROFILE\.GMapCatcher\*.*" +3 0
-        Rename "$INSTDIR\.GMapCatcher\*.*" "$PROFILE\.GMapCatcher"
-        ;AccessControl::GrantOnFile "$PROFILE\.GMapCatcher" "(BU)" "FullAccess"
-
-    CopyFiles /SILENT "$INSTDIR\.GMapCatcher\*.*" "$PROFILE\.GMapCatcher" 1024
+    Rename /SILENT "$INSTDIR\.Aleppo\*.*" "$PROFILE\.Aleppo" 1024
 
     ; Check if VC++ 2008 runtimes are already installed:
     ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}" "DisplayName"
