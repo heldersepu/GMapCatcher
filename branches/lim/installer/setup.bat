@@ -18,11 +18,11 @@
 :: clean up before starting
 @DEL *.exe
 @CD ..
+@RD dist /s /q
+@RD build /s /q
 @DEL *.exe
 @DEL *.pyc /s
 @DEL *.bak /s
-@RD dist /s /q
-@RD build /s /q
 
 @ECHO.
 @ECHO.

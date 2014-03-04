@@ -59,6 +59,8 @@ class MapConf():
 
         config.add_section(SECTION_MAP)
         config.set(SECTION_MAP, 'zoom', self.init_zoom)
+        config.set(SECTION_MAP, 'max_zoom', self.max_zoom)
+        config.set(SECTION_MAP, 'min_zoom', self.min_zoom)
         config.set(SECTION_MAP, 'language', self.language)
         config.set(SECTION_MAP, 'center', self.init_center)
         config.set(SECTION_MAP, 'show_cross', self.show_cross)
@@ -76,8 +78,6 @@ class MapConf():
         config.set(SECTION_MAP, 'overlay_delay', self.overlay_delay)
         config.set(SECTION_MAP, 'opacity', self.opacity)
         config.set(SECTION_MAP, 'draw_track_start_end', self.draw_track_start_end)
-        config.set(SECTION_MAP, 'max_zoom', self.max_zoom)
-        config.set(SECTION_MAP, 'min_zoom', self.min_zoom)
 
         config.add_section(SECTION_GPS)
         config.set(SECTION_GPS, 'max_gps_zoom', self.max_gps_zoom)

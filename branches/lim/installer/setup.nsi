@@ -1,5 +1,5 @@
 !define PRODUCT_NAME "Aleppo_Map"
-!define PRODUCT_VERSION "1.0"
+!define PRODUCT_VERSION "1.0.0.0"
 !define PRODUCT_WEB_SITE "http://www.aleppoltd.com/"
 !include nsDialogs.nsh
 
@@ -113,7 +113,7 @@ Function un.OnCheckbox
 FunctionEnd
 Function un.onUninstSuccess
     ${If} $boolCHECKBOX == "True"
-        RMDir /r "$PROFILE\.googlemaps"
+        RMDir /r "$PROFILE\.Aleppo"
     ${EndIf}
 FunctionEnd
 
@@ -138,7 +138,7 @@ Section "${PRODUCT_NAME} (required)"
     WriteUninstaller "uninstall.exe"
 
 
-    Rename /SILENT "$INSTDIR\.Aleppo\*.*" "$PROFILE\.Aleppo" 1024
+    Rename "$INSTDIR\.Aleppo\*.*" "$PROFILE\.Aleppo"
 
     ; Check if VC++ 2008 runtimes are already installed:
     ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}" "DisplayName"

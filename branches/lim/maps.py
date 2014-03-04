@@ -1007,6 +1007,8 @@ class MainWindow(gtk.Window):
 
     ## Handles the Key pressing
     def key_press_event(self, w, event):
+        print "KEY = " + str(event.keyval)
+        self.status_bar.text("KEY = " + str(event.keyval))
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
