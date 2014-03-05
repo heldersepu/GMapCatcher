@@ -315,7 +315,7 @@ class MainWindow(gtk.Window):
                     self.drawing_area.repaint()
                 # Update the status bar with the GPS Coordinates
                 if self.conf.statusbar_type == STATUS_GPS and not self.Ruler:
-                    self.status_bar.coordinates(self.gps.gpsfix.latitude, self.gps.gpsfix.longitude)
+                    self.status_bar.coordinates(zl, self.gps.gpsfix.latitude, self.gps.gpsfix.longitude)
 
                 # Add to gps_points
                 if self.conf.gps_track:
@@ -785,7 +785,7 @@ class MainWindow(gtk.Window):
 
         if self.conf.statusbar_type == STATUS_MOUSE and not self.Ruler:
             coord = self.pointer_to_world_coord((event.x, event.y))
-            self.status_bar.coordinates(coord[0], coord[1])
+            self.status_bar.coordinates(self.get_zoom(), coord[0], coord[1])
 
     def view_credits(self, menuitem):
         w = OurCredits()
