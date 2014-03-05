@@ -1,5 +1,5 @@
 !define PRODUCT_NAME "Aleppo_Map"
-!define PRODUCT_VERSION "1.0.0.0"
+!define PRODUCT_VERSION "1.2.6.0"
 !define PRODUCT_WEB_SITE "http://www.aleppoltd.com/"
 !include nsDialogs.nsh
 
@@ -7,14 +7,14 @@
 Name "${PRODUCT_NAME}"
 
 ; The file to write
-OutFile "${PRODUCT_NAME}.exe"
+OutFile "${PRODUCT_NAME}.${PRODUCT_VERSION}.exe"
 
 ; Set the compression algorithm
 SetCompressor /FINAL /SOLID lzma
 SetCompressorDictSize 32
 
 ; The default installation directory
-InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
+InstallDir "C:\GPS\ASMS"
 
 ; Registry key to check for directory (so if you install again, it will
 ; overwrite the old one automatically)
@@ -35,7 +35,7 @@ VIAddVersionKey "FileVersion" "${PRODUCT_VERSION}"
 ;--------------------------------
 ; Pages
 Page components
-Page directory
+;Page directory
 Page instfiles
 Page custom finalPage
 
@@ -81,11 +81,11 @@ Function OnCheckbox
         StrCpy $boolCHECKBOX "False"
     ${EndIf}
 FunctionEnd
-Function .onInstSuccess
-	Delete "$INSTDIR\DNSAPI.DLL"
+Function .onInstSuccess    
+    Delete "$INSTDIR\DNSAPI.DLL"
     ${If} $boolCHECKBOX != "False"
         Exec "$INSTDIR\maps.exe"
-    ${EndIf}    
+    ${EndIf}
 FunctionEnd
 
 ;--------------------------------
@@ -120,7 +120,7 @@ FunctionEnd
 ;--------------------------------
 ; The stuff to install
 Section "${PRODUCT_NAME} (required)"
-    SetAutoClose true
+    ;SetAutoClose true
     SectionIn RO
     SetOutPath $INSTDIR
 
@@ -137,33 +137,22 @@ Section "${PRODUCT_NAME} (required)"
     WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "NoRepair" 1
     WriteUninstaller "uninstall.exe"
 
-
-    Rename "$INSTDIR\.Aleppo\*.*" "$PROFILE\.Aleppo"
-
     ; Check if VC++ 2008 runtimes are already installed:
     ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}" "DisplayName"
     ; If VC++ 2008 runtimes are not installed execute in Quiet mode
     StrCmp $0 "Microsoft Visual C++ 2008 Redistributable - x86 9.0.21022" +2 0
         ExecWait '"$INSTDIR\vcredist_x86.exe" /q'
-SectionEnd
-
-; Optional Shortcuts sections (can be disabled by the user)
-Section "Start Menu Shortcuts"
-    CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe"
-    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\uninstall.exe"
-    ; Create a shortcut to the project Homepage
-    WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
-    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
+        
+    CreateDirectory "$PROFILE\.Aleppo"
+    Rename "$INSTDIR\.Aleppo\*.*" "$PROFILE\.Aleppo"
+    CopyFiles /SILENT "$INSTDIR\.Aleppo\*.*" "$PROFILE\.Aleppo" 1024
 SectionEnd
 
 Section "Desktop Shortcut"
+    SectionIn RO
     CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe"
 SectionEnd
 
-Section "Quick Launch Shortcut"
-    CreateShortCut "$QUICKLAUNCH\${PRODUCT_NAME}.lnk" "$INSTDIR\maps.exe"
-SectionEnd
 
 ;--------------------------------
 ; Uninstaller
@@ -174,10 +163,8 @@ Section "Uninstall"
     DeleteRegKey HKLM "SOFTWARE\${PRODUCT_NAME}"
 
     ; Remove directories used
-    RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
     RMDir /r "$INSTDIR"
 
     ; Delete Shortcuts
     Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
-    Delete "$QUICKLAUNCH\${PRODUCT_NAME}.lnk"
 SectionEnd
