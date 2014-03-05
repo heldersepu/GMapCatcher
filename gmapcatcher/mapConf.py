@@ -133,7 +133,7 @@ class MapConf():
         ## oneDirPerMap setting, default is False
         self.oneDirPerMap = read_config('oneDirPerMap', 0, int)
         ## Statusbar type, default is STATUS_NONE
-        self.statusbar_type = read_config('statusbar_type', STATUS_NONE, int)
+        self.statusbar_type = read_config('statusbar_type', STATUS_MOUSE, int)
         ## save width/height/layer/location at close, default is SAVE_AT_CLOSE
         self.save_at_close = read_config('save_at_close', 1, int)
         ## layer when saved at close
