@@ -201,7 +201,7 @@ class MapConf():
         ## default increment for gps track saving
         self.gps_increment = read_config('gps_increment', GPS_INCREMENT, int, SECTION_GPS)
         ## GPS-type, GPSd (0) or serial (1), default is GPSd
-        self.gps_type = read_config('gps_type', 0, int, SECTION_GPS)
+        self.gps_type = read_config('gps_type', 1, int, SECTION_GPS)
         ## Draw GPS-track, default is 1 (True)
         self.gps_track = read_config('gps_track', 1, int, SECTION_GPS)
         ## GPS-track "interval" in meters, default is 50m
@@ -209,11 +209,11 @@ class MapConf():
         ## GPS-track width, default is 2px
         self.gps_track_width = read_config('gps_track_width', 2, int, SECTION_GPS)
         ## GPS serial port, default is 'none'
-        self.gps_serial_port = read_config('gps_serial_port', 'none', str, SECTION_GPS)
+        self.gps_serial_port = read_config('gps_serial_port', 'COM5', str, SECTION_GPS)
         ## GPS serial baudrate, default is 9600
         self.gps_serial_baudrate = read_config('gps_serial_baudrate', 9600, int, SECTION_GPS)
         ## Initial GPS mode, default is GPS_DISABLED
-        self.gps_mode = read_config('gps_mode', GPS_DISABLED, int, SECTION_GPS)
+        self.gps_mode = read_config('gps_mode', GPS_MARKER, int, SECTION_GPS)
         ## Maximum zoom to show the GPS, default is 16
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int, SECTION_GPS)
 
