@@ -23,8 +23,8 @@ class StatusBar(gtk.Statusbar):
         self.clear()
         self.push(self.context_id, strText)
 
-    def coordinates(self, lat, lon):
-        self.text("     Lat: " + str(round(lat, 6)) + "  Lon: " + str(round(lon, 6)))
+    def coordinates(self, z, lat, lon):
+        self.text("     Zoom: " + str(z) + "      Lat: " + str(round(lat, 6)) + "  Lon: " + str(round(lon, 6)))
 
     def distance(self, z, dUnits, total_dist):
         self.text("Segment Distance = %.3f %s, Total distance = %.3f %s" % (z, dUnits, total_dist, dUnits))
