@@ -203,7 +203,7 @@ class MapConf():
         ## GPS-type, GPSd (0) or serial (1), default is GPSd
         self.gps_type = read_config('gps_type', 1, int, SECTION_GPS)
         ## Draw GPS-track, default is 1 (True)
-        self.gps_track = read_config('gps_track', 1, int, SECTION_GPS)
+        self.gps_track = read_config('gps_track', 0, int, SECTION_GPS)
         ## GPS-track "interval" in meters, default is 50m
         self.gps_track_interval = read_config('gps_track_interval', 50, int, SECTION_GPS)
         ## GPS-track width, default is 2px
