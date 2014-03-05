@@ -196,7 +196,7 @@ class DrawingArea(gtk.DrawingArea):
                 i = 0
                 for track in self.tracks:
                     if track.name == 'GPS track':
-                        self.draw_line(track, 'red', self.zl, False)
+                        self.draw_line(track, 'red', self.zl)
                     else:
                         self.draw_line(track, self.colors[i % len(self.colors)], self.zl)
                         i += 1
