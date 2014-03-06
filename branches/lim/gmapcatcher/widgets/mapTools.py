@@ -51,10 +51,10 @@ class mapTools(gtk.Window):
     def __init__(self, mapsObj, start_page):
         gtk.Window.__init__(self)
         self.set_border_width(10)
-        # self.set_transient_for(mapsObj)
+        self.set_transient_for(mapsObj)
         self.set_size_request(600, 480)
         self.set_destroy_with_parent(True)
-        self.set_title(" GMapCatcher Tools ")
+        self.set_title(" App Settings ")
         self.connect('key-press-event', self.key_press_event, self)
         self.connect('delete-event', self.on_delete)
         self.mapsObj = mapsObj
