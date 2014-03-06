@@ -5,8 +5,8 @@
 import os
 import locale
 
-NAME = "Aleppo"
-VERSION = "1.0"
+NAME = "ASMS"
+VERSION = "1.2.8.0"
 VERSION_NAME = ""
 WEB_ADDRESS = "http://www.aleppoltd.com/"
 
@@ -155,7 +155,7 @@ SECTION_AGENT = 'agent'
 R_EARTH = 6371.
 
 USER_PATH = unicode(os.path.expanduser("~"), locale.getpreferredencoding())
-DEFAULT_PATH = os.path.join(USER_PATH, ".Aleppo")
+DEFAULT_PATH = os.path.join(USER_PATH, ".ASMS")
 
 LANGUAGES = ["en", "es", "zh"]
 

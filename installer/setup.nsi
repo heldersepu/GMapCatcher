@@ -1,5 +1,5 @@
-!define PRODUCT_NAME "Aleppo_Map"
-!define PRODUCT_VERSION "1.2.6.0"
+!define PRODUCT_NAME "ASMS_Map"
+!define PRODUCT_VERSION "1.2.8.0"
 !define PRODUCT_WEB_SITE "http://www.aleppoltd.com/"
 !include nsDialogs.nsh
 
@@ -57,9 +57,9 @@ Function finalPage
 
 	nsDialogs::Create 1018
 	Pop $0
-	${NSD_CreateLabel} 75u 30u 80% 8u "Aleppo Map was succesfully installed on your computer."
+	${NSD_CreateLabel} 75u 30u 80% 8u "ASMS Map was succesfully installed on your computer."
 	Pop $0
-	${NSD_CreateCheckbox} 80u 50u 50% 8u "Run Aleppo Map v${PRODUCT_VERSION}"
+	${NSD_CreateCheckbox} 80u 50u 50% 8u "Run ASMS Map v${PRODUCT_VERSION}"
 	Pop $CHECKBOX
     SendMessage $CHECKBOX ${BM_SETCHECK} ${BST_CHECKED} 0
     GetFunctionAddress $1 OnCheckbox
@@ -94,7 +94,7 @@ Function un.finalPage
 
 	nsDialogs::Create 1018
 	Pop $0
-	${NSD_CreateLabel} 50u 30u 80% 8u "Aleppo Map was uninstalled from your computer."
+	${NSD_CreateLabel} 50u 30u 80% 8u "ASMS Map was uninstalled from your computer."
 	Pop $0
 	${NSD_CreateCheckbox} 60u 50u 50% 8u "Remove all downloaded images"
 	Pop $CHECKBOX
@@ -113,7 +113,7 @@ Function un.OnCheckbox
 FunctionEnd
 Function un.onUninstSuccess
     ${If} $boolCHECKBOX == "True"
-        RMDir /r "$PROFILE\.Aleppo"
+        RMDir /r "$PROFILE\.ASMS"
     ${EndIf}
 FunctionEnd
 
@@ -143,9 +143,9 @@ Section "${PRODUCT_NAME} (required)"
     StrCmp $0 "Microsoft Visual C++ 2008 Redistributable - x86 9.0.21022" +2 0
         ExecWait '"$INSTDIR\vcredist_x86.exe" /q'
         
-    CreateDirectory "$PROFILE\.Aleppo"
-    Rename "$INSTDIR\.Aleppo\*.*" "$PROFILE\.Aleppo"
-    CopyFiles /SILENT "$INSTDIR\.Aleppo\*.*" "$PROFILE\.Aleppo" 1024
+    CreateDirectory "$PROFILE\.ASMS"
+    Rename "$INSTDIR\.ASMS\*.*" "$PROFILE\.ASMS"
+    CopyFiles /SILENT "$INSTDIR\.ASMS\*.*" "$PROFILE\.ASMS" 1024
 SectionEnd
 
 Section "Desktop Shortcut"
