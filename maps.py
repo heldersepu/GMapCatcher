@@ -495,12 +495,15 @@ class MainWindow(gtk.Window):
     def menu_tools(self, w, strName):
         for intPos in range(len(TOOLS_MENU)):
             if strName.startswith(TOOLS_MENU[intPos]):
-                if not self.settingsw:
-                    self.settingsw = mapTools(self, intPos)
-                else:
-                    self.settingsw.myNotebook.set_current_page(intPos)
-                    self.settingsw.present()
-                return True
+                return self.show_settings(intPos)
+
+    def show_settings(self, intPos):
+        if not self.settingsw:
+            self.settingsw = mapTools(self, intPos)
+        else:
+            self.settingsw.myNotebook.set_current_page(intPos)
+            self.settingsw.present()
+        return True
 
     ## All the actions for the menu items
     def menu_item_response(self, w, strName):
@@ -927,7 +930,7 @@ class MainWindow(gtk.Window):
         # F11 = 65480
         if keyval == 65480:
             if self.get_decorated():
-                self.set_keep_above(True)
+                #self.set_keep_above(True)
                 self.set_decorated(False)
                 self.fullscreen()
             else:
@@ -1009,8 +1012,10 @@ class MainWindow(gtk.Window):
 
     ## Handles the Key pressing
     def key_press_event(self, w, event):
+        #TODO REMOVE key outputs below
         print "KEY = " + str(event.keyval)
         self.status_bar.text("KEY = " + str(event.keyval))
+        
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
@@ -1030,7 +1035,7 @@ class MainWindow(gtk.Window):
                 webbrowser_open(WEB_ADDRESS)
             # F2 = 65471
             elif event.keyval == 65471:
-                self.show_export()            
+                self.show_export()
             # F4 = 65473
             elif event.keyval == 65473:
                 fileName = FileChooser(USER_PATH, 'Select KML File to import')
@@ -1064,6 +1069,13 @@ class MainWindow(gtk.Window):
             # if Ruler is active, delete (65535) removes last element from ruler
             elif event.keyval == 65535 and self.Ruler:
                 self.remove_last_ruler_segment()
+        else:
+            # F4 = 65473
+            if event.keyval == 65473:
+                self.show_settings(2)
+            # start menu key
+            elif event.keyval == 65511:
+                self.full_screen(65480)
 
         # All Navigation Keys when in FullScreen
         if self.get_border_width() == 0:
@@ -1298,6 +1310,7 @@ class MainWindow(gtk.Window):
         self.combo.default_entry()
         self.drawing_area.center = self.conf.init_center
         self.show_all()
+        self.full_screen(65480)
         if self.conf.limited:
             self.left_panel.hide()
             self.top_panel.hide()
@@ -1312,7 +1325,7 @@ class MainWindow(gtk.Window):
         if not self.conf.limited:
             self.entry.grab_focus()
         else:
-            gobject.timeout_add(2000, self.gps_window_clicked)
+            gobject.timeout_add(2000, self.gps_window_clicked)            
         if self.conf.auto_refresh > 0:
             gobject.timeout_add(self.conf.auto_refresh, self.refresh)
 

@@ -201,7 +201,7 @@ class MapConf():
         ## default increment for gps track saving
         self.gps_increment = read_config('gps_increment', GPS_INCREMENT, int, SECTION_GPS)
         ## GPS-type, GPSd (0) or serial (1), default is GPSd
-        self.gps_type = read_config('gps_type', 1, int, SECTION_GPS)
+        self.gps_type = read_config('gps_type', TYPE_SERIAL, int, SECTION_GPS)
         ## Draw GPS-track, default is 1 (True)
         self.gps_track = read_config('gps_track', 0, int, SECTION_GPS)
         ## GPS-track "interval" in meters, default is 50m
