@@ -18,7 +18,7 @@ class MapConf():
         # the config file must be found at DEFAULT_PATH
         configpath = DEFAULT_PATH
         fileUtils.check_dir(configpath)
-        configpath = os.path.join(configpath, 'AleppoMap.conf')
+        configpath = os.path.join(configpath, 'ASMS_Map.conf')
         return configpath
 
     ## Initialise all variables.
@@ -218,7 +218,7 @@ class MapConf():
         self.max_gps_zoom = read_config('max_gps_zoom', 16, int, SECTION_GPS)
 
         ## User agent name
-        self.name = read_config('name', 'Aleppo', str, SECTION_AGENT)
+        self.name = read_config('name', 'ASMS', str, SECTION_AGENT)
         ## User agent version
         self.version = read_config('version', VERSION, str, SECTION_AGENT)
         ## User agent webaddress

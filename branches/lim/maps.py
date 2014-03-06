@@ -1299,7 +1299,7 @@ class MainWindow(gtk.Window):
         self.add(vbox)
 
         self.connect('focus-in-event', self.focus_in_event)
-        self.set_title(" Aleppo Systems ")
+        self.set_title(" ASMS ")
         self.set_border_width(10)
         self.set_size_request(450, 450)
         if self.conf.save_at_close:
