@@ -249,6 +249,8 @@ class MainWindow(gtk.Window):
                 self.gpsw.hide()
             else:
                 self.gpsw.show()
+            self.gpsw.move(10,20)
+        return False
 
     def visual_download(self):
         if self.visual_dlconfig.get('active', False):
@@ -1019,16 +1021,16 @@ class MainWindow(gtk.Window):
         elif (event.state & gtk.gdk.CONTROL_MASK) != 0 and event.keyval in [113, 81, 87, 119]:
             self.on_delete()
             self.destroy()
+        # F3 == 65472
+        elif event.keyval == 65472:
+            self.gps_window_clicked()
         elif not self.conf.limited:
             # F1 = 65471  Help
             if event.keyval == 65470:
                 webbrowser_open(WEB_ADDRESS)
             # F2 = 65471
             elif event.keyval == 65471:
-                self.show_export()
-            # F3 == 65472
-            elif event.keyval == 65472:
-                self.gps_window_clicked()
+                self.show_export()            
             # F4 = 65473
             elif event.keyval == 65473:
                 fileName = FileChooser(USER_PATH, 'Select KML File to import')
@@ -1309,6 +1311,8 @@ class MainWindow(gtk.Window):
         self.drawing_area.da_set_cursor()
         if not self.conf.limited:
             self.entry.grab_focus()
+        else:
+            gobject.timeout_add(2000, self.gps_window_clicked)
         if self.conf.auto_refresh > 0:
             gobject.timeout_add(self.conf.auto_refresh, self.refresh)
 
