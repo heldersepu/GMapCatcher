@@ -1,5 +1,5 @@
 !define PRODUCT_NAME "ASMS_Map"
-!define PRODUCT_VERSION "1.2.8.0"
+!define PRODUCT_VERSION "1.2.9.0"
 !define PRODUCT_WEB_SITE "http://www.aleppoltd.com/"
 !include nsDialogs.nsh
 

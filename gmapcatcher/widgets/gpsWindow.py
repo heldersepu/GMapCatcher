@@ -22,17 +22,22 @@ class gpsWindow(gtk.Window):
         gtk.Window.__init__(self)
         self.mapsObj = mapsObj
         self.gps_values = []
+        self.point_coord = mapsObj.center_coord()
         self.__stop = False
-        vbox = gtk.VBox(False)
-        vbox.pack_start(self._createLabels(FontDescription("16")))
-        self.add(vbox)
+        frame = gtk.Frame()
+        vbox = gtk.VBox(False, 5)
+        vbox.set_border_width(5)
+        vbox.pack_start(self._createLabels(FontDescription("14"), ))
+        frame.add(vbox)
+        self.add(frame)
         self.set_title("GPS")
         self.set_border_width(10)
         self.update_widgets()
         self.set_position(gtk.WIN_POS_NONE)
         self.set_gravity(gtk.gdk.GRAVITY_NORTH_WEST)
         self.placement = self.get_position()
-        self.set_size_request(250, 300)
+        self.set_size_request(250, 330)
+        self.set_border_width(2)
         self.connect('key-press-event', self.key_press)
         self.connect('delete-event', self.on_delete)
         self.connect('hide', self.on_hide)
@@ -40,8 +45,12 @@ class gpsWindow(gtk.Window):
         menu = self.rclick_menu()
         self.connect('button_press_event', self.window_event, menu)
         self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+        if mapsObj.conf.gps_window_decoration:
+            self.move(10,20)
+        else:
+            self.set_decorated(False)
+            self.move(-1,-1)
         self.set_resizable(False)
-        self.move(10,20)
         self.show_all()        
         self.set_transient_for(mapsObj)
         self.connect('show', self.on_show)
@@ -91,9 +100,8 @@ class gpsWindow(gtk.Window):
         self.__stop = True
 
     def _createLabels(self, font):
-        texts = ['GPS time', 'Latitude', 'Longitude', 'Speed', 'Heading', 'Altitude']
-        if self.mapsObj.conf.gps_type == TYPE_SERIAL:
-            texts.append('Satellites')
+        texts = ['GPS time', 'Latitude', 'Longitude', 'Speed', 'Heading', 'Altitude', 'Satellites', 'Pointer lat', 'Pointer lon']
+
         table = gtk.Table(len(texts) + 2, 2)
         table.set_col_spacings(5)
         table.set_row_spacings(5)
@@ -111,6 +119,7 @@ class gpsWindow(gtk.Window):
             table.attach(label, 0, 1, i + 1, i + 2)
 
             label = gtk.Label()
+            label.set_use_markup(True)
             label.set_alignment(0, 0.5)
             label.modify_font(font)
             self.gps_values.append(label)
@@ -126,7 +135,11 @@ class gpsWindow(gtk.Window):
                               (self.mapsObj.gps.gpsfix.latitude, self.mapsObj.gps.gpsfix.longitude))
         else:
             clipboard.set_text("No GPS location detected.")
-
+    
+    def update_pointer(self, coord):
+        self.point_coord = coord
+        self.update_widgets()        
+    
     def update_widgets(self):
         ## Check if gps exists by checking that fix exists and fix-time exists
         # NMEA should include some kind of time always,
@@ -166,6 +179,10 @@ class gpsWindow(gtk.Window):
             self.fix_label.set_text('<span foreground=\"red\">No GPS detected</span>')
             for gps_value in self.gps_values:
                 gps_value.set_text('---')
+        self.gps_values[7].set_text('<span foreground=\"blue\">%.6f</span>' % self.point_coord[0])
+        self.gps_values[8].set_text('<span foreground=\"blue\">%.6f</span>' % self.point_coord[1])
+        self.gps_values[7].set_use_markup(True)
+        self.gps_values[8].set_use_markup(True)
         self.fix_label.set_use_markup(True)
         if self.__stop:
             return False

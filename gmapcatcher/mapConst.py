@@ -6,7 +6,7 @@ import os
 import locale
 
 NAME = "ASMS"
-VERSION = "1.2.8.0"
+VERSION = "1.2.9.0"
 VERSION_NAME = ""
 WEB_ADDRESS = "http://www.aleppoltd.com/"
 

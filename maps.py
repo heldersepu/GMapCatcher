@@ -232,6 +232,9 @@ class MainWindow(gtk.Window):
                     self.layer, self.conf)
         exw.show()
 
+    def center_coord(self):        
+        return mapUtils.tile_to_coord(self.drawing_area.center, self.get_zoom())
+    
     def track_control_clicked(self, w=None, pointer=None):
         if not self.trackw:
             self.trackw = trackWindow(self)
@@ -730,6 +733,16 @@ class MainWindow(gtk.Window):
             self.shown_tracks.append(track)
         else:
             error_msg(self, 'Failed to fetch route.')
+            
+    def nearestMarker(self, event):
+        coord = self.pointer_to_world_coord((event.x, event.y))
+        markerDisp2_list = []
+        for markerName in self.marker.positions.keys():
+            # Calculate the angular displacement squared of the mouse coord to the marker coords
+            markerDisp2 = (self.marker.positions[markerName][0] - coord[0]) ** 2 + (self.marker.positions[markerName][1] - coord[1]) ** 2
+            markerDisp2_list.append((markerDisp2, markerName))
+        if (len(markerDisp2_list) > 0):
+            self.status_bar.text("Nearest marker:    " + str(sorted(markerDisp2_list)[0][1]))
 
     ## Handles Right & Double clicks events in the drawing_area
     def da_click_events(self, w, event):
@@ -737,22 +750,13 @@ class MainWindow(gtk.Window):
         # On button press, set the coordinates
         if event.type == gtk.gdk.BUTTON_PRESS:
             self.dragXY = (event.x, event.y)
-        elif event.type == gtk.gdk.BUTTON_RELEASE:
-            # Find nearest marker...
-            # Check if left-clicked, mouse status bar is on, is not in ruler mode and map not dragged
-            if event.button == 1 and self.conf.statusbar_type == STATUS_MOUSE and not self.Ruler \
-              and abs(event.x - self.dragXY[0]) < 5 and abs(event.y - self.dragXY[1]) < 5:
+            if self.gpsw:
                 coord = self.pointer_to_world_coord((event.x, event.y))
-                markerDisp2_list = []
-                for markerName in self.marker.positions.keys():
-                    # Calculate the angular displacement squared of the mouse coord to the marker coords
-                    markerDisp2 = (self.marker.positions[markerName][0] - coord[0]) ** 2 + (self.marker.positions[markerName][1] - coord[1]) ** 2
-                    markerDisp2_list.append((markerDisp2, markerName))
-                if (len(markerDisp2_list) > 0):
-                    self.status_bar.text("Nearest marker:    " + str(sorted(markerDisp2_list)[0][1]))
+                self.gpsw.update_pointer(coord)
+        elif event.type == gtk.gdk.BUTTON_RELEASE:
 
             # Right-Click event shows the popUp menu
-            elif event.button == 3 and not (event.state & gtk.gdk.CONTROL_MASK):
+            if event.button == 3 and not (event.state & gtk.gdk.CONTROL_MASK):
                 if not self.Ruler:
                     self.myPointer = (event.x, event.y)
                     w.popup(None, None, None, event.button, event.time)
@@ -928,7 +932,7 @@ class MainWindow(gtk.Window):
     ## Handles the pressing of F11 & F12
     def full_screen(self, keyval):
         # F11 = 65480
-        if keyval == 65480:
+        if keyval in [65480, 65307]:
             if self.get_decorated():
                 #self.set_keep_above(True)
                 self.set_decorated(False)
@@ -984,13 +988,13 @@ class MainWindow(gtk.Window):
 
         # Minus = [45,65453]   Zoom Out
         # Plus  = [43,65451]   Zoom In
-        elif keyval in [45, 65453]:
+        elif keyval in [45, 65453, 65288]:
             self.do_zoom(zoom + 1, zoom, True)
-        elif keyval in [43, 65451]:
+        elif keyval in [43, 65451, 65289]:
             self.do_zoom(zoom - 1, zoom, True)
 
         # Space = 32   ReCenter the GPS
-        elif keyval == 32:
+        elif keyval in [32, 65293]:
             self.reCenter_gps = True
         # Handle the numbers
         elif 49 <= keyval <= 57:
@@ -1012,8 +1016,6 @@ class MainWindow(gtk.Window):
 
     ## Handles the Key pressing
     def key_press_event(self, w, event):
-        #TODO REMOVE key outputs below
-        print "KEY = " + str(event.keyval)
         self.status_bar.text("KEY = " + str(event.keyval))
         
         # F11 = 65480, F12 = 65481, ESC = 65307
@@ -1310,8 +1312,8 @@ class MainWindow(gtk.Window):
         self.combo.default_entry()
         self.drawing_area.center = self.conf.init_center
         self.show_all()
-        self.full_screen(65480)
         if self.conf.limited:
+            self.full_screen(65480)
             self.left_panel.hide()
             self.top_panel.hide()
             self.set_border_width(0)

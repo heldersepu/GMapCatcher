@@ -85,6 +85,7 @@ class MapConf():
         config.set(SECTION_GPS, 'gps_increment', self.gps_increment)
         config.set(SECTION_GPS, 'gps_type', self.gps_type)
         config.set(SECTION_GPS, 'gps_track', self.gps_track)
+        config.set(SECTION_GPS, 'gps_window_decoration', self.gps_window_decoration)
         config.set(SECTION_GPS, 'gps_track_interval', self.gps_track_interval)
         config.set(SECTION_GPS, 'gps_track_width', self.gps_track_width)
         config.set(SECTION_GPS, 'gps_serial_port', self.gps_serial_port)
@@ -204,6 +205,7 @@ class MapConf():
         self.gps_type = read_config('gps_type', TYPE_SERIAL, int, SECTION_GPS)
         ## Draw GPS-track, default is 1 (True)
         self.gps_track = read_config('gps_track', 0, int, SECTION_GPS)
+        self.gps_window_decoration = read_config('gps_window_decoration', 0, int, SECTION_GPS)
         ## GPS-track "interval" in meters, default is 50m
         self.gps_track_interval = read_config('gps_track_interval', 50, int, SECTION_GPS)
         ## GPS-track width, default is 2px
