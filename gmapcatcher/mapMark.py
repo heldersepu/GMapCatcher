@@ -24,7 +24,7 @@ class MyMarkers:
     def append_marker(self, coord, strName=None, extraTag=False):
         if strName is None:
             strName = str(coord[0]) + '_' + str(coord[1])
-        fileUtils.append_file('marker', self.markerPath, coord, strName, extraTag)
+        fileUtils.append_file('marker', self.markerPath, (coord[0], coord[1], 18), strName, extraTag)
 
     def __init__(self, configpath=None):
         localPath = os.path.expanduser(configpath or DEFAULT_PATH)
@@ -50,6 +50,6 @@ class MyMarkers:
         else:
             return 56 + int((maxZoom - zl) * 15)
 
-    def get_marker_pixbuf(self, zl, image='marker_s.png'):
+    def get_marker_pixbuf(self, zl, image='m_yellow.png'):
         pixDim = self.get_pixDim(zl)
         return mapPixbuf.getImage(image, pixDim, pixDim)
