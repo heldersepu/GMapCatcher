@@ -86,7 +86,7 @@ TILES_WIDTH = 256
 TILES_HEIGHT = 256
 NR_MTS = 4
 SEPARATOR = "\t"
-TOOLS_MENU = ["Settings", "Edit locations", "Edit markers",
+TOOLS_MENU = ["Settings", "", "Edit markers",
               "Change Theme", "GPS Options", ""]
 TOOLS_MENU_PLUS_CREDITS = " About "
 TOOLS_MENU_PLUS_VISUAL_DL = "Save Path Maps"
@@ -152,6 +152,7 @@ SECTION_INIT = 'init'
 SECTION_GPS = 'gps'
 SECTION_MAP = 'map'
 SECTION_AGENT = 'agent'
+SECTION_MARKERS = 'markers'
 R_EARTH = 6371.
 
 USER_PATH = unicode(os.path.expanduser("~"), locale.getpreferredencoding())
