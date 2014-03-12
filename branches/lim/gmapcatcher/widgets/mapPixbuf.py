@@ -2,6 +2,7 @@
 ## @package gmapcatcher.widgets.mapPixbuf
 # Get the Pixbuf from image files.
 
+import os
 import gtk
 from gmapcatcher.mapConst import *
 from os.path import join, dirname, abspath, exists, isfile
@@ -74,6 +75,14 @@ def getImage(filename, intWidth=56, intHeight=56):
                 intHeight * 4)
     return pix_buf
 
+## Get the names of all markers.
+def getMarkers():
+    markersName = []
+    if os.path.isdir(_prefix):
+        for l in os.listdir(_prefix):
+            if (l[:2] == "m_"):
+                markersName += [l]
+    return markersName
 
 def image_data_fs(filename):
     return gtk.gdk.pixbuf_new_from_file(filename)
