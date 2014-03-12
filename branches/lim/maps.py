@@ -232,9 +232,9 @@ class MainWindow(gtk.Window):
                     self.layer, self.conf)
         exw.show()
 
-    def center_coord(self):        
+    def center_coord(self):
         return mapUtils.tile_to_coord(self.drawing_area.center, self.get_zoom())
-    
+
     def track_control_clicked(self, w=None, pointer=None):
         if not self.trackw:
             self.trackw = trackWindow(self)
@@ -733,7 +733,7 @@ class MainWindow(gtk.Window):
             self.shown_tracks.append(track)
         else:
             error_msg(self, 'Failed to fetch route.')
-            
+
     def nearestMarker(self, event):
         coord = self.pointer_to_world_coord((event.x, event.y))
         markerDisp2_list = []
@@ -1017,7 +1017,7 @@ class MainWindow(gtk.Window):
     ## Handles the Key pressing
     def key_press_event(self, w, event):
         self.status_bar.text("KEY = " + str(event.keyval))
-        
+
         # F11 = 65480, F12 = 65481, ESC = 65307
         if event.keyval in [65480, 65481, 65307]:
             self.full_screen(event.keyval)
@@ -1074,7 +1074,7 @@ class MainWindow(gtk.Window):
         else:
             # F4 = 65473
             if event.keyval == 65473:
-                self.show_settings(2)
+                self.show_settings(1)
             # start menu key
             elif event.keyval == 65511:
                 self.full_screen(65480)
@@ -1327,7 +1327,7 @@ class MainWindow(gtk.Window):
         if not self.conf.limited:
             self.entry.grab_focus()
         else:
-            gobject.timeout_add(2000, self.gps_window_clicked)            
+            gobject.timeout_add(2000, self.gps_window_clicked)
         if self.conf.auto_refresh > 0:
             gobject.timeout_add(self.conf.auto_refresh, self.refresh)
 
