@@ -13,6 +13,7 @@ def read_file(strInfo, filePath, maxLine=0):
     if os.path.exists(filePath):
         p = re.compile(strInfo + '="([^"]+)".*lat="([^"]+)".*lng="([^"]+)".*')
         q = re.compile('.*zoom="([^"]+)".*')
+        r = re.compile('.*image="([^"]+)".*')
         file = open(filePath, "r")
         for line in file:
             try:
@@ -21,17 +22,21 @@ def read_file(strInfo, filePath, maxLine=0):
                 if (line[0] != '#'):
                     m = p.search(line)
                     if m:
-                        zoom = 10
+                        zoom = 20
                         z = q.search(line)
                         if z:
                             zoom = int(z.group(1))
+                        
+                        image = "marker_s.png"
+                        g = r.search(line)
+                        if g:
+                            image = g.group(1)
+                        
                         if m.group(1) in fileData:
                             name = '%s %i' % (m.group(1), len(fileData))
                         else:
                             name = m.group(1)
-                        fileData[name] = (float(m.group(2)),
-                                                float(m.group(3)),
-                                                zoom)
+                        fileData[name] = (float(m.group(2)), float(m.group(3)), zoom, image)
                 if (maxLine > 0):
                     if (len(fileData) > maxLine):
                         break
@@ -70,8 +75,12 @@ def write_file(strInfo, filePath, fileData):
         # The method 'write' takes an unicode string here and acording to python manual
         # it translates it automatically to string buffer acording to system defaults.
         # Probably all systems translate unicode to UTF-8
-        file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
-                  (l.encode('UTF-8'), fileData[l][0], fileData[l][1], fileData[l][2]))
+        try:
+            file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\timage="%s"\n' %
+                      (l.encode('UTF-8'), fileData[l][0], fileData[l][1], fileData[l][2], fileData[l][3]))
+        except Exception:
+            file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
+                      (l.encode('UTF-8'), fileData[l][0], fileData[l][1], fileData[l][2]))
     file.close()
 
 

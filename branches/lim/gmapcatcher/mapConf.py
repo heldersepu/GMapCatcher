@@ -71,13 +71,15 @@ class MapConf():
         config.set(SECTION_MAP, 'force_update_days', self.force_update_days)
         config.set(SECTION_MAP, 'auto_refresh', self.auto_refresh)
         config.set(SECTION_MAP, 'google_src', self.google_src)
-        config.set(SECTION_MAP, 'show_marker_name', int(self.show_marker_name))
-        config.set(SECTION_MAP, 'marker_font_color', self.marker_font_color)
-        config.set(SECTION_MAP, 'marker_font_desc', self.marker_font_desc)
         config.set(SECTION_MAP, 'maxthreads', self.maxthreads)
         config.set(SECTION_MAP, 'overlay_delay', self.overlay_delay)
         config.set(SECTION_MAP, 'opacity', self.opacity)
         config.set(SECTION_MAP, 'draw_track_start_end', self.draw_track_start_end)
+
+        config.add_section(SECTION_MARKERS)
+        config.set(SECTION_MARKERS, 'show_marker_name', int(self.show_marker_name))
+        config.set(SECTION_MARKERS, 'marker_font_color', self.marker_font_color)
+        config.set(SECTION_MARKERS, 'marker_font_desc', self.marker_font_desc)
 
         config.add_section(SECTION_GPS)
         config.set(SECTION_GPS, 'max_gps_zoom', self.max_gps_zoom)
@@ -179,13 +181,6 @@ class MapConf():
         self.auto_refresh = read_config('auto_refresh', 0, int, SECTION_MAP)
         ## Part of the URL that is used to get the google tiles
         self.google_src = read_config('google_src', '', str, SECTION_MAP)
-        ## Show the name/description of the marker in the map
-        self.show_marker_name = read_config('show_marker_name', 0, int, SECTION_MAP)
-        ## The font color for the name of the marker
-        self.marker_font_color = read_config('marker_font_color', '#00CCCC', str, SECTION_MAP)
-        ## The font Description for the marker "sans bold 12"
-        ## http://www.pygtk.org/docs/pygtk/class-pangofontdescription.html
-        self.marker_font_desc = read_config('marker_font_desc', 'normal', str, SECTION_MAP)
         ## Maximum number of threads to download maps
         self.maxthreads = read_config('maxthreads', 4, int, SECTION_MAP)
         ## Time delay before drawing the map overlay
@@ -196,6 +191,14 @@ class MapConf():
         self.draw_track_start_end = read_config('draw_track_start_end', 0, int, SECTION_MAP)
         self.max_zoom = read_config('max_zoom', MAP_MAX_ZOOM_LEVEL - 2, int, SECTION_MAP)
         self.min_zoom = read_config('min_zoom', MAP_MIN_ZOOM_LEVEL, int, SECTION_MAP)
+
+        ## Show the name/description of the marker in the map
+        self.show_marker_name = read_config('show_marker_name', 1, int, SECTION_MARKERS)
+        ## The font color for the name of the marker
+        self.marker_font_color = read_config('marker_font_color', '#00CCCC', str, SECTION_MARKERS)
+        ## The font Description for the marker "sans bold 12"
+        ## http://www.pygtk.org/docs/pygtk/class-pangofontdescription.html
+        self.marker_font_desc = read_config('marker_font_desc', 'sans bold 16', str, SECTION_MARKERS)
 
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float, SECTION_GPS)
