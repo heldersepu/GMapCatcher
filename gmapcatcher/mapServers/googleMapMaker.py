@@ -10,14 +10,14 @@ known_layers = {}
 ## Returns a template URL for the Google Map Maker
 def layer_url_template(layer):
     if layer not in known_layers:
-        known_layers[layer] = 'http://mt%d.google.com/vt/hl=x-local&x=%i&y=%i&zoom=%i'
+        known_layers[layer] = 'http://mt%d.google.com/vt/hl=x-local&source=mapmaker&x=%i&y=%i&z=%i'
     return known_layers[layer]
 
 
 ## Returns the URL to the Google Map Maker tile
 def get_url(counter, coord, layer, conf):
     return layer_url_template('gwm') % \
-        (counter, coord[0], coord[1], coord[2] + 1)
+        (counter, coord[0], coord[1], 17 - coord[2])
 
 
 ## Parse http://www.google.com/mapmaker.
