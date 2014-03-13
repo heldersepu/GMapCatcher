@@ -35,6 +35,7 @@ from gmapcatcher.widgets.customWidgets import gtk, gtk_menu, myToolTip, myFrame,
 from gmapcatcher.widgets.widDrawingArea import DrawingArea
 from gmapcatcher.widgets.widComboBoxLayer import ComboBoxLayer
 from gmapcatcher.widgets.widComboBoxEntry import ComboBoxEntry
+from gmapcatcher.widgets.markerWindow import markerWindow
 from gmapcatcher.widgets.widMapExport import MapExport
 from gmapcatcher.widgets.widStatusBar import StatusBar
 from gmapcatcher.widgets.widCredits import OurCredits
@@ -759,7 +760,9 @@ class MainWindow(gtk.Window):
             if event.button == 3 and not (event.state & gtk.gdk.CONTROL_MASK):
                 if not self.Ruler:
                     self.myPointer = (event.x, event.y)
-                    w.popup(None, None, None, event.button, event.time)
+                    coords = self.pointer_to_world_coord(self.myPointer)
+                    markerWindow(self, coords)
+                    #w.popup(None, None, None, event.button, event.time)
                 else:
                     menu = self.ruler_popup()
                     menu.popup(None, None, None, event.button, event.time)
