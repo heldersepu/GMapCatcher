@@ -16,8 +16,7 @@ class CellRendererClickablePixbuf(gtk.CellRendererPixbuf):
         gtk.CellRendererPixbuf.__init__(self)
         self.set_property('mode', gtk.CELL_RENDERER_MODE_ACTIVATABLE)
 
-    def do_activate(self, event, widget, path, background_area, cell_area,
-                    flags):
+    def do_activate(self, event, widget, path, background_area, cell_area, flags):
         self.emit('clicked', path)
 
 class markerWindow(gtk.Window):
@@ -87,8 +86,8 @@ class markerWindow(gtk.Window):
             pbs.append(pb)
         for pb in pbs:
             listStore.append(pb)
-        myTree = gtk.TreeView(listStore)
         
+        myTree = gtk.TreeView(listStore)        
         for intRow in range(5):
             cell = CellRendererClickablePixbuf()
             cell.connect('clicked', self.__cell_clicked, listStore, intRow*2)
@@ -96,6 +95,9 @@ class markerWindow(gtk.Window):
             tvcolumn.set_attributes(cell, pixbuf=intRow*2)
             myTree.append_column(tvcolumn)
             tvcolumn.set_expand(True)        
+        treeSel = myTree.get_selection()
+        treeSel.set_mode(gtk.SELECTION_NONE)
+        myTree.set_grid_lines(gtk.TREE_VIEW_GRID_LINES_BOTH)
         return myTree
     
     def __controls(self, parent):        
@@ -104,7 +106,9 @@ class markerWindow(gtk.Window):
         sw = gtk.ScrolledWindow()
         sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)        
         sw.add(self.__top_frame())
-        hpaned.pack1(sw, True, True)
+        frame = gtk.Frame()
+        frame.add(sw)
+        hpaned.pack1(frame, True, True)
         hpaned.pack2(self.__action_buttons(), False, False)
         vbox.pack_start(hpaned)
         self.hpaned = hpaned
@@ -115,7 +119,7 @@ class markerWindow(gtk.Window):
         self.set_border_width(10)
         if parent is not None:
             self.set_transient_for(parent)
-        self.set_size_request(570, 300)
+        self.set_size_request(500, 350)
         self.set_destroy_with_parent(True)
         self.set_title(" Markers ")
         self.connect('key-press-event', self.key_press_event, self)

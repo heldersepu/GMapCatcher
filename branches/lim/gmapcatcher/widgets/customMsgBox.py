@@ -12,7 +12,7 @@ def user_confirm(parent, strMessage, buttons=gtk.BUTTONS_YES_NO):
     dialog = gtk.MessageDialog(parent,
             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
             gtk.MESSAGE_QUESTION, buttons, strMessage)
-    dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
+    #dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
     dialog.set_position(gtk.WIN_POS_CENTER)
     dialog.set_keep_above(True)
     resp = dialog.run()
