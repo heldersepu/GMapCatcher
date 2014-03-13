@@ -7,6 +7,7 @@ pygtk.require('2.0')
 import gtk
 import gobject
 import mapPixbuf
+from customMsgBox import user_confirm
 
 
 class CellRendererClickablePixbuf(gtk.CellRendererPixbuf):
@@ -20,6 +21,19 @@ class CellRendererClickablePixbuf(gtk.CellRendererPixbuf):
         self.emit('clicked', path)
 
 class markerWindow(gtk.Window):
+    
+    def btn_del_all(self, w):
+        confirm = user_confirm(self, 'Are you sure you want to delete all markers?')
+        if confirm == gtk.RESPONSE_YES:
+            self.destroy()
+            
+    def btn_del_last(self, w):
+        confirm = user_confirm(self, 'Are you sure you want to delete last marker?')
+        if confirm == gtk.RESPONSE_YES:
+            self.destroy()
+        
+    def btn_cancel(self, w):
+        self.destroy()
 
     ## All the buttons below the items
     def __action_buttons(self):
@@ -31,18 +45,18 @@ class markerWindow(gtk.Window):
 
         button = gtk.Button('Delete _All')
         button.set_size_request(95, 35)
-        # button.connect('clicked', self.btn_add_clicked, listStore, myTree)
+        button.connect('clicked', self.btn_del_all)
         hbbox.add(button)
 
         button = gtk.Button('Delete _Last')
         button.set_size_request(95, 35)
-        # button.connect('clicked', self.btn_remove_clicked, listStore, myTree)
+        button.connect('clicked', self.btn_del_last)
         hbbox.add(button)
-
 
         button = gtk.Button('_Cancel')
         button.set_size_request(34, 35)
-        # button.connect('clicked', self.btn_save_clicked, strInfo, filePath, listStore, parent)
+        button.connect('clicked', self.btn_cancel)
+        
         bbox.add(hbbox)
         hbbox = gtk.HButtonBox()
         hbbox.set_layout(gtk.BUTTONBOX_END)
