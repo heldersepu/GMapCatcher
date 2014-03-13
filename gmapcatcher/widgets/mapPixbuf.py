@@ -50,6 +50,9 @@ def downloading():
         pix_dl = image_data_direct("downloading")
     return pix_dl
 
+def marker_pixbuf(fileName):
+    pixb = getImage(fileName, 256, 256)
+    return pixb.subpixbuf(96,85, 64,64)
 
 ## Get the Pixbuf from the given image.
 # This is used in myToolTip
