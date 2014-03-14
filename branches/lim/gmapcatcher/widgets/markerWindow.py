@@ -20,15 +20,23 @@ class CellRendererClickablePixbuf(gtk.CellRendererPixbuf):
         self.emit('clicked', path)
 
 class markerWindow(gtk.Window):
+
+    def refresh_parent(self):
+        self.prnt.marker.refresh()
+        self.prnt.drawing_area.repaint()
     
     def btn_del_all(self, w):
         confirm = user_confirm(self, 'Are you sure you want to delete all markers?')
         if confirm == gtk.RESPONSE_YES:
+            self.prnt.marker.del_all()
+            self.refresh_parent()
             self.destroy()
             
     def btn_del_last(self, w):
         confirm = user_confirm(self, 'Are you sure you want to delete last marker?')
         if confirm == gtk.RESPONSE_YES:
+            self.prnt.marker.del_last()
+            self.refresh_parent()
             self.destroy()
         
     def btn_cancel(self, w):
@@ -100,7 +108,7 @@ class markerWindow(gtk.Window):
         myTree.set_grid_lines(gtk.TREE_VIEW_GRID_LINES_BOTH)
         return myTree
     
-    def __controls(self, parent):        
+    def __controls(self):        
         vbox = gtk.VBox(False)
         hpaned = gtk.VPaned()
         sw = gtk.ScrolledWindow()
@@ -114,11 +122,11 @@ class markerWindow(gtk.Window):
         self.hpaned = hpaned
         return vbox
 
-    def __init__(self, parent=None, coord=[]):
+    def __init__(self, parent, coords):
         gtk.Window.__init__(self)
         self.set_border_width(10)
-        if parent is not None:
-            self.set_transient_for(parent)
+        self.prnt = parent
+        self.set_transient_for(parent)
         self.set_size_request(500, 350)
         self.set_destroy_with_parent(True)
         self.set_title(" Markers ")
@@ -127,7 +135,7 @@ class markerWindow(gtk.Window):
         frame = gtk.Frame()
         vbox = gtk.VBox(False, 5)
         vbox.set_border_width(5)
-        vbox.pack_start(self.__controls(parent))
+        vbox.pack_start(self.__controls())
         frame.add(vbox)
         self.add(frame)
         self.set_border_width(2)
