@@ -8,16 +8,8 @@ import gtk
 import gobject
 import mapPixbuf
 from customMsgBox import user_confirm
+from cellRendererClickablePixbuf import CellRendererClickablePixbuf
 
-
-class CellRendererClickablePixbuf(gtk.CellRendererPixbuf):
-    __gsignals__ = {'clicked': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,(gobject.TYPE_STRING,))}
-    def __init__(self):
-        gtk.CellRendererPixbuf.__init__(self)
-        self.set_property('mode', gtk.CELL_RENDERER_MODE_ACTIVATABLE)
-
-    def do_activate(self, event, widget, path, background_area, cell_area, flags):
-        self.emit('clicked', path)
 
 class markerWindow(gtk.Window):
 
@@ -164,12 +156,3 @@ class markerWindow(gtk.Window):
                 (event.state & gtk.gdk.CONTROL_MASK) != 0 and \
                 event.keyval in [87, 119]:
             window.destroy()
-
-def main():
-    gtk.gdk.threads_init()
-    markerWindow()
-    gtk.threads_enter()
-    gtk.main()
-    gtk.threads_leave()
-if __name__ == "__main__":
-    main()
