@@ -34,14 +34,18 @@ class markerWindow2(gtk.Window):
     def __top_right(self):
         vbox = gtk.VBox(False,10)
         hbox1 = gtk.HBox(False,10)
-        hbox1.add(gtk.Button('Hello World'))
-        hbox1.add(gtk.Button('Hello World'))
-        hbox1.add(gtk.Button('Hello World'))
+        hbox1.add(gtk.Label('Name:'))
+        self.entryName = gtk.Entry()
+        self.entryName.set_width_chars(35)
+        self.entryName.set_text("Enter name here")
+        hbox1.add(self.entryName)
         
         hbox2 = gtk.HBox(False,10)
-        hbox2.add(gtk.Button('Hello World'))
-        hbox2.add(gtk.Button('Hello World'))
-        hbox2.add(gtk.Button('Hello World'))
+        hbox2.add(gtk.Label('Coord:'))
+        eCoord = gtk.Entry()
+        eCoord.set_width_chars(35)
+        eCoord.set_text(str(self.coords[0]) + ", " + str(self.coords[1]))
+        hbox2.add(eCoord)
         vbox.add(hbox1)
         vbox.add(hbox2)
         box = gtk.VBox(False,10)
@@ -103,7 +107,7 @@ class markerWindow2(gtk.Window):
         self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.set_decorated(False)
         self.show_all()
-        self.hpaned.grab_focus()
+        self.entryName.grab_focus()
 
     def on_delete(self, *args):
         self.hide()
