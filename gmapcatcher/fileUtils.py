@@ -100,6 +100,26 @@ def append_file(strInfo, filePath, strData, strName, extraTag=False):
                   (strName, strData[0], strData[1], strData[2] + 2))
     file.close()
 
+## Delete the last location 
+def del_last_entry(strInfo, filePath):
+    file = open(filePath, "r")
+    strContent = file.read()
+    file.seek(0, 0)
+    lastLine = ''
+    for line in file.readlines():
+        line = line.decode("UTF-8")
+        if (line.startswith(strInfo+'=')):
+            lastLine = line
+    file.close()
+    
+    try:
+        file = open(filePath, "w")
+    except Exception:
+        print 'Error! Can NOT write file:'
+        print '  ' + filePath
+        return
+    file.write(codecs.BOM_UTF8 + strContent.replace(lastLine,''))
+    file.close()
 
 ## Writes a new gtkrc file with the given theme
 def write_gtkrc(strTheme):

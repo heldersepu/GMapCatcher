@@ -21,6 +21,13 @@ class MyMarkers:
     def write_markers(self):
         fileUtils.write_file('marker', self.markerPath, self.positions)
 
+    def del_all(self):
+        self.positions = {}
+        self.write_markers()
+
+    def del_last(self):
+        fileUtils.del_last_entry('marker', self.markerPath)
+    
     def append_marker(self, coord, strName=None, extraTag=False):
         if strName is None:
             strName = str(coord[0]) + '_' + str(coord[1])
