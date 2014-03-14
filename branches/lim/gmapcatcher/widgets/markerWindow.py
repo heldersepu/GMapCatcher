@@ -30,17 +30,17 @@ class markerWindow(gtk.Window):
         if confirm == gtk.RESPONSE_YES:
             self.prnt.marker.del_all()
             self.refresh_parent()
-            self.destroy()
+            self.hide()
             
     def btn_del_last(self, w):
         confirm = user_confirm(self, 'Are you sure you want to delete last marker?')
         if confirm == gtk.RESPONSE_YES:
             self.prnt.marker.del_last()
             self.refresh_parent()
-            self.destroy()
+            self.hide()
         
     def btn_cancel(self, w):
-        self.destroy()
+        self.hide()
 
     ## All the buttons below the items
     def __action_buttons(self):
@@ -74,8 +74,10 @@ class markerWindow(gtk.Window):
         return hbox
     
     def __cell_clicked(self, w, intRow, listStore, intCol):
-        print listStore[intRow][intCol+1]
-        print ""
+        image = listStore[intRow][intCol+1]        
+        self.prnt.marker.append_marker(self.coords, image, 'image="' + image + '"')
+        self.refresh_parent()
+        self.hide()
     
     def __top_frame(self):
         pb = gtk.gdk.Pixbuf
@@ -126,6 +128,7 @@ class markerWindow(gtk.Window):
         gtk.Window.__init__(self)
         self.set_border_width(10)
         self.prnt = parent
+        self.coords = coords
         self.set_transient_for(parent)
         self.set_size_request(500, 350)
         self.set_destroy_with_parent(True)
@@ -143,7 +146,14 @@ class markerWindow(gtk.Window):
         self.set_decorated(False)
         self.show_all()
         self.hpaned.grab_focus()
+        gobject.timeout_add(1000, self.do_destroy)
     
+    def do_destroy(self, *args):
+        if not self.get_property("visible"):
+            self.destroy()
+            return False
+        return True
+
     def on_delete(self, *args):
         self.hide()
         return False

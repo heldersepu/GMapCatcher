@@ -49,6 +49,7 @@ class MyMarkers:
         return self.positions
 
     def get_pixDim(self, zl):
+        return 256
         maxZoom = MAP_MAX_ZOOM_LEVEL - 2
         if zl >= maxZoom:
             return 56
