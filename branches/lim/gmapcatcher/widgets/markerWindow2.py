@@ -10,18 +10,23 @@ from cellRendererClickablePixbuf import CellRendererClickablePixbuf
 
 
 class markerWindow2(gtk.Window):
-
+    DEFAULT = "Enter name here"
     def refresh_parent(self):
         self.prnt.marker.refresh()
         self.prnt.drawing_area.repaint()
 
     def btn_done(self, w):
+        name = self.entryName.get_text()
+        if name == self.DEFAULT:
+            name = str(self.coords[0]) + "_" + str(self.coords[1])
+        self.prnt.marker.append_marker(self.coords, name, 'image="' + self.marker + '"')
+        self.refresh_parent()
         self.destroy()
 
     ## All the buttons below the items
     def __action_buttons(self):
         bbox = gtk.HButtonBox()
-        bbox.set_layout(gtk.BUTTONBOX_EDGE)       
+        bbox.set_layout(gtk.BUTTONBOX_EDGE)
         button = gtk.Button('_Done')
         button.set_size_request(34, 35)
         button.connect('clicked', self.btn_done)
@@ -30,21 +35,21 @@ class markerWindow2(gtk.Window):
         hbox.pack_start(bbox,padding=10)
         return hbox
 
-
     def __top_right(self):
         vbox = gtk.VBox(False,10)
         hbox1 = gtk.HBox(False,10)
         hbox1.add(gtk.Label('Name:'))
         self.entryName = gtk.Entry()
         self.entryName.set_width_chars(35)
-        self.entryName.set_text("Enter name here")
+        self.entryName.set_text(self.DEFAULT)
         hbox1.add(self.entryName)
-        
+
         hbox2 = gtk.HBox(False,10)
         hbox2.add(gtk.Label('Coord:'))
         eCoord = gtk.Entry()
         eCoord.set_width_chars(35)
         eCoord.set_text(str(self.coords[0]) + ", " + str(self.coords[1]))
+        eCoord.set_editable(False)
         hbox2.add(eCoord)
         vbox.add(hbox1)
         vbox.add(hbox2)
@@ -52,7 +57,7 @@ class markerWindow2(gtk.Window):
         box.set_border_width(10)
         box.add(vbox)
         return box
-        
+
     def __top_frame(self):
         listStore = gtk.ListStore(gtk.gdk.Pixbuf)
         listStore.append([mapPixbuf.marker_pixbuf(self.marker)])
@@ -76,7 +81,7 @@ class markerWindow2(gtk.Window):
 
     def __controls(self):
         vbox = gtk.VBox(False)
-        hpaned = gtk.VPaned()        
+        hpaned = gtk.VPaned()
         frame = gtk.Frame()
         frame.add(self.__top_frame())
         hpaned.pack1(frame, True, True)

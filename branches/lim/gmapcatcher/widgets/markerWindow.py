@@ -8,6 +8,7 @@ import gtk
 import gobject
 import mapPixbuf
 from customMsgBox import user_confirm
+from markerWindow2 import markerWindow2
 from cellRendererClickablePixbuf import CellRendererClickablePixbuf
 
 
@@ -16,21 +17,21 @@ class markerWindow(gtk.Window):
     def refresh_parent(self):
         self.prnt.marker.refresh()
         self.prnt.drawing_area.repaint()
-    
+
     def btn_del_all(self, w):
         confirm = user_confirm(self, 'Are you sure you want to delete all markers?')
         if confirm == gtk.RESPONSE_YES:
             self.prnt.marker.del_all()
             self.refresh_parent()
             self.hide()
-            
+
     def btn_del_last(self, w):
         confirm = user_confirm(self, 'Are you sure you want to delete last marker?')
         if confirm == gtk.RESPONSE_YES:
             self.prnt.marker.del_last()
             self.refresh_parent()
             self.hide()
-        
+
     def btn_cancel(self, w):
         self.hide()
 
@@ -55,28 +56,27 @@ class markerWindow(gtk.Window):
         button = gtk.Button('_Cancel')
         button.set_size_request(34, 35)
         button.connect('clicked', self.btn_cancel)
-        
+
         bbox.add(hbbox)
         hbbox = gtk.HButtonBox()
         hbbox.set_layout(gtk.BUTTONBOX_END)
-        hbbox.add(button)       
+        hbbox.add(button)
         bbox.add(hbbox)
         hbox = gtk.HBox()
         hbox.pack_start(bbox,padding=10)
         return hbox
-    
+
     def __cell_clicked(self, w, intRow, listStore, intCol):
-        image = listStore[intRow][intCol+1]        
-        self.prnt.marker.append_marker(self.coords, image, 'image="' + image + '"')
-        self.refresh_parent()
+        image = listStore[intRow][intCol+1]
+        markerWindow2(self.prnt, self.coords, image)
         self.hide()
-    
+
     def __top_frame(self):
         pb = gtk.gdk.Pixbuf
         listStore = gtk.ListStore(pb,str, pb,str, pb,str, pb,str, pb,str)
         pb = []
         pbs = []
-        for marker in mapPixbuf.getMarkers():            
+        for marker in mapPixbuf.getMarkers():
             pb.append(mapPixbuf.marker_pixbuf(marker))
             pb.append(marker)
             if len(pb) == 10:
@@ -88,25 +88,25 @@ class markerWindow(gtk.Window):
             pbs.append(pb)
         for pb in pbs:
             listStore.append(pb)
-        
-        myTree = gtk.TreeView(listStore)        
+
+        myTree = gtk.TreeView(listStore)
         for intRow in range(5):
             cell = CellRendererClickablePixbuf()
             cell.connect('clicked', self.__cell_clicked, listStore, intRow*2)
             tvcolumn = gtk.TreeViewColumn('', cell)
             tvcolumn.set_attributes(cell, pixbuf=intRow*2)
             myTree.append_column(tvcolumn)
-            tvcolumn.set_expand(True)        
+            tvcolumn.set_expand(True)
         treeSel = myTree.get_selection()
         treeSel.set_mode(gtk.SELECTION_NONE)
         myTree.set_grid_lines(gtk.TREE_VIEW_GRID_LINES_BOTH)
         return myTree
-    
-    def __controls(self):        
+
+    def __controls(self):
         vbox = gtk.VBox(False)
         hpaned = gtk.VPaned()
         sw = gtk.ScrolledWindow()
-        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)        
+        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         sw.add(self.__top_frame())
         frame = gtk.Frame()
         frame.add(sw)
@@ -139,7 +139,7 @@ class markerWindow(gtk.Window):
         self.show_all()
         self.hpaned.grab_focus()
         gobject.timeout_add(1000, self.do_destroy)
-    
+
     def do_destroy(self, *args):
         if not self.get_property("visible"):
             self.destroy()
@@ -149,7 +149,7 @@ class markerWindow(gtk.Window):
     def on_delete(self, *args):
         self.hide()
         return False
-    
+
     def key_press_event(self, widget, event, window):
         # W = 87,119; Esc = 65307
         if event.keyval == 65307 or \
