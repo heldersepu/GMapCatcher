@@ -158,8 +158,12 @@ class DrawingArea(mapDrawingArea.DrawingArea):
                     # Display the Marker Name
                     gco = self.window.new_gc()
                     gco.set_rgb_fg_color(gtk.gdk.color_parse(conf.marker_font_color))
-
-                    pangolayout = self.create_pango_layout(marker_name)
+                    
+                    marker_info = marker_name
+                    if conf.show_marker_coord:
+                        marker_info += ("\n%.4f, %.4f" % (mcoord[0], mcoord[1]))
+                    pangolayout = self.create_pango_layout(marker_info)
+                    pangolayout.set_single_paragraph_mode(False)
                     pangolayout.set_font_description(
                             pango.FontDescription(conf.marker_font_desc))
                     self.wr_pltxt(gco, screen_coord[0], screen_coord[1], pangolayout)
