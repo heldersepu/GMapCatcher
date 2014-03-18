@@ -78,6 +78,7 @@ class MapConf():
 
         config.add_section(SECTION_MARKERS)
         config.set(SECTION_MARKERS, 'show_marker_name', int(self.show_marker_name))
+        config.set(SECTION_MARKERS, 'show_marker_coord', int(self.show_marker_coord))
         config.set(SECTION_MARKERS, 'marker_font_color', self.marker_font_color)
         config.set(SECTION_MARKERS, 'marker_font_desc', self.marker_font_desc)
 
@@ -194,6 +195,7 @@ class MapConf():
 
         ## Show the name/description of the marker in the map
         self.show_marker_name = read_config('show_marker_name', 1, int, SECTION_MARKERS)
+        self.show_marker_coord = read_config('show_marker_coord', 1, int, SECTION_MARKERS)
         ## The font color for the name of the marker
         self.marker_font_color = read_config('marker_font_color', '#00CCCC', str, SECTION_MARKERS)
         ## The font Description for the marker "sans bold 12"
