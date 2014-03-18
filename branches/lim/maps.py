@@ -133,7 +133,6 @@ class MainWindow(gtk.Window):
                     found = key
                     break
             if not found:
-                self.cb_offline.set_active(False)
                 location = self.ctx_map.search_location(l)
                 if (location[:6] == "error="):
                     self.drawing_area.draw_message(location[6:])
@@ -157,18 +156,6 @@ class MainWindow(gtk.Window):
         coord = locations[unicode(found_locations[0])]
         zl = self.do_zoom(coord[2], coord[2], True)
         self.drawing_area.center = mapUtils.coord_to_tile((coord[0], coord[1], zl))
-
-    ## Handles the click in the offline check box
-    def offline_clicked(self, w):
-        self.drawing_area.repaint()
-        if not self.cb_offline.get_active():
-            self.do_check_for_updates()
-
-    ## Start checking if there is an update
-    def do_check_for_updates(self):
-        if self.conf.check_for_updates and (self.update is None):
-            # 3 seconds delay before starting the check
-            self.update = CheckForUpdates(3, self.conf.version_url)
 
     ## Handles the change in the GPS combo box
     def gps_changed(self, w):
@@ -366,7 +353,6 @@ class MainWindow(gtk.Window):
         self.cb_offline = gtk.CheckButton("Offlin_e")
         if self.conf.start_offline:
             self.cb_offline.set_active(True)
-        self.cb_offline.connect('clicked', self.offline_clicked)
         hbox.pack_start(self.cb_offline)
 
         self.cb_forceupdate = gtk.CheckButton("_Force update")
@@ -611,7 +597,7 @@ class MainWindow(gtk.Window):
         self.update_export()
         self.ctx_map.do_export(
             self.tPoint, self.export_panel.expZoom.get_value_as_int(), self.layer,
-            not self.cb_offline.get_active(), self.conf,
+            False, self.conf,
             self.export_panel.image_size(),
             self.export_panel.mode.get_active_text(),
             gui_callback(self.export_done)
@@ -670,12 +656,6 @@ class MainWindow(gtk.Window):
         return menu
 
     def getCloudMadeRoute(self, w, points, name=None):
-        if self.cb_offline.get_active():
-            if error_msg(self, "Offline mode, cannot get route!" +
-                        "      Would you like to get online?",
-                        gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
-                return
-        self.cb_offline.set_active(False)
         start = points[0]
         end = points[-1]
         transit_points = []
@@ -814,11 +794,9 @@ class MainWindow(gtk.Window):
                     self.background.append(tile_coord)
 
                 gc = da.style.black_gc
-                force_update = self.cb_forceupdate.get_active()
-                img = self.ctx_map.load_pixbuf(tile_coord, layer, force_update)
+                img = self.ctx_map.load_pixbuf(tile_coord, layer, False)
                 if hybridbackground:
-                    img2 = self.ctx_map.load_pixbuf(tile_coord, hybridbackground_layer,
-                                                    force_update)
+                    img2 = self.ctx_map.load_pixbuf(tile_coord, hybridbackground_layer, False)
                 for x, y in xy:
                     da.window.draw_pixbuf(gc, img, 0, 0, x, y,
                                           TILES_WIDTH, TILES_HEIGHT)
