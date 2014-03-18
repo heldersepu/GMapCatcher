@@ -143,20 +143,8 @@ class MapDownloader:
         world_tiles = mapUtils.tiles_on_level(coord[2])
         coord = (mapUtils.mod(coord[0], world_tiles),
                  mapUtils.mod(coord[1], world_tiles), coord[2])
-        # try to get a tile offline
-        if self.ctx_map.is_tile_in_local_repos(coord, layer) or (not online):
-            if not (force_update and online):
-                callback(True, coord, layer)
-                return ret
-
-        if not (coord, layer) in self.queued:
-            self.queued.append((coord, layer))
-            self.taskq.put(
-                DownloadTask(
-                    coord, layer, callback, force_update, conf
-                )
-            )
-        return ret + 1
+        callback(True, coord, layer)
+        return ret
 
     # @return number of tiles queued for download
     def query_region(self, xmin, xmax, ymin, ymax, zoom, *args, **kwargs):
