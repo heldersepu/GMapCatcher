@@ -26,7 +26,6 @@ from gmapcatcher.mapUpdate import CheckForUpdates
 from gmapcatcher.mapServices import MapServ
 from gmapcatcher.mapDownloader import MapDownloader
 from gmapcatcher.xmlUtils import kml_to_markers
-from gmapcatcher.widgets.DLWindow import DLWindow
 from gmapcatcher.widgets.EXWindow import EXWindow
 from gmapcatcher.widgets.gpsWindow import gpsWindow
 from gmapcatcher.widgets.trackWindow import trackWindow
@@ -203,19 +202,7 @@ class MainWindow(gtk.Window):
             self.gps_window_clicked(w)
 
     def download_clicked(self, w, pointer=None):
-        rect = self.drawing_area.get_allocation()
-        if (pointer is None):
-            tile = self.drawing_area.center
-        else:
-            tile = mapUtils.pointer_to_tile(
-                rect, pointer, self.drawing_area.center, self.get_zoom()
-            )
-
-        coord = mapUtils.tile_to_coord(tile, self.get_zoom())
-        km_px = mapUtils.km_per_pixel(coord)
-        dlw = DLWindow(coord, km_px * rect.width, km_px * rect.height,
-                        self.layer, self.conf, self.cb_forceupdate.get_active())
-        dlw.show()
+        return False
 
     def export_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
@@ -255,24 +242,6 @@ class MainWindow(gtk.Window):
                 self.gpsw.show()
             self.gpsw.move(10,20)
         return False
-
-    def visual_download(self):
-        if self.visual_dlconfig.get('active', False):
-            force_update = self.cb_forceupdate.get_active()
-            confzl = self.visual_dlconfig.get('zl', -2)
-            thezl = self.get_zoom()
-            sz = self.visual_dlconfig.get('sz', 4)
-            rect = self.drawing_area.get_allocation()
-
-            coord = mapUtils.tile_to_coord(self.drawing_area.center, thezl)
-            km_px = mapUtils.km_per_pixel(coord)
-
-            self.visual_dlconfig['downloader'].bulk_download(
-                        coord, (thezl - 1, thezl + confzl),
-                        km_px * rect.width / sz, km_px * rect.height / sz,
-                        self.layer, gui_callback(self.visualdl_cb),
-                        self.visualdl_update, force_update, self.conf)
-            self.visualdl_update()
 
     def check_bulk_down(self):
         if self.conf.map_service in NO_BULK_DOWN:
@@ -377,21 +346,6 @@ class MainWindow(gtk.Window):
         gtk.stock_add([(gtk.STOCK_PREFERENCES, "", 0, 0, "")])
         button = gtk.Button(stock=gtk.STOCK_PREFERENCES)
         button.set_size_request(34, -1)
-        menu = gtk_menu(TOOLS_MENU, self.menu_tools)
-        menu.prepend(self.operations_sub_menu())
-
-        self.visual_dltool = gtk.CheckMenuItem(TOOLS_MENU_PLUS_VISUAL_DL)
-        menu.append(self.visual_dltool)
-        self.visual_dltool.connect('toggled', self.visual_dltool_toggled)
-        self.visual_dltool.show()
-        temp = gtk.MenuItem()
-        menu.append(temp)
-        temp.show()
-        self.credits_menuitem = gtk.MenuItem(TOOLS_MENU_PLUS_CREDITS)
-        menu.append(self.credits_menuitem)
-        self.credits_menuitem.connect('activate', self.view_credits)
-        self.credits_menuitem.show()
-        button.connect_object("event", self.tools_button_event, menu)
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
@@ -790,9 +744,7 @@ class MainWindow(gtk.Window):
     def da_motion(self, w, event):
         if (event.state & gtk.gdk.BUTTON1_MASK):
             self.gps_idle_time = time.time()
-            self.drawing_area.da_move(event.x, event.y, self.get_zoom())
-            if (event.state & gtk.gdk.SHIFT_MASK):
-                self.visual_download()
+            self.drawing_area.da_move(event.x, event.y, self.get_zoom())            
             self.update_export()
 
         if self.conf.statusbar_type == STATUS_MOUSE and not self.Ruler:
@@ -801,50 +753,19 @@ class MainWindow(gtk.Window):
 
     def view_credits(self, menuitem):
         w = OurCredits()
-        w.destroy()
-
-    def visual_dltool_toggled(self, menuitem):
-        if not self.visual_dlconfig.get('downloader', False):
-            self.visual_dlconfig['downloader'] = MapDownloader(self.ctx_map, self.conf.maxthreads)
-
-        if menuitem.get_active():
-            if self.check_bulk_down():
-                self.visual_dlconfig['active'] = True
-                self.draw_overlay()
-            else:
-                menuitem.set_active(False)
-        else:
-            self.visual_dlconfig['active'] = False
-            self.drawing_area.repaint()
-
-    def visualdl_cb(self, *args, **kwargs):
-        self.visualdl_update(1)
-
-    def visualdl_update(self, recd=0):
-        if self.visual_dlconfig.get('downloader', False):
-            temp = self.visual_dlconfig.get('recd', 0)
-            self.visual_dlconfig['qd'] = \
-                    self.visual_dlconfig['downloader'].qsize() + temp + recd
-            self.visual_dlconfig['recd'] = temp + recd
-        if self.visual_dlconfig.get('recd', 0) >= \
-                self.visual_dlconfig.get('qd', 0):
-            self.visual_dlconfig['qd'], self.visual_dlconfig['recd'] = 0, 0
-        self.drawing_area.repaint()
+        w.destroy()    
 
     def expose_cb(self, drawing_area, event):
-        online = not self.cb_offline.get_active() and not self.hide_dlfeedback
         self.hide_dlfeedback = False
-        force_update = self.cb_forceupdate.get_active()
         rect = drawing_area.get_allocation()
         zl = self.get_zoom()
         self.drawing_area.cr = drawing_area.window.cairo_create()
         self.downloader.query_region_around_point(
             self.drawing_area.center, (rect.width, rect.height), zl, self.layer,
             gui_callback(self.tile_received),
-            online=online, force_update=force_update,
-            conf=self.conf, hybrid_background=self.ctx_map.get_hybrid_background(self.layer, self.conf.map_service)
+            online=False, force_update=False,
+            conf=self.conf
         )
-        self.downloading = self.downloader.qsize()
         self.draw_overlay()
 
     def scroll_cb(self, widget, event):
@@ -872,11 +793,6 @@ class MainWindow(gtk.Window):
             self.drawing_area.repaint()
 
     def tile_received(self, tile_coord, layer, download=False):
-        if download:
-            self.downloading = self.downloader.qsize()
-            if self.downloading <= 0:
-                self.hide_dlfeedback = True
-                self.drawing_area.repaint()
         hybridbackground_layer = self.ctx_map.get_hybrid_background(self.layer, self.conf.map_service)
         hybridbackground = (self.layer >= LAYER_HYB and layer == hybridbackground_layer)
         if (self.layer == layer or hybridbackground) and self.get_zoom() == tile_coord[2]:
@@ -1052,15 +968,7 @@ class MainWindow(gtk.Window):
                             "\n" + str(kmlResponse))
             # F6 = 65475
             elif event.keyval == 65475:
-                if not(self.export_panel.flags() & gtk.VISIBLE):
-                    self.visual_dlconfig['active'] = \
-                        not self.visual_dlconfig.get('active', False)
-                    self.visual_dltool.set_active(
-                            self.visual_dlconfig.get('active', False))
-                    if not self.visual_dlconfig.get('downloader', False):
-                        self.visual_dlconfig['downloader'] = \
-                                MapDownloader(self.ctx_map, self.conf.maxthreads)
-                    self.drawing_area.repaint()
+                self.drawing_area.repaint()
             # F7 = 65476 for Ruler
             elif event.keyval == 65476:
                 self.doRuler()
@@ -1157,9 +1065,7 @@ class MainWindow(gtk.Window):
         self.hide()
         if mapGPS.available and self.gps:
             self.gps.stop_all()
-        self.downloader.stop_all()
-        if self.visual_dlconfig.get('downloader', False):
-            self.visual_dlconfig['downloader'].stop_all()
+        self.downloader.stop_all()        
         self.ctx_map.finish()
         # If there was an update show it
         if self.update:
