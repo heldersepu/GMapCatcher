@@ -89,9 +89,9 @@ If you make a mistake, press delete to remove last point. You can zoom and move 
 The path shows segment length and the whole path length (up to that point) on every point of the path. After you finish drawing the path, just press F7 again to close the tool. You then have a choice to use path as a track or dismiss it. If you choose to use it as track, it will be shown on the map until you close GMapCatcher or hide the track through Track control.
 
 = Tools menu =
-
-== Operations ==
 https://gmapcatcher.googlecode.com/svn/wiki/images/GMapCatcher_tools.png
+== Operations ==
+
 === Download ===
 Within the following dialog an area and a zoom level to download a map section can be entered. The dialog stays alive during the download.
 
