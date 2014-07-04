@@ -93,6 +93,7 @@ The path shows segment length and the whole path length (up to that point) on ev
 
 === Download ===
 http://gmapcatcher.googlecode.com/svn/wiki/images/GMapCatcher_tools.png
+
 Within the following dialog an area and a zoom level to download a map section can be entered. The dialog stays alive during the download.
 
     http://gmapcatcher.googlecode.com/svn/wiki/images/download_window.png
