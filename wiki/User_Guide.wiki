@@ -104,7 +104,7 @@ The centre of the downloaded area is defined by entering latitude and longitude.
     * left button: Start download
     ** by right-clicking Start download, you can select the map layers to download.
     * middle button: Open menu to restart/continue a previous download
-    * right button: Cancel current download.
+    * right button: Pause current download.
 
   How to update and/or modify a downloaded area? If you have e.g. downloaded the complete US with zoom level 4, now you want to update the NY area with zoom level 2, then you open the Download Window, simply enter the coordinates for NY and set the zoom level to 2, the range width and height to 50km and start the download. Now the NY area is updated the rest remains the same and the complete US is still available for offline viewing with zoom level 4 while NY is available with zoom level 2.
 
