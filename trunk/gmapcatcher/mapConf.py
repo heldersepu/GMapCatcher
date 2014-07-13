@@ -76,6 +76,7 @@ class MapConf():
         config.set(SECTION_MAP, 'overlay_delay', self.overlay_delay)
         config.set(SECTION_MAP, 'opacity', self.opacity)
         config.set(SECTION_MAP, 'draw_track_start_end', self.draw_track_start_end)
+        config.set(SECTION_MAP, 'ruler_track_width', self.ruler_track_width)
 
         config.add_section(SECTION_GPS)
         config.set(SECTION_GPS, 'max_gps_zoom', self.max_gps_zoom)
@@ -192,6 +193,8 @@ class MapConf():
         self.opacity = read_config('opacity', 0.0, float, SECTION_MAP)
         ## Initial map opacity
         self.draw_track_start_end = read_config('draw_track_start_end', 0, int, SECTION_MAP)
+		## Ruler-track width, default is 3px
+        self.ruler_track_width = read_config('ruler_track_width', 3, int, SECTION_MAP)
 
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float, SECTION_GPS)
