@@ -201,7 +201,7 @@ class DrawingArea(mapDrawingArea.DrawingArea):
 
         # Draw the Ruler lines
         if len(r_coord) >= 1:
-            self.draw_ruler_lines(conf.units, r_coord, zl, conf.gps_track_width)
+            self.draw_ruler_lines(conf.units, r_coord, zl, conf.ruler_track_width)
 
         if showMarkers:
             pixDim = marker.get_pixDim(zl)
