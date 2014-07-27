@@ -112,6 +112,9 @@ The centre of the downloaded area is defined by entering latitude and longitude.
 You can save current display of map to file
 http://gmapcatcher.googlecode.com/svn/wiki/images/export_map.png
 
+The image will be saved in your installation directory:
+C:\Program Files (x86)\GMapCatcher
+
 === Export Repo tiles ===
 You can export your downloaded map tiles from one format to another
 http://gmapcatcher.googlecode.com/svn/wiki/images/export_window.png
