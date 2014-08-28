@@ -25,7 +25,7 @@
         <br><br>
         One of the best editors for Python and NSIS scripts is [http://notepad-plus.sourceforge.net/uk/download.php Notepad++]<br>
         and a more complete NSIS IDE is [http://hmne.sourceforge.net/ HM NIS EDIT]<br>
-        alos a good Python IDE is [http://www.jetbrains.com/pycharm/download/ PyCharm]
+        also a good Python IDE is [http://www.jetbrains.com/pycharm/download/ PyCharm]
 
  ==  Source Code  ==
          * View the HEAD revision directly at http://code.google.com/p/gmapcatcher/source/browse/#svn/trunk
