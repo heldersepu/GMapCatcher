@@ -1,3 +1,0 @@
-#labels Deprecated
-===The Keyboard Shortcuts are now inside the User_Guide:===
-[http://code.google.com/p/gmapcatcher/wiki/User_Guide#Keyboard_shortcuts]
