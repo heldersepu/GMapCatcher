@@ -1,0 +1,1 @@
+0.8.0.0	http://gmapcatcher.googlecode.com/files/GMapCatcher-0.8.0.0.exe
