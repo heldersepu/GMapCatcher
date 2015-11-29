@@ -19,7 +19,7 @@ Users can choose their preferred map and watch it while online. All viewed map s
 
 After starting the programme the GUI shows the map, a small size scroll bar on the left and a toolbar on top.
 
-![http://gmapcatcher.googlecode.com/svn/wiki/images/main_window.png](http://gmapcatcher.googlecode.com/svn/wiki/images/main_window.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/main_window.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/main_window.png)
 
 By using the scroll bar the resolution/scale of the map can be changed. The toolbar consists of two rows and offers the following actions and settings (first row to second row, left to right):
   * **Main configuration button**
