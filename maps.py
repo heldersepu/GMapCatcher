@@ -607,16 +607,18 @@ class MainWindow(gtk.Window):
             self.tPoint['yHigh'] = tile[0][1] + (heightFact - int(heightFact / 2))
 
             lowCoord = mapUtils.tile_to_coord(
-                ((self.tPoint['xLow'], self.tPoint['yLow']),
-                 (0, 0)), self.export_panel.expZoom.get_value_as_int()
+                ((self.tPoint['xLow'], self.tPoint['yLow']), (0, 0)), 
+                self.export_panel.expZoom.get_value_as_int()
             )
+            self.tPoint['lowCoord'] = lowCoord
             self.export_panel.entryUpperLeft.set_text(str(lowCoord[0]) + ", " + str(lowCoord[1]))
             self.tPoint['FileName'] = "coord=%.6f,%.6f_zoom=%d.png" % lowCoord
 
             highCoord = mapUtils.tile_to_coord(
-                ((self.tPoint['xHigh'], self.tPoint['yHigh']),
-                 (0, 0)), self.export_panel.expZoom.get_value_as_int()
+                ((self.tPoint['xHigh'], self.tPoint['yHigh']), (0, 0)), 
+                self.export_panel.expZoom.get_value_as_int()
             )
+            self.tPoint['highCoord'] = highCoord
             self.export_panel.entryLowerRight.set_text(str(highCoord[0]) + ", " + str(highCoord[1]))
 
             # Set the vars to draw rectangle
