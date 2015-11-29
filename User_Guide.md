@@ -45,7 +45,7 @@ By using the scroll bar the resolution/scale of the map can be changed. The tool
 
 While displaying a map a right mouse click opens the following menu:
 
-![http://gmapcatcher.googlecode.com/svn/wiki/gmap_rclick.png](http://gmapcatcher.googlecode.com/svn/wiki/gmap_rclick.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/gmap_rclick.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/gmap_rclick.png)
 
 The first four items change the map section display and explain themselves:
   * Zoom In: Decrease zoom
