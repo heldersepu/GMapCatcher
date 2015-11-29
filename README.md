@@ -8,7 +8,7 @@ It displays them using a custom GUI. User can view the maps while offline. GMapC
 
 GMapCatcher is written in Python 2.7 & PyGTK, can run on Linux, Windows and Mac OSX.
 
-![http://gmapcatcher.googlecode.com/svn/wiki/snapshot.gif](http://gmapcatcher.googlecode.com/svn/wiki/snapshot.gif)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/snapshot.gif](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/snapshot.gif)
 
 You can find a list of improvements and latest features in the [Changelog](http://code.google.com/p/gmapcatcher/source/browse/trunk/changelog)
 
