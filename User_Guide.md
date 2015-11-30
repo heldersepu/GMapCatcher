@@ -66,7 +66,7 @@ Actions of the final 2 items:
 ## Visual path download ##
 > When the visual path download tool is visible, it describes the area that would be included in a visual download.
 
-![http://gmapcatcher.googlecode.com/svn/wiki/visual_download.png](http://gmapcatcher.googlecode.com/svn/wiki/visual_download.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/visual_download.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/visual_download.png)
 
   * Shift+Scroll changes the size of the area
   * Ctrl+Scroll changes the minimum zoom level to download
@@ -90,11 +90,11 @@ The path shows segment length and the whole path length (up to that point) on ev
 ## Operations ##
 
 ### Download ###
-![http://gmapcatcher.googlecode.com/svn/wiki/images/GMapCatcher_tools.png](http://gmapcatcher.googlecode.com/svn/wiki/images/GMapCatcher_tools.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/GMapCatcher_tools.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/GMapCatcher_tools.png)
 
 Within the following dialog an area and a zoom level to download a map section can be entered. The dialog stays alive during the download.
 
-> ![http://gmapcatcher.googlecode.com/svn/wiki/images/download_window.png](http://gmapcatcher.googlecode.com/svn/wiki/images/download_window.png)
+> ![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/download_window.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/download_window.png)
 
 The centre of the downloaded area is defined by entering latitude and longitude. The size of the area by entering width and height. The maximum and minimum zoom level define the scale of the downloaded map tiles. The map type which is set in the drop down menu for 'map type selection' is used for the download.
 
@@ -108,14 +108,14 @@ The centre of the downloaded area is defined by entering latitude and longitude.
 
 ### Export map to image ###
 You can save current display of map to file
-![http://gmapcatcher.googlecode.com/svn/wiki/images/export_map.png](http://gmapcatcher.googlecode.com/svn/wiki/images/export_map.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/export_map.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/export_map.png)
 
 The image will be saved in your installation directory:
 C:\Program Files (x86)\GMapCatcher
 
 ### Export Repo tiles ###
 You can export your downloaded map tiles from one format to another
-![http://gmapcatcher.googlecode.com/svn/wiki/images/export_window.png](http://gmapcatcher.googlecode.com/svn/wiki/images/export_window.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/export_window.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/export_window.png)
 
 ### Track control ###
 Track control allows controlling of tracks shown in the map. Through this window you can also import and export tracks, as well as export GPS track. GMapCatcher uses GPX-files to store this information.
@@ -126,12 +126,12 @@ With import tracks you can import tracks and routes from GPX-files. You can expo
 
 Below is Track control window being used to show one of the drawn ruler paths and one track from imported file.
 
-![http://gmapcatcher.googlecode.com/svn/wiki/images/track_control.png](http://gmapcatcher.googlecode.com/svn/wiki/images/track_control.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/track_control.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/track_control.png)
 
 ### GPS window ###
 GPS window shows the current GPS information, if available. Unit of speed is determined by unit selection in [User\_Guide#Settings](User_Guide#Settings.md).
 
-![http://gmapcatcher.googlecode.com/svn/wiki/images/gps_window.png](http://gmapcatcher.googlecode.com/svn/wiki/images/gps_window.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/gps_window.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/gps_window.png)
 
 # Settings #
 
@@ -143,7 +143,7 @@ All values in the tab Settings describe display properties when starting the pro
 
 ## Main ##
 
-![http://gmapcatcher.googlecode.com/svn/wiki/images/settings_main.png](http://gmapcatcher.googlecode.com/svn/wiki/images/settings_main.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_main.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_main.png)
 
   * 'Size' defines the display size of the GMapCatcher window. 'Zoom' defines the zoom level of the map section specified by the coordinates of the field 'Center', which is displayed on start up.
   * The button 'Use Currents' sets all values according to the current display.
@@ -156,30 +156,30 @@ All values in the tab Settings describe display properties when starting the pro
 
 ## Edit locations ##
 
-![http://gmapcatcher.googlecode.com/svn/wiki/images/settings_locations.png](http://gmapcatcher.googlecode.com/svn/wiki/images/settings_locations.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_locations.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_locations.png)
 
 Allows adding, deleting and editing of locations. All locations searched will be added here.
 
 ## Edit markers ##
 
-![http://gmapcatcher.googlecode.com/svn/wiki/images/settings_markers.png](http://gmapcatcher.googlecode.com/svn/wiki/images/settings_markers.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_markers.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_markers.png)
 
 Allows adding, deleting and editing of markers. You can add marker also by CTRL + left-clicking the map in the point where you want marker.
 
 ## Change Theme ##
 
-![http://gmapcatcher.googlecode.com/svn/wiki/images/settings_theme.png](http://gmapcatcher.googlecode.com/svn/wiki/images/settings_theme.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_theme.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_theme.png)
 
   * 'Mark center of the map' allows adding a center point to the map window.
   * 'Map scales' selects whether to draw map scale
   * 'Map service' allows selecting of map service.
     * 'Use different folder per map service' allows using multiple maps without them interfering with each other. Also, when selected, map selection box in main window shows all the available map services instead of showing just map layers of selected map.
     * 'Select map servers' allows toggling displaying of the maps in map selection. You can disable map by entering 0 to 'status' and enable by entering '1'
-> ![http://gmapcatcher.googlecode.com/svn/wiki/images/settings_map_servers.png](http://gmapcatcher.googlecode.com/svn/wiki/images/settings_map_servers.png)
+> ![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_map_servers.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_map_servers.png)
 
 ## GPS Options ##
 
-![http://gmapcatcher.googlecode.com/svn/wiki/images/settings_gps.png](http://gmapcatcher.googlecode.com/svn/wiki/images/settings_gps.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_gps.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_gps.png)
 
   * 'GPS' allows setting of GPS behaviour
     * 'GPS type' selects GPS type, possible choices are 'Off', 'GPSd' and 'Serial'.
