@@ -175,7 +175,7 @@ Allows adding, deleting and editing of markers. You can add marker also by CTRL 
   * 'Map service' allows selecting of map service.
     * 'Use different folder per map service' allows using multiple maps without them interfering with each other. Also, when selected, map selection box in main window shows all the available map services instead of showing just map layers of selected map.
     * 'Select map servers' allows toggling displaying of the maps in map selection. You can disable map by entering 0 to 'status' and enable by entering '1'
-> ![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_map_servers.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_map_servers.png)
+![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_map_servers.png](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/images/settings_map_servers.png)
 
 ## GPS Options ##
 
