@@ -27,5 +27,5 @@ def tile_to_quadkey(coord):
             digit += 1
         if (coord[1] & mask) != 0:
             digit += 2
-        quadKey.append(str(digit))  # Was there a reason for this to be "quadKey.append(`digit`)" ?
+        quadKey.append(str(digit))
     return ''.join(quadKey)
