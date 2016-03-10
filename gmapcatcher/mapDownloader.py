@@ -56,23 +56,16 @@ class DownloaderThread(Thread):
             self.inq.task_done()
 
     def process_task(self, task):
-        # poznamka: filename tady neni potreba, nejaky sideeffect?
-        #filename = self.ctx_map.get_file(
-        #    task.coord, task.layer, True,
-        #   task.force_update, task.mapServ, task.styleID
-        #)
         self.ctx_map.get_tile(
             task.coord, task.layer, True,
             task.force_update, task.conf
         )
         if task.callback:
-            # print "process_task callback", task
             task.callback(False, task.coord, task.layer, True)
         try:
             self.parent.queued.remove((task.coord, task.layer))
         except ValueError:
             True
-# seems to happen at completion - tuple not in list
 
 
 ## Main class used for downloading tiles.
