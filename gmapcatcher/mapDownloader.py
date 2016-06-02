@@ -235,7 +235,7 @@ class MapQueue:
         if iterable is None:
             self.length = 0
         else:
-            self.length = max(len(iterable, maxlen))
+            self.length = max(len(iterable), maxlen)
             for i in range(self.length):
                 self.stack.append(iterable[i])
         self.pending = 0
