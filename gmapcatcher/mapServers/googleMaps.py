@@ -8,13 +8,12 @@ import gmapcatcher.openanything as openanything
 from gmapcatcher.mapConst import *
 
 known_layers = {}
+map_server_query = ["m", "k", "p", "h"]
 
 
 ## Returns a template URL for the GoogleMaps
 def layer_url_template(layer, conf):
     if layer not in known_layers:
-        map_server_query = ["m", "k", "p", "h"]
-
         oa = openanything.fetch(
             'http://maps.google.com/maps?t=' + map_server_query[layer])
 
@@ -22,7 +21,6 @@ def layer_url_template(layer, conf):
             print "Trying to fetch http://maps.google.com/maps but failed"
             return None
         html = oa['data']
-
         known_layers[layer] = parse_start_page(layer, html, conf)
     return known_layers[layer]
 
@@ -31,7 +29,7 @@ def layer_url_template(layer, conf):
 def get_url(counter, coord, layer, conf):
     template = layer_url_template(layer, conf)
     if template:
-        return template % (counter, coord[0], coord[1], 17 - coord[2])
+        return template % (coord[0], coord[1], 17 - coord[2])
 
 
 ## The json.dumps is desired but not required
@@ -49,25 +47,14 @@ def json_dumps(string):
 def parse_start_page(layer, html, conf):
     end_str = '&src=' + conf.google_src + '&hl=' + conf.language + '&x=%i&y=%i&z=%i'
 
-    hybrid = ''
-    if layer == LAYER_HYB:
-        hybrid = 'Hybrid'
+    # srtPattern = 'https://mts0.googleapis.com/maps/vt?lyrs=m@352000000'
+    # p = re.compile(srtPattern)
+    # match = p.search(html)
+    # if not match:
+        # print "Cannot parse result"
+        # return None
 
-    # List of patterns add more as needed
-    paList = [
-        '<div id=inlineTiles' + hybrid + ' dir=ltr>' +
-        '<img src="http.://([a-z]{3,4})[0-9].google.com/(.+?)&'
-    ]
-    for srtPattern in paList:
-        p = re.compile(srtPattern)
-        match = p.search(html)
-        if match:
-            break
-    if not match:
-        print "Cannot parse result"
-        return None
-
-    return 'http://%s%%d.google.com/%s' % tuple(match.groups()) + end_str
+    return 'https://mts0.googleapis.com/maps/vt?lyrs=%s@352000000' % map_server_query[layer] + end_str
 
 
 def set_zoom(intZoom):
