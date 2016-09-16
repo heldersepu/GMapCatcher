@@ -14,12 +14,12 @@ You can find a list of improvements and latest features in the [Changelog](http:
 
 ## Download ##
 
-http://gmapcatcher.googlecode.com/files/GMapCatcher-0.7.6.1.tar.gz
+https://github.com/heldersepu/gmapcatcher/archive/0.8.tar.gz
 
 or
 
 ```
-$ svn checkout http://gmapcatcher.googlecode.com/svn/trunk gmapcatcher
+$ git clone https://github.com/heldersepu/gmapcatcher
 ```
 
 For Windows users, get the [latest Windows installer](http://code.google.com/p/gmapcatcher/downloads/list?can=2&q=Win+Installer)
@@ -59,8 +59,7 @@ If you choose the tarball (because you have a legacy Windows like Windows 98), y
 
 Currently GMapCatcher also depends on [Python Imaging Library (PIL)](http://www.pythonware.com/products/pil/). For gentoo users, emerge dev-python/imaging.
 
-<a href='Hidden comment: 
-== Deprecated version ==
+## Deprecated version ##
 
 Versions before 0.046 are depreated because google changes their http://maps.google.com/maps so old versions cannot fetch correct google map version number. Users are recommended to download new version, or at least modify their "googleMaps.py":
 ```
@@ -75,8 +74,7 @@ def fetch_version_string:
 	return "2.89"
 ```
 
-For more detail, see [http://code.google.com/p/gmapcatcher/issues/detail?id=17 Issue 17]
-'></a>
+For more detail, see [Issue 17](https://github.com/heldersepu/gmapcatcher/issues/17)
 
 ## Authors ##
 
