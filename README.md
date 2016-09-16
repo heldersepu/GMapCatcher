@@ -59,7 +59,6 @@ If you choose the tarball (because you have a legacy Windows like Windows 98), y
 
 Currently GMapCatcher also depends on [Python Imaging Library (PIL)](http://www.pythonware.com/products/pil/). For gentoo users, emerge dev-python/imaging.
 
-<a href='Hidden comment: 
 == Deprecated version ==
 
 Versions before 0.046 are depreated because google changes their http://maps.google.com/maps so old versions cannot fetch correct google map version number. Users are recommended to download new version, or at least modify their "googleMaps.py":
@@ -76,7 +75,6 @@ def fetch_version_string:
 ```
 
 For more detail, see [Issue 17](https://github.com/heldersepu/gmapcatcher/issues/17)
-'></a>
 
 ## Authors ##
 
