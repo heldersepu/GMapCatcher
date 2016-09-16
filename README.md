@@ -19,7 +19,7 @@ http://gmapcatcher.googlecode.com/files/GMapCatcher-0.7.6.1.tar.gz
 or
 
 ```
-$ svn checkout http://gmapcatcher.googlecode.com/svn/trunk gmapcatcher
+$ git clone https://github.com/heldersepu/gmapcatcher
 ```
 
 For Windows users, get the [latest Windows installer](http://code.google.com/p/gmapcatcher/downloads/list?can=2&q=Win+Installer)
