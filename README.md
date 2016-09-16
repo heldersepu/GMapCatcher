@@ -75,7 +75,7 @@ def fetch_version_string:
 	return "2.89"
 ```
 
-For more detail, see [http://code.google.com/p/gmapcatcher/issues/detail?id=17 Issue 17]
+For more detail, see [Issue 17](https://github.com/heldersepu/gmapcatcher/issues/17)
 '></a>
 
 ## Authors ##
