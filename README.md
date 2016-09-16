@@ -14,7 +14,7 @@ You can find a list of improvements and latest features in the [Changelog](http:
 
 ## Download ##
 
-http://gmapcatcher.googlecode.com/files/GMapCatcher-0.7.6.1.tar.gz
+https://github.com/heldersepu/gmapcatcher/archive/0.8.tar.gz
 
 or
 
