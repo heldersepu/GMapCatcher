@@ -25,12 +25,6 @@ One of the best editors for Python and NSIS scripts is <a href='http://notepad-p
 and a more complete NSIS IDE is <a href='http://hmne.sourceforge.net/'>HM NIS EDIT</a><br>
 also a good Python IDE is <a href='http://www.jetbrains.com/pycharm/download/'>PyCharm</a></blockquote>
 
-<blockquote><h2>Source Code</h2>
-<ul><li>View the HEAD revision directly at <a href='http://code.google.com/p/gmapcatcher/source/browse/#svn/trunk'>http://code.google.com/p/gmapcatcher/source/browse/#svn/trunk</a>
-</li><li>Check out a working copy using <a href='http://tortoisesvn.net/downloads'>TortoiseSVN</a></li></ul></blockquote>
-
-<blockquote><a href='http://tortoisesvn.net/downloads.html'><img src='http://gmapcatcher.googlecode.com/svn/wiki/TortoiseCheckout.png' /></a> <code>tsvn:http://gmapcatcher.googlecode.com/svn/trunk</code></blockquote>
-
 </br></br>
 
 After downloading & installing all requirements just double click <b>maps.py</b>
