@@ -259,4 +259,4 @@ Allows adding, deleting and editing of markers. You can add marker also by CTRL 
 The config file is named **gmapcatcher.conf** and it contains all the settings for GMapCatcher.
 
 Details of all the keys in the config file here:
-http://gmapcatcher.googlecode.com/svn/doxygen/html/classgmapcatcher_1_1map_conf_1_1_map_conf.html#pub-attribs
+https://github.com/heldersepu/GMapCatcher/blob/master/gmapcatcher/mapConf.py#L112
