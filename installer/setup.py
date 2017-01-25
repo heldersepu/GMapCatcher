@@ -69,5 +69,5 @@ else:
                 'dll_excludes': DLL_EXCLUDES,
             }
         },
-        data_files = [ ('README',["README.md"]), ('changelog',["changelog.md"]) ]
+        data_files = [ "README.md", "changelog.md" ]
     )
