@@ -87,6 +87,9 @@ if __name__ == "__main__":
                 (args.gpx, '', '', args.max_zl, args.min_zl, args.width)
 
     mConf = MapConf()
+    ## Here we can overwrite some of the config values
+    # print mConf.map_service
+    # print mConf.repository_type    
     ctx_map = MapServ(mConf)
     downloader = MapDownloader(ctx_map, args.nr_threads)
     try:
