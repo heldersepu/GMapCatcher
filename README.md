@@ -59,23 +59,6 @@ If you choose the tarball (because you have a legacy Windows like Windows 98), y
 
 Currently GMapCatcher also depends on [Python Imaging Library (PIL)](http://www.pythonware.com/products/pil/). For gentoo users, emerge dev-python/imaging.
 
-## Deprecated version ##
-
-Versions before 0.046 are depreated because google changes their http://maps.google.com/maps so old versions cannot fetch correct google map version number. Users are recommended to download new version, or at least modify their "googleMaps.py":
-```
- -p = re.compile("http://mt[0-9].google.com/mt\?.*w([0-9].[0-9][0-9])")
- +p = re.compile("http://mt[0-9].google.com/mt.*w([0-9].[0-9][0-9])")
-```
-
-If it doesn"t work, replace the whole fetch_version_string function in googleMaps.py by
-
-```
-def fetch_version_string:
-	return "2.89"
-```
-
-For more detail, see [Issue 17](https://github.com/heldersepu/gmapcatcher/issues/17)
-
 ## Authors ##
 
 pi3orama@gmail.com, HelderSepu@gmail.com
