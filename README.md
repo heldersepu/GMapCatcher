@@ -2,7 +2,7 @@
 
 GMapCatcher is an offline maps viewer. It can display maps from many providers such as:
 
-[CloudMade](http://maps.cloudmade.com/), [OpenStreetMap](http://www.openstreetmap.org/), [Yahoo Maps](http://maps.yahoo.com/), [Bing Maps](http://www.bing.com/maps/), [Nokia Maps](http://maps.nokia.com), [SkyVector](http://skyvector.com/), ~~Google Map~~.
+[CloudMade](http://maps.cloudmade.com/), [OpenStreetMap](http://www.openstreetmap.org/), [Yahoo Maps](http://maps.yahoo.com/), [Bing Maps](http://www.bing.com/maps/), [Nokia Maps](http://maps.nokia.com), ~~SkyVector~~, ~~Google Map~~.
 
 It displays them using a custom GUI. User can view the maps while offline. GMapCatcher doesn't depend on the map's JavaScript.
 
