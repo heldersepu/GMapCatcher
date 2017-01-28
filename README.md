@@ -52,7 +52,7 @@ Windows:
 
 Windows users are highly recommended to download the [latest Windows installer](http://code.google.com/p/gmapcatcher/downloads/list?can=2&q=Win+Installer).
 This installer contains all required packages, works well on XP, Vista and Win 7.
-For a complete list of tested OS, see wiki [Tested Operating Systems](http://code.google.com/p/gmapcatcher/wiki/TestedOperatingSystems).
+For a complete list of tested OS, see wiki [Tested Operating Systems](https://github.com/heldersepu/GMapCatcher/blob/wiki/TestedOperatingSystems.md).
 
 
 If you choose the tarball (because you have a legacy Windows like Windows 98), you must install [Python 2.6](http://www.python.org/download/), [GTK+ for windows](http://www.gtk.org/download.html), [pygtk, pygobject and pycairo](http://www.pygtk.org/downloads.html) yourself.
