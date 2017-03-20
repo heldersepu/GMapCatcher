@@ -1,8 +1,8 @@
 Nov 2015    H.S    <HelderSepu@gmail.com>
     * 0.8.0.6
-	* Migrate code to GitHub
-	* Add a world map file to the export
-	
+    * Migrate code to GitHub
+    * Add a world map file to the export
+    
 July 20 2013    H.S    <HelderSepu@gmail.com>
     * 0.8.0.5 - At revision: 1590
     * Fix issue in py2exe that created problems in Win 8
