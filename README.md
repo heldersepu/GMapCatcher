@@ -14,7 +14,7 @@ You can find a list of improvements and latest features in the [Changelog](http:
 
 ## Download ##
 
-https://github.com/heldersepu/gmapcatcher/archive/0.8.tar.gz
+https://github.com/heldersepu/GMapCatcher/releases/tag/0.8.0.6
 
 or
 
@@ -22,7 +22,6 @@ or
 $ git clone https://github.com/heldersepu/gmapcatcher
 ```
 
-For Windows users, get the [latest Windows installer](http://code.google.com/p/gmapcatcher/downloads/list?can=2&q=Win+Installer)
 
 ## Usage ##
 
