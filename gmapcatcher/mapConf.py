@@ -127,7 +127,7 @@ class MapConf():
         self.repository_type = read_config('repository_type', 0, int)
         ## URL with the latest version used for the notification updates.
         self.version_url = read_config('version_url',
-            'http://gmapcatcher.googlecode.com/svn/wiki/version.wiki', str)
+            'https://raw.githubusercontent.com/heldersepu/GMapCatcher/wiki/version.md', str)
         ## Whether or not to check for updates, default is True (1)
         self.check_for_updates = read_config('check_for_updates', 1, int)
         ## oneDirPerMap setting, default is False
