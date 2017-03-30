@@ -8,7 +8,6 @@ import os
 import re
 import sys
 import time
-import signal
 import gobject
 import gmapcatcher.mapGPS as mapGPS
 import gmapcatcher.mapUtils as mapUtils
@@ -1335,9 +1334,4 @@ if __name__ == "__main__":
             continue
 
     main(conf_path)
-    pid = os.getpid()
-    # send ourselves sigquit, particularly necessary in posix as
-    # download threads may be holding system resources - python
-    # signals in windows implemented in python 2.7
-    if os.name == 'posix':
-        os.kill(pid, signal.SIGQUIT)
+    sys.exit(0)
