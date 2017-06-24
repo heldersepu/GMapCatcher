@@ -1,6 +1,6 @@
 # Introduction #
 
-> This should be a good starting point for all MS Windows developers.
+This should be a good starting point for all MS Windows developers.
 
 
 # Details #
