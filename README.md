@@ -54,7 +54,7 @@ This installer contains all required packages, works well on XP, Vista and Win 7
 For a complete list of tested OS, see wiki [Tested Operating Systems](https://github.com/heldersepu/GMapCatcher/blob/wiki/TestedOperatingSystems.md).
 
 
-If you choose the tarball (because you have a legacy Windows like Windows 98), you must install [Python 2.6](http://www.python.org/download/), [GTK+ for windows](http://www.gtk.org/download.html), [pygtk, pygobject and pycairo](http://www.pygtk.org/downloads.html) yourself.
+If you choose the tarball (because you have a legacy Windows like Windows 98), you must install [Python 2.7](http://www.python.org/download/), [GTK+ for windows](http://www.gtk.org/download.html), [pygtk, pygobject and pycairo](http://www.pygtk.org/downloads.html) yourself.
 
 Currently GMapCatcher also depends on [Python Imaging Library (PIL)](http://www.pythonware.com/products/pil/). For gentoo users, emerge dev-python/imaging.
 
