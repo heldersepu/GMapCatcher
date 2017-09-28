@@ -53,7 +53,8 @@ def parse_start_page(layer, html, conf):
     # if not match:
         # print "Cannot parse result"
         # return None
-
+    if (layer == LAYER_SAT):
+        return 'https://khms0.googleapis.com/kh?v=742&hl=en&' + end_str
     return 'https://mts0.googleapis.com/maps/vt?lyrs=%s@352000000' % map_server_query[layer] + end_str
 
 

@@ -12,6 +12,7 @@ __copyright__ = 'Copyright (c) 2004 Mark Pilgrim'
 __license__ = 'Python'
 
 import sys
+import ssl
 from urllib import urlencode
 import urllib2
 import urlparse
@@ -95,6 +96,7 @@ def openAnything(source, etag=None, lastmodified=None, agent=USER_AGENT, post_da
 
     protocol = urlparse.urlparse(source)[0]
     if protocol == 'http' or protocol == 'https':
+        
         # open URL with urllib2
         request = urllib2.Request(source)
         request.add_header('User-Agent', agent)
@@ -108,9 +110,9 @@ def openAnything(source, etag=None, lastmodified=None, agent=USER_AGENT, post_da
             request.add_data(body)
         elif post_data:
             request.add_data(encode_post_data(post_data))
-        request.add_header('Accept-encoding', 'gzip')
-        opener = urllib2.build_opener(SmartRedirectHandler(), DefaultErrorHandler())
-        return opener.open(request)
+        request.add_header('Accept-encoding', 'gzip')       
+        gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1) 
+        return urllib2.urlopen(request, context=gcontext)
 
     # try to open with native open function (if source is a filename)
     try:
