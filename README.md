@@ -49,7 +49,7 @@ Windows:
 
 ## Dependencies ##
 
-Windows users are highly recommended to download the [latest Windows installer](http://code.google.com/p/gmapcatcher/downloads/list?can=2&q=Win+Installer).
+Windows users are highly recommended to download the [latest Windows installer](https://github.com/heldersepu/GMapCatcher/releases).
 This installer contains all required packages, works well on XP, Vista and Win 7.
 For a complete list of tested OS, see wiki [Tested Operating Systems](https://github.com/heldersepu/GMapCatcher/blob/wiki/TestedOperatingSystems.md).
 
