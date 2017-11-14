@@ -25,6 +25,9 @@ $ git clone https://github.com/heldersepu/gmapcatcher
 
 ## Usage ##
 
+See the [User Guide](https://github.com/heldersepu/GMapCatcher/blob/wiki/User_Guide.md) for more details.
+
+
 **maps.py** is a gui program used to browse google map. With the **offline** toggle button unchecked,  it can download google map tiles automatically. Once the file downloaded, it will reside on user's hard disk and needn't to be downloaded again any more. At release 0.02, it use multi-threaded downloader and can be faster.
 
 After version 0.04, user can force GMapCatcher to re-download old map tiles by checking "Force update". If a tile is older than 24 hours, it will be re-downloaded.
