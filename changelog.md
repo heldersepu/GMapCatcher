@@ -1,3 +1,7 @@
+May 2018    H.S    <HelderSepu@gmail.com>
+  * 0.8.0.7    
+    * Correction the Nokia template
+    
 Nov 2015    H.S    <HelderSepu@gmail.com>
   * 0.8.0.6
     * Migrate code to GitHub
