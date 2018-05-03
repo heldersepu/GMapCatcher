@@ -17,7 +17,7 @@ This should be a good starting point for all MS Windows developers.
 If you want to build the win installer you need:
 <table cellspacing='10'>
 <blockquote><tr align='left'><th> - py2exe   </th><th> <a href='http://www.py2exe.org/'>http://www.py2exe.org/</a></th></tr>
-<tr align='left'><th> - NSIS     </th><th> <a href='http://nsis.sourceforge.net/Download'>http://nsis.sourceforge.net/Download</a></th></tr>
+<tr align='left'><th> - NSIS     </th><th> <a href='https://sourceforge.net/projects/nsis/'>https://sourceforge.net/projects/nsis/</a></th></tr>
 <tr align='left'><th> - NSIS AccessControl plug-in    </th><th> <a href='http://nsis.sourceforge.net/AccessControl_plug-in'>http://nsis.sourceforge.net/AccessControl_plug-in</a></th></tr>
 </blockquote><blockquote></table>
 <br><br>
