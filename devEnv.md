@@ -30,4 +30,3 @@ also a good Python IDE is <a href='http://www.jetbrains.com/pycharm/download/'>P
 After downloading & installing all requirements just double click <b>maps.py</b>
 
 
-<hr />
