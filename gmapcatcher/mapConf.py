@@ -63,6 +63,7 @@ class MapConf():
         config.set(SECTION_MAP, 'center', self.init_center)
         config.set(SECTION_MAP, 'show_cross', self.show_cross)
         config.set(SECTION_MAP, 'map_service', self.map_service)
+        config.set(SECTION_MAP, 'google_api', self.google_API)
         config.set(SECTION_MAP, 'cloudmade_api', self.cloudMade_API)
         config.set(SECTION_MAP, 'cloudmade_styleid', self.cloudMade_styleID)
         config.set(SECTION_MAP, 'scale_visible', int(self.scale_visible))
@@ -166,6 +167,8 @@ class MapConf():
         self.show_cross = read_config('show_cross', 0, int, SECTION_MAP)
         ## Map service to get images, default is Nokia
         self.map_service = read_config('map_service', MAP_SERVERS[NOKIA], str, SECTION_MAP)
+        ## Google API key
+        self.google_API = read_config('google_API', 'AIzaSyB3d6ZZvE0msnWbh9gX3bAN0bSFf4m8DuE', str, SECTION_MAP)
         ## cloudMade API key
         self.cloudMade_API = read_config('cloudmade_api', '333d990d389d5e65a7714dd738b2fc77', str, SECTION_MAP)
         ## Initial style ID for the CloudMade maps

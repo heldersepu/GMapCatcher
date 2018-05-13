@@ -58,10 +58,10 @@ def set_zoom(intZoom):
 
 
 ## Search a location in Google
-def search_location(location):
+def search_location(location, key='AIzaSyB3d6ZZvE0msnWbh9gX3bAN0bSFf4m8DuE'):
     print 'downloading the following location:', location
     try:
-        oa = openanything.fetch('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyB3d6ZZvE0msnWbh9gX3bAN0bSFf4m8DuE&address=' +
+        oa = openanything.fetch('https://maps.googleapis.com/maps/api/geocode/json?key=%s&address=' % key +
             urllib.quote_plus(location), agent="Mozilla/5.0")
     except Exception:
         return 'error=Can not connect to http://maps.googleapis.com', None

@@ -44,6 +44,7 @@ class MapServ:
     def __init__(self, conf):
         self.tile_repository = None
         self.initLocations(conf)
+        self.gApiKey = conf.google_API
 
         if (os.path.exists(self.locationpath)):
             self.read_locations()
@@ -60,7 +61,7 @@ class MapServ:
 
     def search_location(self, location):
         from mapServers import googleMaps
-        location, coord = googleMaps.search_location(location)
+        location, coord = googleMaps.search_location(location, self.gApiKey)
         location = mapUtils.html_decode(location)
         if (location[:6] != "error="):
             self.locations[location] = coord
