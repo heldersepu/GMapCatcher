@@ -7,7 +7,7 @@ This should be a good starting point for all MS Windows developers.
 
  ## Main stuff (Required) ##
  <table cellspacing='10'>
-<blockquote><tr align='left'><th> - Python 2.7  </th><th> <a href='http://www.python.org/download/releases/2.7.5/'>http://www.python.org/download/releases/2.7.5/</a></th></tr>
+<blockquote><tr align='left'><th> - Python 2.7  </th><th> <a href='https://www.python.org/downloads/release/python-2715/'>https://www.python.org/downloads/release/python-2715/</a></th></tr>
 <tr align='left'><th> + PyGTK all-in-one </th><th> <a href='http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/'>http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/</a></th></tr>
 <tr align='left'><th> + PIL </th><th> <a href='http://www.pythonware.com/products/pil/'>http://www.pythonware.com/products/pil/</a></th></tr>
 <tr align='left'><th> + pyserial </th><th> <a href='http://sourceforge.net/projects/pyserial/'>http://sourceforge.net/projects/pyserial/</a></th></tr>
