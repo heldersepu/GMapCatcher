@@ -1,3 +1,7 @@
+May 13 2018    H.S    <HelderSepu@gmail.com>
+  * 0.8.0.8    
+    * Fix the issue with the Search (Issue 451)
+    
 May 2018    H.S    <HelderSepu@gmail.com>
   * 0.8.0.7    
     * Correction the Nokia template

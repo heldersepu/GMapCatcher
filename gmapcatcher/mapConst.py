@@ -6,7 +6,7 @@ import os
 import locale
 
 NAME = "GMapCatcher"
-VERSION = "0.8.0.7"
+VERSION = "0.8.0.8"
 VERSION_NAME = ""
 WEB_ADDRESS = "https://github.com/heldersepu/GMapCatcher"
 
