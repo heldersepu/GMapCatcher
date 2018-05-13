@@ -32,15 +32,6 @@ def get_url(counter, coord, layer, conf):
         return template % (coord[0], coord[1], 17 - coord[2])
 
 
-## The json.dumps is desired but not required
-def json_dumps(string):
-    try:
-        import json
-        return json.dumps(string)
-    except:
-        return string
-
-
 ## Parse maps.google.com/maps.
 #  the return value is a url pattern like this:
 #  http://mt%d.google.com/vt/lyrs=t@110&hl=en&x=%i&y=%i&z=%i
