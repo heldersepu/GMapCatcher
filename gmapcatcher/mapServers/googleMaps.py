@@ -66,6 +66,7 @@ def set_zoom(intZoom):
 
 
 ## Search a location in Google
+# TODO switch to https://maps.googleapis.com/maps/api/geocode/json?address=Miami&key=AIzaSyB3d6ZZvE0msnWbh9gX3bAN0bSFf4m8DuE
 def search_location(location):
     print 'downloading the following location:', location
     try:
