@@ -452,8 +452,6 @@ class MainWindow(gtk.Window):
         vbox.set_size_request(-1, 89)
         return myFrame(" Query ", vbox, 0)
 
-
-
     def __create_left_paned(self, conf):
         vbox = gtk.VBox(False, 5)
         scale = gtk.VScale()
@@ -467,9 +465,10 @@ class MainWindow(gtk.Window):
         vbox.pack_start(scale)
         self.scale = scale
 
-        oSpin = SpinBtn(conf.opacity*10, 0, 9,1,1)
-        oSpin.connect('value-changed', self.scale_opacity_change_value)
-        vbox.pack_start(oSpin, False, True)
+        if conf.opacity >= 0:
+            oSpin = SpinBtn(conf.opacity*10, 0, 9,1,1)
+            oSpin.connect('value-changed', self.scale_opacity_change_value)
+            vbox.pack_start(oSpin, False, True)
         return vbox
 
     def __create_right_paned(self):
