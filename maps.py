@@ -4,44 +4,42 @@
 ## @package maps
 # This is the Main Window
 
-import os
+import gobject
 import re
 import sys
 import time
-import gobject
+from threading import Timer
+
+import gmapcatcher.fileUtils as fileUtils
 import gmapcatcher.mapGPS as mapGPS
 import gmapcatcher.mapUtils as mapUtils
-import gmapcatcher.fileUtils as fileUtils
 import gmapcatcher.widgets.mapPixbuf as mapPixbuf
-
-from threading import Timer
-from gmapcatcher.mapConst import *
-from gmapcatcher.mapUtils import openGPX
-from gmapcatcher.widgets.mapTools import mapTools
+from gmapcatcher.cmRoute import cmRoute
 from gmapcatcher.gtkThread import gui_callback, webbrowser_open
 from gmapcatcher.mapConf import MapConf
-from gmapcatcher.mapMark import MyMarkers
-from gmapcatcher.mapUpdate import CheckForUpdates
-from gmapcatcher.mapServices import MapServ
+from gmapcatcher.mapConst import *
 from gmapcatcher.mapDownloader import MapDownloader
-from gmapcatcher.xmlUtils import kml_to_markers
+from gmapcatcher.mapMark import MyMarkers
+from gmapcatcher.mapServices import MapServ
+from gmapcatcher.mapUpdate import CheckForUpdates
+from gmapcatcher.mapUtils import openGPX
 from gmapcatcher.widgets.DLWindow import DLWindow
 from gmapcatcher.widgets.EXWindow import EXWindow
-from gmapcatcher.widgets.gpsWindow import gpsWindow
-from gmapcatcher.widgets.trackWindow import trackWindow
 from gmapcatcher.widgets.customMsgBox import user_confirm, error_msg, error_msg_non_blocking
-from gmapcatcher.widgets.customWidgets import gtk, gtk_menu, myToolTip, myFrame, lbl, legal_warning, SpinBtn, FileChooser
-from gmapcatcher.widgets.widDrawingArea import DrawingArea
-from gmapcatcher.widgets.widComboBoxLayer import ComboBoxLayer
+from gmapcatcher.widgets.customWidgets import gtk, gtk_menu, myToolTip, myFrame, legal_warning, SpinBtn, FileChooser
+from gmapcatcher.widgets.gpsWindow import gpsWindow
+from gmapcatcher.widgets.mapTools import mapTools
+from gmapcatcher.widgets.trackWindow import trackWindow
 from gmapcatcher.widgets.widComboBoxEntry import ComboBoxEntry
+from gmapcatcher.widgets.widComboBoxLayer import ComboBoxLayer
+from gmapcatcher.widgets.widCredits import OurCredits
+from gmapcatcher.widgets.widDrawingArea import DrawingArea
 from gmapcatcher.widgets.widMapExport import MapExport
 from gmapcatcher.widgets.widStatusBar import StatusBar
-from gmapcatcher.widgets.widCredits import OurCredits
-from gmapcatcher.cmRoute import cmRoute
+from gmapcatcher.xmlUtils import kml_to_markers
 
 
 class MainWindow(gtk.Window):
-
     gps = None
     update = None
     myPointer = None
@@ -89,8 +87,7 @@ class MainWindow(gtk.Window):
     def tools_button_event(self, w, event):
         if event.type == gtk.gdk.BUTTON_PRESS:
             w.popup(None, None, None, 1, event.time)
-        elif event.type == gtk.gdk.KEY_PRESS and \
-             event.keyval in [65293, 32]:
+        elif event.type == gtk.gdk.KEY_PRESS and event.keyval in [65293, 32]:
             self.menu_tools(None, TOOLS_MENU[0])
 
     ## Search for the location in the Entry box
@@ -103,7 +100,9 @@ class MainWindow(gtk.Window):
         if location == ComboBoxEntry.DEFAULT_TEXT:
             self.combo.clean_entry()
             return
-        p = re.compile('(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:lon)?g?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*', re.IGNORECASE)
+        p = re.compile(
+            '(?:lat)?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*)[ ]*,[ ]*(?:lon)?g?(?:itude)?[ ]*=?[ ]*(-?\d+\.?\d*).*',
+            re.IGNORECASE)
         coords = p.search(location)
         # nb needs 0.-- for coords 0 < |coord| < 1
         try:
@@ -134,7 +133,7 @@ class MainWindow(gtk.Window):
             if not found:
                 self.cb_offline.set_active(False)
                 location = self.ctx_map.search_location(l)
-                if (location[:6] == "error="):
+                if location[:6] == "error=":
                     self.drawing_area.draw_message(location[6:])
                     self.entry.grab_focus()
                     return
@@ -202,7 +201,7 @@ class MainWindow(gtk.Window):
 
     def download_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
-        if (pointer is None):
+        if pointer is None:
             tile = self.drawing_area.center
         else:
             tile = mapUtils.pointer_to_tile(
@@ -212,12 +211,12 @@ class MainWindow(gtk.Window):
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         km_px = mapUtils.km_per_pixel(coord)
         dlw = DLWindow(coord, km_px * rect.width, km_px * rect.height,
-                        self.layer, self.conf, self.cb_forceupdate.get_active())
+                       self.layer, self.conf, self.cb_forceupdate.get_active())
         dlw.show()
 
     def export_clicked(self, w, pointer=None):
         rect = self.drawing_area.get_allocation()
-        if (pointer is None):
+        if pointer is None:
             tile = self.drawing_area.center
         else:
             tile = mapUtils.pointer_to_tile(
@@ -227,8 +226,7 @@ class MainWindow(gtk.Window):
         coord = mapUtils.tile_to_coord(tile, self.get_zoom())
         km_px = mapUtils.km_per_pixel(coord)
 
-        exw = EXWindow(self.ctx_map, coord, km_px * rect.width, km_px * rect.height,
-                    self.layer, self.conf)
+        exw = EXWindow(self.ctx_map, coord, km_px * rect.width, km_px * rect.height, self.layer, self.conf)
         exw.show()
 
     def track_control_clicked(self, w=None, pointer=None):
@@ -261,10 +259,10 @@ class MainWindow(gtk.Window):
             km_px = mapUtils.km_per_pixel(coord)
 
             self.visual_dlconfig['downloader'].bulk_download(
-                        coord, (thezl - 1, thezl + confzl),
-                        km_px * rect.width / sz, km_px * rect.height / sz,
-                        self.layer, gui_callback(self.visualdl_cb),
-                        self.visualdl_update, force_update, self.conf)
+                coord, (thezl - 1, thezl + confzl),
+                km_px * rect.width / sz, km_px * rect.height / sz,
+                self.layer, gui_callback(self.visualdl_cb),
+                self.visualdl_update, force_update, self.conf)
             self.visualdl_update()
 
     def check_bulk_down(self):
@@ -293,7 +291,7 @@ class MainWindow(gtk.Window):
                             for x, y in xy:
                                 x = x + tile[1][0]
                                 y = y + tile[1][1]
-                                if not(0 < x < rect.width) or not(0 < y < rect.height):
+                                if not (0 < x < rect.width) or not (0 < y < rect.height):
                                     self.drawing_area.center = tile
                                 else:
                                     if GPS_IMG_SIZE[0] > x:
@@ -325,7 +323,8 @@ class MainWindow(gtk.Window):
                             (self.gps.gpsfix.latitude, self.gps.gpsfix.longitude))
                         self.gps_track.distance += distance
                     if not len(self.gps_track.points) or distance > (float(self.conf.gps_track_interval) / 1000):
-                        point = mapUtils.TrackPoint(latitude=self.gps.gpsfix.latitude, longitude=self.gps.gpsfix.longitude)
+                        point = mapUtils.TrackPoint(latitude=self.gps.gpsfix.latitude,
+                                                    longitude=self.gps.gpsfix.longitude)
                         if self.gps.gpsfix.altitude is not None:
                             point.altitude = self.gps.gpsfix.altitude
                         if self.gps.gpsfix.speed is not None:
@@ -387,7 +386,7 @@ class MainWindow(gtk.Window):
         button.connect_object("event", self.tools_button_event, menu)
         button.props.has_tooltip = True
         button.connect("query-tooltip", myToolTip, "Tools",
-                    "Set of tools to customise GMapCatcher", "marker.png")
+                       "Set of tools to customise GMapCatcher", "marker.png")
         hbox.pack_start(button, False)
 
         self.combo = self.__create_combo_box()
@@ -433,15 +432,15 @@ class MainWindow(gtk.Window):
         hbox.add(bbox)
         return hbox
 
-    #Show or hide the gps combo depending on type
+    ## Show or hide the gps combo depending on type
     def update_cmb_gps(self):
-        if (self.conf.gps_type > TYPE_OFF):
+        if self.conf.gps_type > TYPE_OFF:
             self.cmb_gps.show()
         else:
             self.cmb_gps.hide()
 
     def scale_opacity_change_value(self, w, *args):
-        self.conf.opacity = round(w.get_value()/10, 1)
+        self.conf.opacity = round(w.get_value() / 10, 1)
         self.drawing_area.repaint()
 
     def __create_top_paned(self):
@@ -466,7 +465,7 @@ class MainWindow(gtk.Window):
         self.scale = scale
 
         if conf.opacity >= 0:
-            oSpin = SpinBtn(conf.opacity*10, 0, 9,1,1)
+            oSpin = SpinBtn(conf.opacity * 10, 0, 9, 1, 1)
             oSpin.connect('value-changed', self.scale_opacity_change_value)
             vbox.pack_start(oSpin, False, True)
         return vbox
@@ -529,7 +528,7 @@ class MainWindow(gtk.Window):
                     points = [
                         mapUtils.TrackPoint(self.gps.gpsfix.latitude, self.gps.gpsfix.longitude),
                         mapUtils.TrackPoint(coords[0], coords[1])
-                        ]
+                    ]
                     self.getCloudMadeRoute(w, points)
                 else:
                     dialog = error_msg_non_blocking('No GPS fix', 'No GPS fix.')
@@ -543,8 +542,8 @@ class MainWindow(gtk.Window):
     ## utility function screen location of pointer to world coord
     def pointer_to_world_coord(self, pointer=None):
         return mapUtils.pointer_to_coord(
-                self.drawing_area.get_allocation(),
-                pointer, self.drawing_area.center, self.get_zoom())
+            self.drawing_area.get_allocation(),
+            pointer, self.drawing_area.center, self.get_zoom())
 
     ## add mouse location latitude/longitude to clipboard
     def mouse_location(self, pointer=None):
@@ -557,7 +556,7 @@ class MainWindow(gtk.Window):
         clipboard = gtk.Clipboard()
         if self.gps and self.gps.gpsfix:
             clipboard.set_text("Latitude=%.6f, Longitude=%.6f" %
-                              (self.gps.gpsfix.latitude, self.gps.gpsfix.longitude))
+                               (self.gps.gpsfix.latitude, self.gps.gpsfix.longitude))
         else:
             clipboard.set_text("No GPS location detected.")
 
@@ -577,7 +576,7 @@ class MainWindow(gtk.Window):
         self.top_panel.hide()
         self.export_panel.show()
         self.export_panel.export_pbar.off()
-        #Set the zoom level
+        # Set the zoom level
         zl = self.get_zoom()
         if zl < (self.map_min_zoom + 2):
             zl = self.map_min_zoom + 2
@@ -605,7 +604,7 @@ class MainWindow(gtk.Window):
             self.tPoint['yHigh'] = tile[0][1] + (heightFact - int(heightFact / 2))
 
             lowCoord = mapUtils.tile_to_coord(
-                ((self.tPoint['xLow'], self.tPoint['yLow']), (0, 0)), 
+                ((self.tPoint['xLow'], self.tPoint['yLow']), (0, 0)),
                 self.export_panel.expZoom.get_value_as_int()
             )
             self.tPoint['lowCoord'] = lowCoord
@@ -613,7 +612,7 @@ class MainWindow(gtk.Window):
             self.tPoint['FileName'] = "coord=%.6f,%.6f_zoom=%d.png" % lowCoord
 
             highCoord = mapUtils.tile_to_coord(
-                ((self.tPoint['xHigh'], self.tPoint['yHigh']), (0, 0)), 
+                ((self.tPoint['xHigh'], self.tPoint['yHigh']), (0, 0)),
                 self.export_panel.expZoom.get_value_as_int()
             )
             self.tPoint['highCoord'] = highCoord
@@ -637,7 +636,7 @@ class MainWindow(gtk.Window):
             self.drawing_area.repaint()
 
     def export_done(self, text):
-        if (text[:6] == "error="):
+        if text[:6] == "error=":
             rect = self.drawing_area.get_allocation()
             self.drawing_area.draw_message(text[6:], 10, rect.height / 2, 'red')
             time.sleep(2)
@@ -666,7 +665,8 @@ class MainWindow(gtk.Window):
         l = len(self.ruler_coord)
 
         if l > 1:
-            z = mapUtils.countDistanceFromLatLon(self.ruler_coord[l - 2].getLatLon(), self.ruler_coord[l - 1].getLatLon())
+            z = mapUtils.countDistanceFromLatLon(self.ruler_coord[l - 2].getLatLon(),
+                                                 self.ruler_coord[l - 1].getLatLon())
             unit = self.conf.units
             if unit != UNIT_TYPE_KM:
                 z = mapUtils.convertUnits(UNIT_TYPE_KM, unit, z)
@@ -679,7 +679,8 @@ class MainWindow(gtk.Window):
     def remove_last_ruler_segment(self):
         l = len(self.ruler_coord)
         if l > 0:
-            z = mapUtils.countDistanceFromLatLon(self.ruler_coord[l - 2].getLatLon(), self.ruler_coord[l - 1].getLatLon())
+            z = mapUtils.countDistanceFromLatLon(self.ruler_coord[l - 2].getLatLon(),
+                                                 self.ruler_coord[l - 1].getLatLon())
             unit = self.conf.units
             if unit != UNIT_TYPE_KM:
                 z = mapUtils.convertUnits(UNIT_TYPE_KM, unit, z)
@@ -688,7 +689,7 @@ class MainWindow(gtk.Window):
             self.drawing_area.repaint()
             new_l = len(self.ruler_coord)
             if new_l > 1:
-                self.status_bar.text("Total distance = %.3f km" % (self.total_dist))
+                self.status_bar.text("Total distance = %.3f km" % self.total_dist)
             elif new_l == 1:
                 self.status_bar.text("Click to second point to show ruler and distances")
             else:
@@ -712,8 +713,8 @@ class MainWindow(gtk.Window):
     def getCloudMadeRoute(self, w, points, name=None):
         if self.cb_offline.get_active():
             if error_msg(self, "Offline mode, cannot get route!" +
-                        "      Would you like to get online?",
-                        gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
+                               "      Would you like to get online?",
+                         gtk.BUTTONS_YES_NO) != gtk.RESPONSE_YES:
                 return
         self.cb_offline.set_active(False)
         start = points[0]
@@ -739,14 +740,15 @@ class MainWindow(gtk.Window):
             # Find nearest marker...
             # Check if left-clicked, mouse status bar is on, is not in ruler mode and map not dragged
             if event.button == 1 and self.conf.statusbar_type == STATUS_MOUSE and not self.Ruler \
-              and abs(event.x - self.dragXY[0]) < 5 and abs(event.y - self.dragXY[1]) < 5:
+                    and abs(event.x - self.dragXY[0]) < 5 and abs(event.y - self.dragXY[1]) < 5:
                 coord = self.pointer_to_world_coord((event.x, event.y))
                 markerDisp2_list = []
                 for markerName in self.marker.positions.keys():
                     # Calculate the angular displacement squared of the mouse coord to the marker coords
-                    markerDisp2 = (self.marker.positions[markerName][0] - coord[0]) ** 2 + (self.marker.positions[markerName][1] - coord[1]) ** 2
+                    markerDisp2 = (self.marker.positions[markerName][0] - coord[0]) ** 2 + (
+                            self.marker.positions[markerName][1] - coord[1]) ** 2
                     markerDisp2_list.append((markerDisp2, markerName))
-                if (len(markerDisp2_list) > 0):
+                if len(markerDisp2_list) > 0:
                     self.status_bar.text("Nearest marker:    " + str(sorted(markerDisp2_list)[0][1]))
 
             # Right-Click event shows the popUp menu
@@ -761,7 +763,7 @@ class MainWindow(gtk.Window):
             # if the window has been dragged, just ignore it...
             if abs(event.x - self.dragXY[0]) < 5 and abs(event.y - self.dragXY[1]) < 5:
                 # Ctrl + Click adds a marker
-                if (event.state & gtk.gdk.CONTROL_MASK):
+                if event.state & gtk.gdk.CONTROL_MASK:
                     self.add_marker((event.x, event.y))
                 # Left-Click in Ruler Mode
                 elif event.button == 1 and self.Ruler:
@@ -771,7 +773,7 @@ class MainWindow(gtk.Window):
         elif event.type == gtk.gdk._2BUTTON_PRESS and not (event.state & gtk.gdk.CONTROL_MASK):
             zl = self.get_zoom()
             # Alt + 2Click Zoom Out
-            if (event.state & gtk.gdk.MOD1_MASK):
+            if event.state & gtk.gdk.MOD1_MASK:
                 self.do_zoom(zl + 1, zl, True, (event.x, event.y))
             # 2Click Zoom In
             else:
@@ -779,10 +781,10 @@ class MainWindow(gtk.Window):
 
     ## Handles the mouse motion over the drawing_area
     def da_motion(self, w, event):
-        if (event.state & gtk.gdk.BUTTON1_MASK):
+        if event.state & gtk.gdk.BUTTON1_MASK:
             self.gps_idle_time = time.time()
             self.drawing_area.da_move(event.x, event.y, self.get_zoom())
-            if (event.state & gtk.gdk.SHIFT_MASK):
+            if event.state & gtk.gdk.SHIFT_MASK:
                 self.visual_download()
             self.update_export()
 
@@ -815,7 +817,7 @@ class MainWindow(gtk.Window):
         if self.visual_dlconfig.get('downloader', False):
             temp = self.visual_dlconfig.get('recd', 0)
             self.visual_dlconfig['qd'] = \
-                    self.visual_dlconfig['downloader'].qsize() + temp + recd
+                self.visual_dlconfig['downloader'].qsize() + temp + recd
             self.visual_dlconfig['recd'] = temp + recd
         if self.visual_dlconfig.get('recd', 0) >= \
                 self.visual_dlconfig.get('qd', 0):
@@ -1037,18 +1039,18 @@ class MainWindow(gtk.Window):
                     kmlResponse = kml_to_markers(fileName, self.marker)
                     if kmlResponse:
                         error_msg(self, "There was an error importing: \n" +
-                            "\n" + str(type(kmlResponse)) +
-                            "\n" + str(kmlResponse))
+                                  "\n" + str(type(kmlResponse)) +
+                                  "\n" + str(kmlResponse))
             # F6 = 65475
             elif event.keyval == 65475:
-                if not(self.export_panel.flags() & gtk.VISIBLE):
+                if not (self.export_panel.flags() & gtk.VISIBLE):
                     self.visual_dlconfig['active'] = \
                         not self.visual_dlconfig.get('active', False)
                     self.visual_dltool.set_active(
-                            self.visual_dlconfig.get('active', False))
+                        self.visual_dlconfig.get('active', False))
                     if not self.visual_dlconfig.get('downloader', False):
                         self.visual_dlconfig['downloader'] = \
-                                MapDownloader(self.ctx_map, self.conf.maxthreads)
+                            MapDownloader(self.ctx_map, self.conf.maxthreads)
                     self.drawing_area.repaint()
             # F7 = 65476 for Ruler
             elif event.keyval == 65476:
@@ -1158,8 +1160,8 @@ class MainWindow(gtk.Window):
     def enable_gps(self, show_warning):
         if self.gps and mapGPS.available:
             if self.gps.type != self.conf.gps_type \
-              or self.gps.serial_port != self.conf.gps_serial_port \
-              or self.gps.baudrate != self.conf.gps_serial_baudrate:
+                    or self.gps.serial_port != self.conf.gps_serial_port \
+                    or self.gps.baudrate != self.conf.gps_serial_baudrate:
                 self.gps.stop_all()
                 self.gps_valid = True
                 self.gps = mapGPS.GPS(
@@ -1177,21 +1179,21 @@ class MainWindow(gtk.Window):
 
     def gps_warning(self):
         if mapGPS.available and self.conf.map_service in NO_GPS:
-            if (self.conf.gps_type > TYPE_OFF):
+            if self.conf.gps_type > TYPE_OFF:
                 return legal_warning(self, self.conf.map_service, "gps integration")
         return True
 
     def pane_notify(self, pane, gparamspec, intPos):
         if gparamspec.name == 'position':
             panePos = pane.get_property('position')
-            if (panePos < intPos - 2):
+            if panePos < intPos - 2:
                 pane.set_position(0)
-            elif (panePos > intPos + 2):
+            elif panePos > intPos + 2:
                 pane.set_position(intPos + 2)
 
     def load_tracks(self):
         tracks = fileUtils.get_tracks()
-        if (len(tracks) > 0):
+        if len(tracks) > 0:
             for track in tracks:
                 dtrack = openGPX(track)
                 if dtrack:
