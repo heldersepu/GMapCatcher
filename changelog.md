@@ -1,16 +1,20 @@
+Dec 06 2018    H.S    <HelderSepu@gmail.com>
+  * 0.8.0.9
+    * Fix bug exporting map (Issue 458)
+
 May 13 2018    H.S    <HelderSepu@gmail.com>
-  * 0.8.0.8    
+  * 0.8.0.8
     * Fix the issue with the Search (Issue 451)
-    
+
 May 2018    H.S    <HelderSepu@gmail.com>
-  * 0.8.0.7    
+  * 0.8.0.7
     * Correction the Nokia template
-    
+
 Nov 2015    H.S    <HelderSepu@gmail.com>
   * 0.8.0.6
     * Migrate code to GitHub
     * Add a world map file to the export
-    
+
 July 20 2013    H.S    <HelderSepu@gmail.com>
   * 0.8.0.5 - At revision: 1590
     * Fix issue in py2exe that created problems in Win 8
@@ -39,7 +43,7 @@ October 12 2012    H.S    <HelderSepu@gmail.com>
     * Get Directions (Issue 103)
     * Add Check box to download Terrain,Satellite or Map (Issue 109)
     * Create one db file per map service. (Issue 207)
-    * Add new GPSd protocol (Issue 209) 
+    * Add new GPSd protocol (Issue 209)
     * Fix Incorrect scale (Issue 281)
     * Fix GPS heading arrow (Issue 332)
     * Fix issue with markers when given same name (Issue 335)
@@ -53,7 +57,7 @@ April 28 2012    H.S    <HelderSepu@gmail.com>
     * Add config option to set API for CloudMade maps (Issue 306)
     * Fix error using draw_line (Issue 321)
     * Add support for Stamen maps: http://maps.stamen.com
-    
+
 March 15 2012    H.S    <HelderSepu@gmail.com>
   * 0.7.7.1 - At revision: 1231
     * Add the ability to change the font/style/color of the marker
