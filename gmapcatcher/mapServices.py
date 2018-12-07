@@ -185,6 +185,17 @@ class MapServ:
     def is_tile_in_local_repos(self, coord, layer):
         return self.tile_repository.is_tile_in_local_repos(coord, layer)
 
+    ## Create world file with the given data
+    def world_file(self, tPoint):
+        file = open(tPoint['FileName'].replace(".png", ".pgw"), 'w')
+        file.write("0.0000000007\n")
+        file.write("0.0000000000\n")
+        file.write("0.0000000000\n")
+        file.write("-0.0000000007\n")
+        file.write(str(tPoint['lowCoord'][0]) + "\n")
+        file.write(str(tPoint['lowCoord'][1]) + "\n")
+        file.close()
+
     ## Combine tiles to one big map
     def do_combine(self, tPoint, zoom, layer, online, conf, size, mode="RGBA"):
         try:
@@ -205,22 +216,11 @@ class MapServ:
                 x += 1
             fileName = tPoint['FileName']
             result.save(fileName)
-            world_file(tPoint)
+            self.world_file(tPoint)
             return fileName
         except Exception, inst:
             print str(inst)
             return 'error=' + str(inst)
-
-	## Create world file with the given data
-	def world_file(self, tPoint):
-		file = open(tPoint['FileName'].replace(".png", ".pgw"), 'w')
-		file.write("0.0000000007\n")
-		file.write("0.0000000000\n")
-		file.write("0.0000000000\n")
-		file.write("-0.0000000007\n")
-		file.write(str(tPoint['lowCoord'][0]) + "\n")
-		file.write(str(tPoint['lowCoord'][1]) + "\n")
-		file.close()
 
     ## Export tiles to one big map
     def do_export(self, tPoint, zoom, layer, online, conf, size, mode, callback):
