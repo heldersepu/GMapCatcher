@@ -54,8 +54,8 @@ The first four items change the map section display and explain themselves:
   * Reset: Display map with highest zoom level.
 
 Actions of the next three items:
-  * Batch Download: See description [Download](http://code.google.com/p/gmapcatcher/wiki/User_Guide#Download)
-  * [Export Map](http://code.google.com/p/gmapcatcher/wiki/User_Guide#Export_map_to_image): Open dialog to save current display of map to file 'map.png' in home folder
+  * Batch Download: See description [Download](https://github.com/heldersepu/GMapCatcher/blob/wiki/User_Guide.md#download)
+  * [Export Map](https://github.com/heldersepu/GMapCatcher/blob/wiki/User_Guide.md#export-map-to-image): Open dialog to save current display of map to file 'map.png' in home folder
   * Add Marker: Add a marker at position of cursor (description of marker must be done afterwards by using the main configuration menu)
 
 Actions of the final 2 items:
@@ -205,7 +205,7 @@ Allows adding, deleting and editing of markers. You can add marker also by CTRL 
 | **Shortcut Key** | **Description** |
 |:-----------------|:----------------|
 |  F1              |  Open help page |
-|  F2              |  [Export map to image](http://code.google.com/p/gmapcatcher/wiki/User_Guide#Export_map_to_image) |
+|  F2              |  [Export map to image](https://github.com/heldersepu/GMapCatcher/blob/wiki/User_Guide.md#export-map-to-image) |
 |  F3              |  Toggle GPS window |
 |  F4              |  Import markers from KML file |
 |  F5              |  Refresh        |
