@@ -10,7 +10,7 @@ GMapCatcher is written in Python 2.7 & PyGTK, can run on Linux, Windows and Mac 
 
 ![https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/snapshot.gif](https://raw.githubusercontent.com/heldersepu/gmapcatcher/wiki/snapshot.gif)
 
-You can find a list of improvements and latest features in the [Changelog](http://code.google.com/p/gmapcatcher/source/browse/trunk/changelog)
+You can find a list of improvements and latest features in the [Changelog](https://github.com/heldersepu/GMapCatcher/blob/master/changelog.md)
 
 ## Download ##
 
@@ -32,7 +32,7 @@ See the [User Guide](https://github.com/heldersepu/GMapCatcher/blob/wiki/User_Gu
 
 After version 0.04, user can force GMapCatcher to re-download old map tiles by checking "Force update". If a tile is older than 24 hours, it will be re-downloaded.
 
-**download.py** is a downloader tools that can be used to download map tiles without gui. **maps** can use files it downloaded without configuration.
+**download.py** is a downloader tool that can be used to download map tiles without gui. **maps** can use files it downloaded without configuration.
 
 Below is an example using **download.py**:
 ```
@@ -53,7 +53,7 @@ Windows:
 ## Dependencies ##
 
 Windows users are highly recommended to download the [latest Windows installer](https://github.com/heldersepu/GMapCatcher/releases).
-This installer contains all required packages, works well on XP, Vista and Win 7.
+This installer contains all required packages, works well on XP, Vista, Win 7, 8 & 10 .
 For a complete list of tested OS, see wiki [Tested Operating Systems](https://github.com/heldersepu/GMapCatcher/blob/wiki/TestedOperatingSystems.md).
 
 
