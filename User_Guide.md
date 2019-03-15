@@ -6,7 +6,7 @@
 GMapCatcher is an online and offline map viewer. Currently the following map providers are supported:
   * [CloudMade](http://maps.cloudmade.com/)
   * [OpenStreetMap](http://www.openstreetmap.org/)
-  * [Google Maps](http://maps.google.com/) No longer supported, see [Issue 210](https://code.google.com/p/gmapcatcher/issues/detail?id=210)
+  * [Google Maps](http://maps.google.com/) No longer supported, see [Issue 210](https://github.com/heldersepu/GMapCatcher/issues/210)
   * [Yahoo](http://maps.yahoo.com/)
   * [InformationFreeway](http://www.informationfreeway.org/)
   * [OpenCycleMap](http://www.opencyclemap.org/)
