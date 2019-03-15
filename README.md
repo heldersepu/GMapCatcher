@@ -14,7 +14,7 @@ You can find a list of improvements and latest features in the [Changelog](https
 
 ## Download ##
 
-https://github.com/heldersepu/GMapCatcher/releases/tag/0.8.0.8
+https://github.com/heldersepu/GMapCatcher/releases
 
 or
 
