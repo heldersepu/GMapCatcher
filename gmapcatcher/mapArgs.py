@@ -32,6 +32,7 @@ class MapArgs():
         print '  --satellite   Retrieve satellite images'
         print '  --terrain     Retrieve terrain images'
         print '  --hybrid      Retrieve hybrid images'
+        print '  --chart       Retrieve chart images'
         print ' '
         print '  --latrange=   Latitude Range to get    (default = %f)' % self.lat_range
         print '  --lngrange=   Longitude Range to get   (default = %f)' % self.lng_range
@@ -89,6 +90,8 @@ class MapArgs():
                         self.layer = LAYER_TER
                     elif arg.startswith('--hybrid'):
                         self.layer = LAYER_HYB
+                    elif arg.startswith('--chart'):
+                        self.layer = LAYER_CHA
                     elif arg.startswith('--mapid='):
                         self.layer = arg[8:]
                     elif arg.startswith('--full-range'):
