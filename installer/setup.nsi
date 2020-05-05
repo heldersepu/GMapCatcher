@@ -1,5 +1,5 @@
 !define PRODUCT_NAME "GMapCatcher"
-!define PRODUCT_VERSION "0.8.0.9"
+!define PRODUCT_VERSION "0.8.1.0"
 !define PRODUCT_WEB_SITE "http://code.google.com/p/gmapcatcher/"
 !include nsDialogs.nsh
 
