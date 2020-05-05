@@ -227,10 +227,12 @@ class DLWindow(gtk.Window):
         nqueued = self.downloader.qsize() if self.downloader else 0
         if nqueued == 0 and ((not self.downloader) or self.downloader.bulk_all_placed):
             self.download_complete()
-            return
-        self.update_pbar(
-            "x=%d y=%d zoom=%d" % coord, ncomplete, ncomplete + nqueued
-        )
+        elif self.downloader.bulk_all_placed:
+            self.update_pbar(
+                "x=%d y=%d zoom=%d" % coord, ncomplete, ncomplete + nqueued
+            )
+        else:
+            self.pbar.set_text(" Loading download queue %d" % nqueued)
 
     def update_pbar(self, text, pos, maxpos):
         percent = ""
