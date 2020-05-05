@@ -1,18 +1,4 @@
-'''OpenAnything: a kind and thoughtful library for HTTP web services
-
-This program is part of 'Dive Into Python', a free Python book for
-experienced programmers.  Visit http://diveintopython.org/ for the
-latest version.
-'''
-
-__author__ = 'Mark Pilgrim (mark@diveintopython.org)'
-__version__ = '$Revision: 1.6 $'[11:-2]
-__date__ = '$Date: 2004/04/16 21:16:24 $'
-__copyright__ = 'Copyright (c) 2004 Mark Pilgrim'
-__license__ = 'Python'
-
 import sys
-import ssl
 from urllib import urlencode
 import urllib2
 import urlparse
@@ -62,26 +48,6 @@ def encode_post_data(post_data):
 
 
 def openAnything(source, etag=None, lastmodified=None, agent=USER_AGENT, post_data=None, files=None):
-    """URL, filename, or string --> stream
-
-    This function lets you define parsers that take any input source
-    (URL, pathname to local or network file, or actual data as a string)
-    and deal with it in a uniform manner.  Returned object is guaranteed
-    to have all the basic stdio read methods (read, readline, readlines).
-    Just .close() the object when you're done with it.
-
-    If the etag argument is supplied, it will be used as the value of an
-    If-None-Match request header.
-
-    If the lastmodified argument is supplied, it must be a formatted
-    date/time string in GMT (as returned in the Last-Modified header of
-    a previous request).  The formatted date/time will be used
-    as the value of an If-Modified-Since request header.
-
-    If the agent argument is supplied, it will be used as the value of a
-    User-Agent request header.
-    """
-
     if hasattr(source, 'read'):
         return source
 
@@ -111,8 +77,8 @@ def openAnything(source, etag=None, lastmodified=None, agent=USER_AGENT, post_da
         elif post_data:
             request.add_data(encode_post_data(post_data))
         request.add_header('Accept-encoding', 'gzip')       
-        gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1) 
-        return urllib2.urlopen(request, context=gcontext)
+        
+        return urllib2.urlopen(request)
 
     # try to open with native open function (if source is a filename)
     try:
