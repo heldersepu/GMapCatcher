@@ -87,6 +87,8 @@ class MapServ:
             import mapServers.informationFreeway as map_server
         elif map_service == MAP_SERVERS[OPENCYCLEMAP]:
             import mapServers.openCycleMap as map_server
+        elif map_service == MAP_SERVERS[OPENTOPOMAP]:
+            import mapServers.openTopoMap as map_server
         elif map_service == MAP_SERVERS[GOOGLE_MAKER]:
             import mapServers.googleMapMaker as map_server
         elif map_service == MAP_SERVERS[YANDEX]:
@@ -160,7 +162,7 @@ class MapServ:
         href = self.get_url_from_coord(coord, layer, conf)
         if href:
             try:
-                #print 'downloading:', href
+                print 'downloading:', href
                 oa = openanything.fetch(href)
                 if oa['status'] == 200:
                     return oa['data']
