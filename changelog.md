@@ -1,4 +1,4 @@
-May 05 2018    H.S    <HelderSepu@gmail.com>
+May 05 2020    H.S    <HelderSepu@gmail.com>
   * 0.8.1.0
     * Add chart to downloader (Issue 401)
     * Add OpenTopoMap server (Issue 459)
