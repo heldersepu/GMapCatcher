@@ -76,7 +76,7 @@ MAP_SERVICES = [
     {"ID": SKYVECTOR_WORLD_LO,   "layers": [LAYER_MAP]},
     {"ID": SKYVECTOR_WORLD_HI,   "layers": [LAYER_MAP]},
     {"ID": MAPS_FOR_FREE, "layers": [LAYER_TER, LAYER_HYB]},
-    {"ID": OPENTOPOMAP,   "layers": [LAYER_MAP]},
+    {"ID": OPENTOPOMAP,   "layers": [LAYER_TER]},
 ]
 
 NO_BULK_DOWN = ["Google", "OpenStreetMap", "OpenCycleMap"]

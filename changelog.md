@@ -1,3 +1,9 @@
+May 05 2018    H.S    <HelderSepu@gmail.com>
+  * 0.8.1.0
+    * Add chart to downloader (Issue 401)
+    * Add OpenTopoMap server (Issue 459)
+    * Improve downloader progress bar (Issue 463)
+
 Dec 06 2018    H.S    <HelderSepu@gmail.com>
   * 0.8.0.9
     * Fix bug exporting map (Issue 458)
