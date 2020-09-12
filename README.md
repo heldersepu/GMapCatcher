@@ -4,7 +4,7 @@ GMapCatcher is an offline maps viewer. It can display maps from many providers s
 
 [CloudMade](http://maps.cloudmade.com/), [OpenStreetMap](http://www.openstreetmap.org/), [Yahoo Maps](http://maps.yahoo.com/), [Bing Maps](http://www.bing.com/maps/), [Nokia Maps](http://maps.nokia.com), ~~SkyVector~~, ~~Google Map~~.
 
-It displays them using a custom GUI. User can view the maps while offline. GMapCatcher doesn't depend on the map's JavaScript.
+It displays them using a custom GUI. User can view the maps while offline.
 
 GMapCatcher is written in Python 2.7 & PyGTK, can run on Linux, Windows and Mac OSX.
 
