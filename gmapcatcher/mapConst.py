@@ -154,6 +154,7 @@ SECTION_INIT = 'init'
 SECTION_GPS = 'gps'
 SECTION_MAP = 'map'
 SECTION_AGENT = 'agent'
+SECTION_MARKERS = 'markers'
 R_EARTH = 6371.
 
 USER_PATH = unicode(os.path.expanduser("~"), locale.getpreferredencoding())

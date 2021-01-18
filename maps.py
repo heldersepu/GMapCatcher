@@ -4,6 +4,7 @@
 ## @package maps
 # This is the Main Window
 
+import os
 import gobject
 import re
 import sys
@@ -34,6 +35,7 @@ from gmapcatcher.widgets.widComboBoxEntry import ComboBoxEntry
 from gmapcatcher.widgets.widComboBoxLayer import ComboBoxLayer
 from gmapcatcher.widgets.widCredits import OurCredits
 from gmapcatcher.widgets.widDrawingArea import DrawingArea
+from gmapcatcher.widgets.markerWindow import markerWindow
 from gmapcatcher.widgets.widMapExport import MapExport
 from gmapcatcher.widgets.widStatusBar import StatusBar
 from gmapcatcher.xmlUtils import kml_to_markers
@@ -228,6 +230,9 @@ class MainWindow(gtk.Window):
 
         exw = EXWindow(self.ctx_map, coord, km_px * rect.width, km_px * rect.height, self.layer, self.conf)
         exw.show()
+
+    def center_coord(self):
+        return mapUtils.tile_to_coord(self.drawing_area.center, self.get_zoom())
 
     def track_control_clicked(self, w=None, pointer=None):
         if not self.trackw:
@@ -493,12 +498,15 @@ class MainWindow(gtk.Window):
     def menu_tools(self, w, strName):
         for intPos in range(len(TOOLS_MENU)):
             if strName.startswith(TOOLS_MENU[intPos]):
-                if not self.settingsw:
-                    self.settingsw = mapTools(self, intPos)
-                else:
-                    self.settingsw.myNotebook.set_current_page(intPos)
-                    self.settingsw.present()
-                return True
+                return self.show_settings(intPos)
+
+    def show_settings(self, intPos):
+        if not self.settingsw:
+            self.settingsw = mapTools(self, intPos)
+        else:
+            self.settingsw.myNotebook.set_current_page(intPos)
+            self.settingsw.present()
+        return True
 
     ## All the actions for the menu items
     def menu_item_response(self, w, strName):
@@ -755,7 +763,12 @@ class MainWindow(gtk.Window):
             elif event.button == 3 and not (event.state & gtk.gdk.CONTROL_MASK):
                 if not self.Ruler:
                     self.myPointer = (event.x, event.y)
-                    w.popup(None, None, None, event.button, event.time)
+                    # Right-Click w/ shift opens the marker window
+                    if event.state & gtk.gdk.SHIFT_MASK:
+                        coords = self.pointer_to_world_coord(self.myPointer)
+                        markerWindow(self, coords)
+                    else:
+                        w.popup(None, None, None, event.button, event.time)
                 else:
                     menu = self.ruler_popup()
                     menu.popup(None, None, None, event.button, event.time)
@@ -1065,6 +1078,13 @@ class MainWindow(gtk.Window):
             # if Ruler is active, delete (65535) removes last element from ruler
             elif event.keyval == 65535 and self.Ruler:
                 self.remove_last_ruler_segment()
+        else:
+            # F4 = 65473
+            if event.keyval == 65473:
+                self.show_settings(1)
+            # start menu key
+            elif event.keyval == 65511:
+                self.full_screen(65480)
 
         # All Navigation Keys when in FullScreen
         if self.get_border_width() == 0:

@@ -293,7 +293,6 @@ class DrawingArea(gtk.DrawingArea):
             self.coord = coord
             self.conf = conf
             self.pixDim = pixDim
-            self.img = self.marker.get_marker_pixbuf(zl)
 
         def run(self):
             while not self.__stop.isSet():
@@ -313,6 +312,7 @@ class DrawingArea(gtk.DrawingArea):
                 if (self.zl <= mpos[2]) and (mpos[0], mpos[1]) != (self.coord[0], self.coord[1]):
                     gtk.threads_enter()
                     try:
-                        self.da.draw_marker(self.conf, mpos, self.zl, self.img, self.pixDim, string)
+                        img = self.marker.get_marker_pixbuf(self.zl, mpos[3])
+                        self.da.draw_marker(self.conf, mpos, self.zl, img, self.pixDim, string)
                     finally:
                         gtk.threads_leave()

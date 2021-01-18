@@ -59,6 +59,8 @@ class MapConf():
 
         config.add_section(SECTION_MAP)
         config.set(SECTION_MAP, 'zoom', self.init_zoom)
+        config.set(SECTION_MAP, 'max_zoom', self.max_zoom)
+        config.set(SECTION_MAP, 'min_zoom', self.min_zoom)
         config.set(SECTION_MAP, 'language', self.language)
         config.set(SECTION_MAP, 'center', self.init_center)
         config.set(SECTION_MAP, 'show_cross', self.show_cross)
@@ -70,14 +72,17 @@ class MapConf():
         config.set(SECTION_MAP, 'force_update_days', self.force_update_days)
         config.set(SECTION_MAP, 'auto_refresh', self.auto_refresh)
         config.set(SECTION_MAP, 'google_src', self.google_src)
-        config.set(SECTION_MAP, 'show_marker_name', int(self.show_marker_name))
-        config.set(SECTION_MAP, 'marker_font_color', self.marker_font_color)
-        config.set(SECTION_MAP, 'marker_font_desc', self.marker_font_desc)
         config.set(SECTION_MAP, 'maxthreads', self.maxthreads)
         config.set(SECTION_MAP, 'overlay_delay', self.overlay_delay)
         config.set(SECTION_MAP, 'opacity', self.opacity)
         config.set(SECTION_MAP, 'draw_track_start_end', self.draw_track_start_end)
         config.set(SECTION_MAP, 'ruler_track_width', self.ruler_track_width)
+
+        config.add_section(SECTION_MARKERS)
+        config.set(SECTION_MARKERS, 'show_marker_name', int(self.show_marker_name))
+        config.set(SECTION_MARKERS, 'show_marker_coord', int(self.show_marker_coord))
+        config.set(SECTION_MARKERS, 'marker_font_color', self.marker_font_color)
+        config.set(SECTION_MARKERS, 'marker_font_desc', self.marker_font_desc)
 
         config.add_section(SECTION_GPS)
         config.set(SECTION_GPS, 'max_gps_zoom', self.max_gps_zoom)
@@ -85,6 +90,7 @@ class MapConf():
         config.set(SECTION_GPS, 'gps_increment', self.gps_increment)
         config.set(SECTION_GPS, 'gps_type', self.gps_type)
         config.set(SECTION_GPS, 'gps_track', self.gps_track)
+        config.set(SECTION_GPS, 'gps_window_decoration', self.gps_window_decoration)
         config.set(SECTION_GPS, 'gps_track_interval', self.gps_track_interval)
         config.set(SECTION_GPS, 'gps_track_width', self.gps_track_width)
         config.set(SECTION_GPS, 'gps_serial_port', self.gps_serial_port)
@@ -181,13 +187,6 @@ class MapConf():
         self.auto_refresh = read_config('auto_refresh', 0, int, SECTION_MAP)
         ## Part of the URL that is used to get the google tiles
         self.google_src = read_config('google_src', '', str, SECTION_MAP)
-        ## Show the name/description of the marker in the map
-        self.show_marker_name = read_config('show_marker_name', 0, int, SECTION_MAP)
-        ## The font color for the name of the marker
-        self.marker_font_color = read_config('marker_font_color', '#00CCCC', str, SECTION_MAP)
-        ## The font Description for the marker "sans bold 12"
-        ## http://www.pygtk.org/docs/pygtk/class-pangofontdescription.html
-        self.marker_font_desc = read_config('marker_font_desc', 'normal', str, SECTION_MAP)
         ## Maximum number of threads to download maps
         self.maxthreads = read_config('maxthreads', 4, int, SECTION_MAP)
         ## Time delay before drawing the map overlay
@@ -196,8 +195,19 @@ class MapConf():
         self.opacity = read_config('opacity', 0.0, float, SECTION_MAP)
         ## Initial map opacity
         self.draw_track_start_end = read_config('draw_track_start_end', 0, int, SECTION_MAP)
-		## Ruler-track width, default is 3px
+        ## Ruler-track width, default is 3px
         self.ruler_track_width = read_config('ruler_track_width', 3, int, SECTION_MAP)
+        self.max_zoom = read_config('max_zoom', MAP_MAX_ZOOM_LEVEL - 2, int, SECTION_MAP)
+        self.min_zoom = read_config('min_zoom', MAP_MIN_ZOOM_LEVEL, int, SECTION_MAP)
+
+        ## Show the name/description of the marker in the map
+        self.show_marker_name = read_config('show_marker_name', 0, int, SECTION_MARKERS)
+        self.show_marker_coord = read_config('show_marker_coord', 0, int, SECTION_MARKERS)
+        ## The font color for the name of the marker
+        self.marker_font_color = read_config('marker_font_color', '#00CCCC', str, SECTION_MARKERS)
+        ## The font Description for the marker "sans bold 12"
+        ## http://www.pygtk.org/docs/pygtk/class-pangofontdescription.html
+        self.marker_font_desc = read_config('marker_font_desc', 'sans bold 16', str, SECTION_MARKERS)
 
         ## How often is the GPS updated, default is 1 second
         self.gps_update_rate = read_config('gps_update_rate', 1.0, float, SECTION_GPS)
@@ -207,6 +217,7 @@ class MapConf():
         self.gps_type = read_config('gps_type', 0, int, SECTION_GPS)
         ## Draw GPS-track, default is 1 (True)
         self.gps_track = read_config('gps_track', 1, int, SECTION_GPS)
+        self.gps_window_decoration = read_config('gps_window_decoration', 0, int, SECTION_GPS)
         ## GPS-track "interval" in meters, default is 50m
         self.gps_track_interval = read_config('gps_track_interval', 50, int, SECTION_GPS)
         ## GPS-track width, default is 2px

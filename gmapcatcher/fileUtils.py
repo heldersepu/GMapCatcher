@@ -13,6 +13,7 @@ def read_file(strInfo, filePath, maxLine=0):
     if os.path.exists(filePath):
         p = re.compile(strInfo + '="([^"]+)".*lat="([^"]+)".*lng="([^"]+)".*')
         q = re.compile('.*zoom="([^"]+)".*')
+        r = re.compile('.*image="([^"]+)".*')
         file = open(filePath, "r")
         for line in file:
             try:
@@ -25,13 +26,17 @@ def read_file(strInfo, filePath, maxLine=0):
                         z = q.search(line)
                         if z:
                             zoom = int(z.group(1))
+                        
+                        image = "marker_s.png"
+                        g = r.search(line)
+                        if g:
+                            image = g.group(1)
+                        
                         if m.group(1) in fileData:
                             name = '%s %i' % (m.group(1), len(fileData))
                         else:
                             name = m.group(1)
-                        fileData[name] = (float(m.group(2)),
-                                                float(m.group(3)),
-                                                zoom)
+                        fileData[name] = (float(m.group(2)), float(m.group(3)), zoom, image)
                 if (maxLine > 0):
                     if (len(fileData) > maxLine):
                         break
@@ -70,7 +75,11 @@ def write_file(strInfo, filePath, fileData):
         # The method 'write' takes an unicode string here and acording to python manual
         # it translates it automatically to string buffer acording to system defaults.
         # Probably all systems translate unicode to UTF-8
-        file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
+        try:
+            file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\timage="%s"\n' %
+                      (l.encode('UTF-8'), fileData[l][0], fileData[l][1], fileData[l][2], fileData[l][3]))
+        except Exception:
+            file.write(strInfo + '="%s"\tlat="%f"\tlng="%f"\tzoom="%i"\n' %
                   (l.encode('UTF-8'), fileData[l][0], fileData[l][1], fileData[l][2]))
     file.close()
 
@@ -91,6 +100,26 @@ def append_file(strInfo, filePath, strData, strName, extraTag=False):
                   (strName, strData[0], strData[1], strData[2] + 2))
     file.close()
 
+## Delete the last location 
+def del_last_entry(strInfo, filePath):
+    file = open(filePath, "r")
+    strContent = file.read()
+    file.seek(0, 0)
+    lastLine = ''
+    for line in file.readlines():
+        line = line.decode("UTF-8")
+        if (line.startswith(strInfo+'=')):
+            lastLine = line
+    file.close()
+    
+    try:
+        file = open(filePath, "w")
+    except Exception:
+        print 'Error! Can NOT write file:'
+        print '  ' + filePath
+        return
+    file.write(codecs.BOM_UTF8 + strContent.replace(lastLine,''))
+    file.close()
 
 ## Writes a new gtkrc file with the given theme
 def write_gtkrc(strTheme):
