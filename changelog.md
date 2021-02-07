@@ -1,3 +1,8 @@
+February 07 2020    H.S    <HelderSepu@gmail.com>
+  * 0.8.2.0
+    * Add more markers (Issue 478)
+    * Improve saving of settings
+
 May 05 2020    H.S    <HelderSepu@gmail.com>
   * 0.8.1.0
     * Add chart to downloader (Issue 401)
