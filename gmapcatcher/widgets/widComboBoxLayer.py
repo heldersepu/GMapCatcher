@@ -59,7 +59,7 @@ class ComboBoxLayer(gtk.ComboBoxEntry):
             self.popup()
 
     def refresh(self):
-        self.child.set_text('')
+        #self.child.set_text('')
         self.set_model(None)
         self.populate()
 
