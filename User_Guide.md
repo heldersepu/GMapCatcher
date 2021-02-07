@@ -136,11 +136,9 @@ GPS window shows the current GPS information, if available. Unit of speed is det
 
 # Settings #
 
-<a href='Hidden comment: 
-I guess this is pretty much wrong information by now?
+All values in the tab Settings describe display properties when starting the programme.   
+Therefore any change requires a restart of the programme in order to have effect.
 
-All values in the tab Settings describe display properties when starting the programme. Therefore any change requires a restart of the programme in order to have effect.
-'></a>
 
 ## Main ##
 
