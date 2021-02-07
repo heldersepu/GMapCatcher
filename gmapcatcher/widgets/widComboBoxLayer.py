@@ -45,6 +45,8 @@ class ComboBoxLayer(gtk.ComboBoxEntry):
                             currentMap = len(store) - 1
         self.set_model(store)
         self.set_text_column(0)
+        if (self.child.get_text() != store[0][0]):
+            self.child.set_text(store[0][0])
         return currentMap
 
     ## Handles the pressing of keys
@@ -59,7 +61,6 @@ class ComboBoxLayer(gtk.ComboBoxEntry):
             self.popup()
 
     def refresh(self):
-        #self.child.set_text('')
         self.set_model(None)
         self.populate()
 
