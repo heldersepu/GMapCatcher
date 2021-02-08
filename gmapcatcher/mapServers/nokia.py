@@ -11,8 +11,8 @@ def layer_url_template(layer):
     return 'http://%i.' + map_server_name[layer] + \
         '.maps.api.here.com/maptile/2.1/maptile/newest/' + \
         map_server_query[layer] + \
-        '.day/%i/%i/%i/256/png8?app_id=bC4fb9WQfCCZfkxspD4z&' + \
-        'app_code=K2Cpd_EKDzrZb1tz0zdpeQ&lg=eng'
+        '.day/%i/%i/%i/256/png8?app_id=VgTVFr1a0ft1qGcLCVJ6&' + \
+        'app_code=LJXqQ8ErW71UsRUK3R33Ow&lg=eng'
 
 
 ## Returns the URL to the nokia map tile
