@@ -1,10 +1,10 @@
 ## @package gmapcatcher.mapServers.nokia
-# All the interaction with http://maps.nokia.com
+# All the interaction with https://wego.here.com/
 
 from gmapcatcher.mapConst import MAP_MAX_ZOOM_LEVEL
 
 
-## Returns a template URL for the Yahoo mas
+## Returns a template URL for the Nokia maps
 def layer_url_template(layer):
     map_server_name = ["base", "aerial", "aerial"]
     map_server_query = ["normal", "hybrid", "terrain"]
