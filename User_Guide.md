@@ -212,8 +212,8 @@ Allows adding, deleting and editing of markers. You can add marker also by CTRL 
 |  F7              |  Draw a path in the map |
 |  F8              |  Show the path control window |
 |  F9              |  Hide/Show the markers |
-|  F12             |  Hide/Show all buttons |
 |  F11             |  Full screen    |
+|  F12             |  Hide/Show all buttons |
 |  ESC             |  Undo F12 & F11 |
 |  Ctrl + Click    |  Add marker     |
 |  Alt + 2Click    |  Zoom out       |
@@ -222,9 +222,6 @@ Allows adding, deleting and editing of markers. You can add marker also by CTRL 
 |  Ctrl + Q        |  Quits gmapcatcher from the main window |
 |  Ctrl + S        |  Saves current page of config settings from config window |
 
-
-
-&lt;BR&gt;
 
 
 ## Navigation (only after hiding buttons F12) ##
@@ -244,10 +241,6 @@ Allows adding, deleting and editing of markers. You can add marker also by CTRL 
 
 
 
-
-&lt;BR&gt;
-
-
 ## GPS related (only when GPS is enabled) ##
 | **Shortcut Key** | **Description** |
 |:-----------------|:----------------|
@@ -257,5 +250,5 @@ Allows adding, deleting and editing of markers. You can add marker also by CTRL 
 # Config File #
 The config file is named **gmapcatcher.conf** and it contains all the settings for GMapCatcher.
 
-Details of all the keys in the config file here:
+Details of all the keys in the config file here:   
 https://github.com/heldersepu/GMapCatcher/blob/master/gmapcatcher/mapConf.py#L112
