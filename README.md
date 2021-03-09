@@ -59,7 +59,7 @@ If you choose to run directly from sources you must have all dependencies, see w
 https://github.com/heldersepu/GMapCatcher/blob/wiki/devEnv.md
 
 
-## Donation
+## Donate
 
 This project is free and will always be.
 
