@@ -155,7 +155,7 @@ class MapConf():
         ## The match function to be used in the auto-completion of the entry
         self.match_func = read_config('match_func', ENTRY_SUB_MENU[0], str)
         ## List of map servers to hide
-        self.hide_map_servers = read_config('hide_map_servers', '0,3,16,18,19,20', str)
+        self.hide_map_servers = read_config('hide_map_servers', '0,3,6,16,18,19,20', str)
         ## Speed and distance units (default km / km/h)
         self.units = read_config('units', 0, int)
         ## Start offline (default = Yes)
