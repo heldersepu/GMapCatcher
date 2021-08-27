@@ -172,7 +172,7 @@ class MapConf():
         ## Show a small cross in the center of the map, default is False (0)
         self.show_cross = read_config('show_cross', 0, int, SECTION_MAP)
         ## Map service to get images, default is Nokia
-        self.map_service = read_config('map_service', MAP_SERVERS[NOKIA], str, SECTION_MAP)
+        self.map_service = read_config('map_service', MAP_SERVERS[VIRTUAL_EARTH], str, SECTION_MAP)
         ## Google API key
         self.google_API = read_config('google_API', 'AIzaSyB3d6ZZvE0msnWbh9gX3bAN0bSFf4m8DuE', str, SECTION_MAP)
         ## cloudMade API key

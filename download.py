@@ -37,7 +37,7 @@ def download_coordpath(downloader, args, mConf):
         downloader.query_coordpath(coords, zl, args.width, args.layer, dl_callback, conf=mConf)
         downloader.wait_all()
 
-def get_args(sys_argv):
+def get_args(sys_argv, ctx_map):
     args = MapArgs(sys_argv)
     if (args.location is None) and (args.gpx is None) and ((args.lat is None) or (args.lng is None)):
         args.print_help()
@@ -49,7 +49,7 @@ def get_args(sys_argv):
         if (not args.location in locations.keys()):
             args.location = ctx_map.search_location(args.location)
             if (args.location[:6] == "error="):
-                print args.location[6:]
+                print(args.location[6:])
                 sys.exit(0)
 
         coord = ctx_map.get_locations()[args.location]
@@ -69,28 +69,31 @@ def get_args(sys_argv):
     return args
 
 if __name__ == "__main__":
-    args = get_args(sys.argv)
+    mConf = MapConf()
+    ## Here we can overwrite some of the config values
+    # print mConf.map_service
+    # print mConf.repository_type
+    ctx_map = MapServ(mConf)
+    args = get_args(sys.argv, ctx_map)
+    mConf.map_service = args.map_server
+    mConf.repository_type = args.repo_type
+    ctx_map = MapServ(mConf)
 
     if (args.location is None):
         args.location = "somewhere"
     else:
-        print "location = %s" % args.location
+        print("location = %s" % args.location)
 
     if args.gpx is None:
-        print "Download %s (%f, %f), range (%f, %f), mapsource: \"%s %s\", zoom level: %d to %d" % \
+        print("Download %s (%f, %f), range (%f, %f), mapsource: \"%s %s\", zoom level: %d to %d" % \
                 (args.location, args.lat, args.lng,
                  args.lat_range, args.lng_range,
                  '', '',
-                 args.max_zl, args.min_zl)
+                 args.max_zl, args.min_zl))
     else:
-        print "Download path in %s, mapsource: \"%s %s\", zoom level: %d to %d, width=%d tiles" % \
-                (args.gpx, '', '', args.max_zl, args.min_zl, args.width)
+        print("Download path in %s, mapsource: \"%s %s\", zoom level: %d to %d, width=%d tiles" % \
+              (args.gpx, '', '', args.max_zl, args.min_zl, args.width))
 
-    mConf = MapConf()
-    ## Here we can overwrite some of the config values
-    # print mConf.map_service
-    # print mConf.repository_type    
-    ctx_map = MapServ(mConf)
     downloader = MapDownloader(ctx_map, args.nr_threads)
     try:
         if args.gpx is not None:
@@ -98,6 +101,6 @@ if __name__ == "__main__":
         else:
             download(downloader, args, mConf)
     finally:
-        print "\nDownload Complete!"
+        print("\nDownload Complete!")
         downloader.stop_all()
         os.kill(os.getpid(), signal.SIGTERM)
