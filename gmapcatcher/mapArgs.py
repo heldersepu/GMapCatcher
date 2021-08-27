@@ -17,6 +17,8 @@ class MapArgs():
     layer = LAYER_MAP
     width = -1
     height = -1
+    map_server = VIRTUAL_EARTH
+    repo_type = REPOS_TYPE_OSM
 
     def print_help(self):
         print ' '
@@ -33,6 +35,9 @@ class MapArgs():
         print '  --terrain     Retrieve terrain images'
         print '  --hybrid      Retrieve hybrid images'
         print '  --chart       Retrieve chart images'
+        print '  --map-server= Name of map server to use (default = {})'.format(MAP_SERVERS[self.map_server])
+        print '  --repo-type=  Name of repo type to save files as (default = {})'.format(REPOS_TYPE[self.repo_type])
+
         print ' '
         print '  --latrange=   Latitude Range to get    (default = %f)' % self.lat_range
         print '  --lngrange=   Longitude Range to get   (default = %f)' % self.lng_range
@@ -100,7 +105,15 @@ class MapArgs():
                         self.lat = 0
                         self.lat_range = 85
                         self.lng_range = 179
-
+                    elif arg.startswith('--map-server='):
+                        self.map_server = oarg[13:]
+                        print("map server = {}".format(self.map_server))
+                        print("map server idx = {}".format(MAP_SERVERS.index(self.map_server)))
+                    elif arg.startswith('--repo-type='):
+                        rt = oarg[12:]
+                        print("repo type = {}".format(rt))
+                        self.repo_type = REPOS_TYPE.index(rt)
+                        print("repo type idx = {}".format(self.repo_type))
     def __str__(self):
         return ("download.py --max-zoom=%s --min-zoom=%s" +
                 " --latitude=%s --longitude=%s" +
